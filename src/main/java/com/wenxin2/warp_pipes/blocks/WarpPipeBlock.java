@@ -2,7 +2,10 @@ package com.wenxin2.warp_pipes.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntityEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -12,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 public class WarpPipeBlock extends DirectionalBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -41,6 +45,15 @@ public class WarpPipeBlock extends DirectionalBlock {
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
+
+//    public static void warp(Player player, BlockPos blockPos, Level world) {
+//        player.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5);
+//        world.gameEvent(GameEvent.TELEPORT, blockPos, GameEvent.Context.of(player));
+//        world.broadcastEntityEvent(player, Entity.ADD_PORTAL_PARTICLES);
+//        world.playSound(null, blockPos, Sounds.BLOCK_WARP_PIPE_TELEPORT, SoundCategory.BLOCKS, 2.0F, 1.0F);
+//        if (player instanceof ServerPlayerEntity)
+//            ModCriteria.USE_WARP_PIPE.trigger((ServerPlayerEntity) player);
+//    }
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos pos2) {

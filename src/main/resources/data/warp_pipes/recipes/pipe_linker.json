@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "planet_rotator",
+  "key": {
+    "W": {
+      "tag": "warp_pipes:warp_pipes"
+    },
+    "C": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "pattern": [
+    " W ",
+    " C ",
+    " C "
+  ],
+  "result": {
+    "item": "warp_pipes:pipe_linker",
+    "count": 1
+  }
+}

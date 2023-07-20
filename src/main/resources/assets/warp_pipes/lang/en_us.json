@@ -1,5 +1,6 @@
 {
   "itemGroup.warp_pipes": "Warp Pipes",
 
-  "block.warp_pipes.green_warp_pipe": "Green Warp Pipe"
+  "block.warp_pipes.green_warp_pipe": "Green Warp Pipe",
+  "item.warp_pipes.pipe_linker": "Pipe Linker"
 }

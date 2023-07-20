@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
+import com.wenxin2.warp_pipes.items.LinkerItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,10 +25,15 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
 
+    public static final RegistryObject<Item> PIPE_LINKER;
+
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
 
     static
     {
+        PIPE_LINKER = registerItem("pipe_linker",
+                () -> new LinkerItem(new Item.Properties().durability(128).tab(WarpPipes.CREATIVE_TAB)));
+
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
