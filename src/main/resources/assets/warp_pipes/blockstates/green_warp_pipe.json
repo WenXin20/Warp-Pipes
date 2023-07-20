@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=up,entrance=true": {
+      "model": "warp_pipes:block/green_warp_pipe_entrance"
+    },
+    "facing=down,entrance=true": {
+      "model": "warp_pipes:block/green_warp_pipe_entrance",
+      "x": 180
+    },
+    "facing=north,entrance=true": {
+      "model": "warp_pipes:block/green_warp_pipe_entrance",
+      "x": 90
+    },
+    "facing=south,entrance=true": {
+      "model": "warp_pipes:block/green_warp_pipe_entrance",
+      "x": 90,
+      "y": 180
+    },
+    "facing=east,entrance=true": {
+      "model": "warp_pipes:block/green_warp_pipe_entrance",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,entrance=true": {
+      "model": "warp_pipes:block/green_warp_pipe_entrance",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up,entrance=false": {
+      "model": "warp_pipes:block/green_warp_pipe"
+    },
+    "facing=down,entrance=false": {
+      "model": "warp_pipes:block/green_warp_pipe",
+      "x": 180
+    },
+    "facing=north,entrance=false": {
+      "model": "warp_pipes:block/green_warp_pipe",
+      "x": 90
+    },
+    "facing=south,entrance=false": {
+      "model": "warp_pipes:block/green_warp_pipe",
+      "x": 90,
+      "y": 180
+    },
+    "facing=east,entrance=false": {
+      "model": "warp_pipes:block/green_warp_pipe",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,entrance=false": {
+      "model": "warp_pipes:block/green_warp_pipe",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

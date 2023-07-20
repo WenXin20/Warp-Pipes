@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "warp_pipes",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/copper"
+    },
+    "D": {
+      "tag": "forge:dyes/green"
+    },
+    "G": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "pattern": [
+    "IDI",
+    "IGI",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "item": "warp_pipes:green_warp_pipe"
+  }
+}
