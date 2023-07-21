@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.blocks;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -135,13 +136,22 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         super.stepOn(world, pos, state, entity);
     }
 
+    protected static final RandomSource random = RandomSource.create();
     public static void warp(Player player, BlockPos pos, Level world) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-            player.teleportTo(warpPipeBE.destinationPos.getX() + 0.5, warpPipeBE.destinationPos.getY() + 5, warpPipeBE.destinationPos.getZ() + 0.5);
+//            player.teleportTo(warpPipeBE.destinationPos.getX() + 0.5, warpPipeBE.destinationPos.getY() + 5, warpPipeBE.destinationPos.getZ() + 0.5);
+            player.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
         }
         world.gameEvent(GameEvent.TELEPORT, pos, GameEvent.Context.of(player));
-        world.broadcastEntityEvent(player, (byte)53);
+        if (world.isClientSide) {
+            for(int i = 0; i < 2; ++i) {
+                world.addParticle(ParticleTypes.PORTAL,
+                        player.getRandomX(0.5D), player.getRandomY() - 0.25D, player.getRandomZ(0.5D),
+                        (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
+                        (random.nextDouble() - 0.5D) * 2.0D);
+            }
+        }
         world.playSound(null, pos, SoundEvents.FOX_TELEPORT, SoundSource.BLOCKS, 2.0F, 1.0F);
     }
 

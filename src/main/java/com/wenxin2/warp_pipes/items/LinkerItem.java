@@ -71,7 +71,7 @@ public class LinkerItem extends Item {
                 tag.putDouble("X", (int)pos.getX());
                 tag.putDouble("Y", (int)pos.getY());
                 tag.putDouble("Z", (int)pos.getZ());
-                tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
+//                tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
                 tag.putString(WARP_PIPE_DIMENSION, world.dimension().toString());
                 assert player != null;
                 player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
@@ -138,7 +138,8 @@ public class LinkerItem extends Item {
         boolean containsPipePos = tag.contains(WARP_PIPE_POS);
         boolean containsPipeDim = tag.contains(WARP_PIPE_DIMENSION);
         if (containsPipePos && containsPipeDim && (optional = LinkerItem.getWarpDimension(tag)).isPresent()) {
-            BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(WARP_PIPE_POS));
+//            BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(WARP_PIPE_POS));
+            BlockPos pos = new BlockPos(tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"));
             return GlobalPos.of(optional.get(), pos);
         }
         return null;
