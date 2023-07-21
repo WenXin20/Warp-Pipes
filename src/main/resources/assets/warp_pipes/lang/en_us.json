@@ -2,5 +2,8 @@
   "itemGroup.warp_pipes": "Warp Pipes",
 
   "block.warp_pipes.green_warp_pipe": "Green Warp Pipe",
-  "item.warp_pipes.pipe_linker": "Pipe Linker"
+  "item.warp_pipes.pipe_linker": "Pipe Linker",
+  "display.warp_pipes.linker.bound": "Bound to pipe pos at %1$s, %2$s, %3$s",
+  "display.warp_pipes.linker.bound_tooltip": "Bound to pipe pos at %1$s",
+  "display.warp_pipes.linker.linked": "Set linked pipe to %1$s, %2$s, %3$s"
 }

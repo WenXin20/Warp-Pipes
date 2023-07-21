@@ -2,19 +2,18 @@ package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
+import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.items.LinkerItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -29,6 +28,8 @@ public class ModRegistry {
 
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
 
+    public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPES;
+
     static
     {
         PIPE_LINKER = registerItem("pipe_linker",
@@ -38,6 +39,9 @@ public class ModRegistry {
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
+
+        WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
+                () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get()).build(null));
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block, CreativeModeTab tab)
