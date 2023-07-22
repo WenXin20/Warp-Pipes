@@ -37,7 +37,7 @@ public class ModRegistry {
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
-                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).randomTicks()
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
