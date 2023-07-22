@@ -16,6 +16,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -78,6 +79,11 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource randomSource) {
+        BubbleColumnBlock.updateColumn(serverWorld, pos.above(), state);
     }
 
     @Override
