@@ -13,10 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeBlockEntity extends BlockEntity {
     public static final String DESTINATION_POS = "DestinationPos";
-    public static final String WARP_COOLDOWN = "WarpCooldown";
     @Nullable
     public BlockPos destinationPos;
-    public int warpCooldown;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -46,24 +44,6 @@ public class WarpPipeBlockEntity extends BlockEntity {
         }
     }
 
-    private boolean hasWarpCooldown() {
-        return this.warpCooldown != 0;
-    }
-
-    public int getWarpCooldown() {
-        return warpCooldown;
-    }
-
-    public void setWarpCooldown(int cooldown) {
-        this.warpCooldown = cooldown;
-    }
-
-    public static void warpCooldownTick(Level world, BlockPos pos, BlockState state, WarpPipeBlockEntity blockEntity) {
-        if (blockEntity.getWarpCooldown() > 0) {
-            --blockEntity.warpCooldown;
-        }
-    }
-
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
@@ -71,18 +51,13 @@ public class WarpPipeBlockEntity extends BlockEntity {
         if (tag.contains(DESTINATION_POS)) {
             this.setDestinationPos(NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS)));
         }
-        if (tag.contains(WARP_COOLDOWN)) {
-            this.setWarpCooldown(getWarpCooldown());
-        }
     }
 
+    @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (this.hasDestinationPos()) {
             tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(this.destinationPos));
-        }
-        if (this.hasWarpCooldown()) {
-            tag.putInt(WARP_COOLDOWN, getWarpCooldown());
         }
     }
 }
