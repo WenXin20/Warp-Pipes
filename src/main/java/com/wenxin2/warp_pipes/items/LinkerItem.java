@@ -46,7 +46,6 @@ public class LinkerItem extends Item {
     public InteractionResult useOn(UseOnContext useOnContext) {
         InteractionResult interactionResult = super.useOn(useOnContext);
         Player player = useOnContext.getPlayer();
-        InteractionHand hand = Objects.requireNonNull(useOnContext.getPlayer()).getUsedItemHand();
         Level world = useOnContext.getLevel();
         BlockPos pos = useOnContext.getClickedPos();
         BlockState state = world.getBlockState(pos);
@@ -63,6 +62,7 @@ public class LinkerItem extends Item {
                 if (tag == null) {
                     tag = new CompoundTag();
                 }
+
                 tag.putBoolean("Bound", Boolean.TRUE);
                 tag.putDouble("X", (int)pos.getX());
                 tag.putDouble("Y", (int)pos.getY());
@@ -70,15 +70,18 @@ public class LinkerItem extends Item {
                 tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
                 tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
 
-                assert player != null;
-                player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                        pos.getX(), pos.getY(), pos.getZ()), true);
-
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                if (player != null) {
+                    player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
+                            pos.getX(), pos.getY(), pos.getZ()), true);
+                }
+                this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
             } else {
                 Player player1 = useOnContext.getPlayer();
-                this.writeTag(world.dimension(), pos, stack.getOrCreateTag());
+                if (tag == null) {
+                    tag = new CompoundTag();
+                }
                 tag.putBoolean("Bound", Boolean.FALSE);
+                this.writeTag(world.dimension(), pos, stack.getOrCreateTag());
 
                 GlobalPos globalPos = LinkerItem.createWarpPos(tag);
                 if (globalPos == null)
@@ -86,21 +89,16 @@ public class LinkerItem extends Item {
                 BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
                 if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(stack)) {
                     this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
-//                    createWarpPos(tag);
                 }
 
-                if (player1 == null)
-                    return interactionResult;
-                stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-                player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                        pos.getX(), pos.getY(), pos.getZ()), true);
+                if (player1 != null) {
+                    stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                    player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
+                            pos.getX(), pos.getY(), pos.getZ()), true);
+                }
                 this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
-
-//                if (globalPos.pos().equals(pos)) {
-//                    return this.reset(world, pos, tag);
-//                }
-                return InteractionResult.sidedSuccess(world.isClientSide);
             }
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
         return interactionResult;
     }
@@ -110,22 +108,11 @@ public class LinkerItem extends Item {
         return tag != null && (tag.contains(WARP_PIPE_DIMENSION) || tag.contains(WARP_PIPE_POS));
     }
 
-//    private InteractionResult reset(Level world, BlockPos pos, CompoundTag tag) {
-//        this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
-//        tag.remove(WARP_PIPE_POS);
-//        tag.remove(WARP_PIPE_DIMENSION);
-//        tag.remove("X");
-//        tag.remove("Y");
-//        tag.remove("Z");
-//        return InteractionResult.sidedSuccess(world.isClientSide);
-//    }
-
     private void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
         this.spawnParticles(world, pos);
         this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
         warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel());
-//        warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world);
         tag.remove(WARP_PIPE_POS);
@@ -141,7 +128,6 @@ public class LinkerItem extends Item {
         boolean containsPipePos = tag.contains(WARP_PIPE_POS);
         boolean containsPipeDim = tag.contains(WARP_PIPE_DIMENSION);
         if (containsPipePos && containsPipeDim && (optional = LinkerItem.getWarpDimension(tag)).isPresent()) {
-//            BlockPos pos = NbtUtils.readBlockPos(tag.getCompound(WARP_PIPE_POS));
             BlockPos pos = new BlockPos(tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"));
             return GlobalPos.of(optional.get(), pos);
         }
@@ -166,9 +152,6 @@ public class LinkerItem extends Item {
 
     private void writeTag(ResourceKey<Level> worldKey, BlockPos pos, CompoundTag tag) {
         tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
-//        tag.putDouble("X", pos.getX());
-//        tag.putDouble("Y", pos.getY());
-//        tag.putDouble("Z", pos.getZ());
         Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, worldKey).resultOrPartial(LOGGER::error).ifPresent(nbtElement -> tag.put(WARP_PIPE_DIMENSION, nbtElement));
     }
 
@@ -182,8 +165,10 @@ public class LinkerItem extends Item {
         CompoundTag tag = stack.getTag();
         if (!Bound) {
             assert tag != null;
-            list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip",/*tag.get(WARP_PIPE_POS)*/tag.get("X"), tag.get("Y"), tag.get("Z"),
-                    tag.getString(WARP_PIPE_DIMENSION), true).withStyle(ChatFormatting.GOLD));
+            if (tag.contains(WARP_PIPE_POS)) {
+                list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.get("X"), tag.get("Y"), tag.get("Z"),
+                        tag.getString(WARP_PIPE_DIMENSION), true).withStyle(ChatFormatting.GOLD));
+            }
         }
     }
 }
