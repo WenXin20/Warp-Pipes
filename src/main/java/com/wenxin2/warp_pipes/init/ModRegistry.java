@@ -23,7 +23,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
-
     public static final RegistryObject<Item> PIPE_LINKER;
 
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
@@ -37,7 +36,7 @@ public class ModRegistry {
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
-                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).randomTicks()
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",

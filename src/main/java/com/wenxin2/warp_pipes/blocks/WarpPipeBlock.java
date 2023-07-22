@@ -5,6 +5,7 @@ import com.wenxin2.warp_pipes.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -27,7 +28,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
@@ -57,6 +60,11 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        return Shapes.block();
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
         Direction direction = placeContext.getClickedFace();
         return this.defaultBlockState().setValue(FACING, direction);
@@ -70,6 +78,11 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
+        return true;
     }
 
     @Override
