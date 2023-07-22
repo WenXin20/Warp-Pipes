@@ -152,23 +152,25 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     protected static final RandomSource random = RandomSource.create();
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
-            entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
-        }
-        if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN) {
-            entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
-        }
-        if (world.getBlockState(pos).getValue(FACING) == Direction.NORTH) {
-            entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
-        }
-        if (world.getBlockState(pos).getValue(FACING) == Direction.SOUTH) {
-            entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
-        }
-        if (world.getBlockState(pos).getValue(FACING) == Direction.EAST) {
-            entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
-        }
-        if (world.getBlockState(pos).getValue(FACING) == Direction.WEST) {
-            entity.teleportTo(pos.getX() + entity.getBbWidth() - 1.0, pos.getY(), pos.getZ() + 0.5);
+        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
+                entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
+            }
+            if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN) {
+                entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
+            }
+            if (world.getBlockState(pos).getValue(FACING) == Direction.NORTH) {
+                entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
+            }
+            if (world.getBlockState(pos).getValue(FACING) == Direction.SOUTH) {
+                entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
+            }
+            if (world.getBlockState(pos).getValue(FACING) == Direction.EAST) {
+                entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
+            }
+            if (world.getBlockState(pos).getValue(FACING) == Direction.WEST) {
+                entity.teleportTo(pos.getX() + entity.getBbWidth() - 1.0, pos.getY(), pos.getZ() + 0.5);
+            }
         }
         if (entity instanceof Player) {
             entity.unRide();
