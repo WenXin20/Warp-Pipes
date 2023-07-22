@@ -72,7 +72,7 @@ public class LinkerItem extends Item {
 
                 if (player != null) {
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                            pos.getX(), pos.getY(), pos.getZ()), true);
+                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GREEN), true);
                 }
                 this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
             } else {
@@ -94,7 +94,7 @@ public class LinkerItem extends Item {
                 if (player1 != null) {
                     stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
                     player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                            pos.getX(), pos.getY(), pos.getZ()), true);
+                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GREEN), true);
                 }
                 this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
             }

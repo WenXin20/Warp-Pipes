@@ -1,21 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "planet_rotator",
+  "group": "pipe_wrench",
   "key": {
-    "W": {
-      "tag": "warp_pipes:warp_pipes"
-    },
     "C": {
       "tag": "forge:ingots/copper"
     }
   },
   "pattern": [
-    " W ",
+    "C C",
     " C ",
     " C "
   ],
   "result": {
-    "item": "warp_pipes:pipe_linker",
+    "item": "warp_pipes:pipe_wrench",
     "count": 1
   }
 }

@@ -4,12 +4,14 @@ import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.items.LinkerItem;
+import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -23,7 +25,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
-    public static final RegistryObject<Item> PIPE_LINKER;
+    public static final RegistryObject<Item> PIPE_WRENCH;
 
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
 
@@ -31,8 +33,8 @@ public class ModRegistry {
 
     static
     {
-        PIPE_LINKER = registerItem("pipe_linker",
-                () -> new LinkerItem(new Item.Properties().durability(128).tab(WarpPipes.CREATIVE_TAB)));
+        PIPE_WRENCH = registerItem("pipe_wrench",
+                () -> new WrenchItem(new Item.Properties().durability(128).tab(WarpPipes.CREATIVE_TAB), Tiers.IRON));
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
