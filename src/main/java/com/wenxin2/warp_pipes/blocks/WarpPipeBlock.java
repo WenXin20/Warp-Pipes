@@ -2,11 +2,9 @@ package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.ModRegistry;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -20,23 +18,19 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.registries.RegistryObject;
 
 import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
-    public int warpCooldown;
 
     public WarpPipeBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -138,7 +132,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (!(entity instanceof Player) && warpPipeBE.getWarpCooldown() == 0 && !entity.isOnPortalCooldown() && destinationPos != null){
                 WarpPipeBlock.warp(entity, destinationPos, world, state);
                 entity.setPortalCooldown();
-//                entity.getPortalWaitTime();
                 warpPipeBE.setWarpCooldown(100);
             }
             if (entity instanceof Player && !entity.isOnPortalCooldown() && destinationPos != null && entity.isShiftKeyDown()) {
@@ -146,19 +139,18 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 entity.setPortalCooldown();
                 warpPipeBE.setWarpCooldown(100);
             }
-//            if (this.getWarpCooldown() > 0) {
-//                --this.warpCooldown;
-//            }
-//            if (entity.isOnPortalCooldown()) {
-//                --entity.portalCooldown();
-//            }
         }
         super.stepOn(world, pos, state, entity);
     }
 
     protected static final RandomSource random = RandomSource.create();
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
+        if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
+            entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
+        }
+        if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN) {
+            entity.teleportTo(pos.getX() + 0.5, pos.getY() - 2.0, pos.getZ() + 0.5);
+        }
         if (entity instanceof Player) {
             entity.unRide();
         }
@@ -175,40 +167,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         }
     }
 
-//    public int getWarpCooldown() {
-//        return warpCooldown;
-//    }
-//
-//    public void setWarpCooldown(int cooldown) {
-//        this.warpCooldown = cooldown;
-//    }
-
-//    @Override
-//    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource source) {
-//        BlockEntity blockEntity = world.getBlockEntity(pos);
-//        if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-//            if (warpPipeBE.getWarpCooldown() > 0) {
-//                warpPipeBE.zeroWarpCooldown();
-//            }
-//        }
-//        super.animateTick(state, world, pos, source);
-//    }
     @org.jetbrains.annotations.Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, ModRegistry.WARP_PIPES.get(), WarpPipeBlockEntity::warpCooldownTick);
     }
-//    @Nullable
-//    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> blockEntityType) {
-//        BlockEntity blockEntity = world.getBlockEntity(pos);
-//        if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-//            return warpPipeBE.warpCooldownTick();
-//        }
-//        return createTickerHelper(world, ModRegistry.WARP_PIPES, world.isClientSide ? WarpPipeBlockEntity::beamAnimationTick : WarpPipeBlockEntity::warpCooldownTick);
-//    }
-
-//    @Nullable
-//    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> blockEntityTypeA, BlockEntityType<E> blockEntityTypeE, BlockEntityTicker<? super E> blockEntityTicker) {
-//        return blockEntityTypeE == blockEntityTypeA ? (BlockEntityTicker<A>)blockEntityTicker : null;
-//    }
 }
