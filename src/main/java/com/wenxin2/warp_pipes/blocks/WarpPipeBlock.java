@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
 
@@ -46,6 +49,11 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state)
     {
         return new WarpPipeBlockEntity(pos, state);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState p_60572_, BlockGetter p_60573_, BlockPos p_60574_, CollisionContext p_60575_) {
+        return Block.box(0.25D, 0.25D, 0.25D, 15.50D, 15.50D, 15.50D);
     }
 
     @Override
@@ -123,33 +131,25 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         return state.setValue(ENTRANCE, Boolean.TRUE);
     }
 
-    @Override
-    public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        BlockPos destinationPos = null;
-        if (state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-            destinationPos = warpPipeBE.destinationPos;
-            if (!(entity instanceof Player) && warpPipeBE.getWarpCooldown() == 0 && !entity.isOnPortalCooldown() && destinationPos != null){
-                WarpPipeBlock.warp(entity, destinationPos, world, state);
-                entity.setPortalCooldown();
-                warpPipeBE.setWarpCooldown(100);
-            }
-            if (entity instanceof Player && !entity.isOnPortalCooldown() && destinationPos != null && entity.isShiftKeyDown()) {
-                WarpPipeBlock.warp(entity, destinationPos, world, state);
-                entity.setPortalCooldown();
-                warpPipeBE.setWarpCooldown(100);
-            }
-        }
-        super.stepOn(world, pos, state, entity);
-    }
-
     protected static final RandomSource random = RandomSource.create();
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
         if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
             entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
         }
         if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN) {
-            entity.teleportTo(pos.getX() + 0.5, pos.getY() - 2.0, pos.getZ() + 0.5);
+            entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
+        }
+        if (world.getBlockState(pos).getValue(FACING) == Direction.NORTH) {
+            entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
+        }
+        if (world.getBlockState(pos).getValue(FACING) == Direction.SOUTH) {
+            entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
+        }
+        if (world.getBlockState(pos).getValue(FACING) == Direction.EAST) {
+            entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
+        }
+        if (world.getBlockState(pos).getValue(FACING) == Direction.WEST) {
+            entity.teleportTo(pos.getX() + entity.getBbWidth() - 1.0, pos.getY(), pos.getZ() + 0.5);
         }
         if (entity instanceof Player) {
             entity.unRide();
@@ -158,11 +158,105 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         world.playSound(null, pos, SoundEvents.FOX_TELEPORT, SoundSource.BLOCKS, 2.0F, 1.0F);
 
         if (world.isClientSide) {
-            for(int i = 0; i < 10; ++i) {
-                world.addParticle(ParticleTypes.PORTAL,
+            for(int i = 0; i < 40; ++i) {
+                world.addParticle(ParticleTypes.ENCHANT,
                         entity.getRandomX(0.5D), entity.getRandomY() - 0.25D, entity.getRandomZ(0.5D),
                         (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
                         (random.nextDouble() - 0.5D) * 2.0D);
+            }
+        }
+    }
+
+    @Override
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockPos destinationPos = null;
+
+        double entityX = entity.getX();
+        double entityY = entity.getY();
+        double entityZ = entity.getZ();
+
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if (state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
+            destinationPos = warpPipeBE.destinationPos;
+            if (entity instanceof Player && !entity.isOnPortalCooldown() && destinationPos != null) {
+                if (state.getValue(FACING) == Direction.UP && entity.isShiftKeyDown() && (entityY > blockY)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ) ) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.NORTH && entity.getMotionDirection() == Direction.SOUTH
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityY == blockY) && (entityZ < blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.SOUTH && entity.getMotionDirection() == Direction.NORTH
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityY == blockY) && (entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.EAST && entity.getMotionDirection() == Direction.WEST
+                        && (entityX > blockX) && (entityY == blockY) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.WEST && entity.getMotionDirection() == Direction.EAST
+                        && (entityX < blockX) && (entityY == blockY) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+            }
+            if (!(entity instanceof Player) && warpPipeBE.getWarpCooldown() == 0 && !entity.isOnPortalCooldown() && destinationPos != null) {
+                if (state.getValue(FACING) == Direction.UP && (entityY > blockY)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.NORTH && entity.getMotionDirection() == Direction.SOUTH
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityY == blockY) && (entityZ < blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.SOUTH && entity.getMotionDirection() == Direction.NORTH
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityY == blockY) && (entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.EAST && entity.getMotionDirection() == Direction.WEST
+                        && (entityX > blockX) && (entityY == blockY) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
+                if (state.getValue(FACING) == Direction.WEST && entity.getMotionDirection() == Direction.EAST
+                        && (entityX < blockX) && (entityY == blockY) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    entity.setPortalCooldown();
+                    warpPipeBE.setWarpCooldown(100);
+                }
             }
         }
     }

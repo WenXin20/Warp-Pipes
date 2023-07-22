@@ -64,9 +64,9 @@ public class LinkerItem extends Item {
                     tag = new CompoundTag();
                 }
                 tag.putBoolean("Bound", Boolean.TRUE);
-                tag.putDouble("X", pos.getX());
-                tag.putDouble("Y", pos.getY());
-                tag.putDouble("Z", pos.getZ());
+                tag.putDouble("X", (int)pos.getX());
+                tag.putDouble("Y", (int)pos.getY());
+                tag.putDouble("Z", (int)pos.getZ());
                 tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
                 tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
 
