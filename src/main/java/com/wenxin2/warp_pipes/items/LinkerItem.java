@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,16 +16,16 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -34,12 +33,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
-public class LinkerItem extends Item {
+public class LinkerItem extends TieredItem {
     public static final String WARP_PIPE_POS = "WarpPos";
     public static final String WARP_PIPE_DIMENSION = "WarpDimension";
     private static final Logger LOGGER = LogUtils.getLogger();
-    public LinkerItem(final Item.Properties properties) {
-        super(properties);
+    public LinkerItem(final Item.Properties properties, Tier tier) {
+        super(tier, properties);
     }
     boolean Bound = Boolean.FALSE;
     @Override
@@ -72,8 +71,9 @@ public class LinkerItem extends Item {
 
                 if (player != null) {
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GREEN), true);
+                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.DARK_GREEN), true);
                 }
+                this.spawnParticles(world, pos);
                 this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
             } else {
                 Player player1 = useOnContext.getPlayer();
@@ -94,8 +94,9 @@ public class LinkerItem extends Item {
                 if (player1 != null) {
                     stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
                     player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GREEN), true);
+                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GOLD), true);
                 }
+                this.spawnParticles(world, pos);
                 this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
             }
             return InteractionResult.sidedSuccess(world.isClientSide);
@@ -109,8 +110,6 @@ public class LinkerItem extends Item {
     }
 
     private void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
-        this.spawnParticles(world, pos);
-        this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
         warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel());
         warpPipeBEGlobal.setDestinationPos(pos);
@@ -139,13 +138,15 @@ public class LinkerItem extends Item {
     }
 
     private void spawnParticles(Level world, BlockPos pos) {
-        if (world instanceof ServerLevel) {
+        if (world.isClientSide()) {
             RandomSource random = world.getRandom();
 
-            for (int i = 0; i < 4; ++i) {
-                ((ServerLevel) world).sendParticles(ParticleTypes.POOF, pos.getX() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)),
-                        pos.getY() + 1.5D, pos.getZ() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)),
-                        1, 0.0D, 0.0D, 0.0D, 0.0D);
+            for (int i = 0; i < 40; ++i) {
+                world.addParticle(ParticleTypes.ENCHANT,
+                        pos.getX() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)), pos.getY() + 1.5D,
+                        pos.getZ() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)),
+                        (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
+                        (random.nextDouble() - 0.5D) * 2.0D);
             }
         }
     }
@@ -166,7 +167,7 @@ public class LinkerItem extends Item {
         if (!Bound) {
             assert tag != null;
             if (tag.contains(WARP_PIPE_POS)) {
-                list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.get("X"), tag.get("Y"), tag.get("Z"),
+                list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"),
                         tag.getString(WARP_PIPE_DIMENSION), true).withStyle(ChatFormatting.GOLD));
             }
         }

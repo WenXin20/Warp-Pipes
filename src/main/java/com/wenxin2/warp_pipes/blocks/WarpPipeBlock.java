@@ -173,10 +173,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         world.gameEvent(GameEvent.TELEPORT, pos, GameEvent.Context.of(entity));
         world.playSound(null, pos, SoundEvents.FOX_TELEPORT, SoundSource.BLOCKS, 2.0F, 1.0F);
 
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             for(int i = 0; i < 40; ++i) {
                 world.addParticle(ParticleTypes.ENCHANT,
-                        entity.getRandomX(0.5D), entity.getRandomY() - 0.25D, entity.getRandomZ(0.5D),
+                        entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
                         (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
                         (random.nextDouble() - 0.5D) * 2.0D);
             }
