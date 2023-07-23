@@ -42,8 +42,12 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
     // Imports
+    implementation fg.deobf("curse.maven:connectedness-${connectedness_version}")
+    implementation fg.deobf("curse.maven:ctm-${ctm_version}")
     implementation fg.deobf("curse.maven:jei-${jei_version}")
+    implementation fg.deobf("curse.maven:reforgium-${reforgium_version}")
 }
 
 mixin {

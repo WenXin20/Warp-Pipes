@@ -161,7 +161,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock) {
+        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE)) {
             if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
                 entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             }
