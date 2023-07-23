@@ -71,7 +71,7 @@ public class LinkerItem extends TieredItem {
 
                 if (player != null) {
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.DARK_GREEN), true);
+                            tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
                 }
                 this.spawnParticles(world, pos);
                 this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
@@ -83,18 +83,18 @@ public class LinkerItem extends TieredItem {
                 tag.putBoolean("Bound", Boolean.FALSE);
                 this.writeTag(world.dimension(), pos, stack.getOrCreateTag());
 
+                if (player1 != null) {
+                    stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                    player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
+                            tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.GOLD), true);
+                }
+
                 GlobalPos globalPos = LinkerItem.createWarpPos(tag);
                 if (globalPos == null)
                     return interactionResult;
                 BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
                 if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(stack)) {
                     this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
-                }
-
-                if (player1 != null) {
-                    stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-                    player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                            pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.GOLD), true);
                 }
                 this.spawnParticles(world, pos);
                 this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
@@ -170,6 +170,9 @@ public class LinkerItem extends TieredItem {
                 list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"),
                         tag.getString(WARP_PIPE_DIMENSION), true).withStyle(ChatFormatting.GOLD));
             }
+        }
+        else {
+            list.add(Component.translatable("display.warp_pipes.linker.not_bound_tooltip", true).withStyle(ChatFormatting.GRAY));
         }
     }
 }
