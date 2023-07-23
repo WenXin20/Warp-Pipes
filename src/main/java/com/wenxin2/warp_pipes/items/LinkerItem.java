@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,6 +21,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -49,8 +51,16 @@ public class LinkerItem extends TieredItem {
         BlockPos pos = useOnContext.getClickedPos();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        ItemStack stack = useOnContext.getItemInHand();
-        CompoundTag tag = stack.getTag();
+        ItemStack item = useOnContext.getItemInHand();
+        CompoundTag tag = item.getTag();
+
+        if ((state.getBlock() instanceof WarpPipeBlock) && player.isShiftKeyDown())
+        {
+            world.setBlock(pos, state.cycle(WarpPipeBlock.ENTRANCE), 4);
+            item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+            this.playSound(world, pos, SoundEvents.ANVIL_PLACE);
+            return InteractionResult.SUCCESS;
+        }
 
         if (tag != null && tag.contains("Bound")) {
             Bound = tag.getBoolean("Bound");
@@ -81,10 +91,10 @@ public class LinkerItem extends TieredItem {
                     tag = new CompoundTag();
                 }
                 tag.putBoolean("Bound", Boolean.FALSE);
-                this.writeTag(world.dimension(), pos, stack.getOrCreateTag());
+                this.writeTag(world.dimension(), pos, item.getOrCreateTag());
 
                 if (player1 != null) {
-                    stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                    item.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
                     player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
                             tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.GOLD), true);
                 }
@@ -93,7 +103,7 @@ public class LinkerItem extends TieredItem {
                 if (globalPos == null)
                     return interactionResult;
                 BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
-                if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(stack)) {
+                if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(item)) {
                     this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
                 }
                 this.spawnParticles(world, pos);
