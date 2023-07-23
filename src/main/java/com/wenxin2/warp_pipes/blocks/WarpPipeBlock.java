@@ -83,7 +83,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
-        return true;
+        return false;
     }
 
     @Override
