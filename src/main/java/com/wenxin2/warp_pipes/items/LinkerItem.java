@@ -62,16 +62,6 @@ public class LinkerItem extends TieredItem {
         ItemStack item = useOnContext.getItemInHand();
         CompoundTag tag = item.getTag();
 
-        if (player.isShiftKeyDown() && getBound()) {
-            tag.remove(WARP_PIPE_POS);
-            tag.remove(WARP_PIPE_DIMENSION);
-            tag.remove("X");
-            tag.remove("Y");
-            tag.remove("Z");
-            this.setBound(Boolean.FALSE);
-            return InteractionResult.SUCCESS;
-        }
-
         if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown())
         {
             world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
