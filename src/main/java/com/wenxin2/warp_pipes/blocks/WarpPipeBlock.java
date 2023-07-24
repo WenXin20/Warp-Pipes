@@ -168,16 +168,14 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void spawnParticles(Entity entity, Level world, BlockPos pos) {
-        if (world.isClientSide()) {
-            RandomSource random = world.getRandom();
+        RandomSource random = world.getRandom();
 
-            if (world.isClientSide()) {
-                for(int i = 0; i < 40; ++i) {
-                    world.addParticle(ParticleTypes.ENCHANT,
-                            entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
-                            (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
-                            (random.nextDouble() - 0.5D) * 2.0D);
-                }
+        if (world.isClientSide()) {
+            for(int i = 0; i < 40; ++i) {
+                world.addParticle(ParticleTypes.ENCHANT,
+                        entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
+                        (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
+                        (random.nextDouble() - 0.5D) * 2.0D);
             }
         }
     }
