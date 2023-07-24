@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -52,7 +53,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState p_60572_, BlockGetter p_60573_, BlockPos p_60574_, CollisionContext p_60575_) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return Block.box(0.25D, 0.25D, 0.25D, 15.50D, 15.50D, 15.50D);
     }
 
@@ -78,13 +79,33 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource randomSource) {
-        BubbleColumnBlock.updateColumn(serverWorld, pos.above(), state);
+    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
+        return false;
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
-        return false;
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos posNeighbor, boolean b) {
+        if (!world.isClientSide) {
+            boolean isClosed = state.getValue(CLOSED);
+            if (isClosed != world.hasNeighborSignal(pos)) {
+                if (isClosed) {
+                    world.scheduleTick(pos, this, 4);
+                } else {
+                    world.setBlock(pos, state.cycle(CLOSED), 2);
+                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
+        if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
+            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
+            this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
+        }
+        BubbleColumnBlock.updateColumn(serverWorld, pos.above(), state);
     }
 
     @Override
@@ -159,6 +180,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
         }
+    }
+
+    private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
+        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
