@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,7 +20,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -54,9 +52,9 @@ public class LinkerItem extends TieredItem {
         ItemStack item = useOnContext.getItemInHand();
         CompoundTag tag = item.getTag();
 
-        if ((state.getBlock() instanceof WarpPipeBlock) && player.isShiftKeyDown())
+        if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown())
         {
-            world.setBlock(pos, state.cycle(WarpPipeBlock.ENTRANCE), 4);
+            world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
             item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
             this.playSound(world, pos, SoundEvents.ANVIL_PLACE);
             return InteractionResult.SUCCESS;

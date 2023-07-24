@@ -33,15 +33,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
+    public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
 
     public WarpPipeBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(ENTRANCE, Boolean.TRUE));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(ENTRANCE, FACING);
+        stateBuilder.add(CLOSED, ENTRANCE, FACING);
     }
 
     @Override
@@ -161,7 +162,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE)) {
+        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
             if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
                 entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             }
@@ -199,7 +200,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
+        if (state.getValue(ENTRANCE) && !state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
             if (entity instanceof Player && entity.portalCooldown == 0 && destinationPos != null) {
                 if (state.getValue(FACING) == Direction.UP && entity.isShiftKeyDown() && (entityY > blockY)
