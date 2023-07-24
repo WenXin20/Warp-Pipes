@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -40,7 +41,16 @@ public class LinkerItem extends TieredItem {
     public LinkerItem(final Item.Properties properties, Tier tier) {
         super(tier, properties);
     }
-    boolean Bound = Boolean.FALSE;
+    public boolean isBound;
+
+    public boolean setBound(boolean isBound) {
+        return this.isBound = isBound;
+    }
+
+    public boolean getBound() {
+        return this.isBound;
+    }
+
     @Override
     public InteractionResult useOn(UseOnContext useOnContext) {
         InteractionResult interactionResult = super.useOn(useOnContext);
@@ -52,20 +62,30 @@ public class LinkerItem extends TieredItem {
         ItemStack item = useOnContext.getItemInHand();
         CompoundTag tag = item.getTag();
 
+        if (player.isShiftKeyDown() && getBound()) {
+            tag.remove(WARP_PIPE_POS);
+            tag.remove(WARP_PIPE_DIMENSION);
+            tag.remove("X");
+            tag.remove("Y");
+            tag.remove("Z");
+            this.setBound(Boolean.FALSE);
+            return InteractionResult.SUCCESS;
+        }
+
         if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown())
         {
             world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
             item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-            this.playSound(world, pos, SoundEvents.ANVIL_PLACE);
+            this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
             return InteractionResult.SUCCESS;
         }
 
         if (tag != null && tag.contains("Bound")) {
-            Bound = tag.getBoolean("Bound");
+            isBound = tag.getBoolean("Bound");
         }
 
         if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)) {
-            if (Bound == Boolean.FALSE) {
+            if (getBound() == Boolean.FALSE) {
                 if (tag == null) {
                     tag = new CompoundTag();
                 }
@@ -76,6 +96,7 @@ public class LinkerItem extends TieredItem {
                 tag.putDouble("Z", (int)pos.getZ());
                 tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
                 tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
+                this.setBound(Boolean.TRUE);
 
                 if (player != null) {
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
@@ -83,12 +104,13 @@ public class LinkerItem extends TieredItem {
                 }
                 this.spawnParticles(world, pos);
                 this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
-            } else {
+            } else if (getBound()) {
                 Player player1 = useOnContext.getPlayer();
                 if (tag == null) {
                     tag = new CompoundTag();
                 }
                 tag.putBoolean("Bound", Boolean.FALSE);
+                this.setBound(Boolean.FALSE);
                 this.writeTag(world.dimension(), pos, item.getOrCreateTag());
 
                 if (player1 != null) {
@@ -142,7 +164,11 @@ public class LinkerItem extends TieredItem {
     }
 
     private void playSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 1.0f, 1.0f);
+        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 100.0f, 1.0f);
+    }
+
+    private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
+        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     private void spawnParticles(Level world, BlockPos pos) {
@@ -172,7 +198,7 @@ public class LinkerItem extends TieredItem {
     @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag tooltip) {
         CompoundTag tag = stack.getTag();
-        if (!Bound) {
+        if (getBound()) {
             assert tag != null;
             if (tag.contains(WARP_PIPE_POS)) {
                 list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"),
