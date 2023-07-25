@@ -281,30 +281,40 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.NORTH && entity.getMotionDirection() == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.SOUTH && entity.getMotionDirection() == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.EAST && entity.getMotionDirection() == Direction.WEST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.WEST && entity.getMotionDirection() == Direction.EAST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
@@ -321,30 +331,39 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.NORTH/* && entity.getMotionDirection() == Direction.SOUTH*/
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.SOUTH/* && entity.getMotionDirection() == Direction.NORTH*/
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.EAST/* && entity.getMotionDirection() == Direction.WEST*/
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
+                    WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
                 if (state.getValue(FACING) == Direction.WEST /*&& entity.getMotionDirection() == Direction.EAST*/
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.spawnParticles(entity, world, pos);
                     WarpPipeBlock.spawnParticles(entity, world, destinationPos);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
