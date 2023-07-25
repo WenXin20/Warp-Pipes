@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -39,7 +40,7 @@ public class ModRegistry {
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
-                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
