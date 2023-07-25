@@ -194,7 +194,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                 } else {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
-                    if (passengerEntity instanceof Player && !(entity instanceof Boat)) {
+                    if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
                 }
@@ -204,7 +204,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
                 } else {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
-                    if (passengerEntity instanceof Player && !(entity instanceof Boat)) {
+                    if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
                 }
@@ -214,7 +214,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
                 } else {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
-                    if (passengerEntity instanceof Player && !(entity instanceof Boat)) {
+                    if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
                 }
@@ -224,7 +224,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
                 } else {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
-                    if (passengerEntity instanceof Player && !(entity instanceof Boat)) {
+                    if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
                 }
@@ -234,7 +234,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
                 } else {
                     entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
-                    if (passengerEntity instanceof Player && !(entity instanceof Boat)) {
+                    if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
                 }
