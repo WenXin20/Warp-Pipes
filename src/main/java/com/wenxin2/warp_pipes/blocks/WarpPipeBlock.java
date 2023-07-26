@@ -271,6 +271,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 200.0F, 0.1F);
     }
 
+    private static final int MAX_PARTICLE_COUNT = 100;
+
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -285,14 +287,32 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
+        // Calculate random motion values within the desired range
+        float entityHeight = entity.getBbHeight(); 
+        float entityWidth = entity.getBbWidth();
+        float motionRangeMin = 0.1F;
+        float motionX = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
+        float motionY = random.nextFloat() * (entityHeight - motionRangeMin) + motionRangeMin;
+        float motionZ = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
+
+        // Calculate a scaling factor based on entity dimensions
+        float scaleFactor = entityHeight * entityWidth; // You can adjust this formula as needed
+
+        // Calculate the particle count based on the scaling factor
+        int particleCount = (int) (scaleFactor * 40); // You can adjust the multiplier to control particle density
+
+        // Ensure particle count does not exceed the maximum limit
+        particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
+
+        // Restrict motionY to the entity's height
+        motionY = Math.max(-entityHeight, Math.min(entityHeight, motionY));
+
         // Send packet to spawn particles on the client side
         ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(
                 ParticleTypes.ENCHANT,      // Particle type
                 true,                       // Long distance
                 entityX, entityY, entityZ,  // Position
-                (random.nextFloat() + 0.5F), // Motion X
-                -random.nextFloat() + 1.5F,  // Motion Y
-                (random.nextFloat() + 0.5F), // Motion Z
+                motionX, motionY, motionZ,  // Motion
                 0,                          // Particle data
                 2                           // Particle count
         );
@@ -305,7 +325,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (!world.isClientSide() && teleportedEntities.getOrDefault(entityId, false)) {
                 Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
                 for (ServerPlayer player : players) {
-                    for (int i = 0; i < 40; ++i) {
+                    for (int i = 0; i < particleCount; ++i) {
                         player.connection.send(packet);
                     }
                 }
