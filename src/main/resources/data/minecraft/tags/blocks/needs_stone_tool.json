@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    { "id": "warp_pipes:green_warp_pipe", "required": false }
+    { "id": "warp_pipes:green_warp_pipe", "required": false },
+    { "id": "warp_pipes:white_warp_pipe", "required": false }
   ]
 }
