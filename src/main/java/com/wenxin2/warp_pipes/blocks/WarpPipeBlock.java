@@ -1,12 +1,15 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -33,6 +36,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -172,19 +176,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static void spawnParticles(Entity entity, Level world, BlockPos pos) {
         RandomSource random = world.getRandom();
 
-        if (world.isClientSide()) {
+//        if (world.isClientSide()) {
             for(int i = 0; i < 40; ++i) {
                 world.addParticle(ParticleTypes.ENCHANT,
                         entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
                         (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
                         (random.nextDouble() - 0.5D) * 2.0D);
-//                        entity.getX() + 0.5, entity.getY() + entity.getBbHeight() * random.nextDouble(),
-//                        entity.getZ() + 0.5,
-//                        (random.nextDouble() - 0.5) * 2.0, -random.nextDouble(),
-//                        (random.nextDouble() - 0.5) * 2.0);
             }
-        }
+//        }
     }
+
+
 
     private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
         world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
@@ -201,15 +203,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-
-        double entityX = entity.getX();
-        double entityY = entity.getY();
-        double entityZ = entity.getZ();
-
-        int blockX = pos.getX();
-        int blockY = pos.getY();
-        int blockZ = pos.getZ();
-
         if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
             Entity passengerEntity = entity.getControllingPassenger();
             if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
@@ -275,12 +268,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             WarpPipeBlock.markEntityTeleported(entity);
         }
         world.gameEvent(GameEvent.TELEPORT, pos, GameEvent.Context.of(entity));
-        world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 200.0F, 0.5F);
+        world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 200.0F, 0.1F);
     }
 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
+        RandomSource random = world.getRandom();
         BlockPos destinationPos = null;
 
         double entityX = entity.getX();
@@ -291,19 +285,32 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
+        // Send packet to spawn particles on the client side
+        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(
+                ParticleTypes.ENCHANT,      // Particle type
+                true,                       // Long distance
+                entityX, entityY, entityZ,  // Position
+                (random.nextFloat() + 0.5F), // Motion X
+                -random.nextFloat() + 1.5F,  // Motion Y
+                (random.nextFloat() + 0.5F), // Motion Z
+                0,                          // Particle data
+                2                           // Particle count
+        );
+
+
         if (state.getValue(ENTRANCE) && !state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
+            int entityId = entity.getId();
 
-            if (world.isClientSide()) {
-                int entityId = entity.getId();
-                if (teleportedEntities.getOrDefault(entityId, false)) {
-                    WarpPipeBlock.spawnParticles(entity, world, pos);
-                    if (destinationPos != null) {
-                        WarpPipeBlock.spawnParticles(entity, world, destinationPos);
+            if (!world.isClientSide() && teleportedEntities.getOrDefault(entityId, false)) {
+                Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+                for (ServerPlayer player : players) {
+                    for (int i = 0; i < 40; ++i) {
+                        player.connection.send(packet);
                     }
-                    // Reset the teleport status for the entity
-                    teleportedEntities.put(entityId, false);
                 }
+                // Reset the teleport status for the entity
+                teleportedEntities.put(entityId, false);
             }
 
             if (entity instanceof Player && entity.portalCooldown == 0 && destinationPos != null) {
