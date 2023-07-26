@@ -268,7 +268,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             WarpPipeBlock.markEntityTeleported(entity);
         }
         world.gameEvent(GameEvent.TELEPORT, pos, GameEvent.Context.of(entity));
-        world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 200.0F, 0.1F);
+        world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 1.0F, 0.1F);
     }
 
     private static final int MAX_PARTICLE_COUNT = 100;
@@ -288,7 +288,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         int blockZ = pos.getZ();
 
         // Calculate random motion values within the desired range
-        float entityHeight = entity.getBbHeight(); 
+        float entityHeight = entity.getBbHeight();
         float entityWidth = entity.getBbWidth();
         float motionRangeMin = 0.1F;
         float motionX = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
