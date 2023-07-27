@@ -2,8 +2,11 @@
   "itemGroup.warp_pipes": "Warp Pipes",
 
   "block.warp_pipes.green_warp_pipe": "Green Warp Pipe",
+  "block.warp_pipes.orange_warp_pipe": "Orange Warp Pipe",
   "block.warp_pipes.white_warp_pipe": "White Warp Pipe",
+
   "item.warp_pipes.pipe_wrench": "Pipe Wrench",
+
   "display.warp_pipes.linker.bound": "Wrench bound to %1$s, %2$s, %3$s",
   "display.warp_pipes.linker.bound_tooltip": "Bound to %1$s, %2$s, %3$s in %4$s",
   "display.warp_pipes.linker.not_bound_tooltip": "Wrench not bound",
