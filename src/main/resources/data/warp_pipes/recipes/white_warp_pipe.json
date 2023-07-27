@@ -10,12 +10,15 @@
     },
     "G": {
       "tag": "forge:gems/diamond"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
     }
   },
   "pattern": [
     "IDI",
     "IGI",
-    "III"
+    "IEI"
   ],
   "result": {
     "count": 1,
