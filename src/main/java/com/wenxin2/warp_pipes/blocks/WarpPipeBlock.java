@@ -332,7 +332,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                             ParticleTypes.ENCHANT,      // Particle type
                             true,                       // Long distance
                             posX, posY, posZ,           // Position
-                            motionX, motionY, motionZ,  // Motion
+                            motionX, -motionY, motionZ, // Motion
                             0,                          // Particle data
                             2                           // Particle count
                         ));

@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -67,6 +67,7 @@ public class LinkerItem extends TieredItem {
             world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
             item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
             this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
+            this.spawnParticles(world, pos, ParticleTypes.ENCHANTED_HIT);
             return InteractionResult.SUCCESS;
         }
 
@@ -92,7 +93,7 @@ public class LinkerItem extends TieredItem {
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
                             tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
                 }
-                this.spawnParticles(world, pos);
+                this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                 this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
             } else if (getBound()) {
                 Player player1 = useOnContext.getPlayer();
@@ -116,7 +117,7 @@ public class LinkerItem extends TieredItem {
                 if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(item)) {
                     this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
                 }
-                this.spawnParticles(world, pos);
+                this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                 this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
             }
             return InteractionResult.sidedSuccess(world.isClientSide);
@@ -161,12 +162,12 @@ public class LinkerItem extends TieredItem {
         world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
-    private void spawnParticles(Level world, BlockPos pos) {
+    private void spawnParticles(Level world, BlockPos pos, ParticleOptions particleOptions) {
         if (world.isClientSide()) {
             RandomSource random = world.getRandom();
 
             for (int i = 0; i < 40; ++i) {
-                world.addParticle(ParticleTypes.ENCHANT,
+                world.addParticle(particleOptions,
                         pos.getX() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)), pos.getY() + 1.5D,
                         pos.getZ() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)),
                         (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
