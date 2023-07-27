@@ -307,16 +307,15 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         // Restrict motionY to the entity's height
         motionY = Math.max(-entityHeight, Math.min(entityHeight, motionY));
 
-        // Send packet to spawn particles on the client side
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(
-                ParticleTypes.ENCHANT,      // Particle type
-                true,                       // Long distance
-                entityX, entityY, entityZ,  // Position
-                motionX, motionY, motionZ,  // Motion
-                0,                          // Particle data
-                2                           // Particle count
-        );
+        // Calculate the center point at the bottom of the entity
+        double centerX = entityX;
+        double centerY = entityY - entityHeight / 2;
+        double centerZ = entityZ;
 
+        // Calculate the motion towards the center point
+        double motionToCenterX = (centerX - entityX) / particleCount;
+        double motionToCenterY = (centerY - entityY) / particleCount;
+        double motionToCenterZ = (centerZ - entityZ) / particleCount;
 
         if (state.getValue(ENTRANCE) && !state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
@@ -326,7 +325,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
                 for (ServerPlayer player : players) {
                     for (int i = 0; i < particleCount; ++i) {
-                        player.connection.send(packet);
+                        double posX = entityX + motionToCenterX * i;
+                        double posY = entityY + entityHeight + motionToCenterY * i;
+                        double posZ = entityZ + motionToCenterZ * i;
+                        player.connection.send(new ClientboundLevelParticlesPacket (
+                            ParticleTypes.ENCHANT,      // Particle type
+                            true,                       // Long distance
+                            posX, posY, posZ,           // Position
+                            motionX, motionY, motionZ,  // Motion
+                            0,                          // Particle data
+                            2                           // Particle count
+                        ));
                     }
                 }
                 // Reset the teleport status for the entity
