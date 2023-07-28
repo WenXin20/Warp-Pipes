@@ -28,6 +28,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
     public static final RegistryObject<Block> LIGHT_BLUE_WARP_PIPE;
+    public static final RegistryObject<Block> LIME_WARP_PIPE;
     public static final RegistryObject<Block> MAGENTA_WARP_PIPE;
     public static final RegistryObject<Block> ORANGE_WARP_PIPE;
     public static final RegistryObject<Block> WHITE_WARP_PIPE;
@@ -39,6 +40,7 @@ public class ModRegistry {
     {
         PIPE_WRENCH = registerItem("pipe_wrench",
                 () -> new WrenchItem(new Item.Properties().durability(128).tab(WarpPipes.CREATIVE_TAB), Tiers.IRON));
+
 
         WHITE_WARP_PIPE = registerBlock("white_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.SNOW)
@@ -65,10 +67,16 @@ public class ModRegistry {
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
+        LIME_WARP_PIPE = registerBlock("lime_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_GREEN)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
+                        .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
+
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
+
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
                 () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get()).build(null));
