@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.utils.DoorEventHandler;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,5 +52,6 @@ public class WarpPipes
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(DoorEventHandler.class);
     }
 }
