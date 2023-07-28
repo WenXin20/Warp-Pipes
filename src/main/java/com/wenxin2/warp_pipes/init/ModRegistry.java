@@ -2,7 +2,6 @@ package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.entities.WarpDoorBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
@@ -14,7 +13,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -36,13 +34,11 @@ public class ModRegistry {
     public static final RegistryObject<Block> YELLOW_WARP_PIPE;
 
     public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPES;
-    public static final RegistryObject<BlockEntityType<WarpDoorBlockEntity>> WARP_DOORS;
 
     static
     {
         PIPE_WRENCH = registerItem("pipe_wrench",
                 () -> new WrenchItem(new Item.Properties().durability(128).tab(WarpPipes.CREATIVE_TAB), Tiers.IRON));
-
 
         WHITE_WARP_PIPE = registerBlock("white_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.SNOW)
@@ -74,12 +70,8 @@ public class ModRegistry {
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
-
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
                 () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get()).build(null));
-
-        WARP_DOORS = WarpPipes.BLOCK_ENTITIES.register("warp_door",
-                () -> BlockEntityType.Builder.of(WarpDoorBlockEntity::new, Blocks.OAK_DOOR).build(null));
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block, CreativeModeTab tab)

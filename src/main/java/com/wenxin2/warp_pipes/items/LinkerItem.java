@@ -2,7 +2,6 @@ package com.wenxin2.warp_pipes.items;
 
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.entities.WarpDoorBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
@@ -77,7 +75,7 @@ public class LinkerItem extends TieredItem {
             isBound = tag.getBoolean("Bound");
         }
 
-        if (((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)) || state.getBlock() instanceof DoorBlock) {
+        if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)) {
             if (getBound() == Boolean.FALSE) {
                 if (tag == null) {
                     tag = new CompoundTag();
@@ -116,11 +114,8 @@ public class LinkerItem extends TieredItem {
                 if (globalPos == null)
                     return interactionResult;
                 BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
-                if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
-                    this.linkPipe(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
-                }
-                if (blockEntity instanceof WarpDoorBlockEntity warpDoorBE && blockEntity1 instanceof WarpDoorBlockEntity warpDoorBEGlobal && LinkerItem.isLinked(item)) {
-                    this.linkDoor(pos, world, tag, warpDoorBE, warpDoorBEGlobal);
+                if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(item)) {
+                    this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
                 }
                 this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                 this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
@@ -135,23 +130,11 @@ public class LinkerItem extends TieredItem {
         return tag != null && (tag.contains(WARP_PIPE_DIMENSION) || tag.contains(WARP_PIPE_POS));
     }
 
-    private void linkPipe(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
+    private void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
         warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel());
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world);
-        tag.remove(WARP_PIPE_POS);
-        tag.remove(WARP_PIPE_DIMENSION);
-        tag.remove("X");
-        tag.remove("Y");
-        tag.remove("Z");
-    }
-
-    private void linkDoor(BlockPos pos, Level world, CompoundTag tag, WarpDoorBlockEntity warpDoorBE, WarpDoorBlockEntity warpDoorBEGlobal) {
-        warpDoorBE.setDestinationPos(warpDoorBEGlobal.getBlockPos());
-        warpDoorBE.setDestinationDim(warpDoorBEGlobal.getLevel());
-        warpDoorBEGlobal.setDestinationPos(pos);
-        warpDoorBEGlobal.setDestinationDim(world);
         tag.remove(WARP_PIPE_POS);
         tag.remove(WARP_PIPE_DIMENSION);
         tag.remove("X");
