@@ -117,10 +117,16 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState neighborState, boolean b) {
+        world.scheduleTick(pos, this, 20);
+    }
+
+    @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         double dx = pos.getX();
         double dy = pos.getY();
         double dz = pos.getZ();
+
         Block blockAbove = world.getBlockState(pos.above()).getBlock();
         Block blockBelow = world.getBlockState(pos.below()).getBlock();
         Block blockNorth = world.getBlockState(pos.north()).getBlock();
@@ -221,6 +227,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         boolean facingSouth = state.getValue(FACING) == Direction.SOUTH;
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
+
+        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER)) {
+            worldAccessor.scheduleTick(pos, this, 20);
+        }
 
         if (facingUp) {
             if (blockAbove instanceof WarpPipeBlock) {

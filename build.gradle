@@ -42,6 +42,7 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // Imports
     implementation fg.deobf("curse.maven:connectedness-${connectedness_version}")
@@ -51,7 +52,7 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, "main.refmap.json"
+    add sourceSets.main, "warp_pipes.refmap.json"
 }
 
 version = "${minecraft_version}-${jar_version}"
@@ -75,6 +76,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'warp_pipes'
+            arg "-mixin.config=warp_pipes.mixins.json"
 
             mods {
                 warp_pipes {
@@ -85,12 +87,10 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-
             property 'forge.logging.markers', 'REGISTRIES'
-
             property 'forge.logging.console.level', 'debug'
-
             property 'forge.enabledGameTestNamespaces', 'warp_pipes'
+            arg "-mixin.config=warp_pipes.mixins.json"
 
             mods {
                 warp_pipes {
@@ -150,7 +150,8 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "warp_pipes_vendor",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "warp_pipes.mixins.json"
         ])
     }
 }
