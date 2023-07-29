@@ -21,10 +21,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -130,34 +130,76 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (!state.getValue(CLOSED) && state.getValue(ENTRANCE)) {
             if (state.getValue(FACING) == Direction.UP && blockAbove instanceof LiquidBlock) {
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15, dz + 0.5D, 0.0D, 0.4D, 0.0D);
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
-                        dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                if (blockAbove == Blocks.LAVA) {
+                    if (random.nextInt(10) == 0) {
+                        world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 1.0D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+                else {
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                            dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                }
             }
             if (state.getValue(FACING) == Direction.DOWN && blockBelow instanceof LiquidBlock) {
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy - 1.15, dz + 0.5D, 0.0D, 0.4D, 0.0D);
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
-                        dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                if (blockBelow == Blocks.LAVA) {
+                    if (random.nextInt(10) == 0) {
+                        world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy - 0.5D, dz + 0.05D, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+                else {
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy - 1.15D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                            dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                }
             }
             if (state.getValue(FACING) == Direction.NORTH && blockNorth instanceof LiquidBlock) {
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, 0.0D);
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
-                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, 0.0D);
+                if (blockNorth == Blocks.LAVA) {
+                    if (random.nextInt(10) == 0) {
+                        world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 0.5D, dz - 0.05D, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+                else {
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, 0.0D);
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                            dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, 0.0D);
+                }
             }
             if (state.getValue(FACING) == Direction.SOUTH && blockSouth instanceof LiquidBlock) {
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz + 1.15D, 0.0D, 0.4D, 0.0D);
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
-                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat() + 1.15D, 0.0D, 0.4D, 0.0D);
+                if (blockSouth == Blocks.LAVA) {
+                    if (random.nextInt(10) == 0) {
+                        world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 0.5D, dz + 1.05D, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+                else {
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz + 1.15D, 0.0D, 0.4D, 0.0D);
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                            dy + (double) random.nextFloat(), dz + (double) random.nextFloat() + 1.15D, 0.0D, 0.4D, 0.0D);
+                }
             }
             if (state.getValue(FACING) == Direction.EAST && blockEast instanceof LiquidBlock) {
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() + 1.15D,
-                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                if (blockEast == Blocks.LAVA) {
+                    if (random.nextInt(10) == 0) {
+                        world.addParticle(ParticleTypes.LAVA, dx + 1.05D, dy + 0.5D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+                else {
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() + 1.15D,
+                            dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                }
             }
             if (state.getValue(FACING) == Direction.WEST && blockWest instanceof LiquidBlock) {
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx - 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
-                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() - 1.15D,
-                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                if (blockWest == Blocks.LAVA) {
+                    if (random.nextInt(10) == 0) {
+                        world.addParticle(ParticleTypes.LAVA, dx - 0.05D, dy + 0.5D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
+                    }
+                }
+                else {
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx - 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                    world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() - 1.15D,
+                            dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                }
             }
 
         }
