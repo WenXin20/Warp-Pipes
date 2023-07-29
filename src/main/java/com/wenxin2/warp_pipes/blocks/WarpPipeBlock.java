@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -115,6 +117,48 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        double dx = pos.getX();
+        double dy = pos.getY();
+        double dz = pos.getZ();
+
+        if (!state.getValue(CLOSED) && state.getValue(ENTRANCE)) {
+            if (state.getValue(FACING) == Direction.UP && world.getBlockState(pos.above()).getBlock() instanceof LiquidBlock) {
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                        dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+            }
+            if (state.getValue(FACING) == Direction.DOWN && world.getBlockState(pos.below()).getBlock() instanceof LiquidBlock) {
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy - 1.15, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                        dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+            }
+            if (state.getValue(FACING) == Direction.NORTH && world.getBlockState(pos.north()).getBlock() instanceof LiquidBlock) {
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, 0.0D);
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, 0.0D);
+            }
+            if (state.getValue(FACING) == Direction.SOUTH && world.getBlockState(pos.south()).getBlock() instanceof LiquidBlock) {
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz + 1.15D, 0.0D, 0.4D, 0.0D);
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
+                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat() + 1.15D, 0.0D, 0.4D, 0.0D);
+            }
+            if (state.getValue(FACING) == Direction.EAST && world.getBlockState(pos.east()).getBlock() instanceof LiquidBlock) {
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() + 1.15D,
+                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+            }
+            if (state.getValue(FACING) == Direction.WEST && world.getBlockState(pos.west()).getBlock() instanceof LiquidBlock) {
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx - 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() - 1.15D,
+                        dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+            }
+
+        }
+        super.animateTick(state, world, pos, random);
+    }
+
+    @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos pos2) {
         Block blockAbove = worldAccessor.getBlockState(pos.above()).getBlock();
         Block blockBelow = worldAccessor.getBlockState(pos.below()).getBlock();
@@ -172,21 +216,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         }
         return state.setValue(ENTRANCE, Boolean.TRUE);
     }
-
-    public static void spawnParticles(Entity entity, Level world, BlockPos pos) {
-        RandomSource random = world.getRandom();
-
-//        if (world.isClientSide()) {
-            for(int i = 0; i < 40; ++i) {
-                world.addParticle(ParticleTypes.ENCHANT,
-                        entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
-                        (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
-                        (random.nextDouble() - 0.5D) * 2.0D);
-            }
-//        }
-    }
-
-
 
     private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
         world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
