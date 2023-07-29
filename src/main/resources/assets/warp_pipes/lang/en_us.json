@@ -1,6 +1,7 @@
 {
   "itemGroup.warp_pipes": "Warp Pipes",
 
+  "block.warp_pipes.cyan_warp_pipe": "Cyan Warp Pipe",
   "block.warp_pipes.gray_warp_pipe": "Gray Warp Pipe",
   "block.warp_pipes.green_warp_pipe": "Green Warp Pipe",
   "block.warp_pipes.light_blue_warp_pipe": "Light Blue Warp Pipe",
