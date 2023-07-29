@@ -121,34 +121,40 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         double dx = pos.getX();
         double dy = pos.getY();
         double dz = pos.getZ();
+        Block blockAbove = world.getBlockState(pos.above()).getBlock();
+        Block blockBelow = world.getBlockState(pos.below()).getBlock();
+        Block blockNorth = world.getBlockState(pos.north()).getBlock();
+        Block blockSouth = world.getBlockState(pos.south()).getBlock();
+        Block blockEast = world.getBlockState(pos.east()).getBlock();
+        Block blockWest = world.getBlockState(pos.west()).getBlock();
 
         if (!state.getValue(CLOSED) && state.getValue(ENTRANCE)) {
-            if (state.getValue(FACING) == Direction.UP && world.getBlockState(pos.above()).getBlock() instanceof LiquidBlock) {
+            if (state.getValue(FACING) == Direction.UP && blockAbove instanceof LiquidBlock) {
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                         dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
             }
-            if (state.getValue(FACING) == Direction.DOWN && world.getBlockState(pos.below()).getBlock() instanceof LiquidBlock) {
+            if (state.getValue(FACING) == Direction.DOWN && blockBelow instanceof LiquidBlock) {
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy - 1.15, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                         dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
             }
-            if (state.getValue(FACING) == Direction.NORTH && world.getBlockState(pos.north()).getBlock() instanceof LiquidBlock) {
+            if (state.getValue(FACING) == Direction.NORTH && blockNorth instanceof LiquidBlock) {
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, 0.0D);
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                         dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, 0.0D);
             }
-            if (state.getValue(FACING) == Direction.SOUTH && world.getBlockState(pos.south()).getBlock() instanceof LiquidBlock) {
+            if (state.getValue(FACING) == Direction.SOUTH && blockSouth instanceof LiquidBlock) {
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz + 1.15D, 0.0D, 0.4D, 0.0D);
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                         dy + (double) random.nextFloat(), dz + (double) random.nextFloat() + 1.15D, 0.0D, 0.4D, 0.0D);
             }
-            if (state.getValue(FACING) == Direction.EAST && world.getBlockState(pos.east()).getBlock() instanceof LiquidBlock) {
+            if (state.getValue(FACING) == Direction.EAST && blockEast instanceof LiquidBlock) {
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() + 1.15D,
                         dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
             }
-            if (state.getValue(FACING) == Direction.WEST && world.getBlockState(pos.west()).getBlock() instanceof LiquidBlock) {
+            if (state.getValue(FACING) == Direction.WEST && blockWest instanceof LiquidBlock) {
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx - 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                 world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat() - 1.15D,
                         dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
