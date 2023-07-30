@@ -15,17 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BubbleColumnBlock.class)
 public class BubbleColumnMixin {
+
     @Inject(at = @At("HEAD"), method = "getColumnState", cancellable = true)
     private static void getColumnState(BlockState state, CallbackInfoReturnable<BlockState> cir) {
-        if (state.getBlock() instanceof WarpPipeBlock && state.getValue(BlockStateProperties.FACING) == Direction.UP && state.getValue(WarpPipeBlock.ENTRANCE)) {
+        if (state.getBlock() instanceof WarpPipeBlock && state.getValue(BlockStateProperties.FACING) == Direction.UP && !state.getValue(WarpPipeBlock.CLOSED)) {
             cir.setReturnValue(Blocks.BUBBLE_COLUMN.defaultBlockState().setValue(BubbleColumnBlock.DRAG_DOWN, false));
         }
     }
 
     @Inject(at = @At("HEAD"), method = "canSurvive", cancellable = true)
     public void canSurvive(BlockState state, LevelReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        BlockState blockState = world.getBlockState(pos.below());
-        if (state.getBlock() instanceof WarpPipeBlock && blockState.getValue(BlockStateProperties.FACING) == Direction.UP && blockState.getValue(WarpPipeBlock.ENTRANCE)) {
+        BlockState stateBelow = world.getBlockState(pos.below());
+        if (state.getBlock() instanceof WarpPipeBlock && stateBelow.getValue(BlockStateProperties.FACING) == Direction.UP && !stateBelow.getValue(WarpPipeBlock.CLOSED)) {
             cir.setReturnValue(true);
         }
     }

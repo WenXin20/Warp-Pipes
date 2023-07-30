@@ -73,7 +73,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
         Direction direction = placeContext.getClickedFace();
-        return this.defaultBlockState().setValue(FACING, direction);
+        return this.defaultBlockState().setValue(FACING, direction).setValue(CLOSED, placeContext.getLevel().hasNeighborSignal(placeContext.getClickedPos()));
     }
 
     @Override
@@ -113,12 +113,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
             this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
         }
-        BubbleColumnBlock.updateColumn(serverWorld, pos.above(), state);
+
+        if (!state.getValue(CLOSED)) {
+            BubbleColumnBlock.updateColumn(serverWorld, pos.above(), state);
+        }
     }
 
     @Override
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState neighborState, boolean b) {
-        world.scheduleTick(pos, this, 20);
+        if (!state.getValue(CLOSED)) {
+            world.scheduleTick(pos, this, 20);
+        }
     }
 
     @Override
@@ -228,7 +233,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
 
-        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER)) {
+        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
             worldAccessor.scheduleTick(pos, this, 20);
         }
 
