@@ -22,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -115,7 +114,19 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         }
 
         if (!state.getValue(CLOSED)) {
-            BubbleColumnBlock.updateColumn(serverWorld, pos.above(), state);
+            if (state.getValue(FACING) == Direction.UP) {
+                PipeBubblesBlock.updateColumnUp(serverWorld, pos.above(), state);
+            } else if (state.getValue(FACING) == Direction.DOWN) {
+                PipeBubblesBlock.updateColumnDown(serverWorld, pos.below(), state);
+            } else if (state.getValue(FACING) == Direction.NORTH) {
+                PipeBubblesBlock.updateColumnNorth(serverWorld, pos.north(), state);
+            } else if (state.getValue(FACING) == Direction.SOUTH) {
+                PipeBubblesBlock.updateColumnSouth(serverWorld, pos.south(), state);
+            } else if (state.getValue(FACING) == Direction.EAST) {
+                PipeBubblesBlock.updateColumnEast(serverWorld, pos.east(), state);
+            } else if (state.getValue(FACING) == Direction.WEST) {
+                PipeBubblesBlock.updateColumnWest(serverWorld, pos.west(), state);
+            }
         }
     }
 

@@ -1,12 +1,12 @@
 package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -35,6 +35,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> MAGENTA_WARP_PIPE;
     public static final RegistryObject<Block> ORANGE_WARP_PIPE;
     public static final RegistryObject<Block> PINK_WARP_PIPE;
+    public static final RegistryObject<Block> PIPE_BUBBLES;
     public static final RegistryObject<Block> WHITE_WARP_PIPE;
     public static final RegistryObject<Block> YELLOW_WARP_PIPE;
 
@@ -102,6 +103,10 @@ public class ModRegistry {
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
 
+        PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
+                () -> new PipeBubblesBlock(BlockBehaviour.Properties.of(Material.BUBBLE_COLUMN).noCollission().noLootTable()));
+
+
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
                 () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get()).build(null));
     }
@@ -113,10 +118,9 @@ public class ModRegistry {
         return blocks;
     }
 
-    public static RegistryObject<Block> registerFoodBlock(String name, Supplier<? extends Block> block, FoodProperties foodProperties, CreativeModeTab tab)
+    public static RegistryObject<Block> registerNoItemBlock(String name, Supplier<? extends Block> block)
     {
         RegistryObject<Block> blocks = WarpPipes.BLOCKS.register(name, block);
-        WarpPipes.ITEMS.register(name, () -> new BlockItem(blocks.get(), new Item.Properties().tab(tab).food(foodProperties)));
         return blocks;
     }
 
