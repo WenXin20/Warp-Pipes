@@ -33,6 +33,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.LavaFluid;
+import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -152,6 +155,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         double dy = pos.getY();
         double dz = pos.getZ();
 
+        Fluid fluidAbove = world.getFluidState(pos.above()).getType();
+        Fluid fluidBelow = world.getFluidState(pos.below()).getType();
+        Fluid fluidNorth = world.getFluidState(pos.north()).getType();
+        Fluid fluidSouth = world.getFluidState(pos.south()).getType();
+        Fluid fluidEast = world.getFluidState(pos.east()).getType();
+        Fluid fluidWest = world.getFluidState(pos.west()).getType();
+
         Block blockAbove = world.getBlockState(pos.above()).getBlock();
         Block blockBelow = world.getBlockState(pos.below()).getBlock();
         Block blockNorth = world.getBlockState(pos.north()).getBlock();
@@ -161,9 +171,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (!state.getValue(CLOSED) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
 
-            if (!warpPipeBE.getPersistentData().isEmpty()) {
-                if (state.getValue(FACING) == Direction.UP && blockAbove instanceof LiquidBlock) {
-                    if (blockAbove == Blocks.LAVA) {
+            if (warpPipeBE.getPersistentData().isEmpty()) {
+                if (state.getValue(FACING) == Direction.UP && (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock)) {
+                    if (fluidAbove instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 1.0D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
@@ -173,30 +183,30 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.DOWN && blockBelow instanceof LiquidBlock) {
-                    if (blockBelow == Blocks.LAVA) {
+                if (state.getValue(FACING) == Direction.DOWN && (fluidBelow instanceof WaterFluid || blockBelow instanceof PipeBubblesBlock)) {
+                    if (fluidBelow instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy - 0.5D, dz + 0.05D, 0.0D, 0.0D, 0.0D);
                         }
                     } else {
-                        world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy - 1.15D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
+                        world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy - 1.15D, dz + 0.5D, 0.0D, -0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
-                                dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
+                                dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, -0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.NORTH && blockNorth instanceof LiquidBlock) {
-                    if (blockNorth == Blocks.LAVA) {
+                if (state.getValue(FACING) == Direction.NORTH && (fluidNorth instanceof WaterFluid || blockNorth instanceof PipeBubblesBlock)) {
+                    if (fluidNorth instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 0.5D, dz - 0.05D, 0.0D, 0.0D, 0.0D);
                         }
                     } else {
-                        world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, 0.0D);
+                        world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, -1.5D);
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
-                                dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, 0.0D);
+                                dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, -1.5D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.SOUTH && blockSouth instanceof LiquidBlock) {
-                    if (blockSouth == Blocks.LAVA) {
+                if (state.getValue(FACING) == Direction.SOUTH && (fluidSouth instanceof WaterFluid || blockSouth instanceof PipeBubblesBlock)) {
+                    if (fluidSouth instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 0.5D, dz + 1.05D, 0.0D, 0.0D, 0.0D);
                         }
@@ -206,8 +216,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 dy + (double) random.nextFloat(), dz + (double) random.nextFloat() + 1.15D, 0.0D, 0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.EAST && blockEast instanceof LiquidBlock) {
-                    if (blockEast == Blocks.LAVA) {
+                if (state.getValue(FACING) == Direction.EAST && (fluidEast instanceof WaterFluid || blockEast instanceof PipeBubblesBlock)) {
+                    if (fluidEast instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 1.05D, dy + 0.5D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
@@ -217,8 +227,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.WEST && blockWest instanceof LiquidBlock) {
-                    if (blockWest == Blocks.LAVA) {
+                if (state.getValue(FACING) == Direction.WEST && (fluidWest instanceof WaterFluid || blockWest instanceof PipeBubblesBlock)) {
+                    if (fluidWest instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx - 0.05D, dy + 0.5D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
