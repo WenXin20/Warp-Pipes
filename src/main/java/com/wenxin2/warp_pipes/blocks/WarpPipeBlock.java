@@ -132,8 +132,15 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState neighborState, boolean b) {
-        if (!state.getValue(CLOSED)) {
-            world.scheduleTick(pos, this, 20);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockPos destinationPos = null;
+
+        if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
+            destinationPos = warpPipeBE.destinationPos;
+
+            if (destinationPos == null) {
+                world.scheduleTick(pos, this, 20);
+            }
         }
     }
 
