@@ -78,13 +78,10 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos neighborPos) {
-        worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
-        if (!state.canSurvive(worldAccessor, pos) /*|| direction == Direction.UP || direction == Direction.DOWN
-                || direction == Direction.NORTH || direction == Direction.SOUTH || direction == Direction.EAST || direction == Direction.WEST*/
-                && !neighborState.is(ModRegistry.PIPE_BUBBLES.get()) && canExistIn(neighborState)) {
+        if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.PIPE_BUBBLES.get()) && canExistIn(neighborState)) {
             worldAccessor.scheduleTick(pos, this, 5);
         }
-
+        worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
         return super.updateShape(state, direction, neighborState, worldAccessor, pos, neighborPos);
     }
 
@@ -114,28 +111,30 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
-        double d0 = (double)pos.getX();
-        double d1 = (double)pos.getY();
-        double d2 = (double)pos.getZ();
+        double d0 = pos.getX();
+        double d1 = pos.getY();
+        double d2 = pos.getZ();
 
         if (state.getValue(DRAG_DOWN) || state.getValue(FACING) == Direction.DOWN) {
             world.addAlwaysVisibleParticle(ParticleTypes.CURRENT_DOWN, d0 + 0.5D, d1 + 0.8D, d2, 0.0D, 0.0D, 0.0D);
             if (random.nextInt(200) == 0) {
-                world.playLocalSound(d0, d1, d2, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundSource.BLOCKS, 0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
+                world.playLocalSound(d0, d1, d2, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundSource.BLOCKS,
+                        0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
             }
         } else {
             if (state.getValue(FACING) == Direction.UP) {
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 0.04D, 0.0D);
+                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 0.1D, 0.0D);
                 world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + (double)random.nextFloat(),
-                        d1 + (double)random.nextFloat(), d2 + (double)random.nextFloat(), 0.0D, 0.04D, 0.0D);
+                        d1 + (double)random.nextFloat(), d2 + (double)random.nextFloat(), 0.0D, 0.1D, 0.0D);
             } else {
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 0.04D, -0.05D);
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE, d0 + (double) random.nextFloat(),
-                        d1 + (double) random.nextFloat(), d2 + (double) random.nextFloat(), 0.0D, 0.04D, -0.05D);
+                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 0.04D, -1.5D);
+                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + (double) random.nextFloat(),
+                        d1 + (double) random.nextFloat(), d2 + (double) random.nextFloat(), 0.0D, 0.04D, -1.5D);
             }
 
             if (random.nextInt(200) == 0) {
-                world.playLocalSound(d0, d1, d2, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS, 0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
+                world.playLocalSound(d0, d1, d2, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS,
+                        0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
             }
         }
     }
