@@ -38,7 +38,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     public PipeBubblesBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.TRUE).setValue(DISTANCE, 6));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.TRUE).setValue(DISTANCE, 3));
     }
 
     @Override
@@ -66,8 +66,6 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         } else if (facing == Direction.WEST) {
             PipeBubblesBlock.repeatColumnWest(serverWorld, pos, state, serverWorld.getBlockState(pos.east()));
         }
-
-//        serverWorld.setBlock(pos, setBlockState(state, serverWorld, pos), 3);
     }
 
     @Override
@@ -75,7 +73,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         int i = getDistance(neighborState);
 
         if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.PIPE_BUBBLES.get())
-                && canExistIn(neighborState)/* && (i != 1 || state.getValue(DISTANCE) != i)*/) {
+                && canExistIn(neighborState)) {
             worldAccessor.scheduleTick(pos, this, 3);
         }
         worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
@@ -92,17 +90,17 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         BlockState stateWest = worldReader.getBlockState(pos.below());
 
         if (state.getValue(FACING) == Direction.UP) {
-            return (stateBelow.is(ModRegistry.PIPE_BUBBLES.get()) || stateBelow.getBlock() instanceof WarpPipeBlock) && getDistance(state) < 6;
+            return (stateBelow.is(ModRegistry.PIPE_BUBBLES.get()) || stateBelow.getBlock() instanceof WarpPipeBlock);
         } else if (state.getValue(FACING) == Direction.DOWN) {
-            return (stateAbove.is(ModRegistry.PIPE_BUBBLES.get()) || stateAbove.getBlock() instanceof WarpPipeBlock) && getDistance(state) < 6;
+            return (stateAbove.is(ModRegistry.PIPE_BUBBLES.get()) || stateAbove.getBlock() instanceof WarpPipeBlock);
         } else if (state.getValue(FACING) == Direction.NORTH) {
-            return (stateSouth.is(ModRegistry.PIPE_BUBBLES.get()) || stateSouth.getBlock() instanceof WarpPipeBlock) && getDistance(state) < 6;
+            return (stateSouth.is(ModRegistry.PIPE_BUBBLES.get()) || stateSouth.getBlock() instanceof WarpPipeBlock);
         } else if (state.getValue(FACING) == Direction.SOUTH) {
-            return (stateNorth.is(ModRegistry.PIPE_BUBBLES.get()) || stateNorth.getBlock() instanceof WarpPipeBlock) && getDistance(state) < 6;
+            return (stateNorth.is(ModRegistry.PIPE_BUBBLES.get()) || stateNorth.getBlock() instanceof WarpPipeBlock);
         } else if (state.getValue(FACING) == Direction.EAST) {
-            return (stateWest.is(ModRegistry.PIPE_BUBBLES.get()) || stateWest.getBlock() instanceof WarpPipeBlock) && getDistance(state) < 6;
+            return (stateWest.is(ModRegistry.PIPE_BUBBLES.get()) || stateWest.getBlock() instanceof WarpPipeBlock);
         } else {
-            return (stateEast.is(ModRegistry.PIPE_BUBBLES.get()) || stateEast.getBlock() instanceof WarpPipeBlock) && getDistance(state) < 6;
+            return (stateEast.is(ModRegistry.PIPE_BUBBLES.get()) || stateEast.getBlock() instanceof WarpPipeBlock);
         }
     }
 
@@ -117,8 +115,8 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         }
 
         if (state.is(ModRegistry.PIPE_BUBBLES.get())) {
-            // Clamp the distance value to be within the allowed range (0 to 6)
-            distance = Math.min(Math.max(distance, 0), 6);
+            // Clamp the distance value to be within the allowed range (0 to 3)
+            distance = Math.min(Math.max(distance, 0), 3);
             return state.setValue(DISTANCE, distance);
         } else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED)) {
             return ModRegistry.PIPE_BUBBLES.get().defaultBlockState().setValue(DRAG_DOWN, Boolean.FALSE)
@@ -134,7 +132,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         if (state.getBlock() instanceof PipeBubblesBlock) {
             return state.getValue(DISTANCE);
         }
-        return 6;
+        return 3;
     }
 
     @Override
