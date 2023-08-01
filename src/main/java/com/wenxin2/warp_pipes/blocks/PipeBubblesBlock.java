@@ -473,15 +473,4 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             }
         }
     }
-
-    //Remove when done
-    @Override
-    public VoxelShape getShape(BlockState p_51005_, BlockGetter p_51006_, BlockPos p_51007_, CollisionContext p_51008_) {
-        return Shapes.block();
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState p_51003_) {
-        return RenderShape.INVISIBLE;
-    }
 }
