@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -118,17 +117,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (!state.getValue(CLOSED)) {
             if (state.getValue(FACING) == Direction.UP) {
-                PipeBubblesBlock.updateColumnUp(serverWorld, pos.above(), state);
+                PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
             } else if (state.getValue(FACING) == Direction.DOWN) {
-                PipeBubblesBlock.updateColumnDown(serverWorld, pos.below(), state);
+                PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state);
             } else if (state.getValue(FACING) == Direction.NORTH) {
-                PipeBubblesBlock.updateColumnNorth(serverWorld, pos.north(), state);
+                PipeBubblesBlock.repeatColumnNorth(serverWorld, pos.north(), state);
             } else if (state.getValue(FACING) == Direction.SOUTH) {
-                PipeBubblesBlock.updateColumnSouth(serverWorld, pos.south(), state);
+                PipeBubblesBlock.repeatColumnSouth(serverWorld, pos.south(), state);
             } else if (state.getValue(FACING) == Direction.EAST) {
-                PipeBubblesBlock.updateColumnEast(serverWorld, pos.east(), state);
+                PipeBubblesBlock.repeatColumnEast(serverWorld, pos.east(), state);
             } else if (state.getValue(FACING) == Direction.WEST) {
-                PipeBubblesBlock.updateColumnWest(serverWorld, pos.west(), state);
+                PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state);
             }
         }
     }
