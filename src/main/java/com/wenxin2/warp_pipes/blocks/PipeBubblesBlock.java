@@ -51,6 +51,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         return state.is(ModRegistry.PIPE_BUBBLES.get()) || state.is(Blocks.WATER) && state.getFluidState().getAmount() >= 8 && state.getFluidState().isSource();
     }
 
+    @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         Direction facing = state.getValue(FACING);
 
@@ -71,8 +72,6 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos neighborPos) {
-        int i = getDistance(neighborState);
-
         if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.PIPE_BUBBLES.get())
                 && canExistIn(neighborState)) {
             worldAccessor.scheduleTick(pos, this, 3);
