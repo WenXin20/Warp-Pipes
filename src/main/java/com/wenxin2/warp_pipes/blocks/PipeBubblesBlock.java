@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.blocks;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -135,68 +136,121 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         return 3;
     }
 
+    public void addParticles(Level world, ParticleOptions particleOptions, double xPos, double yPos, double zPos,
+                             int amt, double xMotion, double yMotion, double zMotion, double speed) {
+        if (!world.isClientSide) {
+            ServerLevel serverWorld = (ServerLevel)world;
+            serverWorld.sendParticles(particleOptions, xPos, yPos, zPos, amt, xMotion, yMotion, zMotion, speed);
+        }
+    }
+
+    public void addAlwaysVisibleParticles(Level world, ParticleOptions particleOptions, double xPos, double yPos, double zPos,
+                                          double xMotion, double yMotion, double zMotion) {
+        if (world.isClientSide) {
+            world.addAlwaysVisibleParticle(particleOptions, xPos, yPos, zPos, xMotion, yMotion, zMotion);
+        }
+    }
+
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
-        double d0 = pos.getX();
-        double d1 = pos.getY();
-        double d2 = pos.getZ();
-
+        double x = pos.getX();
+        double y = pos.getY();
+        double z = pos.getZ();
         if (state.getValue(DRAG_DOWN) || state.getValue(FACING) == Direction.DOWN) {
-            world.addAlwaysVisibleParticle(ParticleTypes.CURRENT_DOWN, d0 + 0.5D, d1 + 0.8D, d2, 0.0D, -1.0D, 0.0D);
-            world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + (double)random.nextFloat(),
-                    d1 + (double)random.nextFloat(), d2 + (double)random.nextFloat(), 0.0D, -1.0D, 0.0D);
+            this.addAlwaysVisibleParticles(world, ParticleTypes.CURRENT_DOWN, x + 0.5D, y + 0.8D, z, 0.0D, -1.0D, 0.0D);
+            this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                    y + random.nextFloat(), z + random.nextFloat(), 0.0D, -1.5D, 0.0D);
             if (random.nextInt(200) == 0) {
-                world.playLocalSound(d0, d1, d2, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundSource.BLOCKS,
+                world.playLocalSound(x, y, z, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundSource.BLOCKS,
                         0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
             }
         } else {
             if (state.getValue(FACING) == Direction.UP) {
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 1.0D, 0.0D);
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + (double)random.nextFloat(),
-                        d1 + (double)random.nextFloat(), d2 + (double)random.nextFloat(), 0.0D, 1.0D, 0.0D);
-            } else {
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 0.04D, -1.5D);
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + 0.5D, d1, d2 + 0.5D, 0.0D, 0.04D, -1.5D);
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + (double) random.nextFloat(),
-                        d1 + (double) random.nextFloat(), d2 + (double) random.nextFloat(), 0.0D, 0.04D, -1.5D);
-                world.addAlwaysVisibleParticle(ParticleTypes.BUBBLE_COLUMN_UP, d0 + (double) random.nextFloat(),
-                        d1 + (double) random.nextFloat(), d2 + (double) random.nextFloat(), 0.0D, 0.04D, -1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE_COLUMN_UP, x + 0.5D, y, z + 0.5D, 0.0D, 1.0D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE_COLUMN_UP, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 0.0D, 1.0D, 0.0D);
+            } else if (state.getValue(FACING) == Direction.NORTH) {
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 0.04D, -1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 0.04D, -1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 0.0D, 0.04D, -1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 0.0D, 0.04D, -1.5D);
+            } else if (state.getValue(FACING) == Direction.SOUTH) {
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 0.04D, 1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 0.04D, 1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 0.0D, 0.04D, 1.5D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 0.0D, 0.04D, 1.5D);
+            } else if (state.getValue(FACING) == Direction.EAST) {
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 1.5D, 0.04D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 1.5D, 0.04D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 1.5D, 0.04D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), 1.5D, 0.04D, 0.0D);
+            } else if (state.getValue(FACING) == Direction.WEST) {
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, -1.5D, 0.04D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, -1.5D, 0.04D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), -1.5D, 0.04D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                        y + random.nextFloat(), z + random.nextFloat(), -1.5D, 0.04D, 0.0D);
             }
+        }
 
-            if (random.nextInt(200) == 0) {
-                world.playLocalSound(d0, d1, d2, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS,
-                        0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
-            }
+        if (random.nextInt(200) == 0) {
+            world.playLocalSound(x, y, z, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS,
+                    0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
         }
     }
 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-        BlockState blockstate = world.getBlockState(pos.above());
+        BlockState stateAbove = world.getBlockState(pos.above());
 
-        if (blockstate.isAir()) {
+        if (stateAbove.isAir()) {
             this.onAboveUpBubbleCol(state.getValue(DRAG_DOWN), entity);
             if (!world.isClientSide) {
-                ServerLevel serverlevel = (ServerLevel)world;
+                ServerLevel serverWorld = (ServerLevel)world;
 
                 for(int i = 0; i < 2; ++i) {
-                    serverlevel.sendParticles(ParticleTypes.SPLASH, (double)pos.getX() + world.random.nextDouble(),
-                            (double)(pos.getY() + 1), (double)pos.getZ() + world.random.nextDouble(), 1,
-                            0.0D, 0.0D, 0.0D, 1.0D);
-                    serverlevel.sendParticles(ParticleTypes.BUBBLE, (double)pos.getX() + world.random.nextDouble(),
-                            (double)(pos.getY() + 1), (double)pos.getZ() + world.random.nextDouble(), 1,
-                            0.0D, 0.01D, 0.0D, 0.2D);
+                    this.addParticles(serverWorld, ParticleTypes.SPLASH, pos.getX() + world.random.nextDouble(),
+                            (pos.getY() + 1), pos.getZ() + world.random.nextDouble(), 1, 0.0D, 0.0D, 0.0D, 1.0D);
+                    this.addParticles(serverWorld, ParticleTypes.BUBBLE, pos.getX() + world.random.nextDouble(),
+                            (pos.getY() + 1), pos.getZ() + world.random.nextDouble(), 1, 0.0D, 0.01D, 0.0D, 0.2D);
                 }
             }
-        } else {
+        } else if (state.getValue(FACING) == Direction.UP) {
             this.onInsideUpBubbleColumn(state.getValue(DRAG_DOWN), entity);
+            if (!world.isClientSide) {
+                ServerLevel serverWorld = (ServerLevel)world;
+
+                for(int i = 0; i < 2; ++i) {
+                    this.addParticles(serverWorld, ParticleTypes.SPLASH, pos.getX() + world.random.nextDouble(),
+                            (pos.getY() + 1), pos.getZ() + world.random.nextDouble(), 1, 0.0D, 0.0D, 0.0D, 1.0D);
+                    this.addParticles(serverWorld, ParticleTypes.BUBBLE, pos.getX() + world.random.nextDouble(),
+                            (pos.getY() + 1), pos.getZ() + world.random.nextDouble(), 1, 0.0D, 0.01D, 0.0D, 0.2D);
+                }
+            }
+        } else if (state.getValue(FACING) == Direction.DOWN) {
+            this.onInsideDownBubbleColumn(state.getValue(DRAG_DOWN), entity);
+        } else if (state.getValue(FACING) == Direction.NORTH) {
+            this.onInsideNorthBubbleColumn(state.getValue(DRAG_DOWN), entity);
+        } else if (state.getValue(FACING) == Direction.SOUTH) {
+            this.onInsideSouthBubbleColumn(state.getValue(DRAG_DOWN), entity);
+        } else if (state.getValue(FACING) == Direction.EAST) {
+            this.onInsideEastBubbleColumn(state.getValue(DRAG_DOWN), entity);
+        } else if (state.getValue(FACING) == Direction.WEST) {
+            this.onInsideWestBubbleColumn(state.getValue(DRAG_DOWN), entity);
         }
     }
 
-    public void onAboveUpBubbleCol(boolean isDragUp, Entity entity) {
+    public void onAboveUpBubbleCol(boolean isDragDown, Entity entity) {
         Vec3 vec3 = entity.getDeltaMovement();
         double d0;
-        if (isDragUp) {
+        if (isDragDown) {
             d0 = Math.max(-0.9D, vec3.y - 0.03D);
         } else {
             d0 = Math.min(1.8D, vec3.y + 0.1D);
@@ -204,16 +258,81 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         entity.setDeltaMovement(vec3.x, d0, vec3.z);
     }
 
-    public void onInsideUpBubbleColumn(boolean isDragUp, Entity entity) {
+    public void onInsideUpBubbleColumn(boolean isDragDown, Entity entity) {
         Vec3 vec3 = entity.getDeltaMovement();
         double d0;
-        if (isDragUp) {
+        if (isDragDown) {
             d0 = Math.max(-0.3D, vec3.y - 0.03D);
         } else {
-            d0 = Math.min(0.7D, vec3.y + 0.06D);
+            d0 = Math.min(0.5D, vec3.y + 0.04D);
         }
 
         entity.setDeltaMovement(vec3.x, d0, vec3.z);
+        entity.resetFallDistance();
+    }
+
+    public void onInsideDownBubbleColumn(boolean isDragDown, Entity entity) {
+        Vec3 vec3 = entity.getDeltaMovement();
+        double d0;
+        if (isDragDown) {
+            d0 = Math.max(0.3D, vec3.y + 0.03D);
+        } else {
+            d0 = Math.min(-0.5D, vec3.y - 0.04D);
+        }
+
+        entity.setDeltaMovement(vec3.x, d0, vec3.z);
+        entity.resetFallDistance();
+    }
+
+    public void onInsideNorthBubbleColumn(boolean isDragDown, Entity entity) {
+        Vec3 vec3 = entity.getDeltaMovement();
+        double d0;
+        if (isDragDown) {
+            d0 = Math.max(0.3D, vec3.z + 0.03D);
+        } else {
+            d0 = Math.min(-0.5D, vec3.z - 0.04D);
+        }
+
+        entity.setDeltaMovement(vec3.x, vec3.y, d0);
+        entity.resetFallDistance();
+    }
+
+    public void onInsideSouthBubbleColumn(boolean isDragDown, Entity entity) {
+        Vec3 vec3 = entity.getDeltaMovement();
+        double d0;
+        if (isDragDown) {
+            d0 = Math.max(-0.3D, vec3.z - 0.03D);
+        } else {
+            d0 = Math.min(0.5D, vec3.z + 0.04D);
+        }
+
+        entity.setDeltaMovement(vec3.x, vec3.y, d0);
+        entity.resetFallDistance();
+    }
+
+    public void onInsideEastBubbleColumn(boolean isDragDown, Entity entity) {
+        Vec3 vec3 = entity.getDeltaMovement();
+        double d0;
+        if (isDragDown) {
+            d0 = Math.max(-0.3D, vec3.x - 0.03D);
+        } else {
+            d0 = Math.min(0.5D, vec3.x + 0.04D);
+        }
+
+        entity.setDeltaMovement(d0, vec3.y, vec3.z);
+        entity.resetFallDistance();
+    }
+
+    public void onInsideWestBubbleColumn(boolean isDragDown, Entity entity) {
+        Vec3 vec3 = entity.getDeltaMovement();
+        double d0;
+        if (isDragDown) {
+            d0 = Math.max(0.3D, vec3.x + 0.03D);
+        } else {
+            d0 = Math.min(-0.5D, vec3.x - 0.04D);
+        }
+
+        entity.setDeltaMovement(d0, vec3.y, vec3.z);
         entity.resetFallDistance();
     }
 
