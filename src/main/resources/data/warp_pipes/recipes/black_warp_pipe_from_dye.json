@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "warp_pipes_from_dye",
+  "ingredients": [
+    {
+      "tag": "forge:dyes/black"
+    },
+    {
+      "tag": "warp_pipes:warp_pipes"
+    }
+  ],
+  "result": {
+    "item": "warp_pipes:black_warp_pipe"
+  }
+}
