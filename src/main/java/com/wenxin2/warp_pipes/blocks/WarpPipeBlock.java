@@ -171,67 +171,68 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         if (!state.getValue(CLOSED) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
 
             if (warpPipeBE.getPersistentData().isEmpty()) {
-                if (state.getValue(FACING) == Direction.UP && (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock)) {
+                
+                if (state.getValue(FACING) == Direction.UP) {
                     if (fluidAbove instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 1.0D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else {
+                    } else if (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                                 dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.DOWN && (fluidBelow instanceof WaterFluid || blockBelow instanceof PipeBubblesBlock)) {
+                if (state.getValue(FACING) == Direction.DOWN) {
                     if (fluidBelow instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy - 0.5D, dz + 0.05D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else {
+                    } else if (fluidBelow instanceof WaterFluid || blockBelow instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE, dx + 0.5D, dy - 1.15D, dz + 0.5D, 0.0D, -0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE, dx + (double) random.nextFloat(),
                                 dy - (double) random.nextFloat() - 1.15D, dz + (double) random.nextFloat(), 0.0D, -0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.NORTH && (fluidNorth instanceof WaterFluid || blockNorth instanceof PipeBubblesBlock)) {
+                if (state.getValue(FACING) == Direction.NORTH) {
                     if (fluidNorth instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 0.5D, dz - 0.05D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else {
+                    } else if (fluidNorth instanceof WaterFluid || blockNorth instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE, dx + 0.5D, dy + 0.5D, dz - 1.15D, 0.0D, 0.4D, -1.5D);
                         world.addParticle(ParticleTypes.BUBBLE, dx + (double) random.nextFloat(),
                                 dy + (double) random.nextFloat(), dz + (double) random.nextFloat() - 1.15D, 0.0D, 0.4D, -1.5D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.SOUTH && (fluidSouth instanceof WaterFluid || blockSouth instanceof PipeBubblesBlock)) {
+                if (state.getValue(FACING) == Direction.SOUTH) {
                     if (fluidSouth instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 0.5D, dz + 1.05D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else {
+                    } else if (fluidSouth instanceof WaterFluid || blockSouth instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE, dx + 0.5D, dy + 0.5D, dz + 1.15D, 0.0D, 0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE, dx + (double) random.nextFloat(),
                                 dy + (double) random.nextFloat(), dz + (double) random.nextFloat() + 1.15D, 0.0D, 0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.EAST && (fluidEast instanceof WaterFluid || blockEast instanceof PipeBubblesBlock)) {
+                if (state.getValue(FACING) == Direction.EAST) {
                     if (fluidEast instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 1.05D, dy + 0.5D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else {
+                    } else if (fluidEast instanceof WaterFluid || blockEast instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE, dx + 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE, dx + (double) random.nextFloat() + 1.15D,
                                 dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
                     }
                 }
-                if (state.getValue(FACING) == Direction.WEST && (fluidWest instanceof WaterFluid || blockWest instanceof PipeBubblesBlock)) {
+                if (state.getValue(FACING) == Direction.WEST) {
                     if (fluidWest instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx - 0.05D, dy + 0.5D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else {
+                    } else if (fluidWest instanceof WaterFluid || blockWest instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE, dx - 1.15D, dy + 0.5D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE, dx + (double) random.nextFloat() - 1.15D,
                                 dy + (double) random.nextFloat(), dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);
