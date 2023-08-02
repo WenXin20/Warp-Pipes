@@ -26,6 +26,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModRegistry {
     public static final RegistryObject<Item> PIPE_WRENCH;
 
+    public static final RegistryObject<Block> BLUE_WARP_PIPE;
     public static final RegistryObject<Block> CYAN_WARP_PIPE;
     public static final RegistryObject<Block> GRAY_WARP_PIPE;
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
@@ -100,6 +101,11 @@ public class ModRegistry {
 
         PURPLE_WARP_PIPE = registerBlock("purple_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_PURPLE)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
+                        .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
+
+        BLUE_WARP_PIPE = registerBlock("blue_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_BLUE)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
