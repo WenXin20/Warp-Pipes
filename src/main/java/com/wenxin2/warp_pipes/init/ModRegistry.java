@@ -39,6 +39,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> PINK_WARP_PIPE;
     public static final RegistryObject<Block> PIPE_BUBBLES;
     public static final RegistryObject<Block> PURPLE_WARP_PIPE;
+    public static final RegistryObject<Block> RED_WARP_PIPE;
     public static final RegistryObject<Block> WHITE_WARP_PIPE;
     public static final RegistryObject<Block> YELLOW_WARP_PIPE;
 
@@ -117,6 +118,11 @@ public class ModRegistry {
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
+                        .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
+
+        RED_WARP_PIPE = registerBlock("red_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
