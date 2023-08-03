@@ -2,8 +2,8 @@
   "parent": "minecraft:block/cube_bottom_top",
   "render_type": "cutout",
   "textures": {
-    "bottom": "warp_pipes:block/clear_warp_pipe_bottom",
-    "side": "warp_pipes:block/clear_warp_pipe_entrance_side",
-    "top": "warp_pipes:block/clear_warp_pipe_top_closed"
+    "bottom": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom",
+    "side": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side",
+    "top": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_top_closed"
   }
 }

@@ -1,7 +1,13 @@
 {
   "variants": {
-    "facing=up,entrance=true,closed=false": {
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance"
+    },
+    "facing=up,entrance=true,closed=false,north=true,south=false,east=false,west=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_n"
+    },
+    "facing=up,entrance=true,closed=false,north=false,south=true,east=false,west=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_s"
     },
     "facing=down,entrance=true,closed=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
