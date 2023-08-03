@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -29,6 +31,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> BLACK_WARP_PIPE;
     public static final RegistryObject<Block> BLUE_WARP_PIPE;
     public static final RegistryObject<Block> BROWN_WARP_PIPE;
+    public static final RegistryObject<Block> CLEAR_WARP_PIPE;
     public static final RegistryObject<Block> CYAN_WARP_PIPE;
     public static final RegistryObject<Block> GRAY_WARP_PIPE;
     public static final RegistryObject<Block> GREEN_WARP_PIPE;
@@ -132,6 +135,11 @@ public class ModRegistry {
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
+        CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
+                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.NONE)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::never)
+                        .isViewBlocking(ModRegistry::never).requiresCorrectToolForDrops().noOcclusion()), WarpPipes.CREATIVE_TAB);
+
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
                 () -> new PipeBubblesBlock(BlockBehaviour.Properties.of(Material.BUBBLE_COLUMN).noCollission().noLootTable()));
@@ -162,5 +170,9 @@ public class ModRegistry {
     private static boolean always(BlockState state, BlockGetter block, BlockPos pos)
     {
         return true;
+    }
+    private static boolean never(BlockState state, BlockGetter block, BlockPos pos)
+    {
+        return false;
     }
 }

@@ -4,6 +4,7 @@
     { "id": "warp_pipes:black_warp_pipe", "required": false },
     { "id": "warp_pipes:blue_warp_pipe", "required": false },
     { "id": "warp_pipes:brown_warp_pipe", "required": false },
+    { "id": "warp_pipes:clear_warp_pipe", "required": false },
     { "id": "warp_pipes:cyan_warp_pipe", "required": false },
     { "id": "warp_pipes:gray_warp_pipe", "required": false },
     { "id": "warp_pipes:green_warp_pipe", "required": false },

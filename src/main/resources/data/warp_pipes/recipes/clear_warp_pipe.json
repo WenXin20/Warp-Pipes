@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "warp_pipes",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/copper"
+    },
+    "D": {
+      "item": "minecraft:glass"
+    },
+    "G": {
+      "tag": "forge:gems/diamond"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    }
+  },
+  "pattern": [
+    "IDI",
+    "IGI",
+    "IEI"
+  ],
+  "result": {
+    "count": 1,
+    "item": "warp_pipes:clear_warp_pipe"
+  }
+}
