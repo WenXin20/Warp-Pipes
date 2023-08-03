@@ -57,23 +57,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
             Block.box(0, 0, 0, 3, 16, 16),
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
-    public static final VoxelShape PIPE_ENTRANCE_S = Shapes.or(
-            Block.box(0, 0, 0, 16, 16, 3),
-            Block.box(13, 0, 0, 16, 16, 16),
-            Block.box(0, 0, 0, 3, 16, 16),
-            Block.box(0, 0, 0, 16, 3, 16)).optimize();
-
-    public static final VoxelShape PIPE_ENTRANCE_E = Shapes.or(
-            Block.box(0, 0, 0, 16, 16, 3),
-            Block.box(0, 0, 13, 16, 16, 16),
-            Block.box(0, 0, 0, 3, 16, 16),
-            Block.box(0, 0, 0, 16, 3, 16)).optimize();
-
-    public static final VoxelShape PIPE_ENTRANCE_W = Shapes.or(
-            Block.box(0, 0, 0, 16, 16, 3),
-            Block.box(0, 0, 13, 16, 16, 16),
-            Block.box(13, 0, 0, 16, 16, 16),
-            Block.box(0, 0, 0, 16, 3, 16)).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_S = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.SOUTH);
+    public static final VoxelShape PIPE_ENTRANCE_E = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.EAST);
+    public static final VoxelShape PIPE_ENTRANCE_W = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.WEST);
 
     public ClearWarpPipeBlock(Properties properties) {
         super(properties);
@@ -121,6 +107,20 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
             return PIPE_ENTRANCE;
         }
         else return PIPE_ENTRANCE;
+    }
+
+    public static VoxelShape rotateShape(VoxelShape shape, Direction from, Direction to) {
+        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
+
+        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
+        for (int i = 0; i < times; i++) {
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ)
+                    -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
+            buffer[0] = buffer[1];
+            buffer[1] = Shapes.empty();
+        }
+
+        return buffer[0];
     }
 
     @Override
