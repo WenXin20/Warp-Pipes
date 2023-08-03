@@ -65,17 +65,15 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
 
     public static final VoxelShape PIPE_ENTRANCE_E = Shapes.or(
             Block.box(0, 0, 0, 16, 16, 3),
-            Block.box(13, 0, 0, 16, 16, 16),
-            Block.box(0, 0, 0, 16, 3, 16),
-            Block.box(0, 0, 0, 3, 16, 16)
-    ).optimize();
+            Block.box(0, 0, 13, 16, 16, 16),
+            Block.box(0, 0, 0, 3, 16, 16),
+            Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
     public static final VoxelShape PIPE_ENTRANCE_W = Shapes.or(
-            Block.box(0, 0, 0, 3, 16, 16),
             Block.box(0, 0, 0, 16, 16, 3),
             Block.box(0, 0, 13, 16, 16, 16),
-            Block.box(0, 0, 0, 16, 3, 16)
-    ).optimize();
+            Block.box(13, 0, 0, 16, 16, 16),
+            Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
     public ClearWarpPipeBlock(Properties properties) {
         super(properties);
