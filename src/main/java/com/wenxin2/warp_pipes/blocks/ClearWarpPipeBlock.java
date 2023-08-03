@@ -61,6 +61,12 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final VoxelShape PIPE_ENTRANCE_E = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.EAST);
     public static final VoxelShape PIPE_ENTRANCE_W = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.WEST);
 
+    public static final VoxelShape PIPE_ENTRANCE_D = Shapes.or(
+            Block.box(0, 0, 0, 16, 15.95, 3),
+            Block.box(0, 0, 13, 16, 15.95, 16),
+            Block.box(13, 0, 0, 16, 15.95, 16),
+            Block.box(0, 0, 0, 3, 15.95, 16)).optimize();
+
     public ClearWarpPipeBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE)
@@ -104,7 +110,14 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                     return PIPE_ENTRANCE_W;
                 }
             }
-            return Shapes.block();
+            if (state.getValue(DOWN)) {
+                if (state.getValue(CLOSED)) {
+                    return PIPE_ENTRANCE_D;
+                } else {
+                    return PIPE_ENTRANCE_D;
+                }
+            }
+            return PIPE_ENTRANCE;
         }
         return Shapes.block();
     }

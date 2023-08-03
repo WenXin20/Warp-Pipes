@@ -1,19 +1,22 @@
 {
   "variants": {
-    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=false": {
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=false,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance"
     },
-    "facing=up,entrance=true,closed=false,north=true,south=false,east=false,west=false": {
+    "facing=up,entrance=true,closed=false,north=true,south=false,east=false,west=false,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_n"
     },
-    "facing=up,entrance=true,closed=false,north=false,south=true,east=false,west=false": {
+    "facing=up,entrance=true,closed=false,north=false,south=true,east=false,west=false,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_s"
     },
-    "facing=up,entrance=true,closed=false,north=false,south=false,east=true,west=false": {
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=true,west=false,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_e"
     },
-    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=true": {
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=true,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_w"
+    },
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=false,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_d"
     },
     "facing=down,entrance=true,closed=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
