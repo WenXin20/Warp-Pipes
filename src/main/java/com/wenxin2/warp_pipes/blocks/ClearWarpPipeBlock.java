@@ -13,14 +13,12 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -45,16 +43,16 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     }));
 
     public static final VoxelShape PIPE_ENTRANCE = Shapes.or(
-            Block.box(0, 0, 0, 16, 16, 3),
-            Block.box(0, 0, 13, 16, 16, 16),
-            Block.box(13, 0, 0, 16, 16, 16),
-            Block.box(0, 0, 0, 3, 16, 16),
+            Block.box(0, 0, 0, 16, 15.98, 3),
+            Block.box(0, 0, 13, 16, 15.98, 16),
+            Block.box(13, 0, 0, 16, 15.98, 16),
+            Block.box(0, 0, 0, 3, 15.98, 16),
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
     public static final VoxelShape PIPE_ENTRANCE_N = Shapes.or(
-            Block.box(0, 0, 13, 16, 16, 16),
-            Block.box(13, 0, 0, 16, 16, 16),
-            Block.box(0, 0, 0, 3, 16, 16),
+            Block.box(0, 0, 13, 16, 15.98, 16),
+            Block.box(13, 0, 0, 16, 15.98, 16),
+            Block.box(0, 0, 0, 3, 15.98, 16),
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
     public static final VoxelShape PIPE_ENTRANCE_S = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.SOUTH);
@@ -62,10 +60,10 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final VoxelShape PIPE_ENTRANCE_W = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.WEST);
 
     public static final VoxelShape PIPE_ENTRANCE_D = Shapes.or(
-            Block.box(0, 0, 0, 16, 15.95, 3),
-            Block.box(0, 0, 13, 16, 15.95, 16),
-            Block.box(13, 0, 0, 16, 15.95, 16),
-            Block.box(0, 0, 0, 3, 15.95, 16)).optimize();
+            Block.box(0, 0, 0, 16, 15.98, 3),
+            Block.box(0, 0, 13, 16, 15.98, 16),
+            Block.box(13, 0, 0, 16, 15.98, 16),
+            Block.box(0, 0, 0, 3, 15.98, 16)).optimize();
 
     public static final VoxelShape PIPE_ENTRANCE_NE = Shapes.or(
             Block.box(0, 0, 13, 16, 15.98, 16),
@@ -132,6 +130,16 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
             return PIPE_ENTRANCE;
         }
         return Shapes.block();
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
+        return this.getShape(state, blockGetter, pos, collisionContext);
+    }
+
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        return this.getShape(state, blockGetter, pos, CollisionContext.empty());
     }
 
     public static VoxelShape rotateShape(VoxelShape shape, Direction from, Direction to) {
