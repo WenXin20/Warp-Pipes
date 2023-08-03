@@ -3,8 +3,8 @@
 	"parent": "minecraft:block/cube_bottom_top",
 	"render_type": "cutout",
 	"textures": {
-		"bottom": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_n",
-		"bottom_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_inner_n",
+		"bottom": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_e",
+		"bottom_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_inner_e",
 		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side",
 		"side": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side",
 		"side_e": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_e",
@@ -12,7 +12,7 @@
 		"side_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner",
 		"side_inner_e": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner_e",
 		"side_inner_w": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner_w",
-		"top": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_top_n"
+		"top": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_top_e"
 	},
 	"elements": [
 		{
@@ -25,23 +25,23 @@
 			}
 		},
 		{
+			"name": "north",
+			"from": [0, 0, 0],
+			"to": [16, 16, 3],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#side_w"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#side_inner_e"}
+			}
+		},
+		{
 			"name": "south",
 			"from": [0, 0, 13],
 			"to": [16, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#side_inner"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#side"}
-			}
-		},
-		{
-			"name": "east",
-			"from": [13, 0, 0],
-			"to": [16, 16, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#side_e"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#side_inner_w"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#side_inner_w"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#side_e"}
 			}
 		},
 		{
@@ -50,8 +50,8 @@
 			"to": [3, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#side_inner_e"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#side_w"}
+				"east": {"uv": [0, 0, 16, 16], "texture": "#side_inner"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#side"}
 			}
 		},
 		{

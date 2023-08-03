@@ -104,9 +104,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                     return PIPE_ENTRANCE_W;
                 }
             }
-            return PIPE_ENTRANCE;
+            return Shapes.block();
         }
-        else return PIPE_ENTRANCE;
+        return Shapes.block();
     }
 
     public static VoxelShape rotateShape(VoxelShape shape, Direction from, Direction to) {
