@@ -4,7 +4,7 @@
 	"render_type": "cutout",
 	"textures": {
 		"bottom": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_ew",
-		"bottom_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_inner_ew",
+		"bottom_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_inner_sew",
 		"side_ew": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_ew",
 		"side_inner_ew": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner_ew",
 		"top": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_top_ew",
@@ -25,11 +25,11 @@
 		{
 			"name": "down",
 			"from": [0, 0, 0],
-			"to": [16, 3, 13],
+			"to": [16, 3, 16],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
-				"up": {"uv": [0, 0, 16, 13], "texture": "#bottom_inner"},
-				"down": {"uv": [0, 3, 16, 16], "texture": "#bottom"}
+				"up": {"uv": [0, 0, 16, 16], "texture": "#bottom_inner"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
 			}
 		}
 	]

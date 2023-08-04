@@ -49,7 +49,7 @@
       "model": "warp_pipes:block/clear_warp_pipe_entrance_sew"
     },
     "facing=up,entrance=true,closed=false,north=true,south=true,east=true,west=true,down=false": {
-      "model": "minecraft:block/air"
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_nsew"
     },
     "facing=down,entrance=true,closed=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
