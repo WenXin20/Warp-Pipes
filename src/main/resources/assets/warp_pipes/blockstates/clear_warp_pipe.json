@@ -96,6 +96,10 @@
     "facing=up,entrance=true,closed=false,north=false,south=true,east=true,west=true,down=true": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_sewd"
     },
+    
+    "facing=up,entrance=true,closed=false,north=true,south=true,east=true,west=true,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_nsewd"
+    },
 
     "facing=down,entrance=true,closed=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
