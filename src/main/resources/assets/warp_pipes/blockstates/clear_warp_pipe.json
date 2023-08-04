@@ -36,6 +36,21 @@
     "facing=up,entrance=true,closed=false,north=false,south=false,east=true,west=true,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_ew"
     },
+    "facing=up,entrance=true,closed=false,north=true,south=true,east=true,west=false,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_nse"
+    },
+    "facing=up,entrance=true,closed=false,north=true,south=true,east=false,west=true,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_nsw"
+    },
+    "facing=up,entrance=true,closed=false,north=true,south=false,east=true,west=true,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_new"
+    },
+    "facing=up,entrance=true,closed=false,north=false,south=true,east=true,west=true,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_sew"
+    },
+    "facing=up,entrance=true,closed=false,north=true,south=true,east=true,west=true,down=false": {
+      "model": "minecraft:block/air"
+    },
     "facing=down,entrance=true,closed=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
       "x": 180
