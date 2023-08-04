@@ -34,6 +34,15 @@
     "facing=up,entrance=true,closed=false,north=true,south=false,east=false,west=false,down=true": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_nd"
     },
+    "facing=up,entrance=true,closed=false,north=false,south=true,east=false,west=false,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_sd"
+    },
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=true,west=false,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_ed"
+    },
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=false,west=true,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_wd"
+    },
 
     "facing=up,entrance=true,closed=false,north=true,south=true,east=false,west=false,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_ns"

@@ -145,6 +145,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                             return ClearWarpPipeVoxels.PIPE_ENTRANCE_SW;
                         }
                     }
+                    if (state.getValue(DOWN)) {
+                        if (state.getValue(CLOSED)) {
+                            return ClearWarpPipeVoxels.PIPE_ENTRANCE_SD;
+                        } else {
+                            return ClearWarpPipeVoxels.PIPE_ENTRANCE_SD;
+                        }
+                    }
                     if (state.getValue(CLOSED)) {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_S;
                     } else {
@@ -159,6 +166,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                             return ClearWarpPipeVoxels.PIPE_ENTRANCE_EW;
                         }
                     }
+                    if (state.getValue(DOWN)) {
+                        if (state.getValue(CLOSED)) {
+                            return ClearWarpPipeVoxels.PIPE_ENTRANCE_ED;
+                        } else {
+                            return ClearWarpPipeVoxels.PIPE_ENTRANCE_ED;
+                        }
+                    }
                     if (state.getValue(CLOSED)) {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_E;
                     } else {
@@ -166,6 +180,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                     }
                 }
                 if (state.getValue(WEST)) {
+                    if (state.getValue(DOWN)) {
+                        if (state.getValue(CLOSED)) {
+                            return ClearWarpPipeVoxels.PIPE_ENTRANCE_WD;
+                        } else {
+                            return ClearWarpPipeVoxels.PIPE_ENTRANCE_WD;
+                        }
+                    }
                     if (state.getValue(CLOSED)) {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_W;
                     } else {
