@@ -6,8 +6,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ClearWarpPipeVoxels {
-    public static final VoxelShape PIPE_CLOSED = Shapes.or(
-            Block.box(0, 13, 0, 16, 16, 16)).optimize();
+    public static final VoxelShape PIPE_CLOSED =
+            Block.box(0, 13, 0, 16, 16, 16);
 
     public static final VoxelShape PIPE_ENTRANCE = Shapes.or(
             Block.box(0, 0, 0, 16, 15.98, 3),
@@ -93,8 +93,14 @@ public class ClearWarpPipeVoxels {
 
 
 
-    public static final VoxelShape PIPE_ENTRANCE_NSEW = Shapes.or(
-            Block.box(0, 0, 0, 16, 3, 16)).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_NSEW =
+            Block.box(0, 0, 0, 16, 3, 16);
+    public static final VoxelShape PIPE_ENTRANCE_NSED =
+            Block.box(0, 0, 0, 3, 15.98, 16);
+
+    public static final VoxelShape PIPE_ENTRANCE_NSWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSED, Direction.NORTH, Direction.SOUTH);
+    public static final VoxelShape PIPE_ENTRANCE_NEWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSED, Direction.NORTH, Direction.WEST);
+    public static final VoxelShape PIPE_ENTRANCE_SEWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSED, Direction.NORTH, Direction.EAST);
 
 
 

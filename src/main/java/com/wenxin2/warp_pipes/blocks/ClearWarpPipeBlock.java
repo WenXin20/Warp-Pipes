@@ -78,6 +78,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                                     return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSEW;
                                 }
                             }
+                            if (state.getValue(DOWN)) {
+                                if (state.getValue(CLOSED)) {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSED;
+                                } else {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSED;
+                                }
+                            }
                             if (state.getValue(CLOSED)) {
                                 return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSE;
                             } else {
@@ -85,6 +92,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                             }
                         }
                         if (state.getValue(WEST)) {
+                            if (state.getValue(DOWN)) {
+                                if (state.getValue(CLOSED)) {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSWD;
+                                } else {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSWD;
+                                }
+                            }
                             if (state.getValue(CLOSED)) {
                                 return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSW;
                             } else {
@@ -106,6 +120,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                     }
                     if (state.getValue(EAST)) {
                         if (state.getValue(WEST)) {
+                            if (state.getValue(DOWN)) {
+                                if (state.getValue(CLOSED)) {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_NEWD;
+                                } else {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_NEWD;
+                                }
+                            }
                             if (state.getValue(CLOSED)) {
                                 return ClearWarpPipeVoxels.PIPE_ENTRANCE_NEW;
                             } else {
@@ -155,6 +176,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                 if (state.getValue(SOUTH)) {
                     if (state.getValue(EAST)) {
                         if (state.getValue(WEST)) {
+                            if (state.getValue(DOWN)) {
+                                if (state.getValue(CLOSED)) {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_SEWD;
+                                } else {
+                                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_SEWD;
+                                }
+                            }
                             if (state.getValue(CLOSED)) {
                                 return ClearWarpPipeVoxels.PIPE_ENTRANCE_SEW;
                             } else {
