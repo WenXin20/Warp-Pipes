@@ -74,6 +74,20 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_NEW = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSE, Direction.NORTH, Direction.WEST);
     public static final VoxelShape PIPE_ENTRANCE_SEW = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSE, Direction.NORTH, Direction.EAST);
 
+    public static final VoxelShape PIPE_ENTRANCE_NED = Shapes.or(
+            Block.box(0, 0, 13, 16, 15.98, 16),
+            Block.box(0, 0, 0, 3, 15.98, 16)).optimize();
+
+    public static final VoxelShape PIPE_ENTRANCE_NWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NED, Direction.NORTH, Direction.WEST);
+    public static final VoxelShape PIPE_ENTRANCE_SED = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NED, Direction.NORTH, Direction.EAST);
+    public static final VoxelShape PIPE_ENTRANCE_SWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NED, Direction.NORTH, Direction.SOUTH);
+
+    public static final VoxelShape PIPE_ENTRANCE_NSD = Shapes.or(
+            Block.box(13, 0, 0, 16, 15.98, 16),
+            Block.box(0, 0, 0, 3, 15.98, 16)).optimize();
+
+    public static final VoxelShape PIPE_ENTRANCE_EWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NS, Direction.NORTH, Direction.EAST);
+
 
 
     public static final VoxelShape PIPE_ENTRANCE_NSEW = Shapes.or(
