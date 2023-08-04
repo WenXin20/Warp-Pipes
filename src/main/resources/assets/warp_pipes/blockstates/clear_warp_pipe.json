@@ -43,8 +43,28 @@
       "x": 90,
       "y": 180
     },
-    "facing=east,entrance=true,closed=false": {
+    "facing=east,entrance=true,closed=false,north=false,south=false,east=false,west=false,up=false,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,entrance=true,closed=false,north=false,south=false,east=false,west=false,up=true,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_s",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,entrance=true,closed=false,north=false,south=false,east=false,west=false,up=false,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_n",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,entrance=true,closed=false,north=true,south=false,east=false,west=false,up=false,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_w",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,entrance=true,closed=false,north=false,south=true,east=false,west=false,up=false,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_e",
       "x": 90,
       "y": 90
     },

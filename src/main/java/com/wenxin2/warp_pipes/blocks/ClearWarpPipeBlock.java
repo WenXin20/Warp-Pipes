@@ -58,6 +58,14 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final VoxelShape PIPE_ENTRANCE_S = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.SOUTH);
     public static final VoxelShape PIPE_ENTRANCE_E = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.EAST);
     public static final VoxelShape PIPE_ENTRANCE_W = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.WEST);
+    public static final VoxelShape PIPE_ENTRANCE_ZE_N = rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 1);
+    public static final VoxelShape PIPE_ENTRANCE_ZE_S = rotateShapeAxis(PIPE_ENTRANCE_S, Direction.Axis.Z, 1);
+    public static final VoxelShape PIPE_ENTRANCE_ZW_N = rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 3);
+    public static final VoxelShape PIPE_ENTRANCE_ZW_S = rotateShapeAxis(PIPE_ENTRANCE_S, Direction.Axis.Z, 3);
+    public static final VoxelShape PIPE_ENTRANCE_XN_E = rotateShapeAxis(PIPE_ENTRANCE_ZE_N, Direction.Axis.X, 1);
+    public static final VoxelShape PIPE_ENTRANCE_XN_W = rotateShapeAxis(PIPE_ENTRANCE_ZW_N, Direction.Axis.X, 1);
+    public static final VoxelShape PIPE_ENTRANCE_XS_E = rotateShapeAxis(PIPE_ENTRANCE_ZE_S, Direction.Axis.X, 3);
+    public static final VoxelShape PIPE_ENTRANCE_XS_W = rotateShapeAxis(PIPE_ENTRANCE_ZW_S, Direction.Axis.X, 3);
 
     public static final VoxelShape PIPE_ENTRANCE_D = Shapes.or(
             Block.box(0, 0, 0, 16, 15.98, 3),
@@ -89,67 +97,134 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         if (state.getValue(ENTRANCE)) {
-            if (state.getValue(NORTH)) {
+            if (state.getValue(FACING) == Direction.UP) {
+                if (state.getValue(NORTH)) {
+                    if (state.getValue(EAST)) {
+                        if (state.getValue(CLOSED)) {
+                            return PIPE_ENTRANCE_NE;
+                        } else {
+                            return PIPE_ENTRANCE_NE;
+                        }
+                    }
+                    if (state.getValue(WEST)) {
+                        if (state.getValue(CLOSED)) {
+                            return PIPE_ENTRANCE_NW;
+                        } else {
+                            return PIPE_ENTRANCE_NW;
+                        }
+                    }
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_N;
+                    } else {
+                        return PIPE_ENTRANCE_N;
+                    }
+                }
+                if (state.getValue(SOUTH)) {
+                    if (state.getValue(EAST)) {
+                        if (state.getValue(CLOSED)) {
+                            return PIPE_ENTRANCE_SE;
+                        } else {
+                            return PIPE_ENTRANCE_SE;
+                        }
+                    }
+                    if (state.getValue(WEST)) {
+                        if (state.getValue(CLOSED)) {
+                            return PIPE_ENTRANCE_SW;
+                        } else {
+                            return PIPE_ENTRANCE_SW;
+                        }
+                    }
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_S;
+                    } else {
+                        return PIPE_ENTRANCE_S;
+                    }
+                }
                 if (state.getValue(EAST)) {
                     if (state.getValue(CLOSED)) {
-                        return PIPE_ENTRANCE_NE;
+                        return PIPE_ENTRANCE_E;
                     } else {
-                        return PIPE_ENTRANCE_NE;
+                        return PIPE_ENTRANCE_E;
                     }
                 }
                 if (state.getValue(WEST)) {
                     if (state.getValue(CLOSED)) {
-                        return PIPE_ENTRANCE_NW;
+                        return PIPE_ENTRANCE_W;
                     } else {
-                        return PIPE_ENTRANCE_NW;
+                        return PIPE_ENTRANCE_W;
                     }
                 }
-                if (state.getValue(CLOSED)) {
-                    return PIPE_ENTRANCE_N;
-                } else {
-                    return PIPE_ENTRANCE_N;
+                if (state.getValue(DOWN)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_D;
+                    } else {
+                        return PIPE_ENTRANCE_D;
+                    }
                 }
+                return PIPE_ENTRANCE;
             }
-            if (state.getValue(SOUTH)) {
+            if (state.getValue(FACING) == Direction.NORTH) {
                 if (state.getValue(EAST)) {
                     if (state.getValue(CLOSED)) {
-                        return PIPE_ENTRANCE_SE;
+                        return PIPE_ENTRANCE_XN_E;
                     } else {
-                        return PIPE_ENTRANCE_SE;
+                        return PIPE_ENTRANCE_XN_E;
                     }
                 }
                 if (state.getValue(WEST)) {
                     if (state.getValue(CLOSED)) {
-                        return PIPE_ENTRANCE_SW;
+                        return PIPE_ENTRANCE_XN_W;
                     } else {
-                        return PIPE_ENTRANCE_SW;
+                        return PIPE_ENTRANCE_XN_W;
                     }
                 }
-                if (state.getValue(CLOSED)) {
-                    return PIPE_ENTRANCE_S;
-                } else {
-                    return PIPE_ENTRANCE_S;
+            }
+            if (state.getValue(FACING) == Direction.SOUTH) {
+                if (state.getValue(EAST)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_XS_E;
+                    } else {
+                        return PIPE_ENTRANCE_XS_E;
+                    }
+                }
+                if (state.getValue(WEST)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_XS_W;
+                    } else {
+                        return PIPE_ENTRANCE_XS_W;
+                    }
                 }
             }
-            if (state.getValue(EAST)) {
-                if (state.getValue(CLOSED)) {
-                    return PIPE_ENTRANCE_E;
-                } else {
-                    return PIPE_ENTRANCE_E;
+            if (state.getValue(FACING) == Direction.EAST) {
+                if (state.getValue(NORTH)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_ZE_N;
+                    } else {
+                        return PIPE_ENTRANCE_ZE_N;
+                    }
+                }
+                if (state.getValue(SOUTH)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_ZE_S;
+                    } else {
+                        return PIPE_ENTRANCE_ZE_S;
+                    }
                 }
             }
-            if (state.getValue(WEST)) {
-                if (state.getValue(CLOSED)) {
-                    return PIPE_ENTRANCE_W;
-                } else {
-                    return PIPE_ENTRANCE_W;
+            if (state.getValue(FACING) == Direction.WEST) {
+                if (state.getValue(NORTH)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_ZW_N;
+                    } else {
+                        return PIPE_ENTRANCE_ZW_N;
+                    }
                 }
-            }
-            if (state.getValue(DOWN)) {
-                if (state.getValue(CLOSED)) {
-                    return PIPE_ENTRANCE_D;
-                } else {
-                    return PIPE_ENTRANCE_D;
+                if (state.getValue(SOUTH)) {
+                    if (state.getValue(CLOSED)) {
+                        return PIPE_ENTRANCE_ZW_S;
+                    } else {
+                        return PIPE_ENTRANCE_ZW_S;
+                    }
                 }
             }
             return PIPE_ENTRANCE;
@@ -167,10 +242,12 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
         return this.getShape(state, blockGetter, pos, CollisionContext.empty());
     }
 
-    public static VoxelShape rotateShape(VoxelShape shape, Direction from, Direction to) {
+    public static VoxelShape rotateShape(VoxelShape shape, Direction fromDirection, Direction toDirection) {
         VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
 
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
+        // Calculate the number of 90-degree rotations needed around the specified axis
+        int times = (toDirection.get2DDataValue() - fromDirection.get2DDataValue() + 4) % 4;
+
         for (int i = 0; i < times; i++) {
             buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ)
                     -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
@@ -181,7 +258,35 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
         return buffer[0];
     }
 
-    @Override
+    public static VoxelShape rotateShapeAxis(VoxelShape shape, Direction.Axis rotationAxis, int numRotations) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
+
+        // Calculate the number of 90-degree rotations needed around the specified axis
+        int times = numRotations % 4;
+        if (times < 0) times += 4; // Ensure positive value for times
+
+        for (int i = 0; i < times; i++) {
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
+                // Rotate the VoxelShape around the specified axis
+                if (rotationAxis == Direction.Axis.X) {
+                    // Rotate around the X-axis
+                    buffer[1] = Shapes.or(buffer[1], Shapes.create(minX, 1 - maxY, minZ, maxX, 1 - minY, maxZ));
+                } else if (rotationAxis == Direction.Axis.Y) {
+                    // Rotate around the Y-axis
+                    buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX));
+                } else if (rotationAxis == Direction.Axis.Z) {
+                    // Rotate around the Z-axis
+                    buffer[1] = Shapes.or(buffer[1], Shapes.create(minY, 1 - maxX, minZ, maxY, 1 - minX, maxZ));
+                }
+            });
+            buffer[0] = buffer[1];
+            buffer[1] = Shapes.empty();
+        }
+
+        return buffer[0];
+    }
+
+@Override
     public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state)
     {
         return new WarpPipeBlockEntity(pos, state);
