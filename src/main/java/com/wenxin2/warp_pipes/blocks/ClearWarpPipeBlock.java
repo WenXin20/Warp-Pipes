@@ -58,6 +58,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final VoxelShape PIPE_ENTRANCE_S = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.SOUTH);
     public static final VoxelShape PIPE_ENTRANCE_E = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.EAST);
     public static final VoxelShape PIPE_ENTRANCE_W = rotateShape(PIPE_ENTRANCE_N, Direction.NORTH, Direction.WEST);
+
+    public static final VoxelShape PIPE_ENTRANCE_NS = Shapes.or(
+            Block.box(13, 0, 0, 16, 15.98, 16),
+            Block.box(0, 0, 0, 3, 15.98, 16),
+            Block.box(0, 0, 0, 16, 3, 16)).optimize();
+
+    public static final VoxelShape PIPE_ENTRANCE_EW = rotateShape(PIPE_ENTRANCE_NS, Direction.NORTH, Direction.EAST);
     public static final VoxelShape PIPE_ENTRANCE_ZE_N = rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZE_S = rotateShapeAxis(PIPE_ENTRANCE_S, Direction.Axis.Z, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZW_N = rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 3);
@@ -99,6 +106,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
         if (state.getValue(ENTRANCE)) {
             if (state.getValue(FACING) == Direction.UP) {
                 if (state.getValue(NORTH)) {
+                    if (state.getValue(SOUTH)) {
+                        if (state.getValue(CLOSED)) {
+                            return PIPE_ENTRANCE_NS;
+                        } else {
+                            return PIPE_ENTRANCE_NS;
+                        }
+                    }
                     if (state.getValue(EAST)) {
                         if (state.getValue(CLOSED)) {
                             return PIPE_ENTRANCE_NE;
@@ -141,6 +155,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                     }
                 }
                 if (state.getValue(EAST)) {
+                    if (state.getValue(WEST)) {
+                        if (state.getValue(CLOSED)) {
+                            return PIPE_ENTRANCE_EW;
+                        } else {
+                            return PIPE_ENTRANCE_EW;
+                        }
+                    }
                     if (state.getValue(CLOSED)) {
                         return PIPE_ENTRANCE_E;
                     } else {

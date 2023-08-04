@@ -30,6 +30,12 @@
     "facing=up,entrance=true,closed=false,north=false,south=true,east=false,west=true,down=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_sw"
     },
+    "facing=up,entrance=true,closed=false,north=true,south=true,east=false,west=false,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_ns"
+    },
+    "facing=up,entrance=true,closed=false,north=false,south=false,east=true,west=true,down=false": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_ew"
+    },
     "facing=down,entrance=true,closed=false": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance",
       "x": 180
