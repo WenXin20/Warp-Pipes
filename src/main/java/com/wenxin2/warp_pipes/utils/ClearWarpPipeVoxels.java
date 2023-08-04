@@ -6,6 +6,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ClearWarpPipeVoxels {
+    public static final VoxelShape PIPE_CLOSED = Shapes.or(
+            Block.box(0, 13, 0, 16, 16, 16)).optimize();
+
     public static final VoxelShape PIPE_ENTRANCE = Shapes.or(
             Block.box(0, 0, 0, 16, 15.98, 3),
             Block.box(0, 0, 13, 16, 15.98, 16),

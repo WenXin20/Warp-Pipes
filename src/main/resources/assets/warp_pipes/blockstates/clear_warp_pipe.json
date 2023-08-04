@@ -132,6 +132,9 @@
     "facing=up,entrance=true,closed=true": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_closed"
     },
+    "facing=up,entrance=true,closed=true,north=true,south=true,east=true,west=true,down=true": {
+      "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_nsewd"
+    },
     "facing=down,entrance=true,closed=true": {
       "model": "warp_pipes:block/clear_warp_pipe_entrance_closed",
       "x": 180

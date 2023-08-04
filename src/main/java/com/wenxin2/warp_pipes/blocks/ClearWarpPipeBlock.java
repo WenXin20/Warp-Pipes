@@ -24,6 +24,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.checkerframework.checker.units.qual.C;
 
 public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -64,6 +65,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                     if (state.getValue(SOUTH)) {
                         if (state.getValue(EAST)) {
                             if (state.getValue(WEST)) {
+                                if (state.getValue(DOWN)) {
+                                    if (state.getValue(CLOSED)) {
+                                        return ClearWarpPipeVoxels.PIPE_CLOSED;
+                                    } else {
+                                        return Shapes.empty();
+                                    }
+                                }
                                 if (state.getValue(CLOSED)) {
                                     return ClearWarpPipeVoxels.PIPE_ENTRANCE_NSEW;
                                 } else {
@@ -379,7 +387,11 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
 
     @Override
     public boolean skipRendering(BlockState state, BlockState neighborState, Direction direction) {
-        return neighborState.is(this) ? true : super.skipRendering(state, neighborState, direction);
+        if (state.getValue(ENTRANCE) && !state.getValue(CLOSED) && state.getValue(NORTH) && state.getValue(SOUTH)
+                && state.getValue(EAST) && state.getValue(WEST) && state.getValue(DOWN)) {
+            return true;
+        } else return state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST)
+                && state.getValue(WEST) && state.getValue(DOWN);
     }
 
     @Override
