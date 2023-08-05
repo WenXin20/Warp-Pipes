@@ -103,7 +103,6 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_SEWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSED, Direction.NORTH, Direction.EAST);
 
 
-
     public static final VoxelShape PIPE_ENTRANCE_ZE_N = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZE_S = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_S, Direction.Axis.Z, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZW_N = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 3);
@@ -114,4 +113,36 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_XN_W = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_ZW_N, Direction.Axis.X, 1);
     public static final VoxelShape PIPE_ENTRANCE_XS_E = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_ZE_S, Direction.Axis.X, 3);
     public static final VoxelShape PIPE_ENTRANCE_XS_W = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_ZW_S, Direction.Axis.X, 3);
+
+
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_N = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_N).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_S = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_S).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_E = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_E).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_W = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_W).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_D = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_D).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NE = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NE).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SE = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SE).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_ND = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_ND).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_ED = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_ED).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_WD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_WD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NS = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NS).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_EW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_EW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSE = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSE).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NEW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NEW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SEW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SEW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NED = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NED).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NWD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SED = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SED).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SWD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_EWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_EWD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSEW = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSEW).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSED = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSED).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSWD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_NEWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NEWD).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_SEWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SEWD).optimize();
 }
