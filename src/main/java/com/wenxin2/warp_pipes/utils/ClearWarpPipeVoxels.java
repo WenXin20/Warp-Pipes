@@ -41,7 +41,6 @@ public class ClearWarpPipeVoxels {
             Block.box(0, 0, 0, 3, 15.98, 16)).optimize();
 
 
-
     public static final VoxelShape PIPE_ENTRANCE_NE = Shapes.or(
             Block.box(0, 0, 13, 16, 15.98, 16),
             Block.box(0, 0, 0, 3, 15.98, 16),
@@ -68,7 +67,6 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_EW = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NS, Direction.NORTH, Direction.EAST);
 
 
-
     public static final VoxelShape PIPE_ENTRANCE_NSE = Shapes.or(
             Block.box(0, 0, 0, 3, 15.98, 16),
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
@@ -92,7 +90,6 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_EWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NS, Direction.NORTH, Direction.EAST);
 
 
-
     public static final VoxelShape PIPE_ENTRANCE_NSEW =
             Block.box(0, 0, 0, 16, 3, 16);
     public static final VoxelShape PIPE_ENTRANCE_NSED =
@@ -103,6 +100,20 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_SEWD = VoxelShapeUtils.rotateShape(PIPE_ENTRANCE_NSED, Direction.NORTH, Direction.EAST);
 
 
+    // Format: axis-facing-direction
+    public static final VoxelShape PIPE_CLOSED_ZE = VoxelShapeUtils.rotateShapeAxis(PIPE_CLOSED, Direction.Axis.Z, 1);
+    public static final VoxelShape PIPE_CLOSED_ZW = VoxelShapeUtils.rotateShapeAxis(PIPE_CLOSED, Direction.Axis.Z, 3);
+    public static final VoxelShape PIPE_CLOSED_YN = VoxelShapeUtils.rotateShapeAxis(PIPE_CLOSED_ZW, Direction.Axis.Y, 1);
+    public static final VoxelShape PIPE_CLOSED_YS = VoxelShapeUtils.rotateShapeAxis(PIPE_CLOSED_ZW, Direction.Axis.Y, 3);
+    public static final VoxelShape PIPE_CLOSED_XD = VoxelShapeUtils.rotateShapeAxis(PIPE_CLOSED, Direction.Axis.X, 1);
+
+    public static final VoxelShape PIPE_ENTRANCE_ZE = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE, Direction.Axis.Z, 1);
+    public static final VoxelShape PIPE_ENTRANCE_ZW = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE, Direction.Axis.Z, 3);
+
+    public static final VoxelShape PIPE_ENTRANCE_YN = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_ZW, Direction.Axis.Y, 1);
+    public static final VoxelShape PIPE_ENTRANCE_YS = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_ZW, Direction.Axis.Y, 3);
+
+    public static final VoxelShape PIPE_ENTRANCE_XD = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE, Direction.Axis.X, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZE_N = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZE_S = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_S, Direction.Axis.Z, 1);
     public static final VoxelShape PIPE_ENTRANCE_ZW_N = VoxelShapeUtils.rotateShapeAxis(PIPE_ENTRANCE_N, Direction.Axis.Z, 3);
@@ -145,4 +156,13 @@ public class ClearWarpPipeVoxels {
     public static final VoxelShape PIPE_ENTRANCE_CLOSED_NSWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NSWD).optimize();
     public static final VoxelShape PIPE_ENTRANCE_CLOSED_NEWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_NEWD).optimize();
     public static final VoxelShape PIPE_ENTRANCE_CLOSED_SEWD = Shapes.or(PIPE_CLOSED, PIPE_ENTRANCE_SEWD).optimize();
+
+
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_ZE = Shapes.or(PIPE_CLOSED_ZE, PIPE_ENTRANCE_ZE).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_ZW = Shapes.or(PIPE_CLOSED_ZW, PIPE_ENTRANCE_ZW).optimize();
+
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_XN = Shapes.or(PIPE_CLOSED_YN, PIPE_ENTRANCE_YN).optimize();
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_XS = Shapes.or(PIPE_CLOSED_YS, PIPE_ENTRANCE_YS).optimize();
+
+    public static final VoxelShape PIPE_ENTRANCE_CLOSED_XD = Shapes.or(PIPE_CLOSED_XD, PIPE_ENTRANCE_XD).optimize();
 }

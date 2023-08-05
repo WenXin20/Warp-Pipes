@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.utils.ClearWarpPipeVoxels;
-import com.wenxin2.warp_pipes.utils.VoxelShapeUtils;
 import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.checkerframework.checker.units.qual.C;
 
 public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -297,6 +295,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_XN_W;
                     }
                 }
+                if (state.getValue(CLOSED)) {
+                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_CLOSED_XN;
+                } else return ClearWarpPipeVoxels.PIPE_ENTRANCE_YN;
             }
             if (state.getValue(FACING) == Direction.SOUTH) {
                 if (state.getValue(EAST)) {
@@ -313,6 +314,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_XS_W;
                     }
                 }
+                if (state.getValue(CLOSED)) {
+                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_CLOSED_XS;
+                } else return ClearWarpPipeVoxels.PIPE_ENTRANCE_YS;
             }
             if (state.getValue(FACING) == Direction.EAST) {
                 if (state.getValue(NORTH)) {
@@ -329,6 +333,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_ZE_S;
                     }
                 }
+                if (state.getValue(CLOSED)) {
+                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_CLOSED_ZE;
+                } else return ClearWarpPipeVoxels.PIPE_ENTRANCE_ZE;
             }
             if (state.getValue(FACING) == Direction.WEST) {
                 if (state.getValue(NORTH)) {
@@ -345,6 +352,14 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                         return ClearWarpPipeVoxels.PIPE_ENTRANCE_ZW_S;
                     }
                 }
+                if (state.getValue(CLOSED)) {
+                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_CLOSED_ZW;
+                } else return ClearWarpPipeVoxels.PIPE_ENTRANCE_ZW;
+            }
+            if (state.getValue(FACING) == Direction.DOWN) {
+                if (state.getValue(CLOSED)) {
+                    return ClearWarpPipeVoxels.PIPE_ENTRANCE_CLOSED_XD;
+                } else return ClearWarpPipeVoxels.PIPE_ENTRANCE_XD;
             }
             return ClearWarpPipeVoxels.PIPE_ENTRANCE;
         }
