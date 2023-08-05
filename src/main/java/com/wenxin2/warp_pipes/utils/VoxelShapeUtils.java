@@ -28,7 +28,7 @@ public class VoxelShapeUtils {
         int times = numRotations % 4;
         if (times < 0) times += 4; // Ensure positive value for times
 
-        for (int i = 0; i < times; i++) {
+        for (int i = 0; i < numRotations; i++) {
             buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
                 // Rotate the VoxelShape around the specified axis
                 if (rotationAxis == Direction.Axis.X) {
