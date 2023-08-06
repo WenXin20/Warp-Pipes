@@ -11,7 +11,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -159,9 +158,12 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
                 .setValue(CLOSED, placeContext.getLevel().hasNeighborSignal(placeContext.getClickedPos()));
     }
 
-    public boolean connectsTo(BlockState state) {
-        Block block = state.getBlock();
-        return block instanceof ClearWarpPipeBlock;
+    public boolean connectsTo(BlockState neighborState) {
+        return neighborState.getBlock() instanceof ClearWarpPipeBlock;
+    }
+
+    public boolean connectsToEntrance(BlockState neighborState, Direction facing) {
+        return neighborState.getBlock() instanceof ClearWarpPipeBlock && neighborState.getValue(FACING) == facing;
     }
 
     @Override
@@ -201,50 +203,47 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
 
-        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
-            worldAccessor.scheduleTick(pos, this, 20);
-        }
-
         if (facingUp) {
             if (blockAbove instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
             }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(state) && (neighborState.getValue(FACING) == Direction.UP));
         }
 
         if (facingDown) {
             if (blockBelow instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
             }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState) && (neighborState.getValue(FACING) == Direction.DOWN));
         }
 
         if (facingNorth) {
             if (blockNorth instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
             }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState) && (neighborState.getValue(FACING) == Direction.NORTH));
         }
 
         if (facingSouth) {
             if (blockSouth instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
             }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState) && (neighborState.getValue(FACING) == Direction.EAST));
         }
 
         if (facingEast) {
             if (blockEast instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
             }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState) && (neighborState.getValue(FACING) == Direction.SOUTH));
         }
 
         if (facingWest) {
             if (blockWest instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
             }
+            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState) && (neighborState.getValue(FACING) == Direction.WEST));
         }
-        return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+        return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState) && (neighborState.getValue(FACING) == Direction.UP));
     }
 }
