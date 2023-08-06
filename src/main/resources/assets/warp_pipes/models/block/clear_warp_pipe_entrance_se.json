@@ -3,14 +3,14 @@
 	"parent": "minecraft:block/cube_bottom_top",
 	"render_type": "cutout",
 	"textures": {
-		"bottom": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_ne",
-		"bottom_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_inner_se",
-		"side_e": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_e",
-		"side_w": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_w",
-		"side_inner_e": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner_e",
-		"side_inner_w": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner_w",
-		"top": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_top_se",
-		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side"
+		"bottom": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_ne",
+		"bottom_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_inner_se",
+		"side_e": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_e",
+		"side_w": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_w",
+		"side_inner_e": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_inner_e",
+		"side_inner_w": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_inner_w",
+		"top": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_top_se",
+		"particle": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side"
 	},
 	"elements": [
 		{

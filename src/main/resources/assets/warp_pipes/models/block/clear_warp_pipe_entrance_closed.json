@@ -3,12 +3,12 @@
 	"parent": "minecraft:block/cube_bottom_top",
 	"render_type": "cutout",
 	"textures": {
-		"bottom": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom",
-		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side",
-		"side": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side",
-		"top": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_top_closed",
-		"bottom_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_bottom_inner",
-		"side_inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_entrance_side_inner"
+		"bottom": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom",
+		"particle": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side",
+		"side": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side",
+		"top": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_top_closed",
+		"bottom_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_inner",
+		"side_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_inner"
 	},
 	"elements": [
 		{
