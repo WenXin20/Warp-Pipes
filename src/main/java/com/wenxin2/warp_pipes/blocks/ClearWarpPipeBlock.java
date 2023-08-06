@@ -66,25 +66,6 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(CLOSED, ENTRANCE, FACING, UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
-    public static VoxelShape getDefaultDirectionShape(Direction facing) {
-        // Return the appropriate rotated VoxelShape based on the facing direction
-        switch (facing) {
-            case UP:
-                return Shapes.or(PIPE_UP);
-            case DOWN:
-                return Shapes.or(PIPE_DOWN);
-            case NORTH:
-                return Shapes.or(PIPE_NORTH);
-            case EAST:
-                return Shapes.or(PIPE_EAST);
-            case SOUTH:
-                return Shapes.or(PIPE_SOUTH);
-            case WEST:
-                return Shapes.or(PIPE_WEST);
-            default:
-                return Shapes.block(); // Return a default shape if facing is not recognized
-        }
-    }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {// Start with a center post shape
