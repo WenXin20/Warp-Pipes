@@ -62,13 +62,14 @@ public class LinkerItem extends TieredItem {
         ItemStack item = useOnContext.getItemInHand();
         CompoundTag tag = item.getTag();
 
-        if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown())
-        {
-            world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
-            item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-            this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
-            this.spawnParticles(world, pos, ParticleTypes.ENCHANTED_HIT);
-            return InteractionResult.SUCCESS;
+        if (player != null) {
+            if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown()) {
+                world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
+                item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
+                this.spawnParticles(world, pos, ParticleTypes.ENCHANTED_HIT);
+                return InteractionResult.SUCCESS;
+            }
         }
 
         if (tag != null && tag.contains("Bound")) {
