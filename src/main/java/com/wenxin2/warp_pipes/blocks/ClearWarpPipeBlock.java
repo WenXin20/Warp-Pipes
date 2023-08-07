@@ -43,15 +43,15 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     }));
     
     public static final VoxelShape PIPE_UP = Shapes.or(
-            Block.box(0, 13, 0, 16, 16, 16)).optimize();
+            Block.box(0, 13, 0, 16, 15.98, 16)).optimize();
     public static final VoxelShape PIPE_NORTH = Shapes.or(
-            Block.box(0, 0, 0, 16, 16, 3)).optimize();
+            Block.box(0, 0, 0, 16, 15.98, 3)).optimize();
     public static final VoxelShape PIPE_SOUTH = Shapes.or(
-            Block.box(0, 0, 13, 16, 16, 16)).optimize();
+            Block.box(0, 0, 13, 16, 15.98, 16)).optimize();
     public static final VoxelShape PIPE_EAST = Shapes.or(
-            Block.box(13, 0, 0, 16, 16, 16)).optimize();
+            Block.box(13, 0, 0, 16, 15.98, 16)).optimize();
     public static final VoxelShape PIPE_WEST = Shapes.or(
-            Block.box(0, 0, 0, 3, 16, 16)).optimize();
+            Block.box(0, 0, 0, 3, 15.98, 16)).optimize();
     public static final VoxelShape PIPE_DOWN = Shapes.or(
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
