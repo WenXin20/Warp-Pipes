@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.items;
 
 import com.mojang.logging.LogUtils;
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.List;
@@ -76,7 +77,7 @@ public class LinkerItem extends TieredItem {
             isBound = tag.getBoolean("Bound");
         }
 
-        if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)) {
+        if (state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE))) {
             if (getBound() == Boolean.FALSE) {
                 if (tag == null) {
                     tag = new CompoundTag();

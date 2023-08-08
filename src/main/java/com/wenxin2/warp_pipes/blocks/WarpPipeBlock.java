@@ -171,7 +171,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         if (!state.getValue(CLOSED) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
 
             if (warpPipeBE.getPersistentData().isEmpty()) {
-                
+
                 if (state.getValue(FACING) == Direction.UP) {
                     if (fluidAbove instanceof LavaFluid) {
                         if (random.nextInt(10) == 0) {
@@ -321,7 +321,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
+        if (state.getBlock() instanceof ClearWarpPipeBlock || (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE)) && !state.getValue(CLOSED)) {
             Entity passengerEntity = entity.getControllingPassenger();
             if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
                 if (entity instanceof Player) {
@@ -435,7 +435,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         double motionToCenterY = (centerY - entityY) / particleCount;
         double motionToCenterZ = (centerZ - entityZ) / particleCount;
 
-        if (state.getValue(ENTRANCE) && !state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
+        if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
             int entityId = entity.getId();
 
