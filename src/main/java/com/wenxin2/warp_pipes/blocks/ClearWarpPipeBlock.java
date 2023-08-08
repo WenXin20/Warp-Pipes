@@ -7,8 +7,11 @@ import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -246,5 +250,47 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
             }
         }
         return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+    }
+
+    @Override
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        double entityX = entity.getX();
+        double entityY = entity.getY();
+        double entityZ = entity.getZ();
+
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02) && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02)) {
+            this.moveSidewaysInPipe(entity);
+        }
+        super.entityInside(state, world, pos, entity);
+    }
+
+    public void moveSidewaysInPipe(Entity entity) {
+        Vec3 lookVec = entity.getLookAngle();
+        Vec3 moveVec = entity.getDeltaMovement();
+        double d0 = Math.min(1.5D, moveVec.y + 0.1D);
+        double speed = 1.25D;
+        double verticalSpeed = 1.15D;
+
+        if (entity instanceof LivingEntity && !entity.isShiftKeyDown()) {
+            Vec3 movement = new Vec3(lookVec.x * speed, moveVec.y * verticalSpeed, lookVec.z * speed);
+            entity.setDeltaMovement(movement.x, movement.y, movement.z);
+
+            if (entity.getDeltaMovement().y > 0 || entity.getDeltaMovement().y < 0) {
+                entity.setDeltaMovement(moveVec.x, d0, moveVec.z);
+            }
+        } else if (!entity.isShiftKeyDown()) {
+
+            Vec3 movement = new Vec3(moveVec.x * speed, moveVec.y * verticalSpeed, moveVec.z * speed);
+            entity.setDeltaMovement(movement.x, movement.y, movement.z);
+
+            if (entity.getDeltaMovement().y > 0 || entity.getDeltaMovement().y < 0) {
+                entity.setDeltaMovement(moveVec.x, d0, moveVec.z);
+            }
+        }
+        entity.resetFallDistance();
     }
 }
