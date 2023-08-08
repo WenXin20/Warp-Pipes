@@ -323,6 +323,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
         if (state.getBlock() instanceof ClearWarpPipeBlock || (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE)) && !state.getValue(CLOSED)) {
             Entity passengerEntity = entity.getControllingPassenger();
+
+            if (!state.getValue(ENTRANCE)) {
+                if (entity instanceof Player) {
+                    entity.teleportTo(pos.getX() + 0.5, pos.getY() - 1.0, pos.getZ() + 0.5);
+                } else {
+                    entity.teleportTo(pos.getX() + 0.5, pos.getY() - 1.0, pos.getZ() + 0.5);
+                    if (passengerEntity instanceof Player) {
+                        entity.unRide();
+                    }
+                }
+            }
             if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
