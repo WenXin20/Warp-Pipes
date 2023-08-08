@@ -321,10 +321,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        if (state.getBlock() instanceof ClearWarpPipeBlock || (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && state.getValue(ENTRANCE)) && !state.getValue(CLOSED)) {
+        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && !state.getValue(CLOSED)) {
             Entity passengerEntity = entity.getControllingPassenger();
 
-            if (!state.getValue(ENTRANCE)) {
+            if (state.getBlock() instanceof ClearWarpPipeBlock && !state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - 1.0, pos.getZ() + 0.5);
                 } else {
@@ -334,7 +334,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     }
                 }
             }
-            if (world.getBlockState(pos).getValue(FACING) == Direction.UP) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.UP && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                 } else {
@@ -344,7 +344,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     }
                 }
             }
-            if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
                 } else {
@@ -354,7 +354,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     }
                 }
             }
-            if (world.getBlockState(pos).getValue(FACING) == Direction.NORTH) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.NORTH && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
                 } else {
@@ -364,7 +364,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     }
                 }
             }
-            if (world.getBlockState(pos).getValue(FACING) == Direction.SOUTH) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.SOUTH && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
                 } else {
@@ -374,7 +374,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     }
                 }
             }
-            if (world.getBlockState(pos).getValue(FACING) == Direction.EAST) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.EAST && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
                 } else {
@@ -384,7 +384,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     }
                 }
             }
-            if (world.getBlockState(pos).getValue(FACING) == Direction.WEST) {
+            if (world.getBlockState(pos).getValue(FACING) == Direction.WEST && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(pos.getX() + entity.getBbWidth() - 1.0, pos.getY(), pos.getZ() + 0.5);
                 } else {
