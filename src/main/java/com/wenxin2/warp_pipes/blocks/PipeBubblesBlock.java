@@ -249,6 +249,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         } else {
             d0 = Math.min(1.8D, vec3.y + 0.1D);
         }
+
         entity.setDeltaMovement(vec3.x, d0, vec3.z);
     }
 
