@@ -7,9 +7,9 @@
 		"bottom_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_inner_nsw",
 		"side_ew": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_ew",
 		"side_inner_ew": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_inner_ew",
-		"particle": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side",
 		"top": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_top_closed",
-		"closed": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_closed"
+		"closed": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_closed",
+		"particle": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side"
 	},
 	"elements": [
 		{
@@ -19,7 +19,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [0, 0, 16, 16], "texture": "#side_ew", "cullface": "east"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#side_inner_ew"}
+				"west": {"uv": [16, 0, 0, 16], "texture": "#side_inner_ew"}
 			}
 		},
 		{
