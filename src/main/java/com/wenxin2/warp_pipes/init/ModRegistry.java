@@ -136,8 +136,8 @@ public class ModRegistry {
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
-                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.NONE)
-                        .sound(SoundType.GLASS).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::never)
+                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.NONE)
+                        .sound(SoundType.GLASS).strength(3.0F, 500.0F).isSuffocating(ModRegistry::never)
                         .isViewBlocking(ModRegistry::never).requiresCorrectToolForDrops().noOcclusion()), WarpPipes.CREATIVE_TAB);
 
 
