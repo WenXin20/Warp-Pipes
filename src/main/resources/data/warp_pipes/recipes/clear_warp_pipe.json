@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "warp_pipes",
+  "group": "clear_warp_pipes",
   "key": {
     "I": {
       "tag": "forge:ingots/copper"
