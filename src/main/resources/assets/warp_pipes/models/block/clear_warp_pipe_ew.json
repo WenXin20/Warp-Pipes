@@ -3,9 +3,9 @@
 	"parent": "minecraft:block/cube_bottom_top",
 	"render_type": "cutout",
 	"textures": {
-		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side",
 		"side_ew": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_ew",
-		"inner_ew": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner_ew"
+		"inner_ew": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner_ew",
+		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side"
 	},
 	"elements": [
 		{
@@ -25,7 +25,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [16, 0, 0, 16], "texture": "#side_ew", "cullface": "north"},
-				"south": {"uv": [16, 0, 0, 16], "texture": "#inner_ew"}
+				"south": {"uv": [0, 0, 16, 16], "texture": "#inner_ew"}
 			}
 		},
 		{
@@ -34,7 +34,7 @@
 			"to": [16, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#inner_ew"},
+				"north": {"uv": [16, 0, 0, 16], "texture": "#inner_ew"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#side_ew", "cullface": "south"}
 			}
 		},
@@ -44,7 +44,7 @@
 			"to": [16, 3, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"up": {"uv": [16, 0, 0, 16], "texture": "#inner_ew"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#inner_ew"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#side_ew", "cullface": "down"}
 			}
 		}
