@@ -5,9 +5,9 @@
 	"textures": {
 		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side",
 		"side": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side",
-		"inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner",
 		"side_e": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_e",
 		"side_w": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_w",
+		"inner": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner",
 		"inner_e": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner_e",
 		"inner_w": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner_w"
 	},
