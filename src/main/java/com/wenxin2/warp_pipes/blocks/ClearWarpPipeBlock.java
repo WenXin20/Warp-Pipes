@@ -3,10 +3,15 @@ package com.wenxin2.warp_pipes.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import java.util.Collection;
 import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -251,6 +257,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        RandomSource random = world.getRandom();
+        Vec3 moveVec = entity.getDeltaMovement();
+
         double entityX = entity.getX();
         double entityY = entity.getY();
         double entityZ = entity.getZ();
@@ -259,8 +268,25 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02) && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02)) {
+        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
+                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()) {
             this.moveSidewaysInPipe(entity);
+
+            if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
+                if (random.nextInt(10) == 0) {
+                    Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+                    for (ServerPlayer player : players) {
+                        for (int i = 0; i < 2; i++) {
+                            player.connection.send(new ClientboundLevelParticlesPacket(
+                                    ParticleTypes.EFFECT, false,
+                                    entityX, entityY, entityZ,
+                                    0.25F, 0.15F, 0.25F,
+                                    0, 2
+                            ));
+                        }
+                    }
+                }
+            }
         }
         super.entityInside(state, world, pos, entity);
     }
@@ -276,7 +302,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
             Vec3 movement = new Vec3(lookVec.x * speed, moveVec.y * verticalSpeed, lookVec.z * speed);
             entity.setDeltaMovement(movement.x, movement.y, movement.z);
 
-            if (entity.getDeltaMovement().y > 0 || entity.getDeltaMovement().y < 0) {
+            if (moveVec.y > 0 || moveVec.y < 0) {
                 entity.setDeltaMovement(moveVec.x, d0, moveVec.z);
             }
         } else if (!entity.isShiftKeyDown()) {
@@ -284,7 +310,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock {
             Vec3 movement = new Vec3(moveVec.x * speed, moveVec.y * verticalSpeed, moveVec.z * speed);
             entity.setDeltaMovement(movement.x, movement.y, movement.z);
 
-            if (entity.getDeltaMovement().y > 0 || entity.getDeltaMovement().y < 0) {
+            if (moveVec.y > 0 || moveVec.y < 0) {
                 entity.setDeltaMovement(moveVec.x, d0, moveVec.z);
             }
         }
