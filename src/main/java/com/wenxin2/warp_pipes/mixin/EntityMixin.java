@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -26,10 +25,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class EntityMixin {
     @Shadow public abstract Level getLevel();
 
-    @Shadow public abstract BlockPos getOnPos();
-
-    @Shadow public abstract SynchedEntityData getEntityData();
-
     @Shadow public abstract double getX();
 
     @Shadow public abstract double getY();
@@ -43,18 +38,18 @@ public abstract class EntityMixin {
 
     @Shadow public int portalCooldown;
 
-    @Shadow public abstract boolean isShiftKeyDown();
-
     @Shadow public abstract void setPortalCooldown();
 
-    @Shadow public abstract Direction getMotionDirection();
-
     @Shadow public abstract BlockPos blockPosition();
-
-    @Shadow private BlockPos blockPosition;
     @Shadow @Final protected RandomSource random;
 
     @Shadow public abstract int getBlockY();
+
+    @Shadow public abstract double getRandomX(double p_20209_);
+
+    @Shadow public abstract double getRandomY();
+
+    @Shadow public abstract double getRandomZ(double p_20263_);
 
     private static final int MAX_PARTICLE_COUNT = 100;
 
@@ -91,35 +86,14 @@ public abstract class EntityMixin {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        // Calculate random motion values within the desired range
-        float entityHeight = this.getBbHeight();
-        float entityWidth = this.getBbWidth();
-        float motionRangeMin = 0.1F;
-        float motionX = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
-        float motionY = random.nextFloat() * (entityHeight - motionRangeMin) + motionRangeMin;
-        float motionZ = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
-
         // Calculate a scaling factor based on entity dimensions
-        float scaleFactor = entityHeight * entityWidth; // You can adjust this formula as needed
+        float scaleFactor = this.getBbHeight() * this.getBbWidth(); // You can adjust this formula as needed
 
         // Calculate the particle count based on the scaling factor
         int particleCount = (int) (scaleFactor * 40); // You can adjust the multiplier to control particle density
 
         // Ensure particle count does not exceed the maximum limit
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
-
-        // Restrict motionY to the entity's height
-        motionY = Math.max(-entityHeight, Math.min(entityHeight, motionY));
-
-        // Calculate the center point at the bottom of the entity
-        double centerX = entityX;
-        double centerY = entityY - entityHeight / 2;
-        double centerZ = entityZ;
-
-        // Calculate the motion towards the center point
-        double motionToCenterX = (centerX - entityX) / particleCount;
-        double motionToCenterY = (centerY - entityY) / particleCount;
-        double motionToCenterZ = (centerZ - entityZ) / particleCount;
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
@@ -129,14 +103,12 @@ public abstract class EntityMixin {
                 Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
                 for (ServerPlayer player : players) {
                     for (int i = 0; i < particleCount; ++i) {
-                        double posX = entityX + motionToCenterX * i;
-                        double posY = entityY + entityHeight + motionToCenterY * i;
-                        double posZ = entityZ + motionToCenterZ * i;
                         player.connection.send(new ClientboundLevelParticlesPacket(
                                 ParticleTypes.ENCHANT,      // Particle type
-                                true,                       // Long distance
-                                posX, posY, posZ,           // Position
-                                motionX, -motionY, motionZ, // Motion
+                                false,                       // Long distance
+                                this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), // Position
+                                (random.nextFloat() - 0.5F) * 2.0F, -random.nextFloat(),
+                                (random.nextFloat() - 0.5F) * 2.0F, // Motion
                                 0,                          // Particle data
                                 2                           // Particle count
                         ));
