@@ -156,7 +156,6 @@ public abstract class EntityMixin {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
-                    System.out.print("EntityY: " + (this.getBlockY()) + ", BlockY: " + (blockY));
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }

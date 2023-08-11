@@ -398,6 +398,16 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 1.0F, 0.1F);
     }
 
+    public static void spawnParticles(Entity entity, Level world) {
+        RandomSource random = world.getRandom();
+        for(int i = 0; i < 40; ++i) {
+            world.addParticle(ParticleTypes.ENCHANT,
+                    entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
+                    (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
+                    (random.nextDouble() - 0.5D) * 2.0D);
+        }
+    }
+
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -413,6 +423,16 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
+            int entityId = entity.getId();
+
+            if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                WarpPipeBlock.spawnParticles(entity, world);
+                if (destinationPos != null) {
+                    WarpPipeBlock.spawnParticles(entity, world);
+                }
+                // Reset the teleport status for the entity
+                WarpPipeBlock.teleportedEntities.put(entityId, false);
+            }
 
             if (entity instanceof Player && entity.portalCooldown == 0 && destinationPos != null) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)

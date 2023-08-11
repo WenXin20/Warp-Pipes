@@ -2,19 +2,16 @@ package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Player.class)
@@ -45,6 +42,16 @@ public abstract class PlayerMixin extends Entity {
 
         super.baseTick();
     }
+
+    public void spawnParticles(Entity entity, Level world) {
+        RandomSource random = world.getRandom();
+        for(int i = 0; i < 40; ++i) {
+            world.addParticle(ParticleTypes.ENCHANT,
+                    entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
+                    (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
+                    (random.nextDouble() - 0.5D) * 2.0D);
+        }
+    }
     
     public void entityInside(Direction pipeDirection, BlockPos pos) {
         Level world = this.getLevel();
@@ -60,56 +67,14 @@ public abstract class PlayerMixin extends Entity {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        // Calculate random motion values within the desired range
-        float entityHeight = this.getBbHeight();
-        float entityWidth = this.getBbWidth();
-        float motionRangeMin = 0.1F;
-        float motionX = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
-        float motionY = random.nextFloat() * (entityHeight - motionRangeMin) + motionRangeMin;
-        float motionZ = random.nextFloat() * (entityWidth - motionRangeMin) + motionRangeMin;
-
-        // Calculate a scaling factor based on entity dimensions
-        float scaleFactor = entityHeight * entityWidth; // You can adjust this formula as needed
-
-        // Calculate the particle count based on the scaling factor
-        int particleCount = (int) (scaleFactor * 40); // You can adjust the multiplier to control particle density
-
-        // Ensure particle count does not exceed the maximum limit
-        particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
-
-        // Restrict motionY to the entity's height
-        motionY = Math.max(-entityHeight, Math.min(entityHeight, motionY));
-
-        // Calculate the center point at the bottom of the entity
-        double centerX = entityX;
-        double centerY = entityY - entityHeight / 2;
-        double centerZ = entityZ;
-
-        // Calculate the motion towards the center point
-        double motionToCenterX = (centerX - entityX) / particleCount;
-        double motionToCenterY = (centerY - entityY) / particleCount;
-        double motionToCenterZ = (centerZ - entityZ) / particleCount;
-
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
-            if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-                for (ServerPlayer player : players) {
-                    for (int i = 0; i < particleCount; ++i) {
-                        double posX = entityX + motionToCenterX * i;
-                        double posY = entityY + entityHeight + motionToCenterY * i;
-                        double posZ = entityZ + motionToCenterZ * i;
-                        player.connection.send(new ClientboundLevelParticlesPacket(
-                                ParticleTypes.ENCHANT,      // Particle type
-                                true,                       // Long distance
-                                posX, posY, posZ,           // Position
-                                motionX, -motionY, motionZ, // Motion
-                                0,                          // Particle data
-                                2                           // Particle count
-                        ));
-                    }
+            if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                this.spawnParticles(this, world);
+                if (destinationPos != null) {
+                    this.spawnParticles(this, world);
                 }
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
@@ -126,7 +91,6 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(this, destinationPos, world, state);
-                    System.out.println("EntityY: " + (this.getBlockY()) + ", BlockY: " + (blockY));
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }
