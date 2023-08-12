@@ -59,14 +59,30 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public static final VoxelShape PIPE_UP = Shapes.or(
             Block.box(0, 13, 0, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_NORTH = Shapes.or(
-            Block.box(0, 0.02, 0, 16, 16, 3)).optimize();
+            Block.box(0, 0, 0, 16, 16, 3)).optimize();
     public static final VoxelShape PIPE_SOUTH = Shapes.or(
-            Block.box(0, 0.02, 13, 16, 16, 16)).optimize();
+            Block.box(0, 0, 13, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_EAST = Shapes.or(
-            Block.box(13, 0.02, 0, 16, 16, 16)).optimize();
+            Block.box(13, 0, 0, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_WEST = Shapes.or(
-            Block.box(0, 0.02, 0, 3, 16, 16)).optimize();
+            Block.box(0, 0, 0, 3, 16, 16)).optimize();
     public static final VoxelShape PIPE_DOWN = Shapes.or(
+            Block.box(0, 0, 0, 16, 3, 16)).optimize();
+    public static final VoxelShape PIPE_FACING_UP = Shapes.or(
+            Block.box(0, 13, 0, 16, 16, 16)).optimize();
+    public static final VoxelShape PIPE_FACING_NORTH = Shapes.or(
+            Block.box(0, 0.02, 0, 16, 16, 3),
+            Block.box(0, 0, 0, 16, 16, 0.02)).optimize();
+    public static final VoxelShape PIPE_FACING_SOUTH = Shapes.or(
+            Block.box(0, 0.02, 13, 16, 16, 16),
+            Block.box(0, 0, 15.98, 16, 16, 16)).optimize();
+    public static final VoxelShape PIPE_FACING_EAST = Shapes.or(
+            Block.box(13, 0.02, 0, 16, 16, 16),
+            Block.box(15.98, 0, 0, 16, 16, 16)).optimize();
+    public static final VoxelShape PIPE_FACING_WEST = Shapes.or(
+            Block.box(0, 0.02, 0, 3, 16, 16),
+            Block.box(0, 0, 0, 0.02, 16, 16)).optimize();
+    public static final VoxelShape PIPE_FACING_DOWN = Shapes.or(
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
 
     public ClearWarpPipeBlock(Properties properties) {
@@ -85,25 +101,50 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {// Start with a center post shape
         VoxelShape shape = Shapes.empty();
+        VoxelShape shapeDown = Shapes.empty();
+
+        if (state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
+            if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
+                shapeDown = Shapes.or(shapeDown, PIPE_FACING_DOWN);
+            }
+            if (!state.getValue(UP)) {
+                shapeDown = Shapes.or(shapeDown, PIPE_FACING_UP);
+            }
+            if (!state.getValue(NORTH)) {
+                shapeDown = Shapes.or(shapeDown, PIPE_FACING_NORTH);
+            }
+            if (!state.getValue(EAST)) {
+                shapeDown = Shapes.or(shapeDown, PIPE_FACING_EAST);
+            }
+            if (!state.getValue(SOUTH)) {
+                shapeDown = Shapes.or(shapeDown, PIPE_FACING_SOUTH);
+            }
+            if (!state.getValue(WEST)) {
+                shapeDown = Shapes.or(shapeDown, PIPE_FACING_WEST);
+            }
+            return shapeDown.optimize();
+        }
 
         // Combine shapes based on the directional block states
-        if (!state.getValue(UP) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.UP))) {
-            shape = Shapes.or(shape, PIPE_UP);
-        }
-        if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
-            shape = Shapes.or(shape, PIPE_DOWN);
-        }
-        if (!state.getValue(NORTH) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.NORTH))) {
-            shape = Shapes.or(shape, PIPE_NORTH);
-        }
-        if (!state.getValue(EAST) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.EAST))) {
-            shape = Shapes.or(shape, PIPE_EAST);
-        }
-        if (!state.getValue(SOUTH) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.SOUTH))) {
-            shape = Shapes.or(shape, PIPE_SOUTH);
-        }
-        if (!state.getValue(WEST) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.WEST))) {
-            shape = Shapes.or(shape, PIPE_WEST);
+        if (!(state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED))) {
+            if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
+                shape = Shapes.or(shape, PIPE_DOWN);
+            }
+            if (!state.getValue(UP) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.UP))) {
+                shape = Shapes.or(shape, PIPE_UP);
+            }
+            if (!state.getValue(NORTH) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.NORTH))) {
+                shape = Shapes.or(shape, PIPE_NORTH);
+            }
+            if (!state.getValue(EAST) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.EAST))) {
+                shape = Shapes.or(shape, PIPE_EAST);
+            }
+            if (!state.getValue(SOUTH) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.SOUTH))) {
+                shape = Shapes.or(shape, PIPE_SOUTH);
+            }
+            if (!state.getValue(WEST) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.WEST))) {
+                shape = Shapes.or(shape, PIPE_WEST);
+            }
         }
 
         if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.UP) {
