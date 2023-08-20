@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.wenxin2.warp_pipes.init.Config;
 import java.util.Collection;
 import java.util.Map;
 import net.minecraft.Util;
@@ -177,24 +178,28 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
         if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
                 state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||
-                (state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
-                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.UP) ||
-                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
-                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.NORTH) ||
-                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(EAST) && state.getValue(WEST) &&
-                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.SOUTH) ||
-                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(WEST) &&
-                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.EAST) ||
-                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) &&
-                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.WEST)) {
-            if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player && player.isCreative()) {
+            (state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                    state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.UP) ||
+            (state.getValue(UP) && state.getValue(DOWN) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                    state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.NORTH) ||
+            (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                    state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.SOUTH) ||
+            (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(WEST) &&
+                    state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.EAST) ||
+            (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) &&
+                    state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.WEST)) {
+
+            if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player
+                    && player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()) {
                 shape = Shapes.or(shape, PIPE_ALL);
             }
         }
 
         if (!state.getValue(ENTRANCE) && state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH)
                 && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST)) {
-            if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player && player.isCreative()) {
+
+            if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player
+                    && player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()) {
                 shape = Shapes.or(shape, PIPE_ALL);
             }
         }
