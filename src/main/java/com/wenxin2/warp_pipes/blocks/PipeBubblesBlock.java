@@ -38,11 +38,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup {
     public static final BooleanProperty DRAG_DOWN = BlockStateProperties.DRAG;
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final IntegerProperty DISTANCE = IntegerProperty.create("distance", 0, 6);
+    public static final IntegerProperty DISTANCE = IntegerProperty.create("distance", 0, 9);
 
     public PipeBubblesBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.TRUE).setValue(DISTANCE, 3));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.TRUE).setValue(DISTANCE, 9));
     }
 
     @Override
@@ -132,8 +132,8 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         }
 
         if (state.is(ModRegistry.PIPE_BUBBLES.get())) {
-            // Clamp the distance value to be within the allowed range (0 to 3)
-            distance = Math.min(Math.max(distance, 0), 3);
+            // Clamp the distance value to be within the allowed range (0 to Config)
+            distance = Math.min(Math.max(distance, 0), Config.PIPE_BUBBLES_DISTANCE.get());
             return state.setValue(DISTANCE, distance);
         } else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED)) {
             return ModRegistry.PIPE_BUBBLES.get().defaultBlockState().setValue(DRAG_DOWN, Boolean.FALSE)
@@ -149,7 +149,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         if (state.getBlock() instanceof PipeBubblesBlock) {
             return state.getValue(DISTANCE);
         }
-        return 3;
+        return Config.PIPE_BUBBLES_DISTANCE.get();
     }
 
     public void addParticles(Level world, ParticleOptions particleOptions, double xPos, double yPos, double zPos,
