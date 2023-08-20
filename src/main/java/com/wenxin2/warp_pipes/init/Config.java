@@ -13,7 +13,6 @@ public class Config
     public static ForgeConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
-    public static ForgeConfigSpec.IntValue PIPE_BUBBLES_DISTANCE;
 
     static
     {
@@ -31,10 +30,6 @@ public class Config
         DEBUG_PIPE_BUBBLES_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Pipe Bubbles. Creative Only. " + "[Default: false]")
                 .define("debug_pipe_bubbles_selection_box", false);
         BUILDER.pop();
-
-        BUILDER.push(CATEGORY_COMMON);
-        PIPE_BUBBLES_DISTANCE = BUILDER.comment("Max distance on blocks underwater pipes push you. " + "[Default: 3]")
-                .defineInRange("rotation_distance", 3, 1, 8);
         BUILDER.pop();
     }
 }
