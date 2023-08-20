@@ -45,10 +45,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // Imports
-    implementation fg.deobf("curse.maven:connectedness-${connectedness_version}")
     implementation fg.deobf("curse.maven:ctm-${ctm_version}")
     implementation fg.deobf("curse.maven:jei-${jei_version}")
-    implementation fg.deobf("curse.maven:reforgium-${reforgium_version}")
 }
 
 mixin {
@@ -168,11 +166,6 @@ jar.finalizedBy('reobfJar')
 // publish.dependsOn('reobfJar')
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
     repositories {
         maven {
             url "file://${project.projectDir}/mcmodsrepo"
