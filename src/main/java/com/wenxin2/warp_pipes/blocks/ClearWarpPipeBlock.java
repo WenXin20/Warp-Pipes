@@ -15,6 +15,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -84,6 +86,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             Block.box(0, 0, 0, 0.02, 16, 16)).optimize();
     public static final VoxelShape PIPE_FACING_DOWN = Shapes.or(
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
+    public static final VoxelShape PIPE_ALL = Shapes.or(
+            Block.box(4, 4, 4, 12, 12, 12)).optimize();
 
     public ClearWarpPipeBlock(Properties properties) {
         super(properties);
@@ -98,8 +102,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         stateBuilder.add(CLOSED, ENTRANCE, FACING, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
 
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {// Start with a center post shape
+    public VoxelShape voxelShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         VoxelShape shape = Shapes.empty();
         VoxelShape shapeDown = Shapes.empty();
 
@@ -121,6 +124,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             }
             if (!state.getValue(WEST)) {
                 shapeDown = Shapes.or(shapeDown, PIPE_FACING_WEST);
+            }
+            else {
+                Shapes.box(2, 2, 2, 14, 14, 14);
             }
             return shapeDown.optimize();
         }
@@ -168,9 +174,45 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         return shape.optimize();
     }
 
+    public VoxelShape noCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        VoxelShape shape = Shapes.empty();
+
+        if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
+                state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||
+                (state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.UP) ||
+                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.NORTH) ||
+                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.SOUTH) ||
+                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(WEST) &&
+                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.EAST) ||
+                (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) &&
+                        state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.WEST)) {
+            if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player && player.isCreative()) {
+                shape = Shapes.or(shape, PIPE_ALL);
+            }
+        }
+
+        if (!state.getValue(ENTRANCE) && state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH)
+                && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST)) {
+            if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player && player.isCreative()) {
+                shape = Shapes.or(shape, PIPE_ALL);
+            }
+        }
+        return shape.optimize();
+    }
+
+    @NotNull
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        VoxelShape shape = Shapes.or(this.voxelShape(state, blockGetter, pos, context), this.noCollisionShape(state, blockGetter, pos, context));
+        return shape.optimize();
+    }
+
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
-        return this.getShape(state, blockGetter, pos, collisionContext);
+        return this.voxelShape(state, blockGetter, pos, collisionContext);
     }
 
     @Override
@@ -242,8 +284,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public boolean skipRendering(BlockState state, BlockState neighborState, Direction direction) {
         if (state.getValue(CLOSED) && (state.getValue(NORTH) || state.getValue(SOUTH) || state.getValue(EAST) || state.getValue(WEST))) {
             return neighborState.is(this) && neighborState.getValue(CLOSED) || super.skipRendering(state, neighborState, direction);
-        } else return state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST)
-                && state.getValue(WEST) && state.getValue(DOWN);
+        }
+        return false;
     }
 
     @Override
