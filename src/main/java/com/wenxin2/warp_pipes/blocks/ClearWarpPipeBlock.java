@@ -101,8 +101,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     public VoxelShape voxelShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        VoxelShape shape = Shapes.create(8, 8, 8, 8.00001, 8.00001, 8.00001);
-        VoxelShape shapeDown = Shapes.create(8, 8, 8, 8.00001, 8.00001, 8.00001);
+        VoxelShape shape = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
+        VoxelShape shapeDown = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
         if (state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
             if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
@@ -173,7 +173,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     public VoxelShape noCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = Shapes.create(8, 8, 8, 8.00001, 8.00001, 8.00001);
+        VoxelShape shape = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
         if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
                 state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||
