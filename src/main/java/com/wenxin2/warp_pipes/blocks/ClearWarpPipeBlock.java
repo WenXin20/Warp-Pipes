@@ -2,7 +2,6 @@ package com.wenxin2.warp_pipes.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.Collection;
 import java.util.Map;
 import net.minecraft.Util;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -102,9 +100,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         stateBuilder.add(CLOSED, ENTRANCE, FACING, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
 
-    public VoxelShape voxelShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = Shapes.empty();
-        VoxelShape shapeDown = Shapes.empty();
+    public VoxelShape voxelShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        VoxelShape shape = Shapes.create(8, 8, 8, 8.00001, 8.00001, 8.00001);
+        VoxelShape shapeDown = Shapes.create(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
         if (state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
             if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
@@ -175,7 +173,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     public VoxelShape noCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = Shapes.empty();
+        VoxelShape shape = Shapes.create(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
         if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
                 state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||
@@ -206,24 +204,19 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     @NotNull
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = Shapes.or(this.voxelShape(state, blockGetter, pos, context), this.noCollisionShape(state, blockGetter, pos, context));
+        VoxelShape shape = Shapes.or(this.voxelShape(state, blockGetter, pos), this.noCollisionShape(state, blockGetter, pos, context));
         return shape.optimize();
     }
 
+
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
-        return this.voxelShape(state, blockGetter, pos, collisionContext);
+        return this.voxelShape(state, blockGetter, pos);
     }
 
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        return this.getShape(state, blockGetter, pos, CollisionContext.empty());
-    }
-
-    @Override
-    public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state)
-    {
-        return new WarpPipeBlockEntity(pos, state);
+        return this.voxelShape(state, blockGetter, pos);
     }
 
     @Override
