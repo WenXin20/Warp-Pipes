@@ -30,6 +30,5 @@ public class Config
         DEBUG_PIPE_BUBBLES_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Pipe Bubbles. Creative Only. " + "[Default: false]")
                 .define("debug_pipe_bubbles_selection_box", false);
         BUILDER.pop();
-        BUILDER.pop();
     }
 }
