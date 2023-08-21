@@ -135,7 +135,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             // Clamp the distance value to be within the allowed range (0 to 3)
             distance = Math.min(Math.max(distance, 0), 3);
             return state.setValue(DISTANCE, distance);
-        } else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED)) {
+        } else if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES) && !state.getValue(WarpPipeBlock.CLOSED)) {
             return ModRegistry.PIPE_BUBBLES.get().defaultBlockState().setValue(DRAG_DOWN, Boolean.FALSE)
                     .setValue(FACING, state.getValue(FACING));
         }
@@ -143,7 +143,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
     }
 
     private static int getDistance(BlockState state) {
-        if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED)) {
+        if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES) && !state.getValue(WarpPipeBlock.CLOSED)) {
             return 0;
         }
         if (state.getBlock() instanceof PipeBubblesBlock) {

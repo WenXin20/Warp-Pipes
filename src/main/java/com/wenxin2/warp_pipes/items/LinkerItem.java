@@ -63,66 +63,59 @@ public class LinkerItem extends TieredItem {
         ItemStack item = useOnContext.getItemInHand();
         CompoundTag tag = item.getTag();
 
-        if (player != null) {
-            if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown()) {
-                world.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 4);
-                item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-                this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
-                this.spawnParticles(world, pos, ParticleTypes.ENCHANTED_HIT);
-                return InteractionResult.SUCCESS;
-            }
-        }
-
         if (tag != null && tag.contains("Bound")) {
             isBound = tag.getBoolean("Bound");
         }
 
-        if (state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE))) {
-            if (getBound() == Boolean.FALSE) {
-                if (tag == null) {
-                    tag = new CompoundTag();
-                }
+        if (player != null) {
+            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)))
+                    && !player.isShiftKeyDown()) {
+                if (getBound() == Boolean.FALSE) {
+                    if (tag == null) {
+                        tag = new CompoundTag();
+                    }
 
-                tag.putBoolean("Bound", Boolean.TRUE);
-                tag.putDouble("X", (int)pos.getX());
-                tag.putDouble("Y", (int)pos.getY());
-                tag.putDouble("Z", (int)pos.getZ());
-                tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
-                tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
-                this.setBound(Boolean.TRUE);
+                    tag.putBoolean("Bound", Boolean.TRUE);
+                    tag.putDouble("X", (int) pos.getX());
+                    tag.putDouble("Y", (int) pos.getY());
+                    tag.putDouble("Z", (int) pos.getZ());
+                    tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
+                    tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
+                    this.setBound(Boolean.TRUE);
 
-                if (player != null) {
-                    player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                            tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
-                }
-                this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
-            } else if (getBound()) {
-                Player player1 = useOnContext.getPlayer();
-                if (tag == null) {
-                    tag = new CompoundTag();
-                }
-                tag.putBoolean("Bound", Boolean.FALSE);
-                this.setBound(Boolean.FALSE);
-                this.writeTag(world.dimension(), pos, item.getOrCreateTag());
+                    if (player != null) {
+                        player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
+                                tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
+                    }
+                    this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
+                    this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
+                } else if (getBound()) {
+                    Player player1 = useOnContext.getPlayer();
+                    if (tag == null) {
+                        tag = new CompoundTag();
+                    }
+                    tag.putBoolean("Bound", Boolean.FALSE);
+                    this.setBound(Boolean.FALSE);
+                    this.writeTag(world.dimension(), pos, item.getOrCreateTag());
 
-                if (player1 != null) {
-                    item.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-                    player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                            tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.GOLD), true);
-                }
+                    if (player1 != null) {
+                        item.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                        player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
+                                tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.GOLD), true);
+                    }
 
-                GlobalPos globalPos = LinkerItem.createWarpPos(tag);
-                if (globalPos == null)
-                    return interactionResult;
-                BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
-                if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal &&  LinkerItem.isLinked(item)) {
-                    this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
+                    GlobalPos globalPos = LinkerItem.createWarpPos(tag);
+                    if (globalPos == null)
+                        return interactionResult;
+                    BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
+                    if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
+                        this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
+                    }
+                    this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
+                    this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
                 }
-                this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
-            return InteractionResult.sidedSuccess(world.isClientSide);
         }
         return interactionResult;
     }

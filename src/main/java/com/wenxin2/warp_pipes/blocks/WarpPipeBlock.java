@@ -40,15 +40,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
+    public static final BooleanProperty BUBBLES = BooleanProperty.create("bubbles");
 
     public WarpPipeBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(BUBBLES, Boolean.TRUE).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(CLOSED, ENTRANCE, FACING);
+        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (isClosed) {
                     world.scheduleTick(pos, this, 4);
                 } else {
-                    world.setBlock(pos, state.cycle(CLOSED), 2);
+                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
                     this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
             }
@@ -109,8 +110,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
-            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
+            serverWorld.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
             this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
+        }
+
+        if (state.getValue(CLOSED) && state.getValue(BUBBLES)) {
+            serverWorld.setBlock(pos, state.setValue(BUBBLES, Boolean.FALSE), 2);
         }
 
         if (!state.getValue(CLOSED)) {
