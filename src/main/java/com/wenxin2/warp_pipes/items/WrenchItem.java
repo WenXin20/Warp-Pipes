@@ -64,7 +64,7 @@ public class WrenchItem extends LinkerItem {
 
             for (int i = 0; i < 40; ++i) {
                 worldAccessor.addParticle(particleOptions,
-                        pos.getX() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)), pos.getY() + 1.5D,
+                        pos.getX() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)), pos.getY() + 1.1D,
                         pos.getZ() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)),
                         (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
                         (random.nextDouble() - 0.5D) * 2.0D);
