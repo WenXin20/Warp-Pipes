@@ -102,8 +102,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     public VoxelShape voxelShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        VoxelShape shape = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
-        VoxelShape shapeDown = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
+        VoxelShape shape = Shapes.empty();
+        VoxelShape shapeDown = Shapes.empty();
 
         if (state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED)) {
             if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
