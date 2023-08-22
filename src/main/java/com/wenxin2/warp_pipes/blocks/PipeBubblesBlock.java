@@ -109,7 +109,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         if (state.getValue(FACING) == Direction.UP) {
             return (stateBelow.is(ModRegistry.PIPE_BUBBLES.get()) || stateBelow.getBlock() instanceof WarpPipeBlock);
         } else if (state.getValue(FACING) == Direction.DOWN) {
-            return (stateAbove.is(ModRegistry.PIPE_BUBBLES.get()) || stateAbove.getBlock() instanceof WarpPipeBlock);
+            return (stateAbove.is(ModRegistry.PIPE_BUBBLES.get()) || (stateAbove.getBlock() instanceof WarpPipeBlock && !stateAbove.getValue(WarpPipeBlock.CLOSED)));
         } else if (state.getValue(FACING) == Direction.NORTH) {
             return (stateSouth.is(ModRegistry.PIPE_BUBBLES.get()) || stateSouth.getBlock() instanceof WarpPipeBlock);
         } else if (state.getValue(FACING) == Direction.SOUTH) {

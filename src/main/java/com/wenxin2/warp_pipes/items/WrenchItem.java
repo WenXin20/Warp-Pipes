@@ -126,7 +126,6 @@ public class WrenchItem extends LinkerItem {
                     if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
                         if (s1.equals("closed")) {
                             worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 8);
-                            worldAccessor.scheduleTick(pos.below(), block, 8);
                             if (state.getValue(WarpPipeBlock.CLOSED)) {
                                 message(player, Component.translatable(this.getDescriptionId() + ".closed.false")
                                         .withStyle(ChatFormatting.GOLD));

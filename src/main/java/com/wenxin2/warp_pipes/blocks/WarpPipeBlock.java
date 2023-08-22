@@ -166,7 +166,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         Block blockEast = world.getBlockState(pos.east()).getBlock();
         Block blockWest = world.getBlockState(pos.west()).getBlock();
 
-        if (!state.getValue(CLOSED) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
+        if (!state.getValue(CLOSED) && state.getValue(BUBBLES) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
 
             if (warpPipeBE.getPersistentData().isEmpty()) {
 
