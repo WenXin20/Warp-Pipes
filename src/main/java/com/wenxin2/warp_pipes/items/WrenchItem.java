@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import java.util.Collection;
 import javax.annotation.Nullable;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -111,10 +112,7 @@ public class WrenchItem extends LinkerItem {
             StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
             String s = Registry.BLOCK.getKey(block).toString();
 
-            if (!(block instanceof WarpPipeBlock)) {
-                message(player, Component.translatable(this.getDescriptionId() + ".empty", s));
-                return false;
-            } else {
+            if (block instanceof WarpPipeBlock) {
                 CompoundTag compoundtag = stack.getOrCreateTagElement("DebugProperty");
                 String s1 = compoundtag.getString(s);
                 Property<?> property = statedefinition.getProperty(s1);
@@ -125,10 +123,18 @@ public class WrenchItem extends LinkerItem {
                 }
 
                 if (cycleProperty && state.getValue(WarpPipeBlock.ENTRANCE)) {
-                    if (!worldAccessor.isClientSide()) {
+                    if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
                         BlockState stateCycle = cycleState(state, property, player.isSecondaryUseActive());
-                        worldAccessor.setBlock(pos, stateCycle, 18);
-                        message(player, Component.translatable(this.getDescriptionId() + ".update", property.getName(), getNameHelper(stateCycle, property)));
+                        if (s1.equals("closed")) {
+                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 20);
+                            message(player, Component.translatable(this.getDescriptionId() + ".closed", property.getName(), getNameHelper(stateCycle, property))
+                                    .withStyle(ChatFormatting.GOLD));
+                        }
+                        if (s1.equals("bubbles")) {
+                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.BUBBLES), 20);
+                            message(player, Component.translatable(this.getDescriptionId() + ".bubbles", property.getName(), getNameHelper(stateCycle, property))
+                                    .withStyle(ChatFormatting.GOLD));
+                        }
                     }
 
                     if (s1.equals("closed"))
@@ -143,7 +149,12 @@ public class WrenchItem extends LinkerItem {
                     String nextProperty = "closed".equals(s1) ? "bubbles" : "closed";
                     compoundtag.putString(s, nextProperty);
                     property = statedefinition.getProperty(nextProperty);
-                    message(player, Component.translatable(this.getDescriptionId() + ".select", property.getName(), getNameHelper(state, property)));
+                    if (!s1.equals("closed")) {
+                        message(player, Component.translatable(this.getDescriptionId() + ".select.closed", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
+                    }
+                    if (!s1.equals("bubbles")) {
+                        message(player, Component.translatable(this.getDescriptionId() + ".select.bubbles", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
+                    }
                 }
 
                 return true;

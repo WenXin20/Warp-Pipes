@@ -109,29 +109,28 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-        if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
-            serverWorld.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
-            this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
+
+        if (state.getValue(FACING) == Direction.UP) {
+            PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
+        } else if (state.getValue(FACING) == Direction.DOWN) {
+            PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state);
+        } else if (state.getValue(FACING) == Direction.NORTH) {
+            PipeBubblesBlock.repeatColumnNorth(serverWorld, pos.north(), state);
+        } else if (state.getValue(FACING) == Direction.SOUTH) {
+            PipeBubblesBlock.repeatColumnSouth(serverWorld, pos.south(), state);
+        } else if (state.getValue(FACING) == Direction.EAST) {
+            PipeBubblesBlock.repeatColumnEast(serverWorld, pos.east(), state);
+        } else if (state.getValue(FACING) == Direction.WEST) {
+            PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state);
         }
 
-        if (state.getValue(CLOSED) && state.getValue(BUBBLES)) {
+        if (state.getValue(CLOSED)) {
             serverWorld.setBlock(pos, state.setValue(BUBBLES, Boolean.FALSE), 2);
         }
 
-        if (!state.getValue(CLOSED)) {
-            if (state.getValue(FACING) == Direction.UP) {
-                PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
-            } else if (state.getValue(FACING) == Direction.DOWN) {
-                PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state);
-            } else if (state.getValue(FACING) == Direction.NORTH) {
-                PipeBubblesBlock.repeatColumnNorth(serverWorld, pos.north(), state);
-            } else if (state.getValue(FACING) == Direction.SOUTH) {
-                PipeBubblesBlock.repeatColumnSouth(serverWorld, pos.south(), state);
-            } else if (state.getValue(FACING) == Direction.EAST) {
-                PipeBubblesBlock.repeatColumnEast(serverWorld, pos.east(), state);
-            } else if (state.getValue(FACING) == Direction.WEST) {
-                PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state);
-            }
+        if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
+            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
+            this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
         }
     }
 
@@ -144,7 +143,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             destinationPos = warpPipeBE.destinationPos;
 
             if (destinationPos == null) {
-                world.scheduleTick(pos, this, 20);
+                world.scheduleTick(pos, this, 3);
             }
         }
     }
