@@ -115,7 +115,7 @@ public class WrenchItem extends LinkerItem {
             if (block instanceof WarpPipeBlock) {
                 CompoundTag compoundtag = stack.getOrCreateTagElement("DebugProperty");
                 String s1 = compoundtag.getString(s);
-                Property<?> property = statedefinition.getProperty(s1);
+                statedefinition.getProperty(s1);
 
                 if (!s1.equals("closed") && !s1.equals("bubbles")) {
                     s1 = "closed";
@@ -124,16 +124,26 @@ public class WrenchItem extends LinkerItem {
 
                 if (cycleProperty && state.getValue(WarpPipeBlock.ENTRANCE)) {
                     if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
-                        BlockState stateCycle = cycleState(state, property, player.isSecondaryUseActive());
                         if (s1.equals("closed")) {
-                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 20);
-                            message(player, Component.translatable(this.getDescriptionId() + ".closed", property.getName(), getNameHelper(stateCycle, property))
-                                    .withStyle(ChatFormatting.GOLD));
+                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 8);
+                            worldAccessor.scheduleTick(pos.below(), block, 8);
+                            if (state.getValue(WarpPipeBlock.CLOSED)) {
+                                message(player, Component.translatable(this.getDescriptionId() + ".closed.false")
+                                        .withStyle(ChatFormatting.GOLD));
+                            } else {
+                                message(player, Component.translatable(this.getDescriptionId() + ".closed.true")
+                                        .withStyle(ChatFormatting.GOLD));
+                            }
                         }
                         if (s1.equals("bubbles")) {
                             worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.BUBBLES), 20);
-                            message(player, Component.translatable(this.getDescriptionId() + ".bubbles", property.getName(), getNameHelper(stateCycle, property))
-                                    .withStyle(ChatFormatting.GOLD));
+                            if (state.getValue(WarpPipeBlock.BUBBLES)) {
+                                message(player, Component.translatable(this.getDescriptionId() + ".bubbles.false")
+                                        .withStyle(ChatFormatting.GOLD));
+                            } else {
+                                message(player, Component.translatable(this.getDescriptionId() + ".bubbles.true")
+                                        .withStyle(ChatFormatting.GOLD));
+                            }
                         }
                     }
 
@@ -148,7 +158,7 @@ public class WrenchItem extends LinkerItem {
 
                     String nextProperty = "closed".equals(s1) ? "bubbles" : "closed";
                     compoundtag.putString(s, nextProperty);
-                    property = statedefinition.getProperty(nextProperty);
+                    Property<?> property = statedefinition.getProperty(nextProperty);
                     if (!s1.equals("closed")) {
                         message(player, Component.translatable(this.getDescriptionId() + ".select.closed", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
                     }
@@ -159,6 +169,7 @@ public class WrenchItem extends LinkerItem {
 
                 return true;
             }
+            return false;
         }
     }
 

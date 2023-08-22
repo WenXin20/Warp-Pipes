@@ -124,10 +124,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state);
         }
 
-        if (state.getValue(CLOSED)) {
-            serverWorld.setBlock(pos, state.setValue(BUBBLES, Boolean.FALSE), 2);
-        }
-
         if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
             serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
             this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
