@@ -280,7 +280,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
     @Override
     public boolean skipRendering(BlockState state, BlockState neighborState, Direction direction) {
-        if (state.getValue(CLOSED) && (state.getValue(NORTH) || state.getValue(SOUTH) || state.getValue(EAST) || state.getValue(WEST))) {
+        if (state.getValue(CLOSED) && (state.getValue(UP) || state.getValue(DOWN) || state.getValue(NORTH) || state.getValue(SOUTH)
+                || state.getValue(EAST) || state.getValue(WEST))) {
             return neighborState.is(this) && neighborState.getValue(CLOSED) || super.skipRendering(state, neighborState, direction);
         }
         return false;
