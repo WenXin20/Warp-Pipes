@@ -10,6 +10,8 @@ public class Config
     public static final String CATEGORY_DEBUG = "Debug";
     public static final String CATEGORY_COMMON = "Common";
 
+    public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH;
+    public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
     public static ForgeConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
@@ -22,6 +24,13 @@ public class Config
 
     public static void initializeConfig()
     {
+        BUILDER.push(CATEGORY_COMMON);
+        CREATIVE_WRENCH = BUILDER.comment("Require creative to turn bubbles on/off and open/close pipes. " + "[Default: false]")
+                .define("creative_wrench", false);
+        CREATIVE_WRENCH_PIPE_LINKING = BUILDER.comment("Require creative to link pipes. " + "[Default: false]")
+                .define("creative_wrench_pipe_linking", false);
+        BUILDER.pop();
+
         BUILDER.comment("Warp Pipes Config").push(CATEGORY_DEBUG);
         DEBUG_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Clear Warp Pipes. " + "[Default: false]")
                 .define("debug_selection_box", false);

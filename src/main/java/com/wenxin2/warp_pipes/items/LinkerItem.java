@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.init.Config;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -54,7 +55,6 @@ public class LinkerItem extends TieredItem {
 
     @Override
     public InteractionResult useOn(UseOnContext useOnContext) {
-        InteractionResult interactionResult = super.useOn(useOnContext);
         Player player = useOnContext.getPlayer();
         Level world = useOnContext.getLevel();
         BlockPos pos = useOnContext.getClickedPos();
@@ -67,7 +67,10 @@ public class LinkerItem extends TieredItem {
             isBound = tag.getBoolean("Bound");
         }
 
-        if (player != null) {
+        if (player != null && !player.isCreative() && Config.CREATIVE_WRENCH_PIPE_LINKING.get()) {
+            player.displayClientMessage(Component.translatable("display.warp_pipes.linker.requires_creative").withStyle(ChatFormatting.RED), true);
+            return InteractionResult.sidedSuccess(world.isClientSide);
+        } else if (player != null) {
             if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)))
                     && !player.isShiftKeyDown()) {
                 if (getBound() == Boolean.FALSE) {
@@ -83,10 +86,8 @@ public class LinkerItem extends TieredItem {
                     tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
                     this.setBound(Boolean.TRUE);
 
-                    if (player != null) {
-                        player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                                tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
-                    }
+                    player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
+                            tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
                 } else if (getBound()) {
@@ -106,7 +107,7 @@ public class LinkerItem extends TieredItem {
 
                     GlobalPos globalPos = LinkerItem.createWarpPos(tag);
                     if (globalPos == null)
-                        return interactionResult;
+                        return super.useOn(useOnContext);
                     BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
                     if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
                         this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
@@ -117,7 +118,7 @@ public class LinkerItem extends TieredItem {
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
-        return interactionResult;
+        return super.useOn(useOnContext);
     }
 
     public static boolean isLinked(ItemStack stack) {

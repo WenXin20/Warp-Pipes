@@ -1,13 +1,17 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -102,7 +106,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
         long currentTime = System.currentTimeMillis();
 
-        if (!world.isClientSide) {
+        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
+            message(player, Component.translatable("item.warp_pipes.pipe_wrench.requires_creative").withStyle(ChatFormatting.RED));
+            super.attack(state, world, pos, player);
+        } else if (!world.isClientSide) {
             if (currentTime - lastInteractionTime >= COOLDOWN_DURATION) {
                 if (itemStack.getItem() instanceof WrenchItem wrenchItem) {
                     wrenchItem.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
@@ -111,6 +118,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
         }
         super.attack(state, world, pos, player);
+    }
+
+    public static void message(Player player, Component component) {
+        ((ServerPlayer)player).sendSystemMessage(component, true);
     }
 
     @Override

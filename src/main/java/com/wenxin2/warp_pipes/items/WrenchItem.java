@@ -3,7 +3,7 @@ package com.wenxin2.warp_pipes.items;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import java.util.Collection;
+import com.wenxin2.warp_pipes.init.Config;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -33,7 +33,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -75,7 +74,10 @@ public class WrenchItem extends LinkerItem {
 
     @Override
     public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player player) {
-        if (!world.isClientSide) {
+        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
+            message(player, Component.translatable(this.getDescriptionId() + ".requires_creative").withStyle(ChatFormatting.RED));
+            return !player.isCreative();
+        } else if (!world.isClientSide) {
             this.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
         }
         return !player.isCreative();
@@ -104,8 +106,9 @@ public class WrenchItem extends LinkerItem {
         return super.useOn(useOnContext);
     }
 
-    private boolean handleInteraction(Player player, BlockState state, LevelAccessor worldAccessor, BlockPos pos, boolean cycleProperty, ItemStack stack) {
-        if (!player.canUseGameMasterBlocks()) {
+    public boolean handleInteraction(Player player, BlockState state, LevelAccessor worldAccessor, BlockPos pos, boolean isPlayerRightClicking, ItemStack stack) {
+        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !worldAccessor.isClientSide()) {
+            message(player, Component.translatable(this.getDescriptionId() + ".requires_creative").withStyle(ChatFormatting.RED));
             return false;
         } else {
             Block block = state.getBlock();
@@ -122,7 +125,7 @@ public class WrenchItem extends LinkerItem {
                     compoundtag.putString(s, s1);
                 }
 
-                if (cycleProperty && state.getValue(WarpPipeBlock.ENTRANCE)) {
+                if (isPlayerRightClicking && state.getValue(WarpPipeBlock.ENTRANCE) && !(!player.isCreative() && Config.CREATIVE_WRENCH.get())) {
                     if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
                         if (s1.equals("closed")) {
                             worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 8);
@@ -158,10 +161,10 @@ public class WrenchItem extends LinkerItem {
                     String nextProperty = "closed".equals(s1) ? "bubbles" : "closed";
                     compoundtag.putString(s, nextProperty);
                     Property<?> property = statedefinition.getProperty(nextProperty);
-                    if (!s1.equals("closed")) {
+                    if (!s1.equals("closed") && !worldAccessor.isClientSide()) {
                         message(player, Component.translatable(this.getDescriptionId() + ".select.closed", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
                     }
-                    if (!s1.equals("bubbles")) {
+                    if (!s1.equals("bubbles") && !worldAccessor.isClientSide()) {
                         message(player, Component.translatable(this.getDescriptionId() + ".select.bubbles", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
                     }
                 }
@@ -172,7 +175,7 @@ public class WrenchItem extends LinkerItem {
         }
     }
 
-    private static void message(Player player, Component component) {
+    public static void message(Player player, Component component) {
         ((ServerPlayer)player).sendSystemMessage(component, true);
     }
 
