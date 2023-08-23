@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -11,8 +12,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -89,6 +92,25 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
         return false;
+    }
+
+    private static final long COOLDOWN_DURATION = 500;
+    private long lastInteractionTime = 0;
+
+    @Override
+    public void attack(BlockState state, Level world, BlockPos pos, Player player) {
+        ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+        long currentTime = System.currentTimeMillis();
+
+        if (!world.isClientSide) {
+            if (currentTime - lastInteractionTime >= COOLDOWN_DURATION) {
+                if (itemStack.getItem() instanceof WrenchItem wrenchItem) {
+                    wrenchItem.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
+                    lastInteractionTime = currentTime;
+                }
+            }
+        }
+        super.attack(state, world, pos, player);
     }
 
     @Override
