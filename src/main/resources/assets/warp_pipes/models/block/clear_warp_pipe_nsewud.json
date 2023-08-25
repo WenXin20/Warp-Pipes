@@ -1,5 +1,5 @@
 {
-	"render_type": "cutout",
+	"render_type": "translucent",
 	"textures": {
 		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side"
 	}
