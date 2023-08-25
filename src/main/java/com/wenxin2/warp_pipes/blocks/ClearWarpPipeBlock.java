@@ -155,23 +155,25 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             }
         }
 
-        if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.UP) {
-            shape = Shapes.or(shape, PIPE_UP);
-        }
-        if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.DOWN) {
-            shape = Shapes.or(shape, PIPE_DOWN);
-        }
-        if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.NORTH) {
-            shape = Shapes.or(shape, PIPE_NORTH);
-        }
-        if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.SOUTH) {
-            shape = Shapes.or(shape, PIPE_SOUTH);
-        }
-        if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.EAST) {
-            shape = Shapes.or(shape, PIPE_EAST);
-        }
-        if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.WEST) {
-            shape = Shapes.or(shape, PIPE_WEST);
+        if (state.getValue(ENTRANCE)) {
+            if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.UP) {
+                shape = Shapes.or(shape, PIPE_UP);
+            }
+            if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.DOWN) {
+                shape = Shapes.or(shape, PIPE_DOWN);
+            }
+            if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.NORTH) {
+                shape = Shapes.or(shape, PIPE_NORTH);
+            }
+            if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.SOUTH) {
+                shape = Shapes.or(shape, PIPE_SOUTH);
+            }
+            if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.EAST) {
+                shape = Shapes.or(shape, PIPE_EAST);
+            }
+            if (state.getValue(CLOSED) && state.getValue(FACING) == Direction.WEST) {
+                shape = Shapes.or(shape, PIPE_WEST);
+            }
         }
         return shape.optimize();
     }
@@ -196,9 +198,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                 if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player
                         && player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
                         || (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player1
-                                && (player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof LinkerItem
-                                        || player1.getItemInHand(player1.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()
-                                        || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
+                            && (player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof LinkerItem
+                                || player1.getItemInHand(player1.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()
+                                || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
                     shape = Shapes.or(shape, PIPE_ALL);
                 }
             }
@@ -210,9 +212,9 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player
                     && player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
                     || (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player1
-                            && (player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof LinkerItem
-                                    || player1.getItemInHand(player1.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()
-                                    || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
+                        && (player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof LinkerItem
+                            || player1.getItemInHand(player1.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()
+                            || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
                 shape = Shapes.or(shape, PIPE_ALL);
             }
         }
