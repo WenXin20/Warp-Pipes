@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_bottom_top",
-	"render_type": "translucent",
+	"render_type": "cutout",
 	"textures": {
 		"closed": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_closed",
 		"bottom": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_se",
