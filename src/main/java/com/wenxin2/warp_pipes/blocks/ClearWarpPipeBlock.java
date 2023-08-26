@@ -105,7 +105,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
 
-    public VoxelShape voxelShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+    public VoxelShape voxelShape(BlockState state) {
         VoxelShape shape = Shapes.empty();
         VoxelShape shapeDown = Shapes.empty();
 
@@ -179,7 +179,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         return shape.optimize();
     }
 
-    public VoxelShape noCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+    public VoxelShape noCollisionShape(BlockState state, CollisionContext context) {
         VoxelShape shape = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
         Player player = (Player) ((EntityCollisionContext) context).getEntity();
@@ -229,19 +229,19 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     @NotNull
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = Shapes.or(this.voxelShape(state, blockGetter, pos), this.noCollisionShape(state, blockGetter, pos, context));
+        VoxelShape shape = Shapes.or(this.voxelShape(state), this.noCollisionShape(state, context));
         return shape.optimize();
     }
 
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
-        return this.voxelShape(state, blockGetter, pos);
+        return this.voxelShape(state);
     }
 
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        return this.voxelShape(state, blockGetter, pos);
+        return this.voxelShape(state);
     }
 
     @Override
