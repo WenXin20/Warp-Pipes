@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DebugStickItem;
+import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -200,7 +201,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                         || (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player1
                             && (player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof LinkerItem
                                 || player1.getItemInHand(player1.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()
-                                || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
+                                || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem
+                                || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DiggerItem))) {
                     shape = Shapes.or(shape, PIPE_ALL);
                 }
             }
@@ -214,7 +216,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                     || (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player1
                         && (player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof LinkerItem
                             || player1.getItemInHand(player1.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()
-                            || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
+                            || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DebugStickItem
+                            || player1.getItemInHand(player1.getUsedItemHand()).getItem() instanceof DiggerItem))) {
                 shape = Shapes.or(shape, PIPE_ALL);
             }
         }
