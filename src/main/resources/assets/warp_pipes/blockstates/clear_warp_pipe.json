@@ -813,6 +813,16 @@
     "facing=west,entrance=true,closed=true,north=false,south=false,east=true,west=false,up=true,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_sd", "x": 90, "y": 270 },
     "facing=west,entrance=true,closed=true,north=false,south=false,east=true,west=false,up=false,down=true": { "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_nd", "x": 90, "y": 270 },
 
+    "facing=west,entrance=true,closed=false,north=true,south=false,east=true,west=true,up=false,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_ed", "x": 90, "y": 270 },
+    "facing=west,entrance=true,closed=false,north=false,south=true,east=true,west=true,up=false,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_wd", "x": 90, "y": 270 },
+    "facing=west,entrance=true,closed=false,north=false,south=false,east=true,west=true,up=true,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_sd", "x": 90, "y": 270 },
+    "facing=west,entrance=true,closed=false,north=false,south=false,east=true,west=true,up=false,down=true": { "model": "warp_pipes:block/clear_warp_pipe_entrance_nd", "x": 90, "y": 270 },
+
+    "facing=west,entrance=true,closed=true,north=true,south=false,east=true,west=true,up=false,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_ed", "x": 90, "y": 270 },
+    "facing=west,entrance=true,closed=true,north=false,south=true,east=true,west=true,up=false,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_wd", "x": 90, "y": 270 },
+    "facing=west,entrance=true,closed=true,north=false,south=false,east=true,west=true,up=true,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_sd", "x": 90, "y": 270 },
+    "facing=west,entrance=true,closed=true,north=false,south=false,east=true,west=true,up=false,down=true": { "model": "warp_pipes:block/clear_warp_pipe_entrance_closed_nd", "x": 90, "y": 270 },
+
     "facing=west,entrance=true,closed=false,north=true,south=true,east=false,west=false,up=false,down=false": { "model": "warp_pipes:block/clear_warp_pipe_entrance_ew", "x": 90, "y": 270 },
     "facing=west,entrance=true,closed=false,north=false,south=false,east=false,west=false,up=true,down=true": { "model": "warp_pipes:block/clear_warp_pipe_entrance_ns", "x": 90, "y": 270 },
 
