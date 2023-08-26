@@ -185,8 +185,8 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             }
         } else {
             if (state.getValue(FACING) == Direction.UP) {
-                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE_COLUMN_UP, x + 0.5D, y, z + 0.5D, 0.0D, 1.0D, 0.0D);
-                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE_COLUMN_UP, x + random.nextFloat(),
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 1.0D, 0.0D);
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
                         y + random.nextFloat(), z + random.nextFloat(), 0.0D, 1.0D, 0.0D);
             } else if (state.getValue(FACING) == Direction.NORTH) {
                 this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 0.04D, -1.5D);
