@@ -391,17 +391,19 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                 && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()) {
             this.moveSidewaysInPipe(entity);
 
-            if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
-                if (random.nextInt(10) == 0) {
-                    Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-                    for (ServerPlayer player : players) {
-                        for (int i = 0; i < 2; i++) {
-                            player.connection.send(new ClientboundLevelParticlesPacket(
-                                    ParticleTypes.EFFECT, false,
-                                    entityX, entityY, entityZ,
-                                    0.25F, 0.15F, 0.25F,
-                                    0, 2
-                            ));
+            if (!world.isClientSide) {
+                if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
+                    if (random.nextInt(10) == 0) {
+                        Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+                        for (ServerPlayer player : players) {
+                            for (int i = 0; i < 2; i++) {
+                                player.connection.send(new ClientboundLevelParticlesPacket(
+                                        ParticleTypes.EFFECT, false,
+                                        entityX, entityY, entityZ,
+                                        0.25F, 0.15F, 0.25F,
+                                        0, 2
+                                ));
+                            }
                         }
                     }
                 }
