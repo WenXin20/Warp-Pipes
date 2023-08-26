@@ -32,15 +32,15 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public void setDestinationPos(@Nullable BlockPos pos) {
         this.destinationPos = pos;
         if (this.level != null) {
-            BlockState blockState = this.getBlockState();
-            this.level.setBlock(this.getBlockPos(), blockState.setValue(WarpPipeBlock.ENTRANCE, Boolean.TRUE), 4);
+            BlockState state = this.getBlockState();
+            this.level.setBlock(this.getBlockPos(), state, 4);
         }
     }
 
     public void setDestinationDim(@Nullable Level world) {
         if (this.level != null) {
-            BlockState blockState = this.getBlockState();
-            this.level.setBlock(this.getBlockPos(), blockState.setValue(WarpPipeBlock.ENTRANCE, Boolean.TRUE), 4);
+            BlockState state = this.getBlockState();
+            this.level.setBlock(this.getBlockPos(), state, 4);
         }
     }
 
