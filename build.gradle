@@ -47,6 +47,7 @@ dependencies {
     // Imports
     implementation fg.deobf("curse.maven:ctm-${ctm_version}")
     implementation fg.deobf("curse.maven:jei-${jei_version}")
+    implementation fg.deobf("curse.maven:spark-${spark_version}")
 }
 
 mixin {
