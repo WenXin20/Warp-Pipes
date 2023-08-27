@@ -126,6 +126,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos posNeighbor, boolean b) {
+
         if (!world.isClientSide) {
             boolean isClosed = state.getValue(CLOSED);
             if (isClosed != world.hasNeighborSignal(pos)) {
@@ -136,8 +137,71 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
             }
-
         }
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos pos2) {
+        Block blockAbove = worldAccessor.getBlockState(pos.above()).getBlock();
+        Block blockBelow = worldAccessor.getBlockState(pos.below()).getBlock();
+        Block blockNorth = worldAccessor.getBlockState(pos.north()).getBlock();
+        Block blockSouth = worldAccessor.getBlockState(pos.south()).getBlock();
+        Block blockEast = worldAccessor.getBlockState(pos.east()).getBlock();
+        Block blockWest = worldAccessor.getBlockState(pos.west()).getBlock();
+
+        boolean facingUp = state.getValue(FACING) == Direction.UP;
+        boolean facingDown = state.getValue(FACING) == Direction.DOWN;
+        boolean facingNorth = state.getValue(FACING) == Direction.NORTH;
+        boolean facingSouth = state.getValue(FACING) == Direction.SOUTH;
+        boolean facingEast = state.getValue(FACING) == Direction.EAST;
+        boolean facingWest = state.getValue(FACING) == Direction.WEST;
+
+        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
+            worldAccessor.scheduleTick(pos, this, 20);
+        }
+
+        if (facingUp) {
+            if (blockAbove == this) {
+                return state.setValue(ENTRANCE, Boolean.FALSE);
+            }
+            else return state.setValue(ENTRANCE, Boolean.TRUE);
+        }
+
+        if (facingDown) {
+            if (blockBelow == this) {
+                return state.setValue(ENTRANCE, Boolean.FALSE);
+            }
+            else return state.setValue(ENTRANCE, Boolean.TRUE);
+        }
+
+        if (facingNorth) {
+            if (blockNorth == this) {
+                return state.setValue(ENTRANCE, Boolean.FALSE);
+            }
+            else return state.setValue(ENTRANCE, Boolean.TRUE);
+        }
+
+        if (facingSouth) {
+            if (blockSouth == this) {
+                return state.setValue(ENTRANCE, Boolean.FALSE);
+            }
+            else return state.setValue(ENTRANCE, Boolean.TRUE);
+        }
+
+        if (facingEast) {
+            if (blockEast == this) {
+                return state.setValue(ENTRANCE, Boolean.FALSE);
+            }
+            else return state.setValue(ENTRANCE, Boolean.TRUE);
+        }
+
+        if (facingWest) {
+            if (blockWest == this) {
+                return state.setValue(ENTRANCE, Boolean.FALSE);
+            }
+            else return state.setValue(ENTRANCE, Boolean.TRUE);
+        }
+        return state.setValue(ENTRANCE, Boolean.FALSE);
     }
 
     @Override
@@ -165,12 +229,63 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState neighborState, boolean b) {
+
+        Block blockAbove = world.getBlockState(pos.above()).getBlock();
+        Block blockBelow = world.getBlockState(pos.below()).getBlock();
+        Block blockNorth = world.getBlockState(pos.north()).getBlock();
+        Block blockSouth = world.getBlockState(pos.south()).getBlock();
+        Block blockEast = world.getBlockState(pos.east()).getBlock();
+        Block blockWest = world.getBlockState(pos.west()).getBlock();
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
         BlockPos destinationPos = null;
 
         if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
             world.scheduleTick(pos, this, 3);
+        }
+
+        if (state.getValue(FACING) == Direction.UP) {
+            if (blockAbove == this) {
+                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
+            }
+            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+        }
+
+        if (state.getValue(FACING) == Direction.DOWN) {
+            if (blockBelow == this) {
+                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
+            }
+            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+        }
+
+        if (state.getValue(FACING) == Direction.NORTH) {
+            if (blockNorth == this) {
+                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
+            }
+            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+        }
+
+        if (state.getValue(FACING) == Direction.SOUTH) {
+            if (blockSouth == this) {
+                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
+            }
+            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+        }
+
+        if (state.getValue(FACING) == Direction.EAST) {
+            if (blockEast == this) {
+                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
+            }
+            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+        }
+
+        if (state.getValue(FACING) == Direction.WEST) {
+            if (blockWest == this) {
+                world.scheduleTick(pos, this, 3);
+                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
+            }
+            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
         }
     }
 
@@ -269,69 +384,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
         }
         super.animateTick(state, world, pos, random);
-    }
-
-    @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos pos2) {
-        Block blockAbove = worldAccessor.getBlockState(pos.above()).getBlock();
-        Block blockBelow = worldAccessor.getBlockState(pos.below()).getBlock();
-        Block blockNorth = worldAccessor.getBlockState(pos.north()).getBlock();
-        Block blockSouth = worldAccessor.getBlockState(pos.south()).getBlock();
-        Block blockEast = worldAccessor.getBlockState(pos.east()).getBlock();
-        Block blockWest = worldAccessor.getBlockState(pos.west()).getBlock();
-
-        boolean facingUp = state.getValue(FACING) == Direction.UP;
-        boolean facingDown = state.getValue(FACING) == Direction.DOWN;
-        boolean facingNorth = state.getValue(FACING) == Direction.NORTH;
-        boolean facingSouth = state.getValue(FACING) == Direction.SOUTH;
-        boolean facingEast = state.getValue(FACING) == Direction.EAST;
-        boolean facingWest = state.getValue(FACING) == Direction.WEST;
-
-        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
-            worldAccessor.scheduleTick(pos, this, 20);
-        }
-
-        if (facingUp) {
-            if (blockAbove instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE);
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE);
-        }
-
-        if (facingDown) {
-            if (blockBelow instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE);
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE);
-        }
-
-        if (facingNorth) {
-            if (blockNorth instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE);
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE);
-        }
-
-        if (facingSouth) {
-            if (blockSouth instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE);
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE);
-        }
-
-        if (facingEast) {
-            if (blockEast instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE);
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE);
-        }
-
-        if (facingWest) {
-            if (blockWest instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE);
-            }
-        }
-        return state.setValue(ENTRANCE, Boolean.TRUE);
     }
 
     private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
