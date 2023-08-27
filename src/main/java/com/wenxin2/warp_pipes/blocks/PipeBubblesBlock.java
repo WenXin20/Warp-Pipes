@@ -42,7 +42,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     public PipeBubblesBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.TRUE).setValue(DISTANCE, 3));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.FALSE).setValue(DISTANCE, 3));
     }
 
     @Override
