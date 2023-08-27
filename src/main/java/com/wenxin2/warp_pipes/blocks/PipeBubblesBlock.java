@@ -230,7 +230,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         BlockState stateAbove = world.getBlockState(pos.above());
-        if (stateAbove.isAir()) {
+        if (stateAbove.isAir() && state.getValue(FACING) == Direction.UP) {
             if (entity instanceof Boat boat) {
                 boat.onAboveBubbleCol(Boolean.FALSE);
             } else this.onAboveUpBubbleCol(state.getValue(DRAG_DOWN), entity);
