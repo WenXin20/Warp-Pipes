@@ -11,7 +11,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -228,9 +230,10 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         BlockState stateAbove = world.getBlockState(pos.above());
-
         if (stateAbove.isAir()) {
-            this.onAboveUpBubbleCol(state.getValue(DRAG_DOWN), entity);
+            if (entity instanceof Boat boat) {
+                boat.onAboveBubbleCol(Boolean.FALSE);
+            } else this.onAboveUpBubbleCol(state.getValue(DRAG_DOWN), entity);
             if (!world.isClientSide) {
                 ServerLevel serverWorld = (ServerLevel)world;
 
