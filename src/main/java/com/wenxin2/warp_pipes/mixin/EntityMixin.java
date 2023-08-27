@@ -2,7 +2,6 @@ package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.init.ModRegistry;
 import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +20,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -53,18 +51,7 @@ public abstract class EntityMixin {
 
     @Shadow public abstract double getRandomZ(double p_20263_);
 
-    @Shadow public abstract BlockPos getOnPos();
-
     private static final int MAX_PARTICLE_COUNT = 100;
-
-    @Inject(method = "isInBubbleColumn", at = @At("RETURN"), cancellable = true)
-    private void modifyIsInBubbleColumn(CallbackInfoReturnable<Boolean> info) {
-        Level world = this.getLevel();
-        BlockPos pos = this.getOnPos();
-        boolean isBubbleColumn = info.getReturnValue();
-        boolean isPipeBubbles = isBubbleColumn || world.getBlockState(pos).is(ModRegistry.PIPE_BUBBLES.get());
-        info.setReturnValue(isPipeBubbles);
-    }
 
     @Inject(at = @At("TAIL"), method = "baseTick")
     public void baseTick(CallbackInfo ci) {
