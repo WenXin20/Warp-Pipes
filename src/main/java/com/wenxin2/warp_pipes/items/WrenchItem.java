@@ -10,9 +10,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -161,7 +161,7 @@ public class WrenchItem extends LinkerItem {
         } else {
             Block block = state.getBlock();
             StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
-            String s = Registry.BLOCK.getKey(block).toString();
+            String s = BuiltInRegistries.BLOCK.getKey(block).toString();
 
             if (block instanceof WarpPipeBlock) {
                 CompoundTag compoundtag = stack.getOrCreateTagElement("DebugProperty");
