@@ -17,21 +17,21 @@ public class ModCreativeTabs {
                 output.accept(ModRegistry.PIPE_WRENCH.get());
 
                 output.accept(ModRegistry.WHITE_WARP_PIPE.get());
-                output.accept(ModRegistry.ORANGE_WARP_PIPE.get());
-                output.accept(ModRegistry.MAGENTA_WARP_PIPE.get());
-                output.accept(ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
                 output.accept(ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
+                output.accept(ModRegistry.GRAY_WARP_PIPE.get());
+                output.accept(ModRegistry.BLACK_WARP_PIPE.get());
+                output.accept(ModRegistry.BROWN_WARP_PIPE.get());
+                output.accept(ModRegistry.RED_WARP_PIPE.get());
+                output.accept(ModRegistry.ORANGE_WARP_PIPE.get());
                 output.accept(ModRegistry.YELLOW_WARP_PIPE.get());
                 output.accept(ModRegistry.LIME_WARP_PIPE.get());
-                output.accept(ModRegistry.PINK_WARP_PIPE.get());
-                output.accept(ModRegistry.GRAY_WARP_PIPE.get());
-                output.accept(ModRegistry.CYAN_WARP_PIPE.get());
-                output.accept(ModRegistry.PURPLE_WARP_PIPE.get());
-                output.accept(ModRegistry.BLACK_WARP_PIPE.get());
-                output.accept(ModRegistry.BLUE_WARP_PIPE.get());
-                output.accept(ModRegistry.BROWN_WARP_PIPE.get());
                 output.accept(ModRegistry.GREEN_WARP_PIPE.get());
-                output.accept(ModRegistry.RED_WARP_PIPE.get());
+                output.accept(ModRegistry.CYAN_WARP_PIPE.get());
+                output.accept(ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
+                output.accept(ModRegistry.BLUE_WARP_PIPE.get());
+                output.accept(ModRegistry.PURPLE_WARP_PIPE.get());
+                output.accept(ModRegistry.MAGENTA_WARP_PIPE.get());
+                output.accept(ModRegistry.PINK_WARP_PIPE.get());
                 output.accept(ModRegistry.CLEAR_WARP_PIPE.get());
 
             }).build());
