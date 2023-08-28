@@ -1,6 +1,5 @@
 package com.wenxin2.warp_pipes.blocks.entities;
 
-import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;

@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.init.Config;
+import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -54,8 +57,53 @@ public class WrenchItem extends LinkerItem {
     }
 
     @Override
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level world, List<Component> list, TooltipFlag tooltip) {
+
+        list.add(Component.literal(""));
+
+        if (Screen.hasShiftDown()) {
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.right_click").withStyle(ChatFormatting.DARK_GREEN));
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click").withStyle(ChatFormatting.BLUE));
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.left_click").withStyle(ChatFormatting.DARK_PURPLE));
+            list.add(Component.literal(""));
+
+        } else {
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+        }
+
+        super.appendHoverText(stack, world, list, tooltip);
+    }
+
+    @Override
     public int getEnchantmentValue() {
         return this.tier.getEnchantmentValue();
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairStack) {
+        return repairStack.is(Tags.Items.INGOTS_COPPER) || super.isValidRepairItem(stack, repairStack);
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack stack, LivingEntity livingEntity, LivingEntity hurtEntity) {
+        stack.hurtAndBreak(2, hurtEntity, (entity) -> {
+            entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+        });
+        return true;
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
+    }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+        return net.minecraftforge.common.ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
+    }
+
+    private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
+        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     private void spawnParticles(LevelAccessor worldAccessor, BlockPos pos, ParticleOptions particleOptions) {
@@ -185,36 +233,5 @@ public class WrenchItem extends LinkerItem {
 
     private static <T> T getRelative(Iterable<T> iterable, @Nullable T t, boolean b) {
         return (T)(b ? Util.findPreviousInIterable(iterable, t) : Util.findNextInIterable(iterable, t));
-    }
-
-    private static <T extends Comparable<T>> String getNameHelper(BlockState state, Property<T> property) {
-        return property.getName(state.getValue(property));
-    }
-
-    @Override
-    public boolean isValidRepairItem(ItemStack stack, ItemStack repairStack) {
-        return repairStack.is(Tags.Items.INGOTS_COPPER) || super.isValidRepairItem(stack, repairStack);
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity livingEntity, LivingEntity hurtEntity) {
-        stack.hurtAndBreak(2, hurtEntity, (entity) -> {
-            entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-        });
-        return true;
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
-    }
-
-    @Override
-    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
-        return net.minecraftforge.common.ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
-    }
-
-    private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 }

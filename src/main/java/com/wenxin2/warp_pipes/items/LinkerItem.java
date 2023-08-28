@@ -193,7 +193,8 @@ public class LinkerItem extends TieredItem {
             }
         }
         else {
-            list.add(Component.translatable("display.warp_pipes.linker.not_bound_tooltip", true).withStyle(ChatFormatting.GRAY));
+            list.add(Component.translatable("display.warp_pipes.linker.not_bound_tooltip", true)
+                    .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
         }
     }
 }
