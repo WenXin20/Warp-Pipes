@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow public abstract Level getLevel();
+    @Shadow public abstract Level level();
 
     @Shadow public abstract double getX();
 
@@ -55,7 +55,7 @@ public abstract class EntityMixin {
 
     @Inject(at = @At("TAIL"), method = "baseTick")
     public void baseTick(CallbackInfo ci) {
-        Level world = this.getLevel();
+        Level world = this.level();
         BlockPos pos = this.blockPosition();
         BlockState state = world.getBlockState(pos);
 
@@ -73,7 +73,7 @@ public abstract class EntityMixin {
     }
     
     public void entityInside(Direction pipeDirection, BlockPos pos) {
-        Level world = this.getLevel();
+        Level world = this.level();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         BlockPos destinationPos = null;
