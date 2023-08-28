@@ -24,7 +24,7 @@ public abstract class PlayerMixin extends Entity {
 
     @Override
     public void baseTick() {
-        Level world = this.getLevel();
+        Level world = this.level();
         BlockPos pos = this.blockPosition();
         BlockState state = world.getBlockState(pos);
 
@@ -54,7 +54,7 @@ public abstract class PlayerMixin extends Entity {
     }
     
     public void entityInside(Direction pipeDirection, BlockPos pos) {
-        Level world = this.getLevel();
+        Level world = this.level();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         BlockPos destinationPos = null;
