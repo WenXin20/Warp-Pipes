@@ -36,8 +36,8 @@ public abstract class LivingEntityMixin extends Entity {
             boolean flag = livingEntity instanceof Player;
 
             if (!this.getEyeInFluidType().isAir()
-                    && !world.getBlockState(new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ())).is(Blocks.BUBBLE_COLUMN)
-                    && !world.getBlockState(new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ())).is(ModRegistry.PIPE_BUBBLES.get())) {
+                    && !world.getBlockState(BlockPos.containing(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)
+                    && !world.getBlockState(BlockPos.containing(this.getX(), this.getEyeY(), this.getZ())).is(ModRegistry.PIPE_BUBBLES.get())) {
 
                 boolean flag1 = livingEntity.canDrownInFluidType(this.getEyeInFluidType())
                         && !MobEffectUtil.hasWaterBreathing(livingEntity)
@@ -65,8 +65,8 @@ public abstract class LivingEntityMixin extends Entity {
             // Forge: Move to if statement since we need to increase the air supply if in bubble column or can't drown
             if (this.getAirSupply() < this.getMaxAirSupply()
                     && (!livingEntity.canDrownInFluidType(this.getEyeInFluidType())
-                    || world.getBlockState(new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ())).is(Blocks.BUBBLE_COLUMN)
-                    || world.getBlockState(new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ())).is(ModRegistry.PIPE_BUBBLES.get()))) {
+                    || world.getBlockState(BlockPos.containing(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN)
+                    || world.getBlockState(BlockPos.containing(this.getX(), this.getEyeY(), this.getZ())).is(ModRegistry.PIPE_BUBBLES.get()))) {
                 this.setAirSupply(livingEntity.increaseAirSupply(this.getAirSupply()));
             }
         }
