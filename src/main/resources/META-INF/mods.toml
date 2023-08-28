@@ -16,9 +16,9 @@ version="${minecraft_version}-${jar_version}"
 # A display name for the mod
 displayName="Warp Pipes"
 # A URL for the "homepage" for this mod, displayed in the mod UI
-# displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
+displayURL="https://github.com/WenXin20/Warp-Pipes" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="warp_pipes_logo.png"
+logoFile="warp_pipes_banner.png"
 # A text field displayed in the mod UI
 credits="Made by WenXin2"
 # A text field displayed in the mod UI
@@ -26,7 +26,7 @@ authors="WenXin2"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-  A mod that adds Warp Pipes from Mario.
+  Warp Pipes!! A new method of transportation!
   '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.warp_pipes]] #optional
