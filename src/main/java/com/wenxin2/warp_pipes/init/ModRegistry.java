@@ -14,17 +14,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+//@Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
     public static final RegistryObject<Item> PIPE_WRENCH;
 
@@ -52,97 +49,97 @@ public class ModRegistry {
     static
     {
         PIPE_WRENCH = registerItem("pipe_wrench",
-                () -> new WrenchItem(new Item.Properties().durability(128).tab(WarpPipes.CREATIVE_TAB), Tiers.IRON));
+                () -> new WrenchItem(new Item.Properties().durability(128), Tiers.IRON));
 
 
         WHITE_WARP_PIPE = registerBlock("white_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.SNOW)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         ORANGE_WARP_PIPE = registerBlock("orange_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_ORANGE)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         MAGENTA_WARP_PIPE = registerBlock("magenta_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_MAGENTA)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         LIGHT_BLUE_WARP_PIPE = registerBlock("light_blue_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_BLUE)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         YELLOW_WARP_PIPE = registerBlock("yellow_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_YELLOW)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         LIME_WARP_PIPE = registerBlock("lime_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_GREEN)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         PINK_WARP_PIPE = registerBlock("pink_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_PINK)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         GRAY_WARP_PIPE = registerBlock("gray_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         LIGHT_GRAY_WARP_PIPE = registerBlock("light_gray_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_LIGHT_GRAY)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         CYAN_WARP_PIPE = registerBlock("cyan_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_CYAN)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         PURPLE_WARP_PIPE = registerBlock("purple_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_PURPLE)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         BLUE_WARP_PIPE = registerBlock("blue_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_BLUE)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLUE)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         BROWN_WARP_PIPE = registerBlock("brown_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_BROWN)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         RED_WARP_PIPE = registerBlock("red_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         BLACK_WARP_PIPE = registerBlock("black_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_BLACK)
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
                         .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F).isViewBlocking(ModRegistry::always)
                         .requiresCorrectToolForDrops()), WarpPipes.CREATIVE_TAB);
 
         CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
-                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.NONE)
+                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
                         .sound(SoundType.GLASS).strength(3.0F, 500.0F).isSuffocating(ModRegistry::never)
                         .isViewBlocking(ModRegistry::never).requiresCorrectToolForDrops().noOcclusion()), WarpPipes.CREATIVE_TAB);
 
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
-                () -> new PipeBubblesBlock(BlockBehaviour.Properties.of(Material.BUBBLE_COLUMN).noCollission().noLootTable()));
+                () -> new PipeBubblesBlock(BlockBehaviour.Properties.of().noCollission().noLootTable()));
 
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
@@ -152,7 +149,7 @@ public class ModRegistry {
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block, CreativeModeTab tab)
     {
         RegistryObject<Block> blocks = WarpPipes.BLOCKS.register(name, block);
-        WarpPipes.ITEMS.register(name, () -> new BlockItem(blocks.get(), new Item.Properties().tab(tab)));
+        WarpPipes.ITEMS.register(name, () -> new BlockItem(blocks.get(), new Item.Properties()));
         return blocks;
     }
 
