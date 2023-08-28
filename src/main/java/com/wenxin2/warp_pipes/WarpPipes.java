@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.init.ModCreativeTabs;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -32,15 +33,6 @@ public class WarpPipes
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, WarpPipes.MODID);
 
-    public static CreativeModeTab CREATIVE_TAB = new CreativeModeTab("warp_pipes")
-    {
-        @Override
-        public ItemStack makeIcon()
-        {
-            return ModRegistry.GREEN_WARP_PIPE.get().asItem().getDefaultInstance();
-        }
-    };
-
     public WarpPipes()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -49,6 +41,7 @@ public class WarpPipes
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
+        ModCreativeTabs.TABS.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
 
