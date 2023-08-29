@@ -269,12 +269,12 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             this.onInsideWestBubbleColumn(state.getValue(DRAG_DOWN), entity);
         }
 
-        LivingEntity livingEntity = (LivingEntity) entity;
-
-        if (!world.isClientSide && livingEntity.canDrownInFluidType(Fluids.WATER.getFluidType())) {
-            int refillAmount = 1;
-            int newAir = Math.min(livingEntity.getAirSupply() + refillAmount, livingEntity.getMaxAirSupply());
-            livingEntity.setAirSupply(newAir);
+        if (entity instanceof LivingEntity livingEntity) {
+            if (!world.isClientSide && livingEntity.canDrownInFluidType(Fluids.WATER.getFluidType())) {
+                int refillAmount = 1;
+                int newAir = Math.min(livingEntity.getAirSupply() + refillAmount, livingEntity.getMaxAirSupply());
+                livingEntity.setAirSupply(newAir);
+            }
         }
     }
 
