@@ -9,7 +9,6 @@ import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
@@ -140,7 +139,7 @@ public class ModRegistry {
 
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
-                () -> new PipeBubblesBlock(BlockBehaviour.Properties.of().noCollission().noLootTable()));
+                () -> new PipeBubblesBlock(BlockBehaviour.Properties.of().replaceable().noCollission().noLootTable()));
 
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
