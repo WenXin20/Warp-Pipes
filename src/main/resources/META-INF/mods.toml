@@ -2,9 +2,9 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml"
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[43,)"
+loaderVersion="${loader_version_range}"
 # The license for you mod.
-license="GNU GPLv3"
+license="${mod_license}"
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/WenXin20/WarpPipes/issues"
 # A list of mods - how many allowed here is determined by the individual mod loader
@@ -12,7 +12,7 @@ issueTrackerURL="https://github.com/WenXin20/WarpPipes/issues"
 # The modid of the mod
 modId="warp_pipes"
 # The version number of the mod
-version="${minecraft_version}-${jar_version}"
+version="${minecraft_version}-${mod_jar_version}"
 # A display name for the mod
 displayName="Warp Pipes"
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -28,6 +28,7 @@ authors="WenXin2"
 description='''
   Warp Pipes!! A new method of transportation!
   '''
+
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.warp_pipes]] #optional
 # the modid of the dependency
@@ -35,15 +36,16 @@ modId="forge"
 # Does this dependency have to exist - if not, ordering below must be specified
 mandatory=true
 # The version range of the dependency
-versionRange="[43,)"
+versionRange="${forge_version_range}"
 # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
 ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
 side="BOTH"
+
 [[dependencies.warp_pipes]]
 modId="minecraft"
 mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-versionRange="[1.19.2,1.20)"
+versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"

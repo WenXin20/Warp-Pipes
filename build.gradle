@@ -54,7 +54,7 @@ mixin {
     add sourceSets.main, "warp_pipes.refmap.json"
 }
 
-version = "${minecraft_version}-${jar_version}"
+version = "${minecraft_version}-${mod_jar_version}"
 group = 'com.wenxin2.warp_pipes'
 archivesBaseName = 'warp_pipes'
 
