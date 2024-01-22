@@ -6,6 +6,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,84 +19,106 @@ public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WarpPipes.MODID);
     public static final RegistryObject<CreativeModeTab> WARP_PIPES_TAB = TABS.register("warp_pipes_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.warp_pipes"))
-            .icon(() -> new ItemStack(ModRegistry.GREEN_WARP_PIPE.get()))
-            .displayItems((parameters, output) -> {
-                output.accept(ModRegistry.PIPE_WRENCH.get());
-
-                output.accept(ModRegistry.CLEAR_WARP_PIPE.get());
-                output.accept(ModRegistry.WHITE_WARP_PIPE.get());
-                output.accept(ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
-                output.accept(ModRegistry.GRAY_WARP_PIPE.get());
-                output.accept(ModRegistry.BLACK_WARP_PIPE.get());
-                output.accept(ModRegistry.BROWN_WARP_PIPE.get());
-                output.accept(ModRegistry.RED_WARP_PIPE.get());
-                output.accept(ModRegistry.ORANGE_WARP_PIPE.get());
-                output.accept(ModRegistry.YELLOW_WARP_PIPE.get());
-                output.accept(ModRegistry.LIME_WARP_PIPE.get());
-                output.accept(ModRegistry.GREEN_WARP_PIPE.get());
-                output.accept(ModRegistry.CYAN_WARP_PIPE.get());
-                output.accept(ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
-                output.accept(ModRegistry.BLUE_WARP_PIPE.get());
-                output.accept(ModRegistry.PURPLE_WARP_PIPE.get());
-                output.accept(ModRegistry.MAGENTA_WARP_PIPE.get());
-                output.accept(ModRegistry.PINK_WARP_PIPE.get());
-
-            }).build());
-
+            .icon(() -> new ItemStack(ModRegistry.GREEN_WARP_PIPE.get())).build());
 
     @SubscribeEvent
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == WARP_PIPES_TAB.getKey()) {
+            add(event, ModRegistry.PIPE_WRENCH.get());
+
+            add(event, ModRegistry.CLEAR_WARP_PIPE.get());
+            add(event, ModRegistry.WHITE_WARP_PIPE.get());
+            add(event, ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
+            add(event, ModRegistry.GRAY_WARP_PIPE.get());
+            add(event, ModRegistry.BLACK_WARP_PIPE.get());
+            add(event, ModRegistry.BROWN_WARP_PIPE.get());
+            add(event, ModRegistry.RED_WARP_PIPE.get());
+            add(event, ModRegistry.ORANGE_WARP_PIPE.get());
+            add(event, ModRegistry.YELLOW_WARP_PIPE.get());
+            add(event, ModRegistry.LIME_WARP_PIPE.get());
+            add(event, ModRegistry.GREEN_WARP_PIPE.get());
+            add(event, ModRegistry.CYAN_WARP_PIPE.get());
+            add(event, ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
+            add(event, ModRegistry.BLUE_WARP_PIPE.get());
+            add(event, ModRegistry.PURPLE_WARP_PIPE.get());
+            add(event, ModRegistry.MAGENTA_WARP_PIPE.get());
+            add(event, ModRegistry.PINK_WARP_PIPE.get());
+        }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(ModRegistry.PIPE_WRENCH.get());
+            addAfter(event, Items.FISHING_ROD, ModRegistry.PIPE_WRENCH.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-            event.accept(ModRegistry.PIPE_WRENCH.get());
+            addBefore(event, Items.SHIELD, ModRegistry.PIPE_WRENCH.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
-            event.accept(ModRegistry.CLEAR_WARP_PIPE.get());
-            event.accept(ModRegistry.GREEN_WARP_PIPE.get());
+            addAfter(event, Items.REDSTONE_LAMP, ModRegistry.CLEAR_WARP_PIPE.get());
+            addAfter(event, Items.REDSTONE_LAMP, ModRegistry.GREEN_WARP_PIPE.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
-            event.accept(ModRegistry.CLEAR_WARP_PIPE.get());
-            event.accept(ModRegistry.WHITE_WARP_PIPE.get());
-            event.accept(ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
-            event.accept(ModRegistry.GRAY_WARP_PIPE.get());
-            event.accept(ModRegistry.BLACK_WARP_PIPE.get());
-            event.accept(ModRegistry.BROWN_WARP_PIPE.get());
-            event.accept(ModRegistry.RED_WARP_PIPE.get());
-            event.accept(ModRegistry.ORANGE_WARP_PIPE.get());
-            event.accept(ModRegistry.YELLOW_WARP_PIPE.get());
-            event.accept(ModRegistry.LIME_WARP_PIPE.get());
-            event.accept(ModRegistry.GREEN_WARP_PIPE.get());
-            event.accept(ModRegistry.CYAN_WARP_PIPE.get());
-            event.accept(ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
-            event.accept(ModRegistry.BLUE_WARP_PIPE.get());
-            event.accept(ModRegistry.PURPLE_WARP_PIPE.get());
-            event.accept(ModRegistry.MAGENTA_WARP_PIPE.get());
-            event.accept(ModRegistry.PINK_WARP_PIPE.get());
+            add(event, ModRegistry.CLEAR_WARP_PIPE.get());
+            add(event, ModRegistry.WHITE_WARP_PIPE.get());
+            add(event, ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
+            add(event, ModRegistry.GRAY_WARP_PIPE.get());
+            add(event, ModRegistry.BLACK_WARP_PIPE.get());
+            add(event, ModRegistry.BROWN_WARP_PIPE.get());
+            add(event, ModRegistry.RED_WARP_PIPE.get());
+            add(event, ModRegistry.ORANGE_WARP_PIPE.get());
+            add(event, ModRegistry.YELLOW_WARP_PIPE.get());
+            add(event, ModRegistry.LIME_WARP_PIPE.get());
+            add(event, ModRegistry.GREEN_WARP_PIPE.get());
+            add(event, ModRegistry.CYAN_WARP_PIPE.get());
+            add(event, ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
+            add(event, ModRegistry.BLUE_WARP_PIPE.get());
+            add(event, ModRegistry.PURPLE_WARP_PIPE.get());
+            add(event, ModRegistry.MAGENTA_WARP_PIPE.get());
+            add(event, ModRegistry.PINK_WARP_PIPE.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(ModRegistry.CLEAR_WARP_PIPE.get());
-            event.accept(ModRegistry.WHITE_WARP_PIPE.get());
-            event.accept(ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
-            event.accept(ModRegistry.GRAY_WARP_PIPE.get());
-            event.accept(ModRegistry.BLACK_WARP_PIPE.get());
-            event.accept(ModRegistry.BROWN_WARP_PIPE.get());
-            event.accept(ModRegistry.RED_WARP_PIPE.get());
-            event.accept(ModRegistry.ORANGE_WARP_PIPE.get());
-            event.accept(ModRegistry.YELLOW_WARP_PIPE.get());
-            event.accept(ModRegistry.LIME_WARP_PIPE.get());
-            event.accept(ModRegistry.GREEN_WARP_PIPE.get());
-            event.accept(ModRegistry.CYAN_WARP_PIPE.get());
-            event.accept(ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
-            event.accept(ModRegistry.BLUE_WARP_PIPE.get());
-            event.accept(ModRegistry.PURPLE_WARP_PIPE.get());
-            event.accept(ModRegistry.MAGENTA_WARP_PIPE.get());
-            event.accept(ModRegistry.PINK_WARP_PIPE.get());
+            addAfter(event, Items.RESPAWN_ANCHOR, ModRegistry.CLEAR_WARP_PIPE.get());
+            addAfter(event, ModRegistry.CLEAR_WARP_PIPE.get(), ModRegistry.WHITE_WARP_PIPE.get());
+            addAfter(event, ModRegistry.WHITE_WARP_PIPE.get(), ModRegistry.LIGHT_GRAY_WARP_PIPE.get());
+            addAfter(event, ModRegistry.LIGHT_GRAY_WARP_PIPE.get(), ModRegistry.GRAY_WARP_PIPE.get());
+            addAfter(event, ModRegistry.GRAY_WARP_PIPE.get(), ModRegistry.BLACK_WARP_PIPE.get());
+            addAfter(event, ModRegistry.BLACK_WARP_PIPE.get(), ModRegistry.BROWN_WARP_PIPE.get());
+            addAfter(event, ModRegistry.BROWN_WARP_PIPE.get(), ModRegistry.RED_WARP_PIPE.get());
+            addAfter(event, ModRegistry.RED_WARP_PIPE.get(), ModRegistry.ORANGE_WARP_PIPE.get());
+            addAfter(event, ModRegistry.ORANGE_WARP_PIPE.get(), ModRegistry.YELLOW_WARP_PIPE.get());
+            addAfter(event, ModRegistry.YELLOW_WARP_PIPE.get(), ModRegistry.LIME_WARP_PIPE.get());
+            addAfter(event, ModRegistry.LIME_WARP_PIPE.get(), ModRegistry.GREEN_WARP_PIPE.get());
+            addAfter(event, ModRegistry.GREEN_WARP_PIPE.get(), ModRegistry.CYAN_WARP_PIPE.get());
+            addAfter(event, ModRegistry.CYAN_WARP_PIPE.get(), ModRegistry.LIGHT_BLUE_WARP_PIPE.get());
+            addAfter(event, ModRegistry.LIGHT_BLUE_WARP_PIPE.get(), ModRegistry.BLUE_WARP_PIPE.get());
+            addAfter(event, ModRegistry.BLUE_WARP_PIPE.get(), ModRegistry.PURPLE_WARP_PIPE.get());
+            addAfter(event, ModRegistry.PURPLE_WARP_PIPE.get(), ModRegistry.MAGENTA_WARP_PIPE.get());
+            addAfter(event, ModRegistry.MAGENTA_WARP_PIPE.get(), ModRegistry.PINK_WARP_PIPE.get());
         }
+    }
+
+    public static void add(BuildCreativeModeTabContentsEvent event, ItemLike item)
+    {
+        ItemStack stack = new ItemStack(item);
+        add(event, stack);
+    }
+
+    public static void add(BuildCreativeModeTabContentsEvent event, ItemStack stack)
+    {
+        if (stack.isEmpty())
+        {
+            System.out.println("Warning, attempting to register an empty stack to tab!");
+            return;
+        }
+        event.accept(stack);
+    }
+
+    public static void addAfter(BuildCreativeModeTabContentsEvent event, ItemLike afterItem, ItemLike item) {
+        event.getEntries().putAfter(new ItemStack(afterItem), new ItemStack(item), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+    }
+
+    public static void addBefore(BuildCreativeModeTabContentsEvent event, ItemLike beforeItem, ItemLike item) {
+        event.getEntries().putBefore(new ItemStack(beforeItem), new ItemStack(item), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
     }
 }
