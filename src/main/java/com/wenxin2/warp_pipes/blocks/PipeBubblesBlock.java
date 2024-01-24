@@ -53,13 +53,14 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
     }
 
     public static boolean canExistIn(BlockState state) {
-        return state.is(ModRegistry.PIPE_BUBBLES.get()) || state.is(Blocks.WATER) && state.getFluidState().getAmount() >= 8 && state.getFluidState().isSource();
+        return state.is(ModRegistry.PIPE_BUBBLES.get())
+                || state.is(Blocks.WATER) && state.getFluidState().getAmount() >= 8 && state.getFluidState().isSource();
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player
-                && player.isCreative() && Config.DEBUG_PIPE_BUBBLES_SELECTION_BOX.get()) {
+                && player.hasPermissions(1) && player.isCreative() && Config.DEBUG_PIPE_BUBBLES_SELECTION_BOX.get()) {
             return Shapes.block();
         }
         return Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
