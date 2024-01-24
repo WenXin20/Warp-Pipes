@@ -25,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
@@ -37,10 +36,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
 public class LinkerItem extends TieredItem {
-    public static final String WARP_PIPE_POS = "WarpPos";
-    public static final String WARP_PIPE_DIMENSION = "WarpDimension";
+    public static final String WARP_POS = "WarpPos";
+    public static final String WARP_DIMENSION = "Dimension";
+    public static final String POS_X = "X";
+    public static final String POS_Y = "Y";
+    public static final String POS_Z = "Z";
+
     private static final Logger LOGGER = LogUtils.getLogger();
-    public LinkerItem(final Item.Properties properties, Tier tier) {
+    public LinkerItem(final Properties properties, Tier tier) {
         super(tier, properties);
     }
     public boolean isBound;
@@ -61,57 +64,78 @@ public class LinkerItem extends TieredItem {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         ItemStack item = useOnContext.getItemInHand();
-        CompoundTag tag = item.getTag();
+        CompoundTag wrenchTag = item.getTag();
+        String dimension = world.dimension().location().toString();
 
-        if (tag != null && tag.contains("Bound")) {
-            isBound = tag.getBoolean("Bound");
+        if (wrenchTag != null && wrenchTag.contains("Bound")) {
+            isBound = wrenchTag.getBoolean("Bound");
         }
 
         if (player != null && !player.isCreative() && Config.CREATIVE_WRENCH_PIPE_LINKING.get()) {
-            player.displayClientMessage(Component.translatable("display.warp_pipes.linker.requires_creative").withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(Component.translatable("display.warp_pipes.linker.requires_creative")
+                    .withStyle(ChatFormatting.RED), true);
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else if (player != null) {
-            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)))
-                    && !player.isShiftKeyDown()) {
-                if (getBound() == Boolean.FALSE) {
-                    if (tag == null) {
-                        tag = new CompoundTag();
+            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)))) {
+
+                if (getBound() == Boolean.FALSE && !player.isShiftKeyDown()) {
+                    if (wrenchTag == null) {
+                        wrenchTag = new CompoundTag();
                     }
 
-                    tag.putBoolean("Bound", Boolean.TRUE);
-                    tag.putDouble("X", (int) pos.getX());
-                    tag.putDouble("Y", (int) pos.getY());
-                    tag.putDouble("Z", (int) pos.getZ());
-                    tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
-                    tag.putString(WARP_PIPE_DIMENSION, world.dimension().location().toString());
+                    BlockPos warpPos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
+
+                    wrenchTag.putBoolean("Bound", Boolean.TRUE);
+                    wrenchTag.putInt(POS_X, pos.getX());
+                    wrenchTag.putInt(POS_Y, pos.getY());
+                    wrenchTag.putInt(POS_Z, pos.getZ());
+                    wrenchTag.put(WARP_POS, NbtUtils.writeBlockPos(warpPos));
+                    wrenchTag.putString(WARP_DIMENSION, dimension);
                     this.setBound(Boolean.TRUE);
 
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                            tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.DARK_GREEN), true);
+                            wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z), wrenchTag.getString(WARP_DIMENSION))
+                            .withStyle(ChatFormatting.DARK_GREEN), true);
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                    this.playSound(world, pos, SoundEvents.AMETHYST_BLOCK_CHIME);
-                } else if (getBound()) {
+                    this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
+                } else if (getBound()/* && player.isShiftKeyDown()*/) {
                     Player player1 = useOnContext.getPlayer();
-                    if (tag == null) {
-                        tag = new CompoundTag();
+                    if (wrenchTag == null) {
+                        wrenchTag = new CompoundTag();
                     }
-                    tag.putBoolean("Bound", Boolean.FALSE);
+                    wrenchTag.putBoolean("Bound", Boolean.FALSE);
                     this.setBound(Boolean.FALSE);
                     this.writeTag(world.dimension(), pos, item.getOrCreateTag());
+
+                    BlockPos warpPos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
 
                     if (player1 != null) {
                         item.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
                         player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                                tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z")).withStyle(ChatFormatting.GOLD), true);
+                                        wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z), wrenchTag.getString(WARP_DIMENSION))
+                                .withStyle(ChatFormatting.GOLD), true);
                     }
 
-                    GlobalPos globalPos = LinkerItem.createWarpPos(tag);
+                    GlobalPos globalPos = LinkerItem.createWarpPos(wrenchTag);
                     if (globalPos == null)
                         return super.useOn(useOnContext);
                     BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
-                    if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
-                        this.link(pos, world, tag, warpPipeBE, warpPipeBEGlobal);
+                    
+                    if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE
+                            && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal
+                            && LinkerItem.isLinked(item)) {
+
+                        wrenchTag.put(WARP_POS, NbtUtils.writeBlockPos(warpPos));
+                        this.link(pos, world, wrenchTag, warpPipeBE, warpPipeBEGlobal);
+                    } else {
+                        if (player1 != null) {
+                            player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.dimension_fail",
+                                            wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z), wrenchTag.getString(WARP_DIMENSION))
+                                    .withStyle(ChatFormatting.RED), true);
+                        }
                     }
+
+
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
                 }
@@ -121,30 +145,39 @@ public class LinkerItem extends TieredItem {
         return super.useOn(useOnContext);
     }
 
-    public static boolean isLinked(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && (tag.contains(WARP_PIPE_DIMENSION) || tag.contains(WARP_PIPE_POS));
+    public void clearTags(CompoundTag wrenchTag) {
+        wrenchTag.remove(POS_X);
+        wrenchTag.remove(POS_Y);
+        wrenchTag.remove(POS_Z);
+        wrenchTag.remove(WARP_DIMENSION);
     }
 
-    private void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
+    public static boolean isLinked(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        return tag != null && (tag.contains(POS_X) || tag.contains(POS_Y) || tag.contains(POS_Z) || tag.contains(WARP_DIMENSION));
+    }
+
+    public void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
+        System.out.println("Current Dimension: " + world.dimension());
+
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
-        warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel());
+        if (warpPipeBEGlobal.getLevel() != null) {
+            warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel().dimension());
+            System.out.println("Global Dimension: " + warpPipeBEGlobal.getLevel().dimension());
+        } else System.out.println("World is null!");
+
         warpPipeBEGlobal.setDestinationPos(pos);
-        warpPipeBEGlobal.setDestinationDim(world);
-        tag.remove(WARP_PIPE_POS);
-        tag.remove(WARP_PIPE_DIMENSION);
-        tag.remove("X");
-        tag.remove("Y");
-        tag.remove("Z");
+        warpPipeBEGlobal.setDestinationDim(world.dimension());
+        this.clearTags(tag);
     }
 
     @Nullable
     public static GlobalPos createWarpPos(CompoundTag tag) {
         Optional<ResourceKey<Level>> optional;
-        boolean containsPipePos = tag.contains(WARP_PIPE_POS);
-        boolean containsPipeDim = tag.contains(WARP_PIPE_DIMENSION);
+        boolean containsPipePos = tag.contains(WARP_POS);
+        boolean containsPipeDim = tag.contains(WARP_DIMENSION);
         if (containsPipePos && containsPipeDim && (optional = LinkerItem.getWarpDimension(tag)).isPresent()) {
-            BlockPos pos = new BlockPos(tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"));
+            BlockPos pos = new BlockPos(tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z));
             return GlobalPos.of(optional.get(), pos);
         }
         return null;
@@ -152,10 +185,6 @@ public class LinkerItem extends TieredItem {
 
     private void playSound(Level world, BlockPos pos, SoundEvent soundEvent) {
         world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 100.0f, 1.0f);
-    }
-
-    private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     private void spawnParticles(Level world, BlockPos pos, ParticleOptions particleOptions) {
@@ -173,12 +202,12 @@ public class LinkerItem extends TieredItem {
     }
 
     private void writeTag(ResourceKey<Level> worldKey, BlockPos pos, CompoundTag tag) {
-        tag.put(WARP_PIPE_POS, NbtUtils.writeBlockPos(pos));
-        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, worldKey).resultOrPartial(LOGGER::error).ifPresent(nbtElement -> tag.put(WARP_PIPE_DIMENSION, nbtElement));
+        tag.put(WARP_POS, NbtUtils.writeBlockPos(pos));
+        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, worldKey).resultOrPartial(LOGGER::error).ifPresent(nbtElement -> tag.put(WARP_DIMENSION, nbtElement));
     }
 
     public static Optional<ResourceKey<Level>> getWarpDimension(CompoundTag tag) {
-        return Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, tag.get(WARP_PIPE_DIMENSION)).result();
+        return Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, tag.get(WARP_DIMENSION)).result();
     }
 
     @Override
@@ -186,13 +215,13 @@ public class LinkerItem extends TieredItem {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag tooltip) {
         CompoundTag tag = stack.getTag();
         if (getBound()) {
-            assert tag != null;
-            if (tag.contains(WARP_PIPE_POS)) {
-                list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"),
-                        tag.getString(WARP_PIPE_DIMENSION), true).withStyle(ChatFormatting.GOLD));
+            if (tag != null && !tag.isEmpty()) {
+                list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z),
+                        tag.getString("Dimension"), true).withStyle(ChatFormatting.GOLD));
             }
         }
         else {
+            list.add(Component.translatable("", true));
             list.add(Component.translatable("display.warp_pipes.linker.not_bound_tooltip", true)
                     .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
         }

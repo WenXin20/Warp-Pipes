@@ -64,19 +64,19 @@ public abstract class EntityMixin {
             BlockState offsetState = world.getBlockState(offsetPos);
 
             if (offsetState.getBlock() instanceof WarpPipeBlock) {
-                this.entityInside(facing, offsetPos);
+                this.entityInside(offsetPos);
             }
             if (state.getBlock() instanceof WarpPipeBlock) {
-                this.entityInside(facing, pos);
+                this.entityInside(pos);
             }
         }
     }
     
-    public void entityInside(Direction pipeDirection, BlockPos pos) {
+    public void entityInside(BlockPos pos) {
         Level world = this.level();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        BlockPos destinationPos = null;
+        BlockPos warpPos;
 
         double entityX = this.getX();
         double entityY = this.getY();
@@ -96,7 +96,7 @@ public abstract class EntityMixin {
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-            destinationPos = warpPipeBE.destinationPos;
+            warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
@@ -118,40 +118,40 @@ public abstract class EntityMixin {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (this.portalCooldown == 0 && destinationPos != null) {
+            if (this.portalCooldown == 0 && warpPipeBE.hasDestinationPos()) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
+                    WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
+                    WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
+                    WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
-                    WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
+                    WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
+                    WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp((Entity) (Object) this, destinationPos, world, state);
+                    WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
                     this.setPortalCooldown();
                     this.portalCooldown = 20;
                 }

@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -401,13 +402,24 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && !state.getValue(CLOSED)) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && !state.getValue(CLOSED)
+                && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getDestinationDim() != null
+                && world instanceof ServerLevel) {
+            ServerLevel serverLevel = ((ServerLevel)world).getServer().getLevel(world.dimension());
+            if (serverLevel == null) {
+                return;
+            }
+
             Entity passengerEntity = entity.getControllingPassenger();
 
             if (state.getBlock() instanceof ClearWarpPipeBlock && !state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - 1.0, pos.getZ() + 0.5);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - 1.0, pos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -415,9 +427,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
             if (world.getBlockState(pos).getValue(FACING) == Direction.UP && state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -425,9 +440,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
             if (world.getBlockState(pos).getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY() - entity.getBbHeight(), pos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -435,9 +453,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
             if (world.getBlockState(pos).getValue(FACING) == Direction.NORTH && state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() - 1.0);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -445,9 +466,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
             if (world.getBlockState(pos).getValue(FACING) == Direction.SOUTH && state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + entity.getBbWidth() + 1.0);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -455,9 +479,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
             if (world.getBlockState(pos).getValue(FACING) == Direction.EAST && state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + entity.getBbWidth() + 1.0, pos.getY(), pos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -465,9 +492,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
             if (world.getBlockState(pos).getValue(FACING) == Direction.WEST && state.getValue(ENTRANCE)) {
-                if (entity instanceof Player) {
+                if (entity instanceof ServerPlayer) {
+                    if (serverLevel != entity.level())
+                        entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + entity.getBbWidth() - 1.0, pos.getY(), pos.getZ() + 0.5);
                 } else {
+                    entity.changeDimension(serverLevel);
                     entity.teleportTo(pos.getX() + entity.getBbWidth() - 1.0, pos.getY(), pos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
@@ -493,7 +523,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        BlockPos destinationPos = null;
+        BlockPos warpPos;
 
         double entityX = entity.getX();
         double entityY = entity.getY();
@@ -504,30 +534,27 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         int blockZ = pos.getZ();
 
         if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-            destinationPos = warpPipeBE.destinationPos;
+            warpPos = warpPipeBE.destinationPos;
             int entityId = entity.getId();
 
             if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
                 WarpPipeBlock.spawnParticles(entity, world);
-                if (destinationPos != null) {
-                    WarpPipeBlock.spawnParticles(entity, world);
-                }
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (entity instanceof Player && entity.portalCooldown == 0 && destinationPos != null) {
+            if (entity instanceof Player && entity.portalCooldown == 0 && warpPipeBE.hasDestinationPos()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
             }
-            if (!(entity instanceof Player) && entity.portalCooldown == 0 && destinationPos != null) {
+            if (!(entity instanceof Player) && entity.portalCooldown == 0 && warpPipeBE.hasDestinationPos()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp(entity, destinationPos, world, state);
+                    WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
                     entity.portalCooldown = 20;
                 }
