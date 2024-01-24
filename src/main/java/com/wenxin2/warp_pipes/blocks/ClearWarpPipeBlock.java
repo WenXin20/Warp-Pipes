@@ -18,6 +18,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DebugStickItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -200,7 +201,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
                 if (player!= null) {
                     if (player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
-                        || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
+                            || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
+                            || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DiggerItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()))) {
@@ -215,7 +217,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
             if (player!= null) {
                 if (player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
-                    || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
+                        || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
+                        || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DiggerItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()))) {
