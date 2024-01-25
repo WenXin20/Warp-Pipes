@@ -53,10 +53,6 @@ public class ModRegistry {
 
     public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPES;
 
-    public static RegistryObject<FlowingFluid> STILL_WATER;
-    public static RegistryObject<FlowingFluid> STILL_WATER_FLOWING;
-    public static RegistryObject<LiquidBlock> STILL_WATER_BLOCK;
-
     static
     {
         PIPE_WRENCH = registerItem("pipe_wrench",
@@ -164,14 +160,6 @@ public class ModRegistry {
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
                 () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get()).build(null));
-
-        STILL_WATER = WarpPipes.FLUIDS.register("still_water", () ->
-                new ForgeFlowingFluid.Source(StillWaterType.makeProperties()));
-        STILL_WATER_FLOWING = WarpPipes.FLUIDS.register("flowing_still_water", () ->
-                new ForgeFlowingFluid.Flowing(StillWaterType.makeProperties()));
-        STILL_WATER_BLOCK = WarpPipes.BLOCKS.register("still_water", () ->
-                new LiquidBlock(STILL_WATER, BlockBehaviour.Properties.of()
-                        .mapColor(MapColor.WATER).noCollission().strength(100.0F).noLootTable().replaceable()));
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block)
