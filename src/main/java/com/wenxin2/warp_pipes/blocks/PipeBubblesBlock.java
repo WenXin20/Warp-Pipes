@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -40,16 +39,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup {
     public static final BooleanProperty DRAG_DOWN = BlockStateProperties.DRAG;
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final IntegerProperty DISTANCE = IntegerProperty.create("distance", 0, 6);
 
     public PipeBubblesBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.FALSE).setValue(DISTANCE, 3));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(DRAG_DOWN, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(DISTANCE, DRAG_DOWN, FACING);
+        stateBuilder.add(DRAG_DOWN, FACING);
     }
 
     @Override
@@ -125,38 +123,19 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
                 || state.is(Blocks.WATER) && state.getFluidState().getAmount() >= 8 && state.getFluidState().isSource();
     }
 
-    public static BlockState setBlockState(BlockState state, LevelAccessor worldAccessor, BlockPos pos, int distance) {
+    public static BlockState setBlockState(BlockState state, LevelAccessor worldAccessor, BlockPos pos) {
         BlockPos.MutableBlockPos posMutable = new BlockPos.MutableBlockPos();
         for (Direction direction : Direction.values()) {
             posMutable.setWithOffset(pos, direction);
-            distance = Math.min(distance, getDistance(worldAccessor.getBlockState(posMutable)) + 1);
-            if (distance == 1) {
-                break;
-            }
         }
 
         if (state.is(ModRegistry.PIPE_BUBBLES.get())) {
-            // Clamp the distance value to be within the allowed range (0 to 3)
-            distance = Math.min(Math.max(distance, 0), 6);
-            return state.setValue(DISTANCE, distance);
+            return state;
         } else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED) && state.getValue(WarpPipeBlock.BUBBLES)) {
             return ModRegistry.PIPE_BUBBLES.get().defaultBlockState().setValue(DRAG_DOWN, Boolean.FALSE)
                     .setValue(FACING, state.getValue(FACING));
         }
         return Blocks.WATER.defaultBlockState();
-    }
-
-    private static int getDistance(BlockState state) {
-        if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED)) {
-            return 0;
-        }
-        if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
-            return 0;
-        }
-        if (state.getBlock() instanceof PipeBubblesBlock) {
-            return state.getValue(DISTANCE);
-        }
-        return 6;
     }
 
     public void addParticles(Level world, ParticleOptions particleOptions, double xPos, double yPos, double zPos,
@@ -396,114 +375,114 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (PipeBubblesBlock.canExistIn(state)) {
-            int initialDistance = getDistance(neighborState);
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
 
-            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4) {
+            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.UP);
                 initialDistance++;
-                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
 
     public static void repeatColumnDown(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (PipeBubblesBlock.canExistIn(state)) {
-            int initialDistance = getDistance(neighborState);
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.DOWN);
 
-            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4) {
+            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.DOWN);
                 initialDistance++;
-                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
 
     public static void repeatColumnNorth(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (PipeBubblesBlock.canExistIn(state)) {
-            int initialDistance = getDistance(neighborState);
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.NORTH);
 
-            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4) {
+            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.NORTH);
                 initialDistance++;
-                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
 
     public static void repeatColumnSouth(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (PipeBubblesBlock.canExistIn(state)) {
-            int initialDistance = getDistance(neighborState);
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.SOUTH);
 
-            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4) {
+            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.SOUTH);
                 initialDistance++;
-                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
 
     public static void repeatColumnEast(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (PipeBubblesBlock.canExistIn(state)) {
-            int initialDistance = getDistance(neighborState);
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.EAST);
 
-            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4) {
+            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.EAST);
                 initialDistance++;
-                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
 
     public static void repeatColumnWest(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (PipeBubblesBlock.canExistIn(state)) {
-            int initialDistance = getDistance(neighborState);
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.WEST);
 
-            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = PipeBubblesBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4) {
+            while (PipeBubblesBlock.canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.WEST);
                 initialDistance++;
-                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = PipeBubblesBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
