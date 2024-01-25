@@ -12,7 +12,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -98,7 +100,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP)
                 .setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE)
                 .setValue(UP, Boolean.FALSE).setValue(NORTH, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE)
-                .setValue(EAST, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(DOWN, Boolean.FALSE));
+                .setValue(EAST, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(DOWN, Boolean.FALSE)
+                .setValue(WATER_SPOUT, Boolean.FALSE));
     }
 
     @Override
@@ -375,6 +378,32 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             }
         }
         return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
+
+        if (state.getValue(WATER_SPOUT) && state.getValue(WATERLOGGED)) {
+            WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
+        }
+        if (state.getValue(FACING) == Direction.UP) {
+            PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
+        } else if (state.getValue(FACING) == Direction.DOWN) {
+            PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state);
+        } else if (state.getValue(FACING) == Direction.NORTH) {
+            PipeBubblesBlock.repeatColumnNorth(serverWorld, pos.north(), state);
+        } else if (state.getValue(FACING) == Direction.SOUTH) {
+            PipeBubblesBlock.repeatColumnSouth(serverWorld, pos.south(), state);
+        } else if (state.getValue(FACING) == Direction.EAST) {
+            PipeBubblesBlock.repeatColumnEast(serverWorld, pos.east(), state);
+        } else if (state.getValue(FACING) == Direction.WEST) {
+            PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state);
+        }
+
+        if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
+            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
+            this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
+        }
     }
 
     @Override

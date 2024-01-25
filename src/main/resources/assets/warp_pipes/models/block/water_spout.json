@@ -4,21 +4,18 @@
 	"render_type": "translucent",
 	"textures": {
 		"particle": "warp_pipes:block/water_spout_flow",
-		"side": "warp_pipes:block/water_spout_flow",
-		"top": "warp_pipes:block/water_spout_still"
+		"side": "warp_pipes:block/water_spout_flow"
 	},
 	"elements": [
 		{
 			"name": "spout",
-			"from": [5, 0, 5],
-			"to": [11, 16, 11],
+			"from": [5, -4, 5],
+			"to": [11, 12, 11],
 			"faces": {
-				"north": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0 },
-				"east": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0 },
-				"south": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0 },
-				"west": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0 },
-				"up": {"uv": [10, 0, 16, 6], "texture": "#top", "tintindex": 0 },
-				"down": {"uv": [10, 0, 16, 6], "texture": "#top", "tintindex": 0 }
+				"north": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0},
+				"east": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0},
+				"south": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0},
+				"west": {"uv": [0, 0, 6, 16], "texture": "#side", "tintindex": 0}
 			}
 		}
 	]
