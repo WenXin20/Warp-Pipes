@@ -19,6 +19,10 @@
   "block.warp_pipes.white_warp_pipe": "White Warp Pipe",
   "block.warp_pipes.yellow_warp_pipe": "Yellow Warp Pipe",
 
+  "block.warp_pipes.pipe_bubbles": "Pipe Bubbles",
+  "block.warp_pipes.water_spout": "Water Spout",
+  "block.warp_pipes.water": "Water",
+
   "item.warp_pipes.pipe_wrench": "Pipe Wrench",
 
   "item.warp_pipes.pipe_wrench.requires_creative": "Requires creative turn off bubbles & close pipes",

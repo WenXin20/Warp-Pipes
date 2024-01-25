@@ -13,6 +13,7 @@ public class Config
     public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH;
     public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
     public static ForgeConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
+    public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
 
@@ -38,6 +39,8 @@ public class Config
                 .define("debug_selection_box_creative", true);
         DEBUG_PIPE_BUBBLES_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Pipe Bubbles. Creative Only. " + "[Default: false]")
                 .define("debug_pipe_bubbles_selection_box", false);
+        DEBUG_WATER_SPOUT_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Water Spouts. Creative Only. " + "[Default: false]")
+                .define("debug_water_spout_selection_box", false);
         BUILDER.pop();
     }
 }

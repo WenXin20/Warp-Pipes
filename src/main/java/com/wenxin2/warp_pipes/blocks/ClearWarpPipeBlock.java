@@ -103,7 +103,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
+        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING, WATER_SPOUT, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
 
     public VoxelShape voxelShape(BlockState state) {

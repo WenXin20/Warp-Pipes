@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "warp_pipes:flowing_still_water", "required": false },
+    { "id": "warp_pipes:still_water", "required": false }
+  ]
+}

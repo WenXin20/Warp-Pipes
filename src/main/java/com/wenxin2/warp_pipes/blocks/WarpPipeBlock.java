@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -49,15 +48,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
     public static final BooleanProperty BUBBLES = BooleanProperty.create("bubbles");
+    public static final BooleanProperty WATER_SPOUT = BooleanProperty.create("water_spout");
 
     public WarpPipeBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(BUBBLES, Boolean.TRUE).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(WATER_SPOUT, Boolean.FALSE)
+                .setValue(BUBBLES, Boolean.TRUE).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING);
+        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING, WATER_SPOUT);
     }
 
     @Override
@@ -134,7 +135,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (isClosed) {
                     world.scheduleTick(pos, this, 4);
                 } else {
-                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
+                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES).cycle(WATER_SPOUT), 2);
                     this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
             }
@@ -210,6 +211,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (state.getValue(FACING) == Direction.UP) {
             PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
+            if (state.getValue(WATER_SPOUT)) {
+                WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
+            }
         } else if (state.getValue(FACING) == Direction.DOWN) {
             PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state);
         } else if (state.getValue(FACING) == Direction.NORTH) {
@@ -312,7 +316,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         Block blockEast = world.getBlockState(pos.east()).getBlock();
         Block blockWest = world.getBlockState(pos.west()).getBlock();
 
-        if (!state.getValue(CLOSED) && state.getValue(BUBBLES) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
+        if (!state.getValue(CLOSED) && (state.getValue(BUBBLES) || state.getValue(WATER_SPOUT)) && state.getValue(ENTRANCE) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
 
             if (warpPipeBE.getPersistentData().isEmpty()) {
 
@@ -321,7 +325,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 1.0D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else if (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock) {
+                    } else if (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock || blockAbove instanceof WaterSpoutBlock) {
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                                 dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);

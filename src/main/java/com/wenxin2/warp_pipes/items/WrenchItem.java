@@ -160,21 +160,21 @@ public class WrenchItem extends LinkerItem {
         } else {
             Block block = state.getBlock();
             StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
-            String s = BuiltInRegistries.BLOCK.getKey(block).toString();
+            String registryName = BuiltInRegistries.BLOCK.getKey(block).toString();
 
             if (block instanceof WarpPipeBlock) {
                 CompoundTag compoundtag = stack.getOrCreateTagElement("DebugProperty");
-                String s1 = compoundtag.getString(s);
-                statedefinition.getProperty(s1);
+                String propertyName = compoundtag.getString(registryName);
+                statedefinition.getProperty(propertyName);
 
-                if (!s1.equals("closed") && !s1.equals("bubbles")) {
-                    s1 = "closed";
-                    compoundtag.putString(s, s1);
+                if (!propertyName.equals("closed") && !propertyName.equals("bubbles")) {
+                    propertyName = "closed";
+                    compoundtag.putString(registryName, propertyName);
                 }
 
                 if (isPlayerRightClicking && state.getValue(WarpPipeBlock.ENTRANCE) && !(!player.isCreative() && Config.CREATIVE_WRENCH.get())) {
                     if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
-                        if (s1.equals("closed")) {
+                        if (propertyName.equals("closed")) {
                             worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 8);
                             if (state.getValue(WarpPipeBlock.CLOSED)) {
                                 message(player, Component.translatable(this.getDescriptionId() + ".closed.false")
@@ -184,7 +184,7 @@ public class WrenchItem extends LinkerItem {
                                         .withStyle(ChatFormatting.GOLD));
                             }
                         }
-                        if (s1.equals("bubbles")) {
+                        if (propertyName.equals("bubbles")) {
                             worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.BUBBLES), 20);
                             if (state.getValue(WarpPipeBlock.BUBBLES)) {
                                 message(player, Component.translatable(this.getDescriptionId() + ".bubbles.false")
@@ -196,22 +196,22 @@ public class WrenchItem extends LinkerItem {
                         }
                     }
 
-                    if (s1.equals("closed"))
+                    if (propertyName.equals("closed"))
                         this.spawnParticles(worldAccessor, pos, ParticleTypes.ENCHANTED_HIT);
-                    if (s1.equals("bubbles")) {
+                    if (propertyName.equals("bubbles")) {
                         this.spawnParticles(worldAccessor, pos, ParticleTypes.BUBBLE);
                         this.spawnParticles(worldAccessor, pos, ParticleTypes.SPLASH);
                     }
 
                 } else if (state.getValue(WarpPipeBlock.ENTRANCE)) {
 
-                    String nextProperty = "closed".equals(s1) ? "bubbles" : "closed";
-                    compoundtag.putString(s, nextProperty);
+                    String nextProperty = "closed".equals(propertyName) ? "bubbles" : "closed";
+                    compoundtag.putString(registryName, nextProperty);
                     Property<?> property = statedefinition.getProperty(nextProperty);
-                    if (!s1.equals("closed") && !worldAccessor.isClientSide()) {
+                    if (!propertyName.equals("closed") && !worldAccessor.isClientSide()) {
                         message(player, Component.translatable(this.getDescriptionId() + ".select.closed", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
                     }
-                    if (!s1.equals("bubbles") && !worldAccessor.isClientSide()) {
+                    if (!propertyName.equals("bubbles") && !worldAccessor.isClientSide()) {
                         message(player, Component.translatable(this.getDescriptionId() + ".select.bubbles", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
                     }
                 }
