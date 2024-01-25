@@ -205,7 +205,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         Vec3 vec3 = entity.getDeltaMovement();
         double d0 = Math.min(0.5D, vec3.y + 0.04D);
 
-        entity.setDeltaMovement(vec3.x, d0 + 0.01D, vec3.z);
+        entity.setDeltaMovement(vec3.x, d0 + 0.05D, vec3.z);
         entity.resetFallDistance();
     }
 
@@ -221,7 +221,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            while (canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3) {
+            while (canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 4 - 1) {
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
