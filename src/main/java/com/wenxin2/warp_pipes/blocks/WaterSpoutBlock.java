@@ -39,18 +39,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WaterSpoutBlock extends Block implements BucketPickup {
     public static final BooleanProperty TOP = BooleanProperty.create("top");
-    public static final BooleanProperty DRAG_DOWN = BlockStateProperties.DRAG;
     public static final IntegerProperty DISTANCE = IntegerProperty.create("distance", 0, 6);
 
     public WaterSpoutBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(DRAG_DOWN, Boolean.FALSE)
-                .setValue(TOP, Boolean.FALSE).setValue(DISTANCE, 6));
+        this.registerDefaultState(this.stateDefinition.any().setValue(TOP, Boolean.FALSE).setValue(DISTANCE, 6));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(DISTANCE, DRAG_DOWN, TOP);
+        stateBuilder.add(DISTANCE, TOP);
     }
 
     @Override
@@ -112,8 +110,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             else return state.setValue(DISTANCE, distance).setValue(TOP, Boolean.TRUE);
         } else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED) && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
             if (worldAccessor.getBlockState(pos.above()).is(ModRegistry.WATER_SPOUT.get()))
-                return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(DRAG_DOWN, Boolean.FALSE).setValue(TOP, Boolean.FALSE);
-            else return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(DRAG_DOWN, Boolean.FALSE).setValue(TOP, Boolean.TRUE);
+                return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.FALSE);
+            else return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.TRUE);
         }
         return Blocks.AIR.defaultBlockState();
     }
@@ -140,27 +138,18 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         double y = pos.getY();
         double z = pos.getZ();
 
-        if (state.getValue(DRAG_DOWN)) {
-            this.addAlwaysVisibleParticles(world, ParticleTypes.CURRENT_DOWN, x + 0.5D, y + 0.8D, z, 0.0D, -1.0D, 0.0D);
-            this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
-                    y + random.nextFloat(), z + random.nextFloat(), 0.0D, -1.5D, 0.0D);
-            if (random.nextInt(200) == 0) {
-                world.playLocalSound(x, y, z, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT, SoundSource.BLOCKS,
-                        0.2F + random.nextFloat() * 0.2F, 0.9F + random.nextFloat() * 0.15F, false);
-            }
-        } else {
-            this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 1.0D, 0.0D);
-            this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
-                    y + random.nextFloat(), z + random.nextFloat(), 0.0D, 1.0D, 0.0D);
 
-            if (world.getBlockState(pos.above()).isAir()) {
-                for (int i = 0; i < 75; ++i)
-                    this.addAlwaysVisibleParticles(world, ParticleTypes.SPLASH, x + random.nextDouble(),
-                            y + 1, z + random.nextDouble(), randomNum, 0.04D, randomNum);
-                for (int i = 0; i < 10; ++i)
-                    this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextDouble(),
-                            y + 1, z + random.nextDouble(), 0.0D, 0.01D, 0.0D);
-            }
+        this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 1.0D, 0.0D);
+        this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
+                y + random.nextFloat(), z + random.nextFloat(), 0.0D, 1.0D, 0.0D);
+
+        if (world.getBlockState(pos.above()).isAir()) {
+            for (int i = 0; i < 75; ++i)
+                this.addAlwaysVisibleParticles(world, ParticleTypes.SPLASH, x + random.nextDouble(),
+                        y + 1, z + random.nextDouble(), randomNum, 0.04D, randomNum);
+            for (int i = 0; i < 10; ++i)
+                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextDouble(),
+                        y + 1, z + random.nextDouble(), 0.0D, 0.01D, 0.0D);
         }
 
         if (random.nextInt(20) == 0) {
@@ -176,7 +165,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         if (stateAbove.isAir()) {
             if (entity instanceof Boat boat) {
                 boat.onAboveBubbleCol(Boolean.FALSE);
-            } else this.onAboveUpBubbleCol(state.getValue(DRAG_DOWN), entity);
+            } else this.onAboveUpBubbleCol(entity);
             if (!world.isClientSide) {
                 ServerLevel serverWorld = (ServerLevel)world;
 
@@ -188,7 +177,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
                 }
             }
         } else {
-            this.onInsideUpBubbleColumn(state.getValue(DRAG_DOWN), entity);
+            this.onInsideUpBubbleColumn(entity);
             if (!world.isClientSide) {
                 ServerLevel serverWorld = (ServerLevel)world;
 
@@ -210,26 +199,16 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
        }
     }
 
-    public void onAboveUpBubbleCol(boolean isDragDown, Entity entity) {
+    public void onAboveUpBubbleCol(Entity entity) {
         Vec3 vec3 = entity.getDeltaMovement();
-        double d0;
-        if (isDragDown) {
-            d0 = Math.max(-0.9D, vec3.y - 0.03D);
-        } else {
-            d0 = Math.min(1.8D, vec3.y + 0.1D);
-        }
+        double d0 = Math.min(1.8D, vec3.y + 0.1D);
 
         entity.setDeltaMovement(vec3.x, d0, vec3.z);
     }
 
-    public void onInsideUpBubbleColumn(boolean isDragDown, Entity entity) {
+    public void onInsideUpBubbleColumn(Entity entity) {
         Vec3 vec3 = entity.getDeltaMovement();
-        double d0;
-        if (isDragDown) {
-            d0 = Math.max(-0.3D, vec3.y - 0.03D);
-        } else {
-            d0 = Math.min(0.5D, vec3.y + 0.04D);
-        }
+        double d0 = Math.min(0.5D, vec3.y + 0.04D);
 
         entity.setDeltaMovement(vec3.x, d0 + 0.01D, vec3.z);
         entity.resetFallDistance();
