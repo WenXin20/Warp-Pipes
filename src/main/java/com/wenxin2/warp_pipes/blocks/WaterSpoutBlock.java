@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
@@ -39,16 +38,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WaterSpoutBlock extends Block implements BucketPickup {
     public static final BooleanProperty TOP = BooleanProperty.create("top");
-    public static final IntegerProperty DISTANCE = IntegerProperty.create("distance", 0, 6);
 
     public WaterSpoutBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(TOP, Boolean.FALSE).setValue(DISTANCE, 6));
+        this.registerDefaultState(this.stateDefinition.any().setValue(TOP, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(DISTANCE, TOP);
+        stateBuilder.add(TOP);
     }
 
     @Override
@@ -100,14 +98,11 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         return state.is(ModRegistry.WATER_SPOUT.get()) || state.isAir();
     }
 
-    public static BlockState setBlockState(BlockState state, LevelAccessor worldAccessor, BlockPos pos, int distance) {
-
+    public static BlockState setBlockState(BlockState state, LevelAccessor worldAccessor, BlockPos pos) {
         if (state.is(ModRegistry.WATER_SPOUT.get())) {
-            // Clamp the distance value to be within the allowed range (0 to 3)
-            distance = Math.min(Math.max(distance, 0), 3);
             if (worldAccessor.getBlockState(pos.above()).is(ModRegistry.WATER_SPOUT.get()))
-                return state.setValue(DISTANCE, distance).setValue(TOP, Boolean.FALSE);
-            else return state.setValue(DISTANCE, distance).setValue(TOP, Boolean.TRUE);
+                return state.setValue(TOP, Boolean.FALSE);
+            else return state.setValue(TOP, Boolean.TRUE);
         } else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED) && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
             if (worldAccessor.getBlockState(pos.above()).is(ModRegistry.WATER_SPOUT.get()))
                 return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.FALSE);
@@ -223,7 +218,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
 
-            BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos, initialDistance);
+            BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
             while (canExistIn(worldAccessor.getBlockState(mutablePos)) && initialDistance < 3) {
@@ -232,7 +227,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
                 }
                 mutablePos.move(Direction.UP);
                 initialDistance++;
-                pipeColumnState = WaterSpoutBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos, initialDistance);
+                pipeColumnState = WaterSpoutBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
     }
