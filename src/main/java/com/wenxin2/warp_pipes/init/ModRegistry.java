@@ -6,7 +6,6 @@ import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.fluids.StillWaterType;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -15,15 +14,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -149,13 +145,13 @@ public class ModRegistry {
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
                 () -> new PipeBubblesBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY)
-                        .replaceable().noCollission().noLootTable()));
+                        .replaceable().noCollission().noLootTable().liquid()));
 
         WATER_SPOUT = registerNoItemBlock("water_spout",
                 () -> new WaterSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).sound(SoundType.WET_GRASS)
                         .pushReaction(PushReaction.DESTROY).isRedstoneConductor(ModRegistry::never)
                         .isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
-                        .replaceable().noCollission().noLootTable().liquid()));
+                        .replaceable().noCollission().noLootTable()));
 
 
         WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
