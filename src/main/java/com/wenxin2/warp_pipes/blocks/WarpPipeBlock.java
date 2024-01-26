@@ -327,7 +327,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         if (random.nextInt(10) == 0) {
                             world.addParticle(ParticleTypes.LAVA, dx + 0.5D, dy + 1.0D, dz + 0.5D, 0.0D, 0.0D, 0.0D);
                         }
-                    } else if (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock || blockAbove instanceof WaterSpoutBlock) {
+                    } else if (fluidAbove instanceof WaterFluid || blockAbove instanceof PipeBubblesBlock) {
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + 0.5D, dy + 1.15D, dz + 0.5D, 0.0D, 0.4D, 0.0D);
                         world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, dx + (double) random.nextFloat(),
                                 dy + (double) random.nextFloat() + 1.15D, dz + (double) random.nextFloat(), 0.0D, 0.4D, 0.0D);

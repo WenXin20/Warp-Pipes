@@ -145,18 +145,10 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         double y = pos.getY();
         double z = pos.getZ();
 
-
-        this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + 0.5D, y, z + 0.5D, 0.0D, 1.0D, 0.0D);
-        this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextFloat(),
-                y + random.nextFloat(), z + random.nextFloat(), 0.0D, 1.0D, 0.0D);
-
         if (world.getBlockState(pos.above()).isAir()) {
             for (int i = 0; i < 75; ++i)
                 this.addAlwaysVisibleParticles(world, ParticleTypes.SPLASH, x + random.nextDouble(),
                         y + 1, z + random.nextDouble(), randomNum, 0.04D, randomNum);
-            for (int i = 0; i < 10; ++i)
-                this.addAlwaysVisibleParticles(world, ParticleTypes.BUBBLE, x + random.nextDouble(),
-                        y + 1, z + random.nextDouble(), 0.0D, 0.01D, 0.0D);
         }
 
         if (random.nextInt(20) == 0) {
