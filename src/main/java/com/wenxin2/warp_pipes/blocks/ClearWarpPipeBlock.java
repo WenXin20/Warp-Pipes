@@ -385,6 +385,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
         if (state.getValue(WATER_SPOUT) && state.getValue(WATERLOGGED)) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
+            serverWorld.scheduleTick(pos, this, 3);
         }
         if (state.getValue(FACING) == Direction.UP) {
             PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
