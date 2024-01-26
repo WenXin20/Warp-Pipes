@@ -210,8 +210,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
 
-        if (state.getValue(WATER_SPOUT)) {
+        if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
+            serverWorld.scheduleTick(pos, this, 3);
         }
         if (state.getValue(FACING) == Direction.UP) {
             PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
@@ -288,7 +289,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (state.getValue(FACING) == Direction.WEST) {
             if (blockWest == this) {
-                world.scheduleTick(pos, this, 3);
+//                world.scheduleTick(pos, this, 3);
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
