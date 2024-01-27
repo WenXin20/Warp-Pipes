@@ -238,15 +238,11 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
             // Used 4 - 1 since this somehow places one more block than intended
-            for (int initialDistance = 0; WaterSpoutBlock.canExistIn(mutableState) && initialDistance < 4 - 1; initialDistance++) {
-                if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)
-                        || (worldAccessor.getBlockState(pos).getBlock() instanceof WarpPipeBlock
-                        && (worldAccessor.getBlockState(pos).getValue(WarpPipeBlock.CLOSED)
-                        || !worldAccessor.getBlockState(pos).getValue(WarpPipeBlock.WATER_SPOUT)))) {
+            for (int initialDistance = 0; WaterSpoutBlock.canExistIn(mutableState) && initialDistance < 11 - 1; initialDistance++) {
+                if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.UP);
-                initialDistance++;
                 pipeColumnState = WaterSpoutBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
