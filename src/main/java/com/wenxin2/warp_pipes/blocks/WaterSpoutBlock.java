@@ -109,16 +109,18 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
 
     public static BlockState setBlockState(BlockState state, LevelAccessor worldAccessor, BlockPos pos) {
         BlockState stateAbove = worldAccessor.getBlockState(pos.above());
-
-        if (state.is(ModRegistry.WATER_SPOUT.get())) {
-            if (stateAbove.is(ModRegistry.WATER_SPOUT.get()))
-                return state.setValue(TOP, Boolean.FALSE);
-            else return state.setValue(TOP, Boolean.TRUE);
-        } else if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.FACING) == Direction.UP
-                && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(WarpPipeBlock.CLOSED)) {
-            if (stateAbove.is(ModRegistry.WATER_SPOUT.get()))
-                return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.FALSE);
-            else return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.TRUE);
+        if (state.isAir() || state.is(ModRegistry.WATER_SPOUT.get())
+                || (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(WarpPipeBlock.CLOSED))) {
+            if (state.is(ModRegistry.WATER_SPOUT.get())) {
+                if (stateAbove.is(ModRegistry.WATER_SPOUT.get()))
+                    return state.setValue(TOP, Boolean.FALSE);
+                else return state.setValue(TOP, Boolean.TRUE);
+            } else if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.FACING) == Direction.UP
+                    && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(WarpPipeBlock.CLOSED)) {
+                if (stateAbove.is(ModRegistry.WATER_SPOUT.get()))
+                    return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.FALSE);
+                else return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.TRUE);
+            }
         }
         return Blocks.AIR.defaultBlockState();
     }
@@ -224,22 +226,21 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
 
     public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
         if (WaterSpoutBlock.canExistIn(state)) {
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
             BlockState mutableState = worldAccessor.getBlockState(mutablePos);
 
             BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
-            for (int initialDistance = 0; WaterSpoutBlock.canExistIn(mutableState) && initialDistance < 4 - 1; initialDistance++) {
-                if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)
-                        || (worldAccessor.getBlockState(pos).getBlock() instanceof WarpPipeBlock
-                        && (worldAccessor.getBlockState(pos).getValue(WarpPipeBlock.CLOSED)
-                        || !worldAccessor.getBlockState(pos).getValue(WarpPipeBlock.WATER_SPOUT)))) {
+            // Used 4 - 1 since this somehow places one more block then intended
+            while (WaterSpoutBlock.canExistIn(mutableState) && initialDistance < 4 - 1) {
+                if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.UP);
+                initialDistance++;
                 pipeColumnState = WaterSpoutBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
-
             }
         }
     }
