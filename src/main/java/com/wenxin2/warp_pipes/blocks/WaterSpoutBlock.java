@@ -79,7 +79,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         Block blockAbove = worldAccessor.getBlockState(pos.above()).getBlock();
 
         if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.WATER_SPOUT.get())
-                 && canExistIn(neighborState)) {
+                 && canExistIn(worldAccessor, neighborPos)) {
             worldAccessor.scheduleTick(pos, this, 3);
         }
 
@@ -108,8 +108,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         else return false;
     }
 
-    public static boolean canExistIn(BlockState state) {
-        return state.is(ModRegistry.WATER_SPOUT.get()) || state.getBlock() instanceof AirBlock;
+    public static boolean canExistIn(LevelAccessor worldAccessor, BlockPos pos) {
+        return worldAccessor.getBlockState(pos).is(ModRegistry.WATER_SPOUT.get()) ||  worldAccessor.getBlockState(pos).isAir();
     }
 
     public static BlockState setBlockState(BlockState state, LevelAccessor worldAccessor, BlockPos pos) {
@@ -230,7 +230,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
     }
 
     public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
-        if (WaterSpoutBlock.canExistIn(state)) {
+        if (WaterSpoutBlock.canExistIn(worldAccessor, pos)) {
+            int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
             BlockState mutableState = worldAccessor.getBlockState(mutablePos);
 
@@ -238,11 +239,13 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             worldAccessor.setBlock(pos, pipeColumnState, 2);
 
             // Used 4 - 1 since this somehow places one more block than intended
-            for (int initialDistance = 0; WaterSpoutBlock.canExistIn(mutableState) && initialDistance < 11 - 1; initialDistance++) {
+            while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < 4 - 1) {
+
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;
                 }
                 mutablePos.move(Direction.UP);
+                initialDistance++;
                 pipeColumnState = WaterSpoutBlock.setBlockState(pipeColumnState, worldAccessor, mutablePos);
             }
         }
