@@ -218,7 +218,7 @@ public class LinkerItem extends TieredItem {
             if (tag != null && !tag.isEmpty()) {
                 list.add(Component.translatable("", true));
                 list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z),
-                        tag.getString("Dimension"), true).withStyle(ChatFormatting.GOLD));
+                        tag.getString(WARP_DIMENSION), true).withStyle(ChatFormatting.GOLD));
             }
         }
         else {

@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeBlockEntity extends BlockEntity {
     public static final String WARP_POS = "WarpPos";
+    public static final String WARP_DIMENSION = "Dimension";
     @Nullable
     public BlockPos destinationPos;
     public String dimensionTag;
@@ -79,7 +80,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         this.destinationPos = null;
-        this.dimensionTag = tag.getString("Dimension");
+        this.dimensionTag = tag.getString(WARP_DIMENSION);
 
         if (tag.contains(WARP_POS)) {
             this.setDestinationPos(NbtUtils.readBlockPos(tag.getCompound(WARP_POS)));
@@ -94,7 +95,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
         }
 
         if (this.dimensionTag != null) {
-            tag.putString("Dimension", this.dimensionTag);
+            tag.putString(WARP_DIMENSION, this.dimensionTag);
         }
     }
 }
