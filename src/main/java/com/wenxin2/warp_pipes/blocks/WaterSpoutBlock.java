@@ -76,14 +76,28 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
                                   LevelAccessor worldAccessor, BlockPos pos, BlockPos neighborPos) {
         super.updateShape(state, direction, neighborState, worldAccessor, pos, neighborPos);
-        Block blockAbove = worldAccessor.getBlockState(pos.above()).getBlock();
+        BlockState stateAbove = worldAccessor.getBlockState(pos.above());
+        BlockState stateBelow = worldAccessor.getBlockState(pos.below());
+
+        if (stateBelow.getBlock() instanceof WarpPipeBlock
+                && (stateBelow.getValue(WarpPipeBlock.CLOSED) || stateBelow.getValue(WarpPipeBlock.FACING) != Direction.UP)) {
+            worldAccessor.destroyBlock(pos, true);
+            return Blocks.AIR.defaultBlockState();
+        }
+
+        if (stateBelow.getBlock() instanceof ClearWarpPipeBlock
+                && (stateBelow.getValue(WarpPipeBlock.CLOSED) || stateBelow.getValue(WarpPipeBlock.FACING) != Direction.UP
+                || !stateBelow.getValue(ClearWarpPipeBlock.WATERLOGGED))) {
+            worldAccessor.destroyBlock(pos, true);
+            return Blocks.AIR.defaultBlockState();
+        }
 
         if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.WATER_SPOUT.get())
                  && canExistIn(worldAccessor, neighborPos)) {
             worldAccessor.scheduleTick(pos, this, 3);
         }
 
-        if (blockAbove == ModRegistry.WATER_SPOUT.get()) {
+        if (stateAbove.getBlock() == ModRegistry.WATER_SPOUT.get()) {
             return state.setValue(TOP, Boolean.FALSE);
         }
         else return state.setValue(TOP, Boolean.TRUE);

@@ -135,7 +135,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (isClosed) {
                     world.scheduleTick(pos, this, 4);
                 } else {
-                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES).cycle(WATER_SPOUT), 2);
+                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
                     this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
             }
