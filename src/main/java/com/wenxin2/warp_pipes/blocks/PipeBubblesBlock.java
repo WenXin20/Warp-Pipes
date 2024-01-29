@@ -85,11 +85,21 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
+                                  LevelAccessor worldAccessor, BlockPos pos, BlockPos neighborPos) {
+        BlockState stateBelow = worldAccessor.getBlockState(pos.below());
+
+        if (stateBelow.getBlock() instanceof WarpPipeBlock
+                && (stateBelow.getValue(WarpPipeBlock.CLOSED) || stateBelow.getValue(WarpPipeBlock.FACING) != Direction.UP)) {
+            worldAccessor.destroyBlock(pos, true);
+            return Blocks.AIR.defaultBlockState();
+        }
+
         if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.PIPE_BUBBLES.get())
                 && canExistIn(neighborState)) {
             worldAccessor.scheduleTick(pos, this, 3);
         }
+
         worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
         return super.updateShape(state, direction, neighborState, worldAccessor, pos, neighborPos);
     }
