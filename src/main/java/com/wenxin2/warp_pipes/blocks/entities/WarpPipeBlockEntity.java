@@ -61,18 +61,9 @@ public class WarpPipeBlockEntity extends BlockEntity {
         if (dimension != null) {
             this.dimensionTag = dimension.location().toString();
         }
-        if (this.level != null && dimension != null && this.destinationPos != null && this.level.getServer() != null) {
+
+        if (this.level != null) {
             this.level.setBlock(this.getBlockPos(), this.getBlockState(), 4);
-
-            // Change dimension
-            ServerLevel targetWorld = this.level.getServer().getLevel(dimension);
-            if (targetWorld != null) {
-                BlockEntity targetBlockEntity = targetWorld.getBlockEntity(this.destinationPos);
-
-                if (targetBlockEntity instanceof WarpPipeBlockEntity warpPipeBETarget) {
-                    warpPipeBETarget.setDestinationPos(this.getBlockPos());
-                }
-            }
         }
     }
 

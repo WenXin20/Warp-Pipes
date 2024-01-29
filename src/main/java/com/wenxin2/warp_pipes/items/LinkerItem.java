@@ -78,7 +78,7 @@ public class LinkerItem extends TieredItem {
         } else if (player != null) {
             if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)))) {
 
-                if (getBound() == Boolean.FALSE && !player.isShiftKeyDown()) {
+                if (getBound() == Boolean.FALSE) {
                     if (wrenchTag == null) {
                         wrenchTag = new CompoundTag();
                     }
@@ -98,7 +98,7 @@ public class LinkerItem extends TieredItem {
                             .withStyle(ChatFormatting.DARK_GREEN), true);
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
-                } else if (getBound()/* && player.isShiftKeyDown()*/) {
+                } else if (getBound()) {
                     Player player1 = useOnContext.getPlayer();
                     if (wrenchTag == null) {
                         wrenchTag = new CompoundTag();
@@ -134,7 +134,6 @@ public class LinkerItem extends TieredItem {
                                     .withStyle(ChatFormatting.RED), true);
                         }
                     }
-
 
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
