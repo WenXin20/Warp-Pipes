@@ -275,10 +275,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
     }
 
     public ItemStack pickupBlock(LevelAccessor worldAccessor, BlockPos pos, BlockState state) {
-        if (worldAccessor.getBlockState(pos).getValue(TOP)) {
-            worldAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            return new ItemStack(Items.WATER_BUCKET);
-        } else return ItemStack.EMPTY;
+        worldAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        return new ItemStack(Items.WATER_BUCKET);
     }
 
     public Optional<SoundEvent> getPickupSound() {
