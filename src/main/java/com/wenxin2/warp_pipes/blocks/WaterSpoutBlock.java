@@ -102,10 +102,10 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             worldAccessor.scheduleTick(pos, this, 3);
         }
 
-        if (stateAbove.getBlock() == ModRegistry.WATER_SPOUT.get()) {
-            return state.setValue(TOP, Boolean.FALSE);
+        if (stateAbove.getBlock() != ModRegistry.WATER_SPOUT.get()) {
+            return state.setValue(TOP, Boolean.TRUE);
         }
-        else return state.setValue(TOP, Boolean.TRUE);
+        else return state.setValue(TOP, Boolean.FALSE);
     }
 
     @Override
@@ -136,14 +136,14 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         if (state.isAir() || state.is(ModRegistry.WATER_SPOUT.get())
                 || (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(WarpPipeBlock.CLOSED))) {
             if (state.is(ModRegistry.WATER_SPOUT.get())) {
-                if (stateAbove.is(ModRegistry.WATER_SPOUT.get()))
-                    return state.setValue(TOP, Boolean.FALSE);
-                else return state.setValue(TOP, Boolean.TRUE);
+                if (!stateAbove.is(ModRegistry.WATER_SPOUT.get()))
+                    return state.setValue(TOP, Boolean.TRUE);
+                else return state.setValue(TOP, Boolean.FALSE);
             } else if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.FACING) == Direction.UP
                     && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(WarpPipeBlock.CLOSED)) {
-                if (stateAbove.is(ModRegistry.WATER_SPOUT.get()))
-                    return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.FALSE);
-                else return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.TRUE);
+                if (!stateAbove.is(ModRegistry.WATER_SPOUT.get()))
+                    return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.TRUE);
+                else return ModRegistry.WATER_SPOUT.get().defaultBlockState().setValue(TOP, Boolean.FALSE);
             }
         }
         return Blocks.AIR.defaultBlockState();
@@ -252,10 +252,14 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         if (WaterSpoutBlock.canExistIn(worldAccessor, pos)) {
             int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
-            BlockState mutableState = worldAccessor.getBlockState(mutablePos);
-
             BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
-            worldAccessor.setBlock(pos, pipeColumnState, 2);
+            BlockState stateAbove = worldAccessor.getBlockState(mutablePos.above());
+
+            if (pipeColumnState.getBlock() instanceof WaterSpoutBlock) {
+                if (stateAbove.getBlock() != ModRegistry.WATER_SPOUT.get()) {
+                    worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.TRUE), 2);
+                } else worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.FALSE), 2);
+            } else worldAccessor.setBlock(pos, pipeColumnState, 2);
 
             // Used 4 - 1 since this somehow places one more block than intended
             while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < 4 - 1) {
