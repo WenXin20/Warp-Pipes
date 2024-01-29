@@ -85,6 +85,11 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             return Blocks.AIR.defaultBlockState();
         }
 
+        if (!(stateBelow.getBlock() instanceof WarpPipeBlock) && !(stateBelow.getBlock() instanceof WaterSpoutBlock)) {
+            worldAccessor.destroyBlock(pos, true);
+            return Blocks.AIR.defaultBlockState();
+        }
+
         if (stateBelow.getBlock() instanceof ClearWarpPipeBlock
                 && (stateBelow.getValue(WarpPipeBlock.CLOSED) || stateBelow.getValue(WarpPipeBlock.FACING) != Direction.UP
                 || !stateBelow.getValue(ClearWarpPipeBlock.WATERLOGGED))) {
@@ -92,7 +97,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             return Blocks.AIR.defaultBlockState();
         }
 
-        if (!state.canSurvive(worldAccessor, pos) && !neighborState.is(ModRegistry.WATER_SPOUT.get())
+        if (!state.canSurvive(worldAccessor, pos) && !(neighborState.getBlock() instanceof WaterSpoutBlock)
                  && canExistIn(worldAccessor, neighborPos)) {
             worldAccessor.scheduleTick(pos, this, 3);
         }
