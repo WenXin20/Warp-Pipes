@@ -89,8 +89,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
                                   LevelAccessor worldAccessor, BlockPos pos, BlockPos neighborPos) {
         BlockState stateBelow = worldAccessor.getBlockState(pos.below());
 
-        if (stateBelow.getBlock() instanceof WarpPipeBlock
-                && (stateBelow.getValue(WarpPipeBlock.CLOSED) || stateBelow.getValue(WarpPipeBlock.FACING) != Direction.UP)) {
+        if (stateBelow.getBlock() instanceof WarpPipeBlock && stateBelow.getValue(WarpPipeBlock.CLOSED)) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
