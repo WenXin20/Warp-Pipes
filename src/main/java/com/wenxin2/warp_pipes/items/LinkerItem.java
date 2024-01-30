@@ -129,9 +129,9 @@ public class LinkerItem extends TieredItem {
                             && LinkerItem.isLinked(item)) {
 
                         wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
-                        wrenchTag.putInt(WarpPipeBlockEntity.POS_X, this.destinationPos.getX());
-                        wrenchTag.putInt(WarpPipeBlockEntity.POS_Y, this.destinationPos.getY());
-                        wrenchTag.putInt(WarpPipeBlockEntity.POS_Z, this.destinationPos.getZ());
+                        wrenchTag.putInt(WarpPipeBlockEntity.POS_X, WarpPipeBlockEntity.destinationPos.getX());
+                        wrenchTag.putInt(WarpPipeBlockEntity.POS_Y, WarpPipeBlockEntity.destinationPos.getY());
+                        wrenchTag.putInt(WarpPipeBlockEntity.POS_Z, WarpPipeBlockEntity.destinationPos.getZ());
                         this.link(pos, world, wrenchTag, warpPipeBE, warpPipeBEGlobal);
                     } else {
                         if (player1 != null) {
