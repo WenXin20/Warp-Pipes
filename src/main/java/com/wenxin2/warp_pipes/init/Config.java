@@ -16,6 +16,7 @@ public class Config
     public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ForgeConfigSpec.IntValue WARP_COOLDOWN;
 
     static
     {
@@ -30,6 +31,8 @@ public class Config
                 .define("creative_wrench", false);
         CREATIVE_WRENCH_PIPE_LINKING = BUILDER.comment("Require creative to link pipes. " + "[Default: false]")
                 .define("creative_wrench_pipe_linking", false);
+        WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[Default: 30]")
+                .defineInRange("warp_cooldown", 50, 0, 9000);
         BUILDER.pop();
 
         BUILDER.comment("Warp Pipes Config").push(CATEGORY_DEBUG);

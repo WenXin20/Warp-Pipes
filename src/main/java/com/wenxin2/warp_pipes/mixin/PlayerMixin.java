@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.mixin;
 import com.google.common.collect.Lists;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.sounds.PipeBubblesSoundHandler;
 import java.util.List;
 import net.minecraft.client.resources.sounds.AmbientSoundHandler;
@@ -90,37 +91,37 @@ public abstract class PlayerMixin extends Entity {
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(this, warpPos, world, state);
                     this.setPortalCooldown();
-                    this.portalCooldown = 20;
+                    this.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(this, warpPos, world, state);
                     this.setPortalCooldown();
-                    this.portalCooldown = 20;
+                    this.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
                     WarpPipeBlock.warp(this, warpPos, world, state);
                     this.setPortalCooldown();
-                    this.portalCooldown = 20;
+                    this.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
                     WarpPipeBlock.warp(this, warpPos, world, state);
                     this.setPortalCooldown();
-                    this.portalCooldown = 20;
+                    this.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(this, warpPos, world, state);
                     this.setPortalCooldown();
-                    this.portalCooldown = 20;
+                    this.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(this, warpPos, world, state);
                     this.setPortalCooldown();
-                    this.portalCooldown = 20;
+                    this.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
             }
         }

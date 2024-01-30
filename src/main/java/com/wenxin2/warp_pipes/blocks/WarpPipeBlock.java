@@ -527,7 +527,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
-                    entity.portalCooldown = 20;
+                    entity.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
             }
             if (!(entity instanceof Player) && entity.portalCooldown == 0 && warpPipeBE.hasDestinationPos()) {
@@ -535,7 +535,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
-                    entity.portalCooldown = 20;
+                    entity.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
             }
         }
