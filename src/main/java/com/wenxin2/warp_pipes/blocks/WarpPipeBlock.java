@@ -522,21 +522,35 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (entity instanceof Player && entity.portalCooldown == 0 && warpPipeBE.hasDestinationPos()) {
+            if (entity instanceof Player player && warpPipeBE.hasDestinationPos()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    WarpPipeBlock.warp(entity, warpPos, world, state);
-                    entity.setPortalCooldown();
-                    entity.portalCooldown = Config.WARP_COOLDOWN.get();
+                    if (entity.portalCooldown == 0) {
+                        WarpPipeBlock.warp(entity, warpPos, world, state);
+                        entity.setPortalCooldown();
+                        entity.portalCooldown = Config.WARP_COOLDOWN.get();
+                    } else this.displayCooldownMessage(player);
                 }
             }
-            if (!(entity instanceof Player) && entity.portalCooldown == 0 && warpPipeBE.hasDestinationPos()) {
+            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
                     entity.portalCooldown = Config.WARP_COOLDOWN.get();
                 }
+            }
+        }
+    }
+
+    public void displayCooldownMessage(Player player) {
+        if (player.portalCooldown > 20) {
+            if (Config.WARP_COOLDOWN_MESSAGE.get()) {
+                if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
+                    player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
+                            player.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
+                else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
+                        .withStyle(ChatFormatting.RED), true);
             }
         }
     }
