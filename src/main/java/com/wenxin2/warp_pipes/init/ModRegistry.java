@@ -47,68 +47,23 @@ public class ModRegistry {
     public static final RegistryObject<Block> WHITE_WARP_PIPE;
     public static final RegistryObject<Block> YELLOW_WARP_PIPE;
 
-    public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPES;
+    public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPE_BLOCK_ENTITY;
 
     static
     {
         PIPE_WRENCH = registerItem("pipe_wrench",
                 () -> new WrenchItem(new Item.Properties().durability(128), Tiers.IRON));
 
+        CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
+                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
+                        .sound(SoundType.GLASS).isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
+                        .isRedstoneConductor(ModRegistry::never).strength(3.0F, 500.0F)
+                        .requiresCorrectToolForDrops().noOcclusion()));
 
-        WHITE_WARP_PIPE = registerBlock("white_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        ORANGE_WARP_PIPE = registerBlock("orange_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        MAGENTA_WARP_PIPE = registerBlock("magenta_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        LIGHT_BLUE_WARP_PIPE = registerBlock("light_blue_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        YELLOW_WARP_PIPE = registerBlock("yellow_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        LIME_WARP_PIPE = registerBlock("lime_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        PINK_WARP_PIPE = registerBlock("pink_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        GRAY_WARP_PIPE = registerBlock("gray_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        LIGHT_GRAY_WARP_PIPE = registerBlock("light_gray_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        CYAN_WARP_PIPE = registerBlock("cyan_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
-
-        PURPLE_WARP_PIPE = registerBlock("purple_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
-                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+        BLACK_WARP_PIPE = registerBlock("black_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
+                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
+                        .isViewBlocking(ModRegistry::always).requiresCorrectToolForDrops()));
 
         BLUE_WARP_PIPE = registerBlock("blue_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLUE)
@@ -120,8 +75,53 @@ public class ModRegistry {
                         .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
                         .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
 
+        CYAN_WARP_PIPE = registerBlock("cyan_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        GRAY_WARP_PIPE = registerBlock("gray_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        LIGHT_BLUE_WARP_PIPE = registerBlock("light_blue_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        LIGHT_GRAY_WARP_PIPE = registerBlock("light_gray_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        LIME_WARP_PIPE = registerBlock("lime_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        MAGENTA_WARP_PIPE = registerBlock("magenta_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        ORANGE_WARP_PIPE = registerBlock("orange_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        PINK_WARP_PIPE = registerBlock("pink_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
+
+        PURPLE_WARP_PIPE = registerBlock("purple_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE)
                         .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
                         .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
 
@@ -131,16 +131,15 @@ public class ModRegistry {
                         .strength(3.5F, 1000.0F)
                         .requiresCorrectToolForDrops()));
 
-        BLACK_WARP_PIPE = registerBlock("black_warp_pipe",
-                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
-                        .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
-                        .isViewBlocking(ModRegistry::always).requiresCorrectToolForDrops()));
+        WHITE_WARP_PIPE = registerBlock("white_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
 
-        CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
-                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
-                        .sound(SoundType.GLASS).isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
-                        .isRedstoneConductor(ModRegistry::never).strength(3.0F, 500.0F)
-                        .requiresCorrectToolForDrops().noOcclusion()));
+        YELLOW_WARP_PIPE = registerBlock("yellow_warp_pipe",
+                () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
 
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
@@ -154,8 +153,8 @@ public class ModRegistry {
                         .replaceable().noCollission().noLootTable()));
 
 
-        WARP_PIPES = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
-                () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get()).build(null));
+        WARP_PIPE_BLOCK_ENTITY = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
+                () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get(), ModRegistry.GREEN_WARP_PIPE.get()).build(null));
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block)

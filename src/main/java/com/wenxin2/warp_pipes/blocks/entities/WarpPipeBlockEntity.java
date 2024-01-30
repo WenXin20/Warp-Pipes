@@ -23,7 +23,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
-        this(ModRegistry.WARP_PIPES.get(), pos, state);
+        this(ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), pos, state);
     }
 
     public WarpPipeBlockEntity(final BlockEntityType<?> tileEntity, BlockPos pos, BlockState state) {
