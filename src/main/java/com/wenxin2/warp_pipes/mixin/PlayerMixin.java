@@ -144,7 +144,7 @@ public abstract class PlayerMixin extends Entity {
     }
 
     public void displayCooldownMessage() {
-        if (this.portalCooldown > 20) {
+        if (this.portalCooldown >= 10) {
         if (Config.WARP_COOLDOWN_MESSAGE.get()) {
             if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
                 this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",

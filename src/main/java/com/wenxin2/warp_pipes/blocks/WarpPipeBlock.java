@@ -544,7 +544,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public void displayCooldownMessage(Player player) {
-        if (player.portalCooldown > 20) {
+        if (player.portalCooldown >= 10) {
             if (Config.WARP_COOLDOWN_MESSAGE.get()) {
                 if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
                     player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
