@@ -47,6 +47,8 @@ public class LinkerItem extends TieredItem {
         super(tier, properties);
     }
     public boolean isBound;
+    @Nullable
+    public BlockPos destinationPos;
 
     public boolean setBound(boolean isBound) {
         return this.isBound = isBound;
@@ -89,6 +91,7 @@ public class LinkerItem extends TieredItem {
                     wrenchTag.putInt(POS_X, pos.getX());
                     wrenchTag.putInt(POS_Y, pos.getY());
                     wrenchTag.putInt(POS_Z, pos.getZ());
+                    this.destinationPos = new BlockPos(wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z));
                     wrenchTag.put(WARP_POS, NbtUtils.writeBlockPos(warpPos));
                     wrenchTag.putString(WARP_DIMENSION, dimension);
                     this.setBound(Boolean.TRUE);
@@ -125,7 +128,10 @@ public class LinkerItem extends TieredItem {
                             && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal
                             && LinkerItem.isLinked(item)) {
 
-                        wrenchTag.put(WARP_POS, NbtUtils.writeBlockPos(warpPos));
+                        wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
+                        wrenchTag.putInt(WarpPipeBlockEntity.POS_X, this.destinationPos.getX());
+                        wrenchTag.putInt(WarpPipeBlockEntity.POS_Y, this.destinationPos.getY());
+                        wrenchTag.putInt(WarpPipeBlockEntity.POS_Z, this.destinationPos.getZ());
                         this.link(pos, world, wrenchTag, warpPipeBE, warpPipeBEGlobal);
                     } else {
                         if (player1 != null) {
@@ -202,7 +208,8 @@ public class LinkerItem extends TieredItem {
 
     private void writeTag(ResourceKey<Level> worldKey, BlockPos pos, CompoundTag tag) {
         tag.put(WARP_POS, NbtUtils.writeBlockPos(pos));
-        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, worldKey).resultOrPartial(LOGGER::error).ifPresent(nbtElement -> tag.put(WARP_DIMENSION, nbtElement));
+        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, worldKey)
+                .resultOrPartial(LOGGER::error).ifPresent(nbtElement -> tag.put(WARP_DIMENSION, nbtElement));
     }
 
     public static Optional<ResourceKey<Level>> getWarpDimension(CompoundTag tag) {

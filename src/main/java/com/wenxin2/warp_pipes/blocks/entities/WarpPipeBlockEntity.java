@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,12 +16,13 @@ import net.minecraft.world.level.block.state.BlockState;
 public class WarpPipeBlockEntity extends BlockEntity {
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
+    public static final String POS_X = "X";
+    public static final String POS_Y = "Y";
+    public static final String POS_Z = "Z";
+
     @Nullable
     public BlockPos destinationPos;
     public String dimensionTag;
-    public int posX;
-    public int posY;
-    public int posZ;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -70,23 +70,31 @@ public class WarpPipeBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.destinationPos = null;
+
+        this.destinationPos = new BlockPos(tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z));
         this.dimensionTag = tag.getString(WARP_DIMENSION);
+//        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains(WARP_POS)) {
-            this.setDestinationPos(NbtUtils.readBlockPos(tag.getCompound(WARP_POS)));
+            this.setDestinationPos(this.destinationPos);
+//            System.out.println("SetWarpPos: " + this.destinationPos);
         }
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (this.hasDestinationPos()) {
+        if (this.hasDestinationPos() && this.destinationPos != null) {
+            tag.putInt(POS_X, this.destinationPos.getX());
+            tag.putInt(POS_Y, this.destinationPos.getY());
+            tag.putInt(POS_Z, this.destinationPos.getZ());
             tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
+//            System.out.println("WarpPos: " + NbtUtils.writeBlockPos(this.destinationPos));
         }
 
         if (this.dimensionTag != null) {
             tag.putString(WARP_DIMENSION, this.dimensionTag);
+//            System.out.println("WarpDim: " + this.dimensionTag);
         }
     }
 }
