@@ -10,6 +10,7 @@ public class Config
     public static final String CATEGORY_DEBUG = "Debug";
     public static final String CATEGORY_COMMON = "Common";
 
+    public static ForgeConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
     public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH;
     public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
     public static ForgeConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
@@ -36,6 +37,8 @@ public class Config
                 .define("creative_wrench", false);
         CREATIVE_WRENCH_PIPE_LINKING = BUILDER.comment("Require creative to link pipes. " + "[Default: false]")
                 .define("creative_wrench_pipe_linking", false);
+        ALLOW_FAST_TRAVEL = BUILDER.comment("Allow fast travel through Clear Warp Pipes. " + "[Default: true]")
+                .define("allow_fast_travel", true);
         TELEPORT_MOBS = BUILDER.comment("Allow mobs to teleport. " + "[Default: true]")
                 .define("teleport_mobs", true);
         TELEPORT_NON_MOBS = BUILDER.comment("Allow non living entities to teleport. " + "[Default: true]")

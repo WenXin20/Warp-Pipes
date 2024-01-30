@@ -421,7 +421,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         int blockZ = pos.getZ();
 
         if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
-                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()) {
+                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()
+                && Config.ALLOW_FAST_TRAVEL.get()) {
             this.moveSidewaysInPipe(entity);
 
             if (!world.isClientSide) {
