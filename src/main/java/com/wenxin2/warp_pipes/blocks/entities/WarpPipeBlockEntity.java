@@ -21,7 +21,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public static final String POS_Z = "Z";
 
     @Nullable
-    public static BlockPos destinationPos;
+    public BlockPos destinationPos;
     public String dimensionTag;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
@@ -34,11 +34,11 @@ public class WarpPipeBlockEntity extends BlockEntity {
     }
 
     public boolean hasDestinationPos() {
-        return destinationPos != null;
+        return this.destinationPos != null;
     }
 
     public void setDestinationPos(@Nullable BlockPos pos) {
-        destinationPos = pos;
+        this.destinationPos = pos;
         if (this.level != null && pos != null) {
             BlockState state = this.getBlockState();
             this.level.setBlock(this.getBlockPos(), state, 4);
@@ -71,25 +71,25 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
 
-        destinationPos = new BlockPos(tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z));
+        this.destinationPos = new BlockPos(tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z));
         this.dimensionTag = tag.getString(WARP_DIMENSION);
-//        System.out.println("SetDestPos: " +  destinationPos);
+//        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains(WARP_POS)) {
-            this.setDestinationPos(destinationPos);
-//            System.out.println("SetWarpPos: " + destinationPos);
+            this.setDestinationPos(this.destinationPos);
+//            System.out.println("SetWarpPos: " + this.destinationPos);
         }
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (this.hasDestinationPos() && destinationPos != null) {
-            tag.putInt(POS_X, destinationPos.getX());
-            tag.putInt(POS_Y, destinationPos.getY());
-            tag.putInt(POS_Z, destinationPos.getZ());
-            tag.put(WARP_POS, NbtUtils.writeBlockPos(destinationPos));
-//            System.out.println("WarpPos: " + NbtUtils.writeBlockPos(destinationPos));
+        if (this.hasDestinationPos() && this.destinationPos != null) {
+            tag.putInt(POS_X, this.destinationPos.getX());
+            tag.putInt(POS_Y, this.destinationPos.getY());
+            tag.putInt(POS_Z, this.destinationPos.getZ());
+            tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
+//            System.out.println("WarpPos: " + NbtUtils.writeBlockPos(this.destinationPos));
         }
 
         if (this.dimensionTag != null) {
