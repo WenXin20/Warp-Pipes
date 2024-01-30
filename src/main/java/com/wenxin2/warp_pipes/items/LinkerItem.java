@@ -47,8 +47,6 @@ public class LinkerItem extends TieredItem {
         super(tier, properties);
     }
     public boolean isBound;
-    @Nullable
-    public BlockPos destinationPos;
 
     public boolean setBound(boolean isBound) {
         return this.isBound = isBound;
@@ -91,7 +89,6 @@ public class LinkerItem extends TieredItem {
                     wrenchTag.putInt(POS_X, pos.getX());
                     wrenchTag.putInt(POS_Y, pos.getY());
                     wrenchTag.putInt(POS_Z, pos.getZ());
-                    this.destinationPos = new BlockPos(wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z));
                     wrenchTag.put(WARP_POS, NbtUtils.writeBlockPos(warpPos));
                     wrenchTag.putString(WARP_DIMENSION, dimension);
                     this.setBound(Boolean.TRUE);
@@ -129,11 +126,6 @@ public class LinkerItem extends TieredItem {
                             && LinkerItem.isLinked(item)) {
 
                         wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
-                        if (this.destinationPos != null) {
-                            wrenchTag.putInt(WarpPipeBlockEntity.POS_X, this.destinationPos.getX());
-                            wrenchTag.putInt(WarpPipeBlockEntity.POS_Y, this.destinationPos.getY());
-                            wrenchTag.putInt(WarpPipeBlockEntity.POS_Z, this.destinationPos.getZ());
-                        }
                         this.link(pos, world, wrenchTag, warpPipeBE, warpPipeBEGlobal);
                     } else {
                         if (player1 != null) {
@@ -168,6 +160,7 @@ public class LinkerItem extends TieredItem {
         System.out.println("Current Dimension: " + world.dimension());
 
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
+        warpPipeBE.setChanged();
         if (warpPipeBEGlobal.getLevel() != null) {
             warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel().dimension());
             System.out.println("Global Dimension: " + warpPipeBEGlobal.getLevel().dimension());
@@ -175,6 +168,7 @@ public class LinkerItem extends TieredItem {
 
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world.dimension());
+        warpPipeBEGlobal.setChanged();
         this.clearTags(tag);
     }
 
