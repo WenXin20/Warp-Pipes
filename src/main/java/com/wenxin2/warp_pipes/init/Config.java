@@ -16,6 +16,9 @@ public class Config
     public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ForgeConfigSpec.BooleanValue TELEPORT_MOBS;
+    public static ForgeConfigSpec.BooleanValue TELEPORT_NON_MOBS;
+    public static ForgeConfigSpec.BooleanValue TELEPORT_PLAYERS;
     public static ForgeConfigSpec.IntValue WARP_COOLDOWN;
     public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
     public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
@@ -33,6 +36,12 @@ public class Config
                 .define("creative_wrench", false);
         CREATIVE_WRENCH_PIPE_LINKING = BUILDER.comment("Require creative to link pipes. " + "[Default: false]")
                 .define("creative_wrench_pipe_linking", false);
+        TELEPORT_MOBS = BUILDER.comment("Allow mobs to teleport. " + "[Default: true]")
+                .define("teleport_mobs", true);
+        TELEPORT_NON_MOBS = BUILDER.comment("Allow non living entities to teleport. " + "[Default: true]")
+                .define("teleport_non_mobs", true);
+        TELEPORT_PLAYERS = BUILDER.comment("Allow players to teleport. " + "[Default: true]")
+                .define("teleport_players", true);
         WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[Default: 30]")
                 .defineInRange("warp_cooldown", 50, 0, 8000);
         WARP_COOLDOWN_MESSAGE = BUILDER.comment("Display a warp cooldown message. " + "[Default: false]")

@@ -1,14 +1,9 @@
 package com.wenxin2.warp_pipes.mixin;
 
-import com.google.common.collect.Lists;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
-import com.wenxin2.warp_pipes.sounds.PipeBubblesSoundHandler;
-import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.sounds.AmbientSoundHandler;
-import net.minecraft.client.resources.sounds.BubbleColumnAmbientSoundHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -80,7 +75,8 @@ public abstract class PlayerMixin extends Entity {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null) {
+        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
+                && Config.TELEPORT_PLAYERS.get()) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
@@ -140,17 +136,20 @@ public abstract class PlayerMixin extends Entity {
                     } else this.displayCooldownMessage();
                 }
             }
+        } else if (!Config.TELEPORT_PLAYERS.get()) {
+            this.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
+                    .withStyle(ChatFormatting.RED), true);
         }
     }
 
     public void displayCooldownMessage() {
         if (this.portalCooldown >= 10) {
-        if (Config.WARP_COOLDOWN_MESSAGE.get()) {
-            if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
-                this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
-                        this.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
-            else this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
-                    .withStyle(ChatFormatting.RED), true);
+            if (Config.WARP_COOLDOWN_MESSAGE.get()) {
+                if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
+                    this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
+                            this.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
+                else this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
+                        .withStyle(ChatFormatting.RED), true);
             }
         }
     }

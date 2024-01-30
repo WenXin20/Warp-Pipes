@@ -11,6 +11,8 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,36 +24,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Entity.class)
-public abstract class EntityMixin {
-    @Shadow public abstract Level level();
-
-    @Shadow public abstract double getX();
-
-    @Shadow public abstract double getY();
-    @Shadow public abstract double getZ();
-
-    @Shadow public abstract float getBbHeight();
-
-    @Shadow public abstract float getBbWidth();
-
-    @Shadow public abstract int getId();
-
-    @Shadow public int portalCooldown;
-
-    @Shadow public abstract void setPortalCooldown();
-
-    @Shadow public abstract BlockPos blockPosition();
-    @Shadow @Final protected RandomSource random;
-
-    @Shadow public abstract int getBlockY();
-
-    @Shadow public abstract double getRandomX(double p_20209_);
-
-    @Shadow public abstract double getRandomY();
-
-    @Shadow public abstract double getRandomZ(double p_20263_);
-
+@Mixin(LivingEntity.class)
+public abstract class LivingEntityMixin extends Entity {
+    public LivingEntityMixin(EntityType<?> entityType, Level world) {
+        super(entityType, world);
+    }
     private static final int MAX_PARTICLE_COUNT = 100;
 
     @Inject(at = @At("TAIL"), method = "baseTick")
@@ -72,7 +49,7 @@ public abstract class EntityMixin {
             }
         }
     }
-    
+
     public void entityInside(BlockPos pos) {
         Level world = this.level();
         BlockState state = world.getBlockState(pos);
@@ -96,7 +73,7 @@ public abstract class EntityMixin {
         // Ensure particle count does not exceed the maximum limit
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
-        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && Config.TELEPORT_NON_MOBS.get()) {
+        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && Config.TELEPORT_MOBS.get()) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

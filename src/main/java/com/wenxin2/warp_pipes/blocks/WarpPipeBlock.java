@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -522,7 +523,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (entity instanceof Player player && warpPipeBE.hasDestinationPos()) {
+            if (entity instanceof Player player && warpPipeBE.hasDestinationPos() && Config.TELEPORT_PLAYERS.get()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (entity.portalCooldown == 0) {
@@ -531,8 +532,21 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         entity.portalCooldown = Config.WARP_COOLDOWN.get();
                     } else this.displayCooldownMessage(player);
                 }
+            } else if (entity instanceof Player player && !Config.TELEPORT_PLAYERS.get()) {
+                player.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
+                        .withStyle(ChatFormatting.RED), true);
             }
-            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos()) {
+
+            if (!(entity instanceof LivingEntity) && warpPipeBE.hasDestinationPos() && Config.TELEPORT_NON_MOBS.get()) {
+                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    WarpPipeBlock.warp(entity, warpPos, world, state);
+                    entity.setPortalCooldown();
+                    entity.portalCooldown = Config.WARP_COOLDOWN.get();
+                }
+            }
+
+            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos() && Config.TELEPORT_MOBS.get()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     WarpPipeBlock.warp(entity, warpPos, world, state);
