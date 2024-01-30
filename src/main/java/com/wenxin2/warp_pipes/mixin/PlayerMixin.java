@@ -90,7 +90,6 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (this.portalCooldown == 0) {
-                        this.displayNoTeleportMessage();
                         WarpPipeBlock.warp(this, warpPos, world, state);
                         this.setPortalCooldown();
                         this.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -99,7 +98,6 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (this.portalCooldown == 0) {
-                        this.displayNoTeleportMessage();
                         WarpPipeBlock.warp(this, warpPos, world, state);
                         this.setPortalCooldown();
                         this.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -108,7 +106,6 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
                     if (this.portalCooldown == 0) {
-                        this.displayNoTeleportMessage();
                         WarpPipeBlock.warp(this, warpPos, world, state);
                         this.setPortalCooldown();
                         this.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -117,7 +114,6 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
                     if (this.portalCooldown == 0) {
-                        this.displayNoTeleportMessage();
                         WarpPipeBlock.warp(this, warpPos, world, state);
                         this.setPortalCooldown();
                         this.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -126,7 +122,6 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (this.portalCooldown == 0) {
-                        this.displayNoTeleportMessage();
                         WarpPipeBlock.warp(this, warpPos, world, state);
                         this.setPortalCooldown();
                         this.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -135,12 +130,36 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (this.portalCooldown == 0) {
-                        this.displayNoTeleportMessage();
                         WarpPipeBlock.warp(this, warpPos, world, state);
                         this.setPortalCooldown();
                         this.portalCooldown = Config.WARP_COOLDOWN.get();
                     } else this.displayCooldownMessage();
                 }
+            }
+        } else if (!state.getValue(WarpPipeBlock.CLOSED) && !Config.TELEPORT_PLAYERS.get()) {
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage();
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage();
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
+                this.displayNoTeleportMessage();
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
+                this.displayNoTeleportMessage();
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
+                    && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage();
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
+                    && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage();
             }
         }
     }
