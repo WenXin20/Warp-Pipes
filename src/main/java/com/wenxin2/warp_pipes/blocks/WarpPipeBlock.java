@@ -532,7 +532,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         entity.portalCooldown = Config.WARP_COOLDOWN.get();
                     } else this.displayCooldownMessage(player);
                 }
-            } else if (entity instanceof Player player && !Config.TELEPORT_PLAYERS.get()) {
+            } else if (state.getValue(FACING) == Direction.DOWN && entity instanceof Player player && !Config.TELEPORT_PLAYERS.get()) {
                 player.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
                         .withStyle(ChatFormatting.RED), true);
             }
