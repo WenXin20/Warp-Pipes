@@ -154,7 +154,14 @@ public class ModRegistry {
 
 
         WARP_PIPE_BLOCK_ENTITY = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
-                () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new, ModRegistry.GREEN_WARP_PIPE.get(), ModRegistry.GREEN_WARP_PIPE.get()).build(null));
+                () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new,
+                        ModRegistry.CLEAR_WARP_PIPE.get(), ModRegistry.BLACK_WARP_PIPE.get(), ModRegistry.BLUE_WARP_PIPE.get(),
+                                ModRegistry.BROWN_WARP_PIPE.get(), ModRegistry.CYAN_WARP_PIPE.get(), ModRegistry.GRAY_WARP_PIPE.get(),
+                                ModRegistry.GREEN_WARP_PIPE.get(), ModRegistry.LIGHT_BLUE_WARP_PIPE.get(), ModRegistry.LIGHT_GRAY_WARP_PIPE.get(),
+                                ModRegistry.LIME_WARP_PIPE.get(), ModRegistry.MAGENTA_WARP_PIPE.get(), ModRegistry.ORANGE_WARP_PIPE.get(),
+                                ModRegistry.PINK_WARP_PIPE.get(), ModRegistry.PURPLE_WARP_PIPE.get(), ModRegistry.RED_WARP_PIPE.get(),
+                                ModRegistry.WHITE_WARP_PIPE.get(), ModRegistry.YELLOW_WARP_PIPE.get())
+                        .build(null));
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block)
