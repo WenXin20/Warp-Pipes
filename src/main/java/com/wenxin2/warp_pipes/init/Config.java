@@ -8,6 +8,7 @@ public class Config
     public static ForgeConfigSpec CONFIG;
 
     public static final String CATEGORY_DEBUG = "Debug";
+    public static final String CATEGORY_CLIENT = "Client";
     public static final String CATEGORY_COMMON = "Common";
 
     public static ForgeConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
@@ -32,6 +33,13 @@ public class Config
 
     public static void initializeConfig()
     {
+        BUILDER.push(CATEGORY_CLIENT);
+        WARP_COOLDOWN_MESSAGE = BUILDER.comment("Display a warp cooldown message. " + "[Default: false]")
+                .define("warp_cooldown_message", false);
+        WARP_COOLDOWN_MESSAGE_TICKS = BUILDER.comment("Display a warp cooldown message with ticks. Requires \"warp_cooldown_message\". " + "[Default: false]")
+                .define("warp_cooldown_message_with_ticks", false);
+        BUILDER.pop();
+
         BUILDER.push(CATEGORY_COMMON);
         CREATIVE_WRENCH = BUILDER.comment("Require creative to turn bubbles on/off and open/close pipes. " + "[Default: false]")
                 .define("creative_wrench", false);
@@ -47,10 +55,6 @@ public class Config
                 .define("teleport_players", true);
         WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[Default: 30]")
                 .defineInRange("warp_cooldown", 50, 0, 8000);
-        WARP_COOLDOWN_MESSAGE = BUILDER.comment("Display a warp cooldown message. " + "[Default: false]")
-                .define("warp_cooldown_message", false);
-        WARP_COOLDOWN_MESSAGE_TICKS = BUILDER.comment("Display a warp cooldown message with ticks. Requires \"warp_cooldown_message\". " + "[Default: false]")
-                .define("warp_cooldown_message_with_ticks", false);
         BUILDER.pop();
 
         BUILDER.comment("Warp Pipes Config").push(CATEGORY_DEBUG);
