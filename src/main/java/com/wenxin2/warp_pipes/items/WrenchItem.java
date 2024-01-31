@@ -130,28 +130,28 @@ public class WrenchItem extends LinkerItem {
         return !player.isCreative();
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext useOnContext) {
-        Player player = useOnContext.getPlayer();
-        Level world = useOnContext.getLevel();
-        BlockPos pos = useOnContext.getClickedPos();
-        BlockState state = world.getBlockState(pos);
-        ItemStack item = useOnContext.getItemInHand();
+//    @Override
+//    public InteractionResult useOn(UseOnContext useOnContext) {
+//        Player player = useOnContext.getPlayer();
+//        Level world = useOnContext.getLevel();
+//        BlockPos pos = useOnContext.getClickedPos();
+//        BlockState state = world.getBlockState(pos);
+//        ItemStack item = useOnContext.getItemInHand();
 
-        if (player != null) {
-            if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown()) {
-                if (!this.handleInteraction(player, world.getBlockState(pos), world, pos, true, useOnContext.getItemInHand())) {
-                    return InteractionResult.FAIL;
-                }
-                else {
-                    item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
-                    return InteractionResult.SUCCESS;
-                }
-            }
-        }
-        return super.useOn(useOnContext);
-    }
+//        if (player != null) {
+//            if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown()) {
+//                if (!this.handleInteraction(player, world.getBlockState(pos), world, pos, true, useOnContext.getItemInHand())) {
+//                    return InteractionResult.FAIL;
+//                }
+//                else {
+//                    item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+//                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
+//                    return InteractionResult.SUCCESS;
+//                }
+//            }
+//        }
+//        return super.useOn(useOnContext);
+//    }
 
     public boolean handleInteraction(Player player, BlockState state, LevelAccessor worldAccessor, BlockPos pos, boolean isPlayerRightClicking, ItemStack stack) {
         if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !worldAccessor.isClientSide()) {
@@ -172,49 +172,49 @@ public class WrenchItem extends LinkerItem {
                     compoundtag.putString(registryName, propertyName);
                 }
 
-                if (isPlayerRightClicking && state.getValue(WarpPipeBlock.ENTRANCE) && !(!player.isCreative() && Config.CREATIVE_WRENCH.get())) {
-                    if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
-                        if (propertyName.equals("closed")) {
-                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 8);
-                            if (state.getValue(WarpPipeBlock.CLOSED)) {
-                                message(player, Component.translatable(this.getDescriptionId() + ".closed.false")
-                                        .withStyle(ChatFormatting.GOLD));
-                            } else {
-                                message(player, Component.translatable(this.getDescriptionId() + ".closed.true")
-                                        .withStyle(ChatFormatting.GOLD));
-                            }
-                        }
-                        if (propertyName.equals("bubbles")) {
-                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.BUBBLES), 20);
-                            if (state.getValue(WarpPipeBlock.BUBBLES)) {
-                                message(player, Component.translatable(this.getDescriptionId() + ".bubbles.false")
-                                        .withStyle(ChatFormatting.GOLD));
-                            } else {
-                                message(player, Component.translatable(this.getDescriptionId() + ".bubbles.true")
-                                        .withStyle(ChatFormatting.GOLD));
-                            }
-                        }
-                    }
-
-                    if (propertyName.equals("closed"))
-                        this.spawnParticles(worldAccessor, pos, ParticleTypes.ENCHANTED_HIT);
-                    if (propertyName.equals("bubbles")) {
-                        this.spawnParticles(worldAccessor, pos, ParticleTypes.BUBBLE);
-                        this.spawnParticles(worldAccessor, pos, ParticleTypes.SPLASH);
-                    }
-
-                } else if (state.getValue(WarpPipeBlock.ENTRANCE)) {
-
-                    String nextProperty = "closed".equals(propertyName) ? "bubbles" : "closed";
-                    compoundtag.putString(registryName, nextProperty);
-                    Property<?> property = statedefinition.getProperty(nextProperty);
-                    if (!propertyName.equals("closed") && !worldAccessor.isClientSide()) {
-                        message(player, Component.translatable(this.getDescriptionId() + ".select.closed", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
-                    }
-                    if (!propertyName.equals("bubbles") && !worldAccessor.isClientSide()) {
-                        message(player, Component.translatable(this.getDescriptionId() + ".select.bubbles", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
-                    }
-                }
+//                if (isPlayerRightClicking && state.getValue(WarpPipeBlock.ENTRANCE) && !(!player.isCreative() && Config.CREATIVE_WRENCH.get())) {
+//                    if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
+//                        if (propertyName.equals("closed")) {
+//                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.CLOSED), 8);
+//                            if (state.getValue(WarpPipeBlock.CLOSED)) {
+//                                message(player, Component.translatable(this.getDescriptionId() + ".closed.false")
+//                                        .withStyle(ChatFormatting.GOLD));
+//                            } else {
+//                                message(player, Component.translatable(this.getDescriptionId() + ".closed.true")
+//                                        .withStyle(ChatFormatting.GOLD));
+//                            }
+//                        }
+//                        if (propertyName.equals("bubbles")) {
+//                            worldAccessor.setBlock(pos, state.cycle(WarpPipeBlock.BUBBLES), 20);
+//                            if (state.getValue(WarpPipeBlock.BUBBLES)) {
+//                                message(player, Component.translatable(this.getDescriptionId() + ".bubbles.false")
+//                                        .withStyle(ChatFormatting.GOLD));
+//                            } else {
+//                                message(player, Component.translatable(this.getDescriptionId() + ".bubbles.true")
+//                                        .withStyle(ChatFormatting.GOLD));
+//                            }
+//                        }
+//                    }
+//
+//                    if (propertyName.equals("closed"))
+//                        this.spawnParticles(worldAccessor, pos, ParticleTypes.ENCHANTED_HIT);
+//                    if (propertyName.equals("bubbles")) {
+//                        this.spawnParticles(worldAccessor, pos, ParticleTypes.BUBBLE);
+//                        this.spawnParticles(worldAccessor, pos, ParticleTypes.SPLASH);
+//                    }
+//
+//                } else if (state.getValue(WarpPipeBlock.ENTRANCE)) {
+//
+//                    String nextProperty = "closed".equals(propertyName) ? "bubbles" : "closed";
+//                    compoundtag.putString(registryName, nextProperty);
+//                    Property<?> property = statedefinition.getProperty(nextProperty);
+//                    if (!propertyName.equals("closed") && !worldAccessor.isClientSide()) {
+//                        message(player, Component.translatable(this.getDescriptionId() + ".select.closed", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
+//                    }
+//                    if (!propertyName.equals("bubbles") && !worldAccessor.isClientSide()) {
+//                        message(player, Component.translatable(this.getDescriptionId() + ".select.bubbles", property.getName()).withStyle(ChatFormatting.DARK_GREEN));
+//                    }
+//                }
 
                 return true;
             }

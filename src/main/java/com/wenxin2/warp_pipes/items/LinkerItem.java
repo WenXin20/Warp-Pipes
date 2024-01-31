@@ -76,7 +76,7 @@ public class LinkerItem extends TieredItem {
                     .withStyle(ChatFormatting.RED), true);
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else if (player != null) {
-            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE)))) {
+            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE))) && player.isShiftKeyDown()) {
 
                 if (getBound() == Boolean.FALSE) {
                     if (wrenchTag == null) {

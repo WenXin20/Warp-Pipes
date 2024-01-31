@@ -14,11 +14,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeBlockEntity extends BlockEntity {
+    private static WarpPipeBlockEntity blockEntity;
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
 
     @Nullable
-    public BlockPos destinationPos;
+    public static BlockPos destinationPos;
     public String dimensionTag;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
@@ -30,16 +31,28 @@ public class WarpPipeBlockEntity extends BlockEntity {
         super(tileEntity, pos, state);
     }
 
+    public static WarpPipeBlockEntity getWarpPipeBlockEntity() {
+        return blockEntity;
+    }
+
     public boolean hasDestinationPos() {
-        return this.destinationPos != null;
+        return destinationPos != null;
     }
 
     public void setDestinationPos(@Nullable BlockPos pos) {
-        this.destinationPos = pos;
+        destinationPos = pos;
         if (this.level != null && pos != null) {
             BlockState state = this.getBlockState();
             this.level.setBlock(this.getBlockPos(), state, 4);
         }
+    }
+
+    @Nullable
+    public static BlockPos getDestinationPos() {
+        if (destinationPos != null) {
+            return destinationPos;
+        }
+        return null;
     }
 
     @Nullable
@@ -67,22 +80,22 @@ public class WarpPipeBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
+        destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
         this.dimensionTag = tag.getString(WARP_DIMENSION);
-//        System.out.println("SetDestPos: " +  this.destinationPos);
+//        System.out.println("SetDestPos: " +  destinationPos);
 
         if (tag.contains(WARP_POS)) {
-            this.setDestinationPos(this.destinationPos);
-//            System.out.println("SetWarpPos: " + this.destinationPos);
+            this.setDestinationPos(destinationPos);
+//            System.out.println("SetWarpPos: " + destinationPos);
         }
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (this.hasDestinationPos() && this.destinationPos != null) {
-            tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
-//            System.out.println("WarpPos: " + NbtUtils.writeBlockPos(this.destinationPos));
+        if (this.hasDestinationPos() && destinationPos != null) {
+            tag.put(WARP_POS, NbtUtils.writeBlockPos(destinationPos));
+//            System.out.println("WarpPos: " + NbtUtils.writeBlockPos(destinationPos));
         }
 
         if (this.dimensionTag != null) {

@@ -1,6 +1,11 @@
 {
   "itemGroup.warp_pipes": "Warp Pipes",
 
+  "menu.warp_pipes.warp_pipe": "Warp Pipe",
+  "menu.warp_pipes.warp_pipe.close": "Close",
+  "menu.warp_pipes.warp_pipe.close.tooltip": "Close Pipe",
+  "menu.warp_pipes.warp_pipe.close.narrate": "Close Pipe",
+
   "block.warp_pipes.black_warp_pipe": "Black Warp Pipe",
   "block.warp_pipes.blue_warp_pipe": "Blue Warp Pipe",
   "block.warp_pipes.brown_warp_pipe": "Brown Warp Pipe",

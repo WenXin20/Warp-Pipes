@@ -6,9 +6,12 @@ import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
@@ -48,6 +51,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> YELLOW_WARP_PIPE;
 
     public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPE_BLOCK_ENTITY;
+    public static final RegistryObject<MenuType<WarpPipeMenu>> WARP_PIPE_MENU;
 
     static
     {
@@ -162,6 +166,8 @@ public class ModRegistry {
                                 ModRegistry.PINK_WARP_PIPE.get(), ModRegistry.PURPLE_WARP_PIPE.get(), ModRegistry.RED_WARP_PIPE.get(),
                                 ModRegistry.WHITE_WARP_PIPE.get(), ModRegistry.YELLOW_WARP_PIPE.get())
                         .build(null));
+
+        WARP_PIPE_MENU = WarpPipes.MENUS.register("warp_pipe", () -> new MenuType<>(WarpPipeMenu::new, FeatureFlags.REGISTRY.allFlags()));
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block)

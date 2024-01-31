@@ -2,6 +2,8 @@ package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +19,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -41,6 +46,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.LavaFluid;
 import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -67,6 +73,24 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     {
         return new WarpPipeBlockEntity(pos, state);
     }
+
+    @Override
+    public InteractionResult use(final BlockState state, final Level world, final BlockPos pos,
+                                 final Player player, final InteractionHand hand, final BlockHitResult hit)
+    {
+        if (state.getValue(ENTRANCE) && /*player.isShiftKeyDown() && */player.getItemInHand(hand).getItem() == ModRegistry.PIPE_WRENCH.get()) {
+            player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WarpPipeMenu(id,
+                    playerInventory, ContainerLevelAccess.create(world, pos)), player.getDisplayName()));
+            return InteractionResult.SUCCESS;
+        } else return InteractionResult.PASS;
+    }
+
+//    private InteractionResult onSneakInteraction(final BlockState state, final Level world, final BlockPos pos,
+//                                                 final Player player, final InteractionHand hand, final BlockHitResult hit)
+//    {
+//        // Handle sneak interactions here
+//        return InteractionResult.PASS;
+//    }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {

@@ -3,10 +3,8 @@ package com.wenxin2.warp_pipes;
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModCreativeTabs;
-import com.wenxin2.warp_pipes.init.ModRegistry;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
@@ -36,6 +34,7 @@ public class WarpPipes
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, WarpPipes.MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, WarpPipes.MODID);;
 
     public WarpPipes()
     {
@@ -47,6 +46,7 @@ public class WarpPipes
         FLUIDS.register(modEventBus);
         FLUID_TYPES.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
+        MENUS.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
