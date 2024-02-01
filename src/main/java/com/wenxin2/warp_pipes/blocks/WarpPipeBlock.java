@@ -1,5 +1,6 @@
 package com.wenxin2.warp_pipes.blocks;
 
+import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
@@ -231,7 +232,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-
         if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
             serverWorld.scheduleTick(pos, this, 3);

@@ -11,23 +11,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent;
 
-public class SCloseStatePacket {
+public class SWaterSpoutStatePacket {
     public final BlockPos pos;
-    public static boolean closePipe;
+    public static boolean hasWaterSpout;
 
-    public SCloseStatePacket(BlockPos pos, Boolean closePipe) {
+    public SWaterSpoutStatePacket(BlockPos pos, Boolean closePipe) {
         this.pos = pos;
-        SCloseStatePacket.closePipe = closePipe;
+        SWaterSpoutStatePacket.hasWaterSpout = closePipe;
     }
 
     // Read and write in the same order!
-    public SCloseStatePacket(FriendlyByteBuf buffer) {
+    public SWaterSpoutStatePacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.pos);
-        buffer.writeBoolean(closePipe);
+        buffer.writeBoolean(hasWaterSpout);
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
@@ -55,18 +55,18 @@ public class SCloseStatePacket {
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
 
-        pipeBlockEntity.closePipe(player);
+        pipeBlockEntity.toggleWaterSpout(player);
     }
 
-    public static SCloseStatePacket openPipe(BlockPos pos, Boolean closePipe) {
-        SCloseStatePacket packet = new SCloseStatePacket(pos, closePipe);
-        SCloseStatePacket.closePipe = false;
+    public static SWaterSpoutStatePacket waterSpout(BlockPos pos, Boolean hasWaterSpout) {
+        SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
+        SWaterSpoutStatePacket.hasWaterSpout = false;
         return packet;
     }
 
-    public static SCloseStatePacket closePipe(BlockPos pos, Boolean closePipe) {
-        SCloseStatePacket packet = new SCloseStatePacket(pos, closePipe);
-        SCloseStatePacket.closePipe = true;
+    public static SWaterSpoutStatePacket noWaterSpout(BlockPos pos, Boolean hasWaterSpout) {
+        SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
+        SWaterSpoutStatePacket.hasWaterSpout = true;
         return packet;
     }
 }

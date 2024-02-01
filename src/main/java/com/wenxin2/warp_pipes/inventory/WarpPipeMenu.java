@@ -13,10 +13,6 @@ public class WarpPipeMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     public BlockPos pos;
 
-//    public WarpPipeMenu(int id, Inventory inventory, final BlockPos pos) {
-//        this(id, inventory, ContainerLevelAccess.NULL);
-//    }
-
     public WarpPipeMenu(int id, Inventory inventory) {
         this(id, inventory, ContainerLevelAccess.NULL);
     }

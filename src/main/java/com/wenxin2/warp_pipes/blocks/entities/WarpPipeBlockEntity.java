@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -138,6 +137,20 @@ public class WarpPipeBlockEntity extends BlockEntity {
                         .setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE)
                         .setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 3);
                 this.playSound(this.level, menuPos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
+            }
+        }
+    }
+
+    public void toggleWaterSpout(ServerPlayer player) {
+        if (this.level != null && player.containerMenu instanceof WarpPipeMenu) {
+            BlockState state = this.level.getBlockState(((WarpPipeMenu) player.containerMenu).getBlockPos());
+            BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
+            if (state.getValue(WarpPipeBlock.WATER_SPOUT)) {
+                this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE), 3);
+                this.playSound(this.level, menuPos, SoundRegistry.WATER_SPOUT_BREAK.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
+            } else {
+                this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.WATER_SPOUT, Boolean.TRUE), 3);
+                this.playSound(this.level, menuPos, SoundRegistry.WATER_SPOUT_PLACE.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
             }
         }
     }
