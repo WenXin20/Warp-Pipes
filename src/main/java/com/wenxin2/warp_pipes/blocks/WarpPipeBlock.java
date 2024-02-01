@@ -149,12 +149,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (!world.isClientSide) {
             boolean isClosed = state.getValue(CLOSED);
-            if (world.hasNeighborSignal(pos)) {
+            if (isClosed != world.hasNeighborSignal(pos)) {
                 if (isClosed) {
-//                    world.scheduleTick(pos, this, 4);
-                    world.setBlock(pos, state.setValue(CLOSED, Boolean.FALSE), 3);
+                    world.scheduleTick(pos, this, 4);
+
                 } else {
-                    world.setBlock(pos, state.setValue(CLOSED, Boolean.TRUE), 3);
+                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
                     this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
             }
