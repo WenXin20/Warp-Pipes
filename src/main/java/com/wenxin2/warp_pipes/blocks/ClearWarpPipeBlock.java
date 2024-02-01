@@ -330,10 +330,6 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
 
-        if (state.getValue(CLOSED)) {
-            worldAccessor.playSound(null, pos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
-        } else worldAccessor.playSound(null, pos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
-
         if (state.getValue(WATERLOGGED) && !state.getValue(CLOSED)) {
             worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
         }

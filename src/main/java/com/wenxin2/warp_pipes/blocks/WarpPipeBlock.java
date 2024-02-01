@@ -181,10 +181,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
 
-        if (state.getValue(CLOSED)) {
-            worldAccessor.playSound(null, pos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
-        } else worldAccessor.playSound(null, pos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
-
         if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
             worldAccessor.scheduleTick(pos, this, 20);
         }
@@ -255,8 +251,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         }
 
         if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
-            serverWorld.setBlock(pos, state.setValue(CLOSED, Boolean.FALSE), 3);
-        } else serverWorld.setBlock(pos, state.setValue(CLOSED, Boolean.TRUE), 3);
+            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
+        }
     }
 
     @Override
