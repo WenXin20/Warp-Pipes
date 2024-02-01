@@ -3,12 +3,13 @@ package com.wenxin2.warp_pipes.init;
 import com.wenxin2.warp_pipes.WarpPipes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class SoundRegistry {
-    public static final SoundType WATER_SPOUT = new SoundType(1.0F, 1.0F, SoundRegistry.WATER_SPOUT_BREAK.get(),
-            SoundRegistry.WATER_SPOUT_STEP.get(), SoundRegistry.WATER_SPOUT_PLACE.get(), SoundRegistry.WATER_SPOUT_HIT.get(), SoundRegistry.WATER_SPOUT_FALL.get());
+    public static final SoundType WATER_SPOUT = new SoundType(1.0F, 1.0F, SoundEvents.BUCKET_FILL,
+            SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_EMPTY, SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_FILL);
     public static final RegistryObject<SoundEvent> PIPES_LINKED;
     public static final RegistryObject<SoundEvent> PIPE_CLOSES;
     public static final RegistryObject<SoundEvent> PIPE_OPENS;
