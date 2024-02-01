@@ -10,7 +10,6 @@ import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -152,7 +151,7 @@ public class ModRegistry {
                         .replaceable().noCollission().noLootTable().liquid()));
 
         WATER_SPOUT = registerNoItemBlock("water_spout",
-                () -> new WaterSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).sound(SoundType.WET_GRASS)
+                () -> new WaterSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).sound(SoundRegistry.WATER_SPOUT)
                         .pushReaction(PushReaction.DESTROY).isRedstoneConductor(ModRegistry::never)
                         .isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
                         .replaceable().noCollission().noLootTable()));

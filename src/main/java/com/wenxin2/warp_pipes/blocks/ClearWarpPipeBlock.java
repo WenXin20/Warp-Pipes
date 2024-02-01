@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.items.LinkerItem;
 import java.util.Collection;
 import java.util.Map;
@@ -14,7 +15,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -329,6 +330,10 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
 
+        if (state.getValue(CLOSED)) {
+            worldAccessor.playSound(null, pos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
+        } else worldAccessor.playSound(null, pos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
+
         if (state.getValue(WATERLOGGED) && !state.getValue(CLOSED)) {
             worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
         }
@@ -403,7 +408,6 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
         if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
             serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
-            this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
         }
     }
 

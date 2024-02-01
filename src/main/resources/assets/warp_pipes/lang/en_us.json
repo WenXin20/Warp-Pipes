@@ -10,6 +10,12 @@
   "subtitles.warp_pipes.block.pipe_closes": "Pipe closes",
   "subtitles.warp_pipes.block.pipe_opens": "Pipe opens",
   "subtitles.warp_pipes.block.pipe_warps": "Pipe warps",
+  "subtitles.warp_pipes.block.water_spout.break": "Water Spout breaks",
+  "subtitles.warp_pipes.block.water_spout.fall": "Water Spout splashes",
+  "subtitles.warp_pipes.block.water_spout.hit": "Water Spout hit",
+  "subtitles.warp_pipes.block.water_spout.place": "Water Spout grows",
+  "subtitles.warp_pipes.block.water_spout.step": "Footsteps",
+  "subtitles.warp_pipes.block.water_spout_": "Water Spout ",
   "subtitles.warp_pipes.item.wrench_bound": "Wrench bound",
 
   "block.warp_pipes.black_warp_pipe": "Black Warp Pipe",
