@@ -97,7 +97,6 @@ public class LinkerItem extends TieredItem {
                             wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z), wrenchTag.getString(WARP_DIMENSION))
                             .withStyle(ChatFormatting.DARK_GREEN), true);
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                    this.spawnParticles(world, player.blockPosition(), ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundRegistry.WRENCH_BOUND.get(), SoundSource.PLAYERS, 1.0F, 0.1F);
                 } else if (getBound()) {
                     Player player1 = useOnContext.getPlayer();
