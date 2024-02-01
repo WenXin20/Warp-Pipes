@@ -41,7 +41,6 @@ public class WarpPipes
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, WarpPipes.MODID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, WarpPipes.MODID);;
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, WarpPipes.MODID);;
-    public static final DeferredRegister<SoundType> SOUND_TYPES = DeferredRegister.create(ForgeRegistries.S, WarpPipes.MODID);;
 
     public WarpPipes()
     {
