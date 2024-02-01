@@ -3,15 +3,11 @@ package com.wenxin2.warp_pipes.blocks.entities;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
-import java.util.Collection;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -19,13 +15,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class WarpPipeBlockEntity extends BlockEntity {
     public static final String WARP_POS = "WarpPos";
@@ -153,33 +146,11 @@ public class WarpPipeBlockEntity extends BlockEntity {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.CLOSED, Boolean.TRUE)
                         .setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE)
                         .setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 3);
-                this.spawnParticles(this.level, menuPos, ParticleTypes.ENCHANTED_HIT);
                 this.playAnvilSound(this.level, menuPos, SoundEvents.ANVIL_PLACE);
             }
         }
     }
 
-    private void spawnParticles(LevelAccessor worldAccessor, BlockPos pos, ParticleOptions particleOptions) {
-            RandomSource random = worldAccessor.getRandom();
-            Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-            for (ServerPlayer player : players) {
-                for (int i = 0; i < 40; ++i) {
-                    player.connection.send(new ClientboundLevelParticlesPacket(
-                            particleOptions,      // Particle type
-                            false,                // Long distance
-                            pos.getX() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)), pos.getY() + 0D,
-                            pos.getZ() + 0.5D + (0.5D * (random.nextBoolean() ? 1 : -1)), // Position
-                            (random.nextFloat() - 0.5F) * 2.0F, -random.nextFloat(),
-                            (random.nextFloat() - 0.5F) * 2.0F, // Motion
-                            0,                    // Particle data
-                            1                     // Particle count
-                    ));
-                }
-            }
-    }
-
-    private void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
     }
 
     public void sendData() {
