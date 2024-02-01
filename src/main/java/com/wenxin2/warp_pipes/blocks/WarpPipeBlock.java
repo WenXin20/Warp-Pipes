@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.blocks;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
@@ -155,8 +156,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
                 } else {
                     world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
-                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
+                if (isClosed) {
+                    this.playSound(world, pos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
+                } else this.playSound(world, pos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
             }
         }
     }
@@ -178,6 +181,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
 
+        if (state.getValue(CLOSED)) {
         if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
             worldAccessor.scheduleTick(pos, this, 20);
         }
@@ -248,9 +252,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         }
 
         if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
-            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
-            this.playAnvilSound(serverWorld, pos, SoundEvents.ANVIL_PLACE);
-        }
+            serverWorld.setBlock(pos, state.setValue(CLOSED, Boolean.FALSE), 3);
+        } else serverWorld.setBlock(pos, state.setValue(CLOSED, Boolean.TRUE), 3);
     }
 
     @Override
@@ -412,8 +415,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         super.animateTick(state, world, pos, random);
     }
 
-    public void playAnvilSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 0.5f, 1.0f);
+    public void playSound(Level world, BlockPos pos, SoundEvent soundEvent, SoundSource source, float volume, float pitch) {
+        world.playSound(null, pos, soundEvent, source, volume, pitch);
     }
 
     // Store a map to track whether entities have teleported or not
@@ -504,7 +507,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             WarpPipeBlock.markEntityTeleported(entity);
         }
         world.gameEvent(GameEvent.TELEPORT, pos, GameEvent.Context.of(entity));
-        world.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS, 1.0F, 0.1F);
+        world.playSound(null, pos, SoundRegistry.PIPE_WARPS.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
     }
 
     public static void spawnParticles(Entity entity, Level world) {

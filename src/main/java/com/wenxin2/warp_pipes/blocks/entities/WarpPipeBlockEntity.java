@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks.entities;
 
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
@@ -142,15 +143,18 @@ public class WarpPipeBlockEntity extends BlockEntity {
             BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
             if (state.getValue(WarpPipeBlock.CLOSED)) {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.CLOSED, Boolean.FALSE), 3);
+                this.playSound(this.level, menuPos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
             } else {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.CLOSED, Boolean.TRUE)
                         .setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE)
                         .setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 3);
-                this.playAnvilSound(this.level, menuPos, SoundEvents.ANVIL_PLACE);
+                this.playSound(this.level, menuPos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
             }
         }
     }
 
+    public void playSound(Level world, BlockPos pos, SoundEvent soundEvent, SoundSource source, float volume, float pitch) {
+        world.playSound(null, pos, soundEvent, source, volume, pitch);
     }
 
     public void sendData() {

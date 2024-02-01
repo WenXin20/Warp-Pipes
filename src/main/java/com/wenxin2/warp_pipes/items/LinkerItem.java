@@ -5,6 +5,7 @@ import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.init.SoundRegistry;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -20,7 +21,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -97,7 +97,8 @@ public class LinkerItem extends TieredItem {
                             wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z), wrenchTag.getString(WARP_DIMENSION))
                             .withStyle(ChatFormatting.DARK_GREEN), true);
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                    this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
+                    this.spawnParticles(world, player.blockPosition(), ParticleTypes.ENCHANT);
+                    this.playSound(world, pos, SoundRegistry.WRENCH_BOUND.get(), SoundSource.PLAYERS, 1.0F, 0.1F);
                 } else if (getBound()) {
                     Player player1 = useOnContext.getPlayer();
                     if (wrenchTag == null) {
@@ -136,7 +137,7 @@ public class LinkerItem extends TieredItem {
                     }
 
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                    this.playSound(world, pos, SoundEvents.AMETHYST_CLUSTER_BREAK);
+                    this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }
@@ -184,8 +185,9 @@ public class LinkerItem extends TieredItem {
         return null;
     }
 
-    private void playSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundSource.PLAYERS, 100.0f, 1.0f);
+
+    public void playSound(Level world, BlockPos pos, SoundEvent soundEvent, SoundSource source, float volume, float pitch) {
+        world.playSound(null, pos, soundEvent, source, volume, pitch);
     }
 
     private void spawnParticles(Level world, BlockPos pos, ParticleOptions particleOptions) {

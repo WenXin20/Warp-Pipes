@@ -1,13 +1,16 @@
 package com.wenxin2.warp_pipes.sounds;
 
+import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AmbientSoundHandler;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 
 public class PipeBubblesSoundHandler implements AmbientSoundHandler {
     private final LocalPlayer player;
@@ -19,15 +22,15 @@ public class PipeBubblesSoundHandler implements AmbientSoundHandler {
     }
 
     public void tick() {
-        Level level = this.player.level();
-        BlockState stateLoaded = level.getBlockStatesIfLoaded(this.player.getBoundingBox()
+        Level world = this.player.level();
+        BlockState stateLoaded = world.getBlockStatesIfLoaded(this.player.getBoundingBox()
                 .inflate(0.0D, (double)-0.4F, 0.0D).deflate(1.0E-6D)).filter((state) -> {
-            return state.is(Blocks.BUBBLE_COLUMN);
+            return state.is(ModRegistry.PIPE_BUBBLES.get());
         }).findFirst().orElse(null);
         if (stateLoaded != null) {
             if (!this.wasInBubbleColumn && !this.firstTick && !this.player.isSpectator()
                     && (stateLoaded.is(ModRegistry.PIPE_BUBBLES.get()) || stateLoaded.is(ModRegistry.WATER_SPOUT.get()))) {
-                boolean flag = stateLoaded.getValue(BubbleColumnBlock.DRAG_DOWN);
+                boolean flag = stateLoaded.getValue(PipeBubblesBlock.DRAG_DOWN);
                 if (flag) {
                     this.player.playSound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 1.0F, 1.0F);
                 } else {
@@ -42,4 +45,7 @@ public class PipeBubblesSoundHandler implements AmbientSoundHandler {
 
         this.firstTick = false;
     }
+
+    public static void init()
+    {}
 }

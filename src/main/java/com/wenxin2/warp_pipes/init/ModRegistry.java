@@ -10,6 +10,7 @@ import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -196,4 +197,7 @@ public class ModRegistry {
     {
         return false;
     }
+
+    public static void init()
+    {}
 }

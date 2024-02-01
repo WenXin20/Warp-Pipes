@@ -6,6 +6,12 @@
   "menu.warp_pipes.warp_pipe.close.tooltip": "Close Pipe",
   "menu.warp_pipes.warp_pipe.close.narrate": "Close Pipe",
 
+  "subtitles.warp_pipes.block.pipes_linked": "Pipes linked",
+  "subtitles.warp_pipes.block.pipe_closes": "Pipe closes",
+  "subtitles.warp_pipes.block.pipe_opens": "Pipe opens",
+  "subtitles.warp_pipes.block.pipe_warps": "Pipe warps",
+  "subtitles.warp_pipes.item.wrench_bound": "Wrench bound",
+
   "block.warp_pipes.black_warp_pipe": "Black Warp Pipe",
   "block.warp_pipes.blue_warp_pipe": "Blue Warp Pipe",
   "block.warp_pipes.brown_warp_pipe": "Brown Warp Pipe",
