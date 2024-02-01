@@ -2,21 +2,18 @@ package com.wenxin2.warp_pipes.blocks.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wenxin2.warp_pipes.WarpPipes;
-import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import com.wenxin2.warp_pipes.network.PacketHandler;
+import com.wenxin2.warp_pipes.network.SCloseStatePacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     public static ResourceLocation WARP_PIPE_GUI =
@@ -57,17 +54,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         final Component close = Component.translatable("menu.warp_pipes.warp_pipe.close");
         this.closeButton = this.addRenderableWidget(new Button.Builder(close, (b) -> {
-//            WarpPipeBlockEntity warpPipeBlockEntity = WarpPipeBlockEntity.getWarpPipeBlockEntity();
-//            Level world = warpPipeBlockEntity.getLevel();
-//            BlockPos pos = warpPipeBlockEntity.getBlockPos();
-//            if (world != null) {
-//                BlockState currentState = world.getBlockState(pos);
-//                BlockState closeState = currentState.setValue(WarpPipeBlock.CLOSED, Boolean.TRUE);
-//                BlockState openState = currentState.setValue(WarpPipeBlock.CLOSED, Boolean.FALSE);
-//                if (currentState.getValue(WarpPipeBlock.CLOSED))
-//                    world.setBlockAndUpdate(pos, openState);
-//                else world.setBlockAndUpdate(pos, closeState);
-//            }
+            PacketHandler.sendToServer(new SCloseStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
         }).bounds(x + 7, y + 16, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.close.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.close.narrate")).build());

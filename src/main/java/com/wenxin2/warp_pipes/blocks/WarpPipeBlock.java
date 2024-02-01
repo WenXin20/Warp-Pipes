@@ -78,19 +78,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public InteractionResult use(final BlockState state, final Level world, final BlockPos pos,
                                  final Player player, final InteractionHand hand, final BlockHitResult hit)
     {
-        if (state.getValue(ENTRANCE) && /*player.isShiftKeyDown() && */player.getItemInHand(hand).getItem() == ModRegistry.PIPE_WRENCH.get()) {
+        if (state.getValue(ENTRANCE) && player.getItemInHand(hand).getItem() == ModRegistry.PIPE_WRENCH.get()) {
             player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WarpPipeMenu(id,
-                    playerInventory, ContainerLevelAccess.create(world, pos)), player.getDisplayName()));
+                    playerInventory, ContainerLevelAccess.create(world, pos), pos), player.getDisplayName()));
             return InteractionResult.SUCCESS;
         } else return InteractionResult.PASS;
     }
-
-//    private InteractionResult onSneakInteraction(final BlockState state, final Level world, final BlockPos pos,
-//                                                 final Player player, final InteractionHand hand, final BlockHitResult hit)
-//    {
-//        // Handle sneak interactions here
-//        return InteractionResult.PASS;
-//    }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
@@ -156,11 +149,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (!world.isClientSide) {
             boolean isClosed = state.getValue(CLOSED);
-            if (isClosed != world.hasNeighborSignal(pos)) {
+            if (world.hasNeighborSignal(pos)) {
                 if (isClosed) {
-                    world.scheduleTick(pos, this, 4);
+//                    world.scheduleTick(pos, this, 4);
+                    world.setBlock(pos, state.setValue(CLOSED, Boolean.FALSE), 3);
                 } else {
-                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
+                    world.setBlock(pos, state.setValue(CLOSED, Boolean.TRUE), 3);
                     this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
                 }
             }
@@ -314,7 +308,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (state.getValue(FACING) == Direction.WEST) {
             if (blockWest == this) {
-//                world.scheduleTick(pos, this, 3);
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);

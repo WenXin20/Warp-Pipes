@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.items;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
+import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -130,28 +131,28 @@ public class WrenchItem extends LinkerItem {
         return !player.isCreative();
     }
 
-//    @Override
-//    public InteractionResult useOn(UseOnContext useOnContext) {
-//        Player player = useOnContext.getPlayer();
-//        Level world = useOnContext.getLevel();
-//        BlockPos pos = useOnContext.getClickedPos();
-//        BlockState state = world.getBlockState(pos);
-//        ItemStack item = useOnContext.getItemInHand();
+    @Override
+    public InteractionResult useOn(UseOnContext useOnContext) {
+        Player player = useOnContext.getPlayer();
+        Level world = useOnContext.getLevel();
+        BlockPos pos = useOnContext.getClickedPos();
+        BlockState state = world.getBlockState(pos);
+        ItemStack item = useOnContext.getItemInHand();
 
-//        if (player != null) {
-//            if ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE) && player.isShiftKeyDown()) {
+        if (player != null) {
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.ENTRANCE) && !player.isShiftKeyDown()) {
 //                if (!this.handleInteraction(player, world.getBlockState(pos), world, pos, true, useOnContext.getItemInHand())) {
 //                    return InteractionResult.FAIL;
 //                }
 //                else {
-//                    item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-//                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
-//                    return InteractionResult.SUCCESS;
+                    item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
+                    return InteractionResult.SUCCESS;
 //                }
-//            }
-//        }
-//        return super.useOn(useOnContext);
-//    }
+            }
+        }
+        return super.useOn(useOnContext);
+    }
 
     public boolean handleInteraction(Player player, BlockState state, LevelAccessor worldAccessor, BlockPos pos, boolean isPlayerRightClicking, ItemStack stack) {
         if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !worldAccessor.isClientSide()) {
