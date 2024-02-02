@@ -253,13 +253,13 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
     }
 
     public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
-        if (WaterSpoutBlock.canExistIn(worldAccessor, pos)) {
+        if (WaterSpoutBlock.canExistIn(worldAccessor, pos) && WarpPipeBlockEntity.spoutHeight != 0) {
             int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
             BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
             BlockState stateAbove = worldAccessor.getBlockState(mutablePos.above());
 
-            if (pipeColumnState.getBlock() instanceof WaterSpoutBlock && WarpPipeBlockEntity.spoutHeight != 0) {
+            if (pipeColumnState.getBlock() instanceof WaterSpoutBlock) {
                 if (stateAbove.getBlock() != ModRegistry.WATER_SPOUT.get()) {
                     worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.TRUE), 2);
                 } else worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.FALSE), 2);
