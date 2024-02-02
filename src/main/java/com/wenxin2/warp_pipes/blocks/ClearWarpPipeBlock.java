@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.items.LinkerItem;
@@ -381,8 +382,10 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-        if (state.getValue(WATER_SPOUT) && state.getValue(WATERLOGGED)) {
-            WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
+        WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
+
+        if (pipeBlockEntity != null && state.getValue(WATERLOGGED)) {
+            WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.spoutHeight);
             serverWorld.scheduleTick(pos, this, 3);
         }
         if (state.getValue(FACING) == Direction.UP) {

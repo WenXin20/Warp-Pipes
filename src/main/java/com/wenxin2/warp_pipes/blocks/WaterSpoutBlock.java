@@ -242,15 +242,18 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
 
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-        WaterSpoutBlock.repeatColumnUp(serverWorld, pos, state, serverWorld.getBlockState(pos.below()));
+        WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
+        if (pipeBlockEntity != null)
+            WaterSpoutBlock.repeatColumnUp(serverWorld, pos, state, serverWorld.getBlockState(pos.below()), pipeBlockEntity.spoutHeight);
+        else WaterSpoutBlock.repeatColumnUp(serverWorld, pos, state, serverWorld.getBlockState(pos.below()), 0);
     }
 
-    public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state) {
-        repeatColumnUp(worldAccessor, pos, worldAccessor.getBlockState(pos), state);
+    public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, int spoutHeight) {
+        repeatColumnUp(worldAccessor, pos, worldAccessor.getBlockState(pos), state, spoutHeight);
     }
 
-    public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState) {
-        if (WaterSpoutBlock.canExistIn(worldAccessor, pos) && WarpPipeBlockEntity.spoutHeight != 0) {
+    public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, BlockState neighborState, int spoutHeight) {
+        if (WaterSpoutBlock.canExistIn(worldAccessor, pos) && spoutHeight != 0) {
             int initialDistance = 0;
             BlockPos.MutableBlockPos mutablePos = pos.mutable().move(Direction.UP);
             BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
@@ -263,7 +266,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             } else worldAccessor.setBlock(pos, pipeColumnState, 2);
 
             // Used 4 - 1 since this somehow places one more block than intended
-            while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < WarpPipeBlockEntity.spoutHeight - 1) {
+            while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < spoutHeight - 1) {
 
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;

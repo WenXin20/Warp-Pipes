@@ -57,5 +57,6 @@ public class SWaterSpoutSliderPacket {
             return;
 
         pipeBlockEntity.waterSpoutHeight(player, WarpPipeScreen.waterSpoutSlider.getValueInt());
+        pipeBlockEntity.setChanged();
     }
 }

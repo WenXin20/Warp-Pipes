@@ -230,8 +230,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-        if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
-            WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state);
+        WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
+
+        if (pipeBlockEntity != null && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
+            WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.spoutHeight);
             serverWorld.scheduleTick(pos, this, 3);
         }
         if (state.getValue(FACING) == Direction.UP) {

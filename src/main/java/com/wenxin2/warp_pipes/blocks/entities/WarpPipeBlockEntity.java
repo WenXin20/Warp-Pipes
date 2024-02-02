@@ -30,7 +30,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public BlockPos destinationPos;
     public static BlockPos blockPos;
     public String dimensionTag;
-    public static int spoutHeight = 4;
+    public int spoutHeight = 4;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -106,7 +106,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
         this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
         blockPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
         this.dimensionTag = tag.getString(WARP_DIMENSION);
-        spoutHeight = tag.getInt(SPOUT_HEIGHT);
+        this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
 //        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains(WARP_POS)) {
@@ -128,7 +128,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
 //            System.out.println("WarpDim: " + this.dimensionTag);
         }
 
-        tag.putInt(SPOUT_HEIGHT, spoutHeight);
+        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
     }
 
     public void closePipe(ServerPlayer player) {
@@ -176,10 +176,14 @@ public class WarpPipeBlockEntity extends BlockEntity {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             blockPos = pos;
             if (blockEntity instanceof WarpPipeBlockEntity warpPipeBlockEntity) {
-                WarpPipeBlockEntity.spoutHeight = spoutHeight;
+                this.spoutHeight = spoutHeight;
                 warpPipeBlockEntity.setChanged();
             }
         }
+    }
+
+    public int getSpoutHeight() {
+        return this.spoutHeight;
     }
 
     public void togglePipeBubbles(ServerPlayer player) {
