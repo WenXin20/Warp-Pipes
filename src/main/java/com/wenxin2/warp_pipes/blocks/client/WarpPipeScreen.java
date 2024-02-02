@@ -49,6 +49,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final int x = (this.width - this.imageWidth) / 2;
         final int y = (this.height - this.imageHeight) / 2;
         graphics.blit(WARP_PIPE_GUI, x, y, 0, 0, this.imageWidth, this.imageHeight);
+
+        waterSpoutSlider.renderTexture();
     }
 
     @Override
@@ -67,12 +69,12 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final Component waterSpout = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button");
         this.waterSpoutButton = this.addRenderableWidget(new Button.Builder(waterSpout, (b) -> {
             PacketHandler.sendToServer(new SWaterSpoutStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
-        }).bounds(x + 7, y + 44, 24, 24)
+        }).bounds(x + 33, y + 18, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.narrate")).build());
 
         final Component height = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.height");
-        waterSpoutSlider = this.addRenderableWidget(new ForgeSlider(x + 33, y + 44, 100, 24,
+        waterSpoutSlider = this.addRenderableWidget(new ForgeSlider(x + 57, y + 18, 100, 24,
                 height, Component.literal(""), 0D, 16D, 4D, true));
         waterSpoutSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip")));
     }
