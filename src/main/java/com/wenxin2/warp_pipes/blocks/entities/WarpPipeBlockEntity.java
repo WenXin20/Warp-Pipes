@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -177,6 +178,20 @@ public class WarpPipeBlockEntity extends BlockEntity {
             if (blockEntity instanceof WarpPipeBlockEntity warpPipeBlockEntity) {
                 WarpPipeBlockEntity.spoutHeight = spoutHeight;
                 warpPipeBlockEntity.setChanged();
+            }
+        }
+    }
+
+    public void togglePipeBubbles(ServerPlayer player) {
+        if (this.level != null && player.containerMenu instanceof WarpPipeMenu) {
+            BlockState state = this.level.getBlockState(((WarpPipeMenu) player.containerMenu).getBlockPos());
+            BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
+            if (state.getValue(WarpPipeBlock.WATER_SPOUT)) {
+                this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 3);
+                this.playSound(this.level, menuPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 1.0F, 0.15F);
+            } else {
+                this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.BUBBLES, Boolean.TRUE), 3);
+                this.playSound(this.level, menuPos, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS, 1.0F, 0.5F);
             }
         }
     }

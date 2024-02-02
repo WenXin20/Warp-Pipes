@@ -11,23 +11,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent;
 
-public class SWaterSpoutStatePacket {
+public class SPipeBubblesStatePacket {
     public final BlockPos pos;
-    public static boolean hasWaterSpout;
+    public static boolean hasPipeBubbles;
 
-    public SWaterSpoutStatePacket(BlockPos pos, Boolean hasWaterSpout) {
+    public SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) {
         this.pos = pos;
-        SWaterSpoutStatePacket.hasWaterSpout = hasWaterSpout;
+        SPipeBubblesStatePacket.hasPipeBubbles = hasPipeBubbles;
     }
 
     // Read and write in the same order!
-    public SWaterSpoutStatePacket(FriendlyByteBuf buffer) {
+    public SPipeBubblesStatePacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.pos);
-        buffer.writeBoolean(hasWaterSpout);
+        buffer.writeBoolean(hasPipeBubbles);
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
@@ -55,18 +55,18 @@ public class SWaterSpoutStatePacket {
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
 
-        pipeBlockEntity.toggleWaterSpout(player);
+        pipeBlockEntity.togglePipeBubbles(player);
     }
 
-    public static SWaterSpoutStatePacket waterSpoutOn(BlockPos pos, Boolean hasWaterSpout) {
-        SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
-        SWaterSpoutStatePacket.hasWaterSpout = false;
+    public static SPipeBubblesStatePacket pipeBubblesOn(BlockPos pos, Boolean hasPipeBubbles) {
+        SPipeBubblesStatePacket packet = new SPipeBubblesStatePacket(pos, hasPipeBubbles);
+        SPipeBubblesStatePacket.hasPipeBubbles = false;
         return packet;
     }
 
-    public static SWaterSpoutStatePacket waterSpoutOff(BlockPos pos, Boolean hasWaterSpout) {
-        SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
-        SWaterSpoutStatePacket.hasWaterSpout = true;
+    public static SPipeBubblesStatePacket pipeBubblesOff(BlockPos pos, Boolean hasPipeBubbles) {
+        SPipeBubblesStatePacket packet = new SPipeBubblesStatePacket(pos, hasPipeBubbles);
+        SPipeBubblesStatePacket.hasPipeBubbles = true;
         return packet;
     }
 }

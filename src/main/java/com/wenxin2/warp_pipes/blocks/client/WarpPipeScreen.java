@@ -6,6 +6,7 @@ import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.network.PacketHandler;
 import com.wenxin2.warp_pipes.network.SCloseStatePacket;
+import com.wenxin2.warp_pipes.network.SPipeBubblesStatePacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutSliderPacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutStatePacket;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,6 +25,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Inventory inventory;
     Button closeButton;
     Button waterSpoutButton;
+    Button bubblesButton;
     public static ForgeSlider waterSpoutSlider;
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
@@ -50,7 +52,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final int y = (this.height - this.imageHeight) / 2;
         graphics.blit(WARP_PIPE_GUI, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        waterSpoutSlider.renderTexture();
+//        waterSpoutSlider.renderTexture();
     }
 
     @Override
@@ -74,9 +76,16 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.narrate")).build());
 
         final Component height = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.height");
-        waterSpoutSlider = this.addRenderableWidget(new ForgeSlider(x + 57, y + 18, 100, 24,
+        waterSpoutSlider = this.addRenderableWidget(new ForgeSlider(x + 59, y + 18, 100, 24,
                 height, Component.literal(""), 0D, 16D, 4D, true));
         waterSpoutSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip")));
+
+        final Component bubbles = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button");
+        this.bubblesButton = this.addRenderableWidget(new Button.Builder(bubbles, (b) -> {
+            PacketHandler.sendToServer(new SPipeBubblesStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        }).bounds(x + 33, y + 44, 24, 24)
+                .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.tooltip")))
+                .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.narrate")).build());
     }
 
     @Override
