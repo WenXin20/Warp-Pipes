@@ -5,7 +5,6 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
-import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -14,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -25,7 +23,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -116,32 +113,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
         return false;
-    }
-
-    private static final long COOLDOWN_DURATION = 500;
-    private long lastInteractionTime = 0;
-
-//    @Override
-//    public void attack(BlockState state, Level world, BlockPos pos, Player player) {
-//        ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
-//        long currentTime = System.currentTimeMillis();
-//
-//        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
-//            message(player, Component.translatable("item.warp_pipes.pipe_wrench.requires_creative").withStyle(ChatFormatting.RED));
-//            super.attack(state, world, pos, player);
-//        } else if (!world.isClientSide) {
-//            if (currentTime - lastInteractionTime >= COOLDOWN_DURATION) {
-//                if (itemStack.getItem() instanceof WrenchItem wrenchItem) {
-//                    wrenchItem.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
-//                    lastInteractionTime = currentTime;
-//                }
-//            }
-//        }
-//        super.attack(state, world, pos, player);
-//    }
-
-    public static void message(Player player, Component component) {
-        ((ServerPlayer)player).sendSystemMessage(component, true);
     }
 
     @Override
