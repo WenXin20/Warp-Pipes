@@ -12,7 +12,9 @@ public class Config
     public static final String CATEGORY_COMMON = "Common";
 
     public static ForgeConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
-    public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH;
+    public static ForgeConfigSpec.BooleanValue CREATIVE_BUBBLES;
+    public static ForgeConfigSpec.BooleanValue CREATIVE_CLOSE_PIPES;
+    public static ForgeConfigSpec.BooleanValue CREATIVE_WATER_SPOUT;
     public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
     public static ForgeConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
@@ -41,8 +43,12 @@ public class Config
         BUILDER.pop();
 
         BUILDER.push(CATEGORY_COMMON);
-        CREATIVE_WRENCH = BUILDER.comment("Require creative to turn bubbles on/off and open/close pipes. " + "[Default: false]")
-                .define("creative_wrench", false);
+        CREATIVE_BUBBLES = BUILDER.comment("Require creative to turn bubbles on/off. " + "[Default: false]")
+                .define("require_creative_bubbles", false);
+        CREATIVE_CLOSE_PIPES = BUILDER.comment("Require creative to open/close pipes. " + "[Default: false]")
+                .define("require_creative_close_pipes", false);
+        CREATIVE_WATER_SPOUT = BUILDER.comment("Require creative to turn water spouts on/off. " + "[Default: false]")
+                .define("require_creative_water_spouts", false);
         CREATIVE_WRENCH_PIPE_LINKING = BUILDER.comment("Require creative to link pipes. " + "[Default: false]")
                 .define("creative_wrench_pipe_linking", false);
         ALLOW_FAST_TRAVEL = BUILDER.comment("Allow fast travel through Clear Warp Pipes. " + "[Default: true]")

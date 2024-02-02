@@ -121,56 +121,56 @@ public class WrenchItem extends LinkerItem {
 
     @Override
     public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player player) {
-        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
-            message(player, Component.translatable(this.getDescriptionId() + ".requires_creative").withStyle(ChatFormatting.RED));
-            return !player.isCreative();
-        } else if (!world.isClientSide) {
-            this.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
-        }
+//        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
+//            message(player, Component.translatable(this.getDescriptionId() + ".requires_creative").withStyle(ChatFormatting.RED));
+//            return !player.isCreative();
+//        } else if (!world.isClientSide) {
+//            this.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
+//        }
         return !player.isCreative();
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext useOnContext) {
-        Player player = useOnContext.getPlayer();
-        Level world = useOnContext.getLevel();
-        BlockPos pos = useOnContext.getClickedPos();
-        BlockState state = world.getBlockState(pos);
-        ItemStack item = useOnContext.getItemInHand();
+//    @Override
+//    public InteractionResult useOn(UseOnContext useOnContext) {
+//        Player player = useOnContext.getPlayer();
+//        Level world = useOnContext.getLevel();
+//        BlockPos pos = useOnContext.getClickedPos();
+//        BlockState state = world.getBlockState(pos);
+//        ItemStack item = useOnContext.getItemInHand();
+//
+//        if (player != null) {
+//            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.ENTRANCE) && !player.isShiftKeyDown()) {
+////                if (!this.handleInteraction(player, world.getBlockState(pos), world, pos, true, useOnContext.getItemInHand())) {
+////                    return InteractionResult.FAIL;
+////                }
+////                else {
+//                    item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+//                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
+//                    return InteractionResult.SUCCESS;
+////                }
+//            }
+//        }
+//        return super.useOn(useOnContext);
+//    }
 
-        if (player != null) {
-            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.ENTRANCE) && !player.isShiftKeyDown()) {
-//                if (!this.handleInteraction(player, world.getBlockState(pos), world, pos, true, useOnContext.getItemInHand())) {
-//                    return InteractionResult.FAIL;
+//    public boolean handleInteraction(Player player, BlockState state, LevelAccessor worldAccessor, BlockPos pos, boolean isPlayerRightClicking, ItemStack stack) {
+//        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !worldAccessor.isClientSide()) {
+//            message(player, Component.translatable(this.getDescriptionId() + ".requires_creative").withStyle(ChatFormatting.RED));
+//            return false;
+//        } else {
+//            Block block = state.getBlock();
+//            StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
+//            String registryName = BuiltInRegistries.BLOCK.getKey(block).toString();
+//
+//            if (block instanceof WarpPipeBlock) {
+//                CompoundTag compoundtag = stack.getOrCreateTagElement("DebugProperty");
+//                String propertyName = compoundtag.getString(registryName);
+//                statedefinition.getProperty(propertyName);
+//
+//                if (!propertyName.equals("closed") && !propertyName.equals("bubbles")) {
+//                    propertyName = "closed";
+//                    compoundtag.putString(registryName, propertyName);
 //                }
-//                else {
-                    item.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(useOnContext.getHand()));
-                    this.playAnvilSound(world, pos, SoundEvents.ANVIL_PLACE);
-                    return InteractionResult.SUCCESS;
-//                }
-            }
-        }
-        return super.useOn(useOnContext);
-    }
-
-    public boolean handleInteraction(Player player, BlockState state, LevelAccessor worldAccessor, BlockPos pos, boolean isPlayerRightClicking, ItemStack stack) {
-        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !worldAccessor.isClientSide()) {
-            message(player, Component.translatable(this.getDescriptionId() + ".requires_creative").withStyle(ChatFormatting.RED));
-            return false;
-        } else {
-            Block block = state.getBlock();
-            StateDefinition<Block, BlockState> statedefinition = block.getStateDefinition();
-            String registryName = BuiltInRegistries.BLOCK.getKey(block).toString();
-
-            if (block instanceof WarpPipeBlock) {
-                CompoundTag compoundtag = stack.getOrCreateTagElement("DebugProperty");
-                String propertyName = compoundtag.getString(registryName);
-                statedefinition.getProperty(propertyName);
-
-                if (!propertyName.equals("closed") && !propertyName.equals("bubbles")) {
-                    propertyName = "closed";
-                    compoundtag.putString(registryName, propertyName);
-                }
 
 //                if (isPlayerRightClicking && state.getValue(WarpPipeBlock.ENTRANCE) && !(!player.isCreative() && Config.CREATIVE_WRENCH.get())) {
 //                    if (!worldAccessor.isClientSide() && player.isShiftKeyDown()) {
@@ -216,15 +216,11 @@ public class WrenchItem extends LinkerItem {
 //                    }
 //                }
 
-                return true;
-            }
-            return false;
-        }
-    }
-
-    public static void message(Player player, Component component) {
-        ((ServerPlayer)player).sendSystemMessage(component, true);
-    }
+//                return true;
+//            }
+//            return false;
+//        }
+//    }
 
     private static <T extends Comparable<T>> BlockState cycleState(BlockState state, Property<T> property, boolean b) {
         return state.setValue(property, getRelative(property.getPossibleValues(), state.getValue(property), b));

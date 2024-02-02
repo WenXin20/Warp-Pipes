@@ -121,24 +121,24 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     private static final long COOLDOWN_DURATION = 500;
     private long lastInteractionTime = 0;
 
-    @Override
-    public void attack(BlockState state, Level world, BlockPos pos, Player player) {
-        ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        long currentTime = System.currentTimeMillis();
-
-        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
-            message(player, Component.translatable("item.warp_pipes.pipe_wrench.requires_creative").withStyle(ChatFormatting.RED));
-            super.attack(state, world, pos, player);
-        } else if (!world.isClientSide) {
-            if (currentTime - lastInteractionTime >= COOLDOWN_DURATION) {
-                if (itemStack.getItem() instanceof WrenchItem wrenchItem) {
-                    wrenchItem.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
-                    lastInteractionTime = currentTime;
-                }
-            }
-        }
-        super.attack(state, world, pos, player);
-    }
+//    @Override
+//    public void attack(BlockState state, Level world, BlockPos pos, Player player) {
+//        ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+//        long currentTime = System.currentTimeMillis();
+//
+//        if (!player.isCreative() && Config.CREATIVE_WRENCH.get() && !world.isClientSide) {
+//            message(player, Component.translatable("item.warp_pipes.pipe_wrench.requires_creative").withStyle(ChatFormatting.RED));
+//            super.attack(state, world, pos, player);
+//        } else if (!world.isClientSide) {
+//            if (currentTime - lastInteractionTime >= COOLDOWN_DURATION) {
+//                if (itemStack.getItem() instanceof WrenchItem wrenchItem) {
+//                    wrenchItem.handleInteraction(player, state, world, pos, false, player.getItemInHand(InteractionHand.MAIN_HAND));
+//                    lastInteractionTime = currentTime;
+//                }
+//            }
+//        }
+//        super.attack(state, world, pos, player);
+//    }
 
     public static void message(Player player, Component component) {
         ((ServerPlayer)player).sendSystemMessage(component, true);

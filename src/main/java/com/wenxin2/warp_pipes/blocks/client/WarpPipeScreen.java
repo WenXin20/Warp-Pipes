@@ -3,20 +3,25 @@ package com.wenxin2.warp_pipes.blocks.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.network.PacketHandler;
 import com.wenxin2.warp_pipes.network.SCloseStatePacket;
 import com.wenxin2.warp_pipes.network.SPipeBubblesStatePacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutSliderPacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutStatePacket;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
@@ -44,6 +49,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        Player player = this.inventory.player;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, WARP_PIPE_GUI);
@@ -53,16 +59,22 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final int y = (this.height - this.imageHeight) / 2;
         graphics.blit(WARP_PIPE_GUI, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        if (this.closeButton.isHoveredOrFocused())
+        if (this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
             graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 24, 24, 24);
+        else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+            graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 48, 24, 24);
         else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 0, 24, 24);
 
-        if (this.waterSpoutButton.isHoveredOrFocused())
+        if (this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get())
             graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 24, 24, 24);
+        else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+            graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 48, 24, 24);
         else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 0, 24, 24);
 
-        if (this.bubblesButton.isHoveredOrFocused())
+        if (this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get())
             graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
+        else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+            graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
         else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 0, 24, 24);
     }
 
@@ -74,7 +86,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         final Component close = Component.translatable("menu.warp_pipes.warp_pipe.close_button");
         this.closeButton = this.addRenderableWidget(new Button.Builder(close, (b) -> {
-            PacketHandler.sendToServer(new SCloseStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+            this.closeButtonOnPress();
         }).bounds(x + 7, y + 18, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.close_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.close_button.narrate")).build());
@@ -82,7 +94,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         final Component waterSpout = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button");
         this.waterSpoutButton = this.addRenderableWidget(new Button.Builder(waterSpout, (b) -> {
-            PacketHandler.sendToServer(new SWaterSpoutStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+            this.waterSpoutButtonOnPress();
         }).bounds(x + 34, y + 18, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.narrate")).build());
@@ -95,7 +107,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         final Component bubbles = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button");
         this.bubblesButton = this.addRenderableWidget(new Button.Builder(bubbles, (b) -> {
-            PacketHandler.sendToServer(new SPipeBubblesStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+            this.bubblesButtonOnPress();
         }).bounds(x + 34, y + 45, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.narrate")).build());
@@ -114,6 +126,31 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
+
+    public void closeButtonOnPress() {
+        Player player = this.inventory.player;
+        ClientLevel world = Minecraft.getInstance().level;
+        if (world != null && !player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() && world.isClientSide())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.close_pipes.requires_creative").withStyle(ChatFormatting.RED), true);
+        else PacketHandler.sendToServer(new SCloseStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+    }
+
+    public void bubblesButtonOnPress() {
+        Player player = this.inventory.player;
+        ClientLevel world = Minecraft.getInstance().level;
+        if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
+        else PacketHandler.sendToServer(new SPipeBubblesStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+    }
+
+    public void waterSpoutButtonOnPress() {
+        Player player = this.inventory.player;
+        ClientLevel world = Minecraft.getInstance().level;
+        if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
+        else PacketHandler.sendToServer(new SWaterSpoutStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+    }
+
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (waterSpoutSlider.isMouseOver(mouseX, mouseY)) {
