@@ -89,8 +89,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.waterSpoutButton.setAlpha(0);
 
         final Component height = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.height");
-        waterSpoutSlider = this.addRenderableWidget(new ForgeSlider(x + 59, y + 18, 100, 24,
-                height, Component.literal(""), 0D, 16D, 4D, true));
+        waterSpoutSlider = this.addRenderableWidget(new TexturedSlider(x + 61, y + 18, 108, 24,
+                height, Component.literal(""), 0D, 16D, 4D, 1D, 0, true));
         waterSpoutSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip")));
 
         final Component bubbles = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button");
@@ -102,7 +102,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.bubblesButton.setAlpha(0);
 
         final Component distance = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.height");
-                distance, Component.literal(""), 0D, 16D, 3D, true));
+        bubblesSlider = this.addRenderableWidget(new TexturedSlider(x + 61, y + 45, 108, 24,
+                distance, Component.literal(""), 0D, 16D, 3D, 1D, 0, true));
         bubblesSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.tooltip")));
     }
 
