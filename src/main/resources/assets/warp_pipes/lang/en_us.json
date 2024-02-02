@@ -3,17 +3,17 @@
 
   "menu.warp_pipes.warp_pipe": "Warp Pipe",
 
-  "menu.warp_pipes.warp_pipe.close_button": "Close",
+  "menu.warp_pipes.warp_pipe.close_button": "",
   "menu.warp_pipes.warp_pipe.close_button.tooltip": "Close Toggle",
   "menu.warp_pipes.warp_pipe.close_button.narrate": "Close Pipe Toggle",
 
-  "menu.warp_pipes.warp_pipe.water_spout_button": "Water Spout",
+  "menu.warp_pipes.warp_pipe.water_spout_button": "",
   "menu.warp_pipes.warp_pipe.water_spout_button.tooltip": "Water Spout Toggle",
   "menu.warp_pipes.warp_pipe.water_spout_button.narrate": "Water Spout Toggle",
   "menu.warp_pipes.warp_pipe.water_spout_slider.height": "Height: ",
   "menu.warp_pipes.warp_pipe.water_spout_slider.tooltip": "Water Spout Height",
 
-  "menu.warp_pipes.warp_pipe.bubbles_button": "Pipe Bubbles",
+  "menu.warp_pipes.warp_pipe.bubbles_button": "",
   "menu.warp_pipes.warp_pipe.bubbles_button.tooltip": "Pipe Bubbles Toggle",
   "menu.warp_pipes.warp_pipe.bubbles_button.narrate": "Pipe Bubbles Toggle",
   "menu.warp_pipes.warp_pipe.bubbles_slider.height": "Distance: ",
