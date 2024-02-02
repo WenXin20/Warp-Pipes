@@ -1,5 +1,7 @@
 package com.wenxin2.warp_pipes.blocks;
 
+import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
+import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -256,14 +259,14 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             BlockState pipeColumnState = WaterSpoutBlock.setBlockState(neighborState, worldAccessor, pos);
             BlockState stateAbove = worldAccessor.getBlockState(mutablePos.above());
 
-            if (pipeColumnState.getBlock() instanceof WaterSpoutBlock) {
+            if (pipeColumnState.getBlock() instanceof WaterSpoutBlock && WarpPipeBlockEntity.spoutHeight != 0) {
                 if (stateAbove.getBlock() != ModRegistry.WATER_SPOUT.get()) {
                     worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.TRUE), 2);
                 } else worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.FALSE), 2);
             } else worldAccessor.setBlock(pos, pipeColumnState, 2);
 
             // Used 4 - 1 since this somehow places one more block than intended
-            while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < 4 - 1) {
+            while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < WarpPipeBlockEntity.spoutHeight - 1) {
 
                 if (!worldAccessor.setBlock(mutablePos, pipeColumnState, 2)) {
                     return;

@@ -23,11 +23,13 @@ import net.minecraft.world.level.block.state.BlockState;
 public class WarpPipeBlockEntity extends BlockEntity {
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
+    public static final String SPOUT_HEIGHT = "SpoutHeight";
 
     @Nullable
     public BlockPos destinationPos;
     public static BlockPos blockPos;
     public String dimensionTag;
+    public static int spoutHeight = 4;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -103,6 +105,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
         this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
         blockPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
         this.dimensionTag = tag.getString(WARP_DIMENSION);
+        spoutHeight = tag.getInt(SPOUT_HEIGHT);
 //        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains(WARP_POS)) {
@@ -123,6 +126,8 @@ public class WarpPipeBlockEntity extends BlockEntity {
             tag.putString(WARP_DIMENSION, this.dimensionTag);
 //            System.out.println("WarpDim: " + this.dimensionTag);
         }
+
+        tag.putInt(SPOUT_HEIGHT, spoutHeight);
     }
 
     public void closePipe(ServerPlayer player) {
@@ -151,6 +156,27 @@ public class WarpPipeBlockEntity extends BlockEntity {
             } else {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.WATER_SPOUT, Boolean.TRUE), 3);
                 this.playSound(this.level, menuPos, SoundRegistry.WATER_SPOUT_PLACE.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
+            }
+        }
+    }
+
+    public void waterSpoutHeight(ServerPlayer player, int spoutHeight) {
+        if (this.level != null && player.containerMenu instanceof WarpPipeMenu) {
+            BlockState state = this.level.getBlockState(((WarpPipeMenu) player.containerMenu).getBlockPos());
+            BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
+            if (this.level.getBlockState(blockPos).getBlock() instanceof WarpPipeBlock)
+                this.setSpoutHeight(spoutHeight, blockPos);
+        }
+    }
+
+    public void setSpoutHeight(int spoutHeight, BlockPos pos) {
+        Level world = this.level;
+        if (world != null) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            blockPos = pos;
+            if (blockEntity instanceof WarpPipeBlockEntity warpPipeBlockEntity) {
+                WarpPipeBlockEntity.spoutHeight = spoutHeight;
+                warpPipeBlockEntity.setChanged();
             }
         }
     }

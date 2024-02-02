@@ -6,6 +6,7 @@ import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.network.PacketHandler;
 import com.wenxin2.warp_pipes.network.SCloseStatePacket;
+import com.wenxin2.warp_pipes.network.SWaterSpoutSliderPacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutStatePacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     public static ResourceLocation WARP_PIPE_GUI =
@@ -22,6 +24,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Inventory inventory;
     Button closeButton;
     Button waterSpoutButton;
+    public static ForgeSlider waterSpoutSlider;
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -67,6 +70,11 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         }).bounds(x + 7, y + 44, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.narrate")).build());
+
+        final Component height = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.height");
+        waterSpoutSlider = this.addRenderableWidget(new ForgeSlider(x + 33, y + 44, 100, 24,
+                height, Component.literal(""), 0D, 16D, 4D, true));
+        waterSpoutSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip")));
     }
 
     @Override
@@ -75,5 +83,17 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
+    }
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (waterSpoutSlider.isMouseOver(mouseX, mouseY)) {
+            // The slider was clicked, handle the value change
+            int spoutHeight = waterSpoutSlider.getValueInt();
+
+            // Send a packet with the new value
+            PacketHandler.sendToServer(new SWaterSpoutSliderPacket(WarpPipeBlockEntity.getPos(), spoutHeight));
+        }
+
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 }

@@ -28,6 +28,11 @@ public class PacketHandler {
                 .decoder(SWaterSpoutStatePacket::new)
                 .consumerMainThread(SWaterSpoutStatePacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SWaterSpoutSliderPacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SWaterSpoutSliderPacket::encode)
+                .decoder(SWaterSpoutSliderPacket::new)
+                .consumerMainThread(SWaterSpoutSliderPacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {
