@@ -27,6 +27,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Button waterSpoutButton;
     Button bubblesButton;
     public static ForgeSlider waterSpoutSlider;
+    public static ForgeSlider bubblesSlider;
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -86,6 +87,11 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         }).bounds(x + 33, y + 44, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.narrate")).build());
+
+        final Component distance = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.height");
+        bubblesSlider = this.addRenderableWidget(new ForgeSlider(x + 59, y + 44, 100, 24,
+                distance, Component.literal(""), 0D, 16D, 3D, true));
+        bubblesSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.tooltip")));
     }
 
     @Override
