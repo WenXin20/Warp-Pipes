@@ -65,7 +65,6 @@ public class WrenchItem extends LinkerItem {
         if (Screen.hasShiftDown()) {
             list.add(Component.translatable(this.getDescriptionId() + ".tooltip.right_click").withStyle(ChatFormatting.DARK_GREEN));
             list.add(Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click").withStyle(ChatFormatting.BLUE));
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.left_click").withStyle(ChatFormatting.DARK_PURPLE));
 
         } else {
             list.add(Component.translatable(this.getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
