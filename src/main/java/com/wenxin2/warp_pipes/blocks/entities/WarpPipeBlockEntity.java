@@ -186,7 +186,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
         if (this.level != null && player.containerMenu instanceof WarpPipeMenu) {
             BlockState state = this.level.getBlockState(((WarpPipeMenu) player.containerMenu).getBlockPos());
             BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
-            if (state.getValue(WarpPipeBlock.WATER_SPOUT)) {
+            if (state.getValue(WarpPipeBlock.BUBBLES)) {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 3);
                 this.playSound(this.level, menuPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 1.0F, 0.15F);
             } else {
