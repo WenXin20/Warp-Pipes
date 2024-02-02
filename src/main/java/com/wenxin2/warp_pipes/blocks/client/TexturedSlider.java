@@ -36,7 +36,7 @@ public class TexturedSlider extends ForgeSlider {
         final Minecraft mc = Minecraft.getInstance();
         guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX(), this.getY(), 0, getTextureY(), this.width, this.height, 200, 24, 2, 3, 2, 2);
 
-        guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 0, getHandleTextureY(), 8, this.height, 200, 24 , 2, 3, 3, 3);
+        guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(), 0, getHandleTextureY(), 12, this.height, 200, 24 , 2, 3, 3, 3);
 
         renderScrollingString(guiGraphics, mc.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
     }
