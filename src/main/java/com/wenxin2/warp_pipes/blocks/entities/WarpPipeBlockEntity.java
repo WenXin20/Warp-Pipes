@@ -103,16 +103,18 @@ public class WarpPipeBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
         blockPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
-        this.dimensionTag = tag.getString(WARP_DIMENSION);
         this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
 //        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains(WARP_POS)) {
+            this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
             this.setDestinationPos(this.destinationPos);
 //            System.out.println("SetWarpPos: " + this.destinationPos);
         }
+
+        if (tag.contains(WARP_DIMENSION))
+            this.dimensionTag = tag.getString(WARP_DIMENSION);
     }
 
     @Override
