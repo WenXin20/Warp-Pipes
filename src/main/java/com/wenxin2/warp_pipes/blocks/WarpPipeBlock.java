@@ -5,6 +5,7 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -13,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -23,6 +25,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -203,7 +206,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
 
-        if (pipeBlockEntity != null && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
+        if (state.getValue(WATER_SPOUT) && pipeBlockEntity != null && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.spoutHeight);
             serverWorld.scheduleTick(pos, this, 3);
         }

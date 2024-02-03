@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
@@ -129,43 +130,57 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
     public void closeButtonOnPress() {
         Player player = this.inventory.player;
-        ClientLevel world = Minecraft.getInstance().level;
+        Level world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.close_pipes.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SCloseStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        else if (world != null) {
+            WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) world.getBlockEntity(this.menu.getBlockPos());
+            if (pipeBlockEntity != null)
+                PacketHandler.sendToServer(new SCloseStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        }
     }
 
     public void bubblesButtonOnPress() {
         Player player = this.inventory.player;
-        ClientLevel world = Minecraft.getInstance().level;
+        Level world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SPipeBubblesStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        else if (world != null) {
+            WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) world.getBlockEntity(this.menu.getBlockPos());
+            if (pipeBlockEntity != null)
+                PacketHandler.sendToServer(new SPipeBubblesStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        }
     }
 
     public void bubblesSliderOnPress(double mouseX, double mouseY) {
         Player player = this.inventory.player;
-        ClientLevel world = Minecraft.getInstance().level;
+        Level world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
     }
 
     public void waterSpoutButtonOnPress() {
         Player player = this.inventory.player;
-        ClientLevel world = Minecraft.getInstance().level;
+        Level world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SWaterSpoutStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        else if (world != null) {
+            WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) world.getBlockEntity(this.menu.getBlockPos());
+            if (pipeBlockEntity != null)
+                PacketHandler.sendToServer(new SWaterSpoutStatePacket(pipeBlockEntity.getPos(), Boolean.TRUE));
+        }
     }
 
     public void waterSpoutSliderOnPress(double mouseX, double mouseY) {
         Player player = this.inventory.player;
-        ClientLevel world = Minecraft.getInstance().level;
+        Level world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-        else if (waterSpoutSlider.isMouseOver(mouseX, mouseY)) {
+        else if (waterSpoutSlider.isMouseOver(mouseX, mouseY) && world != null) {
+            WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) world.getBlockEntity(this.menu.getBlockPos());
             int spoutHeight = waterSpoutSlider.getValueInt();
-            PacketHandler.sendToServer(new SWaterSpoutSliderPacket(WarpPipeBlockEntity.getPos(), spoutHeight));
+            if (pipeBlockEntity != null)
+                PacketHandler.sendToServer(new SWaterSpoutSliderPacket(pipeBlockEntity.getPos(), spoutHeight));
         }
     }
 

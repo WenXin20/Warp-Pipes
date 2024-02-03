@@ -28,7 +28,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
 
     @Nullable
     public BlockPos destinationPos;
-    public static BlockPos blockPos;
+    public BlockPos blockPos;
     public String dimensionTag;
     public int spoutHeight = 4;
 
@@ -71,7 +71,7 @@ public class WarpPipeBlockEntity extends BlockEntity {
     }
 
     @Nullable
-    public static BlockPos getPos() {
+    public BlockPos getPos() {
         if (blockPos != null) {
             return blockPos;
         }
