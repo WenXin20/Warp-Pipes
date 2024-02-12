@@ -40,14 +40,6 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     }
 
     @Override
-    protected void renderLabels(final GuiGraphics graphics, final int x, final int y) {
-        graphics.drawString(this.font, Component.translatable("menu.warp_pipes.warp_pipe").getString(),
-                8, 6, 4210752, false);
-        graphics.drawString(this.font, this.playerInventoryTitle.getString(),
-                8, this.imageHeight - 94 + 2, 4210752, false);
-    }
-
-    @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         Player player = this.inventory.player;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

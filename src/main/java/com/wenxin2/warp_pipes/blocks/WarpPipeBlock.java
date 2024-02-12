@@ -5,16 +5,15 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
-import com.wenxin2.warp_pipes.items.WrenchItem;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -78,11 +77,25 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public InteractionResult use(final BlockState state, final Level world, final BlockPos pos,
                                  final Player player, final InteractionHand hand, final BlockHitResult hit)
     {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
         if (state.getValue(ENTRANCE) && player.getItemInHand(hand).getItem() == ModRegistry.PIPE_WRENCH.get()) {
-            player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WarpPipeMenu(id,
-                    playerInventory, ContainerLevelAccess.create(world, pos), pos), player.getDisplayName()));
+            if (blockEntity instanceof WarpPipeBlockEntity) {
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WarpPipeMenu(id,
+                        playerInventory, ContainerLevelAccess.create(world, pos), pos), ((WarpPipeBlockEntity) blockEntity).getDisplayName()));
+            }
             return InteractionResult.SUCCESS;
         } else return InteractionResult.PASS;
+    }
+
+    @Override
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof WarpPipeBlockEntity) {
+                ((WarpPipeBlockEntity)blockEntity).setCustomName(stack.getHoverName());
+            }
+        }
+
     }
 
     @Override
