@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.blocks.entities;
 
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
+import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
@@ -104,7 +105,6 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         blockPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
-        this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
 //        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains(WARP_POS)) {
@@ -115,6 +115,9 @@ public class WarpPipeBlockEntity extends BlockEntity {
 
         if (tag.contains(WARP_DIMENSION))
             this.dimensionTag = tag.getString(WARP_DIMENSION);
+
+        if (tag.getInt(SPOUT_HEIGHT) != this.spoutHeight)
+            this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
     }
 
     @Override
@@ -130,7 +133,9 @@ public class WarpPipeBlockEntity extends BlockEntity {
 //            System.out.println("WarpDim: " + this.dimensionTag);
         }
 
-        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
+        if (tag.getInt(SPOUT_HEIGHT) != this.spoutHeight)
+            tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
+        System.out.println("SaveSpoutHeightTag: " + tag.get(SPOUT_HEIGHT) + " " + this.getBlockPos());
     }
 
     public void closePipe(ServerPlayer player) {
@@ -167,25 +172,29 @@ public class WarpPipeBlockEntity extends BlockEntity {
         if (this.level != null && player.containerMenu instanceof WarpPipeMenu) {
             BlockState state = this.level.getBlockState(((WarpPipeMenu) player.containerMenu).getBlockPos());
             BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
-            if (this.level.getBlockState(blockPos).getBlock() instanceof WarpPipeBlock)
-                this.setSpoutHeight(spoutHeight, blockPos);
+            if (this.level.getBlockState(this.getBlockPos()).getBlock() instanceof WarpPipeBlock) {
+                this.setSpoutHeight(spoutHeight, this.getBlockPos());
+            }
         }
     }
 
     public void setSpoutHeight(int spoutHeight, BlockPos pos) {
         Level world = this.level;
+
         if (world != null) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            blockPos = pos;
-            if (blockEntity instanceof WarpPipeBlockEntity warpPipeBlockEntity) {
+            pos = this.getBlockPos();
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                if (world.getBlockState(pos.above()).getBlock() instanceof WaterSpoutBlock)
+                    world.destroyBlock(pos.above(), true);
                 this.spoutHeight = spoutHeight;
-                warpPipeBlockEntity.setChanged();
+                this.setChanged();
+                System.out.println("ThisSpoutHeight: " + this.spoutHeight);
+                System.out.println("SpoutHeight: " + spoutHeight);
+//                System.out.println("SpoutHeightTag: " + pipeBlockEntity.getUpdateTag().get(SPOUT_HEIGHT));
+                pipeBlockEntity.setChanged();
             }
         }
-    }
-
-    public int getSpoutHeight() {
-        return this.spoutHeight;
     }
 
     public void togglePipeBubbles(ServerPlayer player) {
