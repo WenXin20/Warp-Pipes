@@ -139,7 +139,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.close_pipes.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SCloseStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        else PacketHandler.sendToServer(new SCloseStatePacket(this.getClickedPos(), Boolean.TRUE));
     }
 
     public void bubblesButtonOnPress() {
@@ -147,7 +147,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SPipeBubblesStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        else PacketHandler.sendToServer(new SPipeBubblesStatePacket(this.getClickedPos(), Boolean.TRUE));
     }
 
     public void bubblesSliderOnPress(double mouseX, double mouseY) {
@@ -162,7 +162,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SWaterSpoutStatePacket(WarpPipeBlockEntity.getPos(), Boolean.TRUE));
+        else PacketHandler.sendToServer(new SWaterSpoutStatePacket(this.getClickedPos(), Boolean.TRUE));
     }
 
     public void waterSpoutSliderOnPress(double mouseX, double mouseY) {

@@ -29,6 +29,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
@@ -42,7 +43,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     private LockCode lockKey = LockCode.NO_LOCK;
     @Nullable
     public BlockPos destinationPos;
-    public static BlockPos blockPos;
     public String dimensionTag;
     public int spoutHeight = 4;
 
@@ -53,7 +53,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public WarpPipeBlockEntity(final BlockEntityType<?> tileEntity, BlockPos pos, BlockState state) {
         super(tileEntity, pos, state);
-        blockPos = this.getBlockPos();
     }
 
     @Override
@@ -107,22 +106,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         return null;
     }
 
-    public void setBlockPos(@Nullable BlockPos pos) {
-        blockPos = pos;
-        if (this.level != null && pos != null) {
-            BlockState state = this.getBlockState();
-            this.level.setBlock(this.getBlockPos(), state, 4);
-        }
-    }
-
-    @Nullable
-    public static BlockPos getPos() {
-        if (blockPos != null) {
-            return blockPos;
-        }
-        return null;
-    }
-
     @Nullable
     public ResourceKey<Level> getDestinationDim() {
         if (dimensionTag != null) {
@@ -149,7 +132,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public void load(CompoundTag tag) {
         super.load(tag);
         this.lockKey = LockCode.fromTag(tag);
-        blockPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
 //        System.out.println("SetDestPos: " +  this.destinationPos);
 
         if (tag.contains("CustomName", 8)) {
@@ -236,7 +218,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 if (world.getBlockState(pos.above()).getBlock() instanceof WaterSpoutBlock)
-                    world.destroyBlock(pos.above(), true);
+                    world.destroyBlock(pos.above(), false);
                 this.spoutHeight = spoutHeight;
 //                spoutHeightStatic = spoutHeight;
                 this.setChanged();
