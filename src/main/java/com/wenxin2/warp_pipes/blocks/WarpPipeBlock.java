@@ -95,7 +95,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 ((WarpPipeBlockEntity)blockEntity).setCustomName(stack.getHoverName());
             }
         }
-
     }
 
     @Override

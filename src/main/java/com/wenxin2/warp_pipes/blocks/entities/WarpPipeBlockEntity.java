@@ -11,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -44,6 +45,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static BlockPos blockPos;
     public String dimensionTag;
     public int spoutHeight = 4;
+    public static int spoutHeightStatic = 4;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -54,6 +56,16 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         super(tileEntity, pos, state);
         blockPos = this.getBlockPos();
     }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+//    public CompoundTag getUpdateTag() {
+//        return this.saveWithoutMetadata();
+//    }
 
     @Nullable
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
@@ -158,8 +170,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (tag.contains(WARP_DIMENSION))
             this.dimensionTag = tag.getString(WARP_DIMENSION);
 
-        if (tag.getInt(SPOUT_HEIGHT) != this.spoutHeight)
-            this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
+//        if (tag.getInt(SPOUT_HEIGHT) != this.spoutHeight)
+        this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
+        spoutHeightStatic = tag.getInt(SPOUT_HEIGHT);
     }
 
     @Override
@@ -181,8 +194,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 //            System.out.println("WarpDim: " + this.dimensionTag);
         }
 
-        if (tag.getInt(SPOUT_HEIGHT) != this.spoutHeight)
-            tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
+//        if (tag.getInt(SPOUT_HEIGHT) != this.spoutHeight)
+        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
+        tag.putInt(SPOUT_HEIGHT, spoutHeightStatic);
         System.out.println("SaveSpoutHeightTag: " + tag.get(SPOUT_HEIGHT) + " " + this.getBlockPos());
     }
 
@@ -217,25 +231,27 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public void waterSpoutHeight(ServerPlayer player, int spoutHeight) {
-        if (this.level != null && player.containerMenu instanceof WarpPipeMenu) {
+        if (this.level != null && this.getUpdatePacket() != null &&player.containerMenu instanceof WarpPipeMenu) {
+            BlockEntity blockEntity = this.level.getBlockEntity(this.getUpdatePacket().getPos());
             BlockState state = this.level.getBlockState(((WarpPipeMenu) player.containerMenu).getBlockPos());
             BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
-            if (this.level.getBlockState(this.getBlockPos()).getBlock() instanceof WarpPipeBlock) {
-                this.setSpoutHeight(spoutHeight, this.getBlockPos());
+            if ( this.level.getBlockState(this.getBlockPos()).getBlock() instanceof WarpPipeBlock) {
+                this.setSpoutHeight(spoutHeight/*, menuPos*/);
             }
         }
     }
 
-    public void setSpoutHeight(int spoutHeight, BlockPos pos) {
+    public void setSpoutHeight(int spoutHeight/*, BlockPos pos*/) {
         Level world = this.level;
 
-        if (world != null) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            pos = this.getBlockPos();
+        if (world != null && this.getUpdatePacket() != null) {
+            BlockEntity blockEntity = world.getBlockEntity(this.getUpdatePacket().getPos());
+            BlockPos pos = this.getBlockPos();
             if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 if (world.getBlockState(pos.above()).getBlock() instanceof WaterSpoutBlock)
                     world.destroyBlock(pos.above(), true);
                 this.spoutHeight = spoutHeight;
+                spoutHeightStatic = spoutHeight;
                 this.setChanged();
                 System.out.println("ThisSpoutHeight: " + this.spoutHeight);
                 System.out.println("SpoutHeight: " + spoutHeight);
@@ -243,6 +259,11 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
                 pipeBlockEntity.setChanged();
             }
         }
+    }
+
+    @Nullable
+    public double getSpoutHeight() {
+        return this.spoutHeight;
     }
 
     public void togglePipeBubbles(ServerPlayer player) {
