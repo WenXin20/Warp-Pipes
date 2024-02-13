@@ -45,7 +45,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static BlockPos blockPos;
     public String dimensionTag;
     public int spoutHeight = 4;
-    public static int spoutHeightStatic = 4;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -167,7 +166,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             this.dimensionTag = tag.getString(WARP_DIMENSION);
 
         this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
-        spoutHeightStatic = tag.getInt(SPOUT_HEIGHT);
     }
 
     @Override
@@ -190,8 +188,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
 
         tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
-        tag.putInt(SPOUT_HEIGHT, spoutHeightStatic);
-        System.out.println("SaveSpoutHeightTag: " + tag.get(SPOUT_HEIGHT) + " " + this.getBlockPos());
     }
 
     public void closePipe(ServerPlayer player) {
@@ -235,18 +231,23 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public void setSpoutHeight(int spoutHeight) {
         Level world = this.level;
 
-        if (world != null && this.getUpdatePacket() != null) {
-            BlockEntity blockEntity = world.getBlockEntity(this.getUpdatePacket().getPos());
+        if (world != null) {
             BlockPos pos = this.getBlockPos();
+            BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 if (world.getBlockState(pos.above()).getBlock() instanceof WaterSpoutBlock)
                     world.destroyBlock(pos.above(), true);
                 this.spoutHeight = spoutHeight;
-                spoutHeightStatic = spoutHeight;
+//                spoutHeightStatic = spoutHeight;
                 this.setChanged();
                 pipeBlockEntity.setChanged();
             }
         }
+    }
+
+    // Only returning default of 4
+    public int getSpoutHeight() {
+        return this.spoutHeight;
     }
 
     public void togglePipeBubbles(ServerPlayer player) {

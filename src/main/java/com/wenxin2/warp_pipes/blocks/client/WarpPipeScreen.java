@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
@@ -34,7 +35,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Button closeButton;
     Button waterSpoutButton;
     Button bubblesButton;
-    private double spoutHeight;
+    private double spoutHeight = 4;
     public static ForgeSlider waterSpoutSlider;
     public static ForgeSlider bubblesSlider;
 
@@ -96,9 +97,19 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.narrate")).build());
         this.waterSpoutButton.setAlpha(0);
 
+        // Only returning default of 4
+        BlockPos clickedPos = getClickedPos();
+        double spoutHeight = this.spoutHeight; // Default value
+        if (clickedPos != null && Minecraft.getInstance().level != null) {
+            BlockEntity blockEntity = Minecraft.getInstance().level.getBlockEntity(clickedPos);
+            if (blockEntity instanceof WarpPipeBlockEntity) {
+                spoutHeight = ((WarpPipeBlockEntity) blockEntity).getSpoutHeight();
+            }
+        }
+
         final Component height = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.height");
         waterSpoutSlider = this.addRenderableWidget(new WaterSpoutSlider(x + 61, y + 18, 108, 24,
-                height, Component.literal(""), 0D, 16D, WarpPipeBlockEntity.spoutHeightStatic, 1D, 0, true));
+                height, Component.literal(""), 0D, 16D, spoutHeight, 1D, 0, true));
         waterSpoutSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip")));
 
         final Component bubbles = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button");
@@ -161,8 +172,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
         else if (waterSpoutSlider.isMouseOver(mouseX, mouseY)) {
             int spoutHeight = waterSpoutSlider.getValueInt();
-            this.spoutHeight = WarpPipeBlockEntity.spoutHeightStatic;
-            BlockPos clickedPos = getClickedPos();
+            BlockPos clickedPos = this.getClickedPos();
             PacketHandler.sendToServer(new SWaterSpoutSliderPacket(clickedPos, spoutHeight));
         }
     }
