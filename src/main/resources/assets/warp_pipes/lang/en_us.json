@@ -67,8 +67,8 @@
   "item.warp_pipes.pipe_wrench.select.closed": "Wrench set to open/close pipes",
 
   "item.warp_pipes.pipe_wrench.tooltip": "[Press Shift]",
-  "item.warp_pipes.pipe_wrench.tooltip.right_click": "Shift-right-click: Opens gui",
-  "item.warp_pipes.pipe_wrench.tooltip.shift_right_click": "Right-click: Binds pipes",
+  "item.warp_pipes.pipe_wrench.tooltip.right_click": "Right-click: Opens pipe GUI",
+  "item.warp_pipes.pipe_wrench.tooltip.shift_right_click": "Shift-right-click: Binds pipes",
 
   "display.warp_pipes.close_pipes.requires_creative": "Requires creative to open/close pipes!",
   "display.warp_pipes.pipe_bubbles.requires_creative": "Requires creative to turn on/off pipe bubbles!",
