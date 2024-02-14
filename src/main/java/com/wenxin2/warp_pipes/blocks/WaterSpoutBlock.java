@@ -117,13 +117,13 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             return true;
         else if ((stateBelow.is(Blocks.WATER) && stateBelow.getFluidState().getAmount() >= 8 && stateBelow.getFluidState().isSource()))
             return true;
-        else if ((stateBelow.getBlock() instanceof WarpPipeBlock && stateBelow.getValue(WarpPipeBlock.FACING) == Direction.UP
+        else if (stateBelow.getBlock() instanceof WarpPipeBlock && stateBelow.getValue(WarpPipeBlock.FACING) == Direction.UP
                 && (!stateBelow.getValue(WarpPipeBlock.CLOSED) && stateBelow.getValue(WarpPipeBlock.WATER_SPOUT))
-                && !(stateBelow.getBlock() instanceof ClearWarpPipeBlock)))
+                && !(stateBelow.getBlock() instanceof ClearWarpPipeBlock))
             return true;
-        else if ((stateBelow.getBlock() instanceof ClearWarpPipeBlock && stateBelow.getValue(WarpPipeBlock.FACING) == Direction.UP
+        else if (stateBelow.getBlock() instanceof ClearWarpPipeBlock && stateBelow.getValue(WarpPipeBlock.FACING) == Direction.UP
                 && (!stateBelow.getValue(WarpPipeBlock.CLOSED) && stateBelow.getValue(WarpPipeBlock.WATER_SPOUT))
-                && stateBelow.getValue(ClearWarpPipeBlock.WATERLOGGED)))
+                && stateBelow.getValue(ClearWarpPipeBlock.WATERLOGGED))
             return true;
         else return false;
     }

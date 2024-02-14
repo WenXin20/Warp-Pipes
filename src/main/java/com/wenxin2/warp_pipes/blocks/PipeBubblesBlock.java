@@ -96,14 +96,12 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             return Blocks.WATER.defaultBlockState();
         }
 
-
         if (state.getValue(FACING) == Direction.NORTH && stateSouth.getBlock() instanceof ClearWarpPipeBlock
                 && (stateSouth.getValue(WarpPipeBlock.CLOSED) || !stateSouth.getValue(ClearWarpPipeBlock.WATERLOGGED)
                 || !stateSouth.getValue(WarpPipeBlock.BUBBLES))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
-
 
         if (state.getValue(FACING) == Direction.SOUTH && stateNorth.getBlock() instanceof ClearWarpPipeBlock
                 && (stateNorth.getValue(WarpPipeBlock.CLOSED) || !stateNorth.getValue(ClearWarpPipeBlock.WATERLOGGED)
@@ -112,14 +110,12 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             return Blocks.WATER.defaultBlockState();
         }
 
-
         if (state.getValue(FACING) == Direction.EAST && stateWest.getBlock() instanceof ClearWarpPipeBlock
                 && (stateWest.getValue(WarpPipeBlock.CLOSED) || !stateWest.getValue(ClearWarpPipeBlock.WATERLOGGED)
                 || !stateWest.getValue(WarpPipeBlock.BUBBLES))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
-
 
         if (state.getValue(FACING) == Direction.WEST && stateEast.getBlock() instanceof ClearWarpPipeBlock
                 && (stateEast.getValue(WarpPipeBlock.CLOSED) || !stateEast.getValue(ClearWarpPipeBlock.WATERLOGGED)
@@ -182,20 +178,82 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         BlockState stateEast = worldReader.getBlockState(pos.below());
         BlockState stateWest = worldReader.getBlockState(pos.below());
 
-        if (state.getValue(FACING) == Direction.UP) {
-            return (stateBelow.is(ModRegistry.PIPE_BUBBLES.get()) || stateBelow.getBlock() instanceof WarpPipeBlock);
-        } else if (state.getValue(FACING) == Direction.DOWN) {
-            return (stateAbove.is(ModRegistry.PIPE_BUBBLES.get()) || (stateAbove.getBlock() instanceof WarpPipeBlock
-                    && !stateAbove.getValue(WarpPipeBlock.CLOSED)));
-        } else if (state.getValue(FACING) == Direction.NORTH) {
-            return (stateSouth.is(ModRegistry.PIPE_BUBBLES.get()) || stateSouth.getBlock() instanceof WarpPipeBlock);
-        } else if (state.getValue(FACING) == Direction.SOUTH) {
-            return (stateNorth.is(ModRegistry.PIPE_BUBBLES.get()) || stateNorth.getBlock() instanceof WarpPipeBlock);
-        } else if (state.getValue(FACING) == Direction.EAST) {
-            return (stateWest.is(ModRegistry.PIPE_BUBBLES.get()) || stateWest.getBlock() instanceof WarpPipeBlock);
-        } else {
-            return (stateEast.is(ModRegistry.PIPE_BUBBLES.get()) || stateEast.getBlock() instanceof WarpPipeBlock);
-        }
+//        if (state.getValue(FACING) == Direction.UP) {
+//            return (stateBelow.is(ModRegistry.PIPE_BUBBLES.get()) || stateBelow.getBlock() instanceof WarpPipeBlock);
+//        } else if (state.getValue(FACING) == Direction.DOWN) {
+//            return (stateAbove.is(ModRegistry.PIPE_BUBBLES.get()) || (stateAbove.getBlock() instanceof WarpPipeBlock
+//                    && !stateAbove.getValue(WarpPipeBlock.CLOSED)));
+//        } else if (state.getValue(FACING) == Direction.NORTH) {
+//            return (stateSouth.is(ModRegistry.PIPE_BUBBLES.get()) || stateSouth.getBlock() instanceof WarpPipeBlock);
+//        } else if (state.getValue(FACING) == Direction.SOUTH) {
+//            return (stateNorth.is(ModRegistry.PIPE_BUBBLES.get()) || stateNorth.getBlock() instanceof WarpPipeBlock);
+//        } else if (state.getValue(FACING) == Direction.EAST) {
+//            return (stateWest.is(ModRegistry.PIPE_BUBBLES.get()) || stateWest.getBlock() instanceof WarpPipeBlock);
+//        } else {
+//            return (stateEast.is(ModRegistry.PIPE_BUBBLES.get()) || stateEast.getBlock() instanceof WarpPipeBlock);
+//        }
+
+        if (state.getValue(FACING) == Direction.UP && stateBelow.is(ModRegistry.PIPE_BUBBLES.get()))
+            return true;
+        else if (state.getValue(FACING) == Direction.DOWN && stateAbove.is(ModRegistry.PIPE_BUBBLES.get()))
+            return true;
+        else if (state.getValue(FACING) == Direction.NORTH && stateSouth.is(ModRegistry.PIPE_BUBBLES.get()))
+            return true;
+        else if (state.getValue(FACING) == Direction.SOUTH && stateNorth.is(ModRegistry.PIPE_BUBBLES.get()))
+            return true;
+        else if (state.getValue(FACING) == Direction.EAST && stateWest.is(ModRegistry.PIPE_BUBBLES.get()))
+            return true;
+        else if (state.getValue(FACING) == Direction.WEST && stateEast.is(ModRegistry.PIPE_BUBBLES.get()))
+            return true;
+        else if (state.getValue(FACING) == Direction.UP && stateBelow.getBlock() instanceof WarpPipeBlock
+                && (!stateBelow.getValue(WarpPipeBlock.CLOSED) && stateBelow.getValue(WarpPipeBlock.BUBBLES))
+                && !(stateBelow.getBlock() instanceof ClearWarpPipeBlock))
+            return true;
+        else if (state.getValue(FACING) == Direction.DOWN && stateAbove.getBlock() instanceof WarpPipeBlock
+                && (!stateAbove.getValue(WarpPipeBlock.CLOSED) && stateAbove.getValue(WarpPipeBlock.BUBBLES))
+                && !(stateAbove.getBlock() instanceof ClearWarpPipeBlock))
+            return true;
+        else if (state.getValue(FACING) == Direction.NORTH && stateSouth.getBlock() instanceof WarpPipeBlock
+                && (!stateSouth.getValue(WarpPipeBlock.CLOSED) && stateSouth.getValue(WarpPipeBlock.BUBBLES))
+                && !(stateSouth.getBlock() instanceof ClearWarpPipeBlock))
+            return true;
+        else if (state.getValue(FACING) == Direction.SOUTH && stateNorth.getBlock() instanceof WarpPipeBlock
+                && (!stateNorth.getValue(WarpPipeBlock.CLOSED) && stateNorth.getValue(WarpPipeBlock.BUBBLES))
+                && !(stateNorth.getBlock() instanceof ClearWarpPipeBlock))
+            return true;
+        else if (state.getValue(FACING) == Direction.EAST && stateWest.getBlock() instanceof WarpPipeBlock
+                && (!stateWest.getValue(WarpPipeBlock.CLOSED) && stateWest.getValue(WarpPipeBlock.BUBBLES))
+                && !(stateWest.getBlock() instanceof ClearWarpPipeBlock))
+            return true;
+        else if (state.getValue(FACING) == Direction.WEST && stateEast.getBlock() instanceof WarpPipeBlock
+                && (!stateEast.getValue(WarpPipeBlock.CLOSED) && stateEast.getValue(WarpPipeBlock.BUBBLES))
+                && !(stateEast.getBlock() instanceof ClearWarpPipeBlock))
+            return true;
+        else if (state.getValue(FACING) == Direction.UP && stateBelow.getBlock() instanceof ClearWarpPipeBlock
+                && (!stateBelow.getValue(WarpPipeBlock.CLOSED) && stateBelow.getValue(WarpPipeBlock.BUBBLES))
+                && stateBelow.getValue(ClearWarpPipeBlock.WATERLOGGED))
+            return true;
+        else if (state.getValue(FACING) == Direction.DOWN && stateAbove.getBlock() instanceof ClearWarpPipeBlock
+                && (!stateAbove.getValue(WarpPipeBlock.CLOSED) && stateAbove.getValue(WarpPipeBlock.BUBBLES))
+                && stateAbove.getValue(ClearWarpPipeBlock.WATERLOGGED))
+            return true;
+        else if (state.getValue(FACING) == Direction.NORTH && stateSouth.getBlock() instanceof ClearWarpPipeBlock
+                && (!stateSouth.getValue(WarpPipeBlock.CLOSED) && stateSouth.getValue(WarpPipeBlock.BUBBLES))
+                && stateSouth.getValue(ClearWarpPipeBlock.WATERLOGGED))
+            return true;
+        else if (state.getValue(FACING) == Direction.SOUTH && stateNorth.getBlock() instanceof ClearWarpPipeBlock
+                && (!stateNorth.getValue(WarpPipeBlock.CLOSED) && stateNorth.getValue(WarpPipeBlock.BUBBLES))
+                && stateNorth.getValue(ClearWarpPipeBlock.WATERLOGGED))
+            return true;
+        else if (state.getValue(FACING) == Direction.EAST && stateWest.getBlock() instanceof ClearWarpPipeBlock
+                && (!stateWest.getValue(WarpPipeBlock.CLOSED) && stateWest.getValue(WarpPipeBlock.BUBBLES))
+                && stateWest.getValue(ClearWarpPipeBlock.WATERLOGGED))
+            return true;
+        else if (state.getValue(FACING) == Direction.WEST && stateEast.getBlock() instanceof ClearWarpPipeBlock
+                && (!stateEast.getValue(WarpPipeBlock.CLOSED) && stateEast.getValue(WarpPipeBlock.BUBBLES))
+                && stateEast.getValue(ClearWarpPipeBlock.WATERLOGGED))
+            return true;
+        else return false;
     }
 
     public static boolean canExistIn(LevelAccessor worldAccessor, BlockPos pos) {
