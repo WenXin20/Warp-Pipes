@@ -83,6 +83,6 @@
 
   "display.warp_pipes.players_cannot_teleport": "Players cannot teleport through Warp Pipes!",
 
-  "display.warp_pipes.warp_cooldown": "Preparing to warp!",
-  "display.warp_pipes.warp_cooldown.ticks": "Preparing to warp in %1$s ticks!"
+  "display.warp_pipes.warp_cooldown": "Pipe warping on cooldown!",
+  "display.warp_pipes.warp_cooldown.ticks": "Pipe warping on cooldown for %1$s ticks!"
 }
