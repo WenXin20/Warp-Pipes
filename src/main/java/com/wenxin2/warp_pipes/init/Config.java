@@ -37,7 +37,7 @@ public class Config
     {
         BUILDER.push(CATEGORY_CLIENT);
         WARP_COOLDOWN_MESSAGE = BUILDER.comment("Display a warp cooldown message. " + "[Default: false]")
-                .define("warp_cooldown_message", false);
+                .define("warp_cooldown_message", true);
         WARP_COOLDOWN_MESSAGE_TICKS = BUILDER.comment("Display a warp cooldown message with ticks. Requires \"warp_cooldown_message\". " + "[Default: false]")
                 .define("warp_cooldown_message_with_ticks", false);
         BUILDER.pop();

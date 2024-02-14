@@ -73,13 +73,16 @@
   "display.warp_pipes.close_pipes.requires_creative": "Requires creative to open/close pipes!",
   "display.warp_pipes.pipe_bubbles.requires_creative": "Requires creative to turn on/off pipe bubbles!",
   "display.warp_pipes.water_spouts.requires_creative": "Requires creative to turn on/off water spouts!",
+
   "display.warp_pipes.linker.requires_creative": "Requires creative to link pipes",
   "display.warp_pipes.linker.bound": "Wrench bound to %1$s, %2$s, %3$s, in %4$s",
   "display.warp_pipes.linker.bound_tooltip": "Bound to %1$s, %2$s, %3$s in %4$s",
   "display.warp_pipes.linker.not_bound_tooltip": "Wrench not bound",
   "display.warp_pipes.linker.linked": "Pipe bound to %1$s, %2$s, %3$s, in %4$s",
   "display.warp_pipes.linker.dimension_fail": "Pipes cannot cross dimensions!",
+
   "display.warp_pipes.players_cannot_teleport": "Players cannot teleport through Warp Pipes!",
-  "display.warp_pipes.warp_cooldown": "Pipe warping on cooldown!",
-  "display.warp_pipes.warp_cooldown.ticks": "Pipe warping on cooldown for %1$s ticks!"
+
+  "display.warp_pipes.warp_cooldown": "Preparing to warp!",
+  "display.warp_pipes.warp_cooldown.ticks": "Preparing to warp in %1$s ticks!"
 }
