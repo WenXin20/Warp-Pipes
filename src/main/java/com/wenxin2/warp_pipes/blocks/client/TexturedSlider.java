@@ -49,4 +49,10 @@ public class TexturedSlider extends ForgeSlider {
         int i = !this.isHovered && !this.canChangeValue ? 2 : 3;
         return i * 24;
     }
+
+    @Override
+    public int getTextureY() {
+        int i = this.isFocused() && !this.canChangeValue ? 1 : 0;
+        return i * 24;
+    }
 }
