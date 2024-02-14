@@ -54,6 +54,6 @@ public class SWaterSpoutSliderPacket {
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-        pipeBlockEntity.waterSpoutHeight(player, WarpPipeScreen.waterSpoutSlider.getValueInt());
+        pipeBlockEntity.waterSpoutHeight(player, waterSpoutHeight);
     }
 }

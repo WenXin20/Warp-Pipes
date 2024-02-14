@@ -54,6 +54,6 @@ public class SPipeBubblesSliderPacket {
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-        pipeBlockEntity.bubblesDistance(player, WarpPipeScreen.bubblesSlider.getValueInt());
+        pipeBlockEntity.bubblesDistance(player, bubblesDistance);
     }
 }
