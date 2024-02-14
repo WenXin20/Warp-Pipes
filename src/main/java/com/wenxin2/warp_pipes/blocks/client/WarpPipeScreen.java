@@ -71,11 +71,11 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         graphics.blit(WARP_PIPE_GUI, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
         if (this.renameButton.isHoveredOrFocused())
-            graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
-        else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 0, 24, 24);
+            graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 97, 24, 24);
+        else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 73, 24, 24);
 
         if (this.renameBox.visible)
-            graphics.blit(WARP_PIPE_GUI, x + 7, y + 2, 8, 83, 162, 12);
+            graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
 
         if (this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
             graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
@@ -102,7 +102,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final int x = (this.width - this.imageWidth) / 2;
         final int y = (this.height - this.imageHeight) / 2;
 
-        this.renameBox = new EditBox(this.font, x + 7, y + 4, 162, 12,
+        this.renameBox = new EditBox(this.font, x + 8, y + 6, 160, 12,
                 Component.translatable("menu.warp_pipes.warp_pipe.rename_box.narrate"));
         this.renameBox.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.rename_box.tooltip")));
         this.renameBox.setBordered(false);
@@ -112,6 +112,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         final Component rename = Component.translatable("menu.warp_pipes.warp_pipe.rename_button");
         this.renameButton = this.addRenderableWidget(new Button.Builder(rename, (b) -> {
+            if (this.renameBox.visible && this.renameBox.isFocused())
+                PacketHandler.sendToServer(new SRenamePipePacket(this.getClickedPos(), this.renameBox.getValue()));
             this.renameBox.setVisible(!this.renameBox.visible);
         }).bounds(x + 7, y + 18, 24, 24)
                 .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.rename_button.tooltip")))
