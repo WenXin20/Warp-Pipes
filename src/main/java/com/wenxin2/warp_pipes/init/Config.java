@@ -59,7 +59,7 @@ public class Config
                 .define("teleport_non_mobs", true);
         TELEPORT_PLAYERS = BUILDER.comment("Allow players to teleport. " + "[Default: true]")
                 .define("teleport_players", true);
-        WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[Default: 30]")
+        WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[20 ticks = 1 second] " + "[Default: 30]")
                 .defineInRange("warp_cooldown", 50, 0, 8000);
         BUILDER.pop();
 
