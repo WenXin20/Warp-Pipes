@@ -38,10 +38,9 @@ public class SWaterSpoutSliderPacket {
                 return;
             Level world = player.level();
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 changeHeight(player, (WarpPipeBlockEntity) blockEntity);
-                ((WarpPipeBlockEntity) blockEntity).sendData();
-                blockEntity.setChanged();
+                pipeBlockEntity.sendData();
             }
         });
     }
@@ -55,8 +54,6 @@ public class SWaterSpoutSliderPacket {
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-
         pipeBlockEntity.waterSpoutHeight(player, WarpPipeScreen.waterSpoutSlider.getValueInt());
-        pipeBlockEntity.setChanged();
     }
 }

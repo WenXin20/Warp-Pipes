@@ -135,8 +135,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public void load(CompoundTag tag) {
         super.load(tag);
         this.lockKey = LockCode.fromTag(tag);
-        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
-        tag.putInt(BUBBLES_DISTANCE, this.bubblesDistance);
+        this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
+        this.bubblesDistance = tag.getInt(BUBBLES_DISTANCE);
 
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
@@ -225,7 +225,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
                 if (world.getBlockState(pos.above()).getBlock() instanceof WaterSpoutBlock)
                     world.destroyBlock(pos.above(), false);
                 this.spoutHeight = spoutHeight;
-                this.setChanged();
                 pipeBlockEntity.setChanged();
             }
         }
@@ -273,7 +272,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
                     world.destroyBlock(pos.west(), false);
 
                 this.bubblesDistance = bubblesDistance;
-                this.setChanged();
                 pipeBlockEntity.setChanged();
             }
         }

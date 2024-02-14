@@ -38,10 +38,9 @@ public class SPipeBubblesSliderPacket {
                 return;
             Level world = player.level();
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 changeDistance(player, (WarpPipeBlockEntity) blockEntity);
-                ((WarpPipeBlockEntity) blockEntity).sendData();
-                blockEntity.setChanged();
+                pipeBlockEntity.sendData();
             }
         });
     }
@@ -55,8 +54,6 @@ public class SPipeBubblesSliderPacket {
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-
         pipeBlockEntity.bubblesDistance(player, WarpPipeScreen.bubblesSlider.getValueInt());
-        pipeBlockEntity.setChanged();
     }
 }
