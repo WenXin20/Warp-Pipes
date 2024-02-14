@@ -43,6 +43,11 @@ public class PacketHandler {
                 .decoder(SPipeBubblesSliderPacket::new)
                 .consumerMainThread(SPipeBubblesSliderPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SRenamePipePacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SRenamePipePacket::encode)
+                .decoder(SRenamePipePacket::new)
+                .consumerMainThread(SRenamePipePacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {

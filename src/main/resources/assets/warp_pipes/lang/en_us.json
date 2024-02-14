@@ -7,17 +7,23 @@
   "menu.warp_pipes.warp_pipe.close_button.tooltip": "Close Toggle",
   "menu.warp_pipes.warp_pipe.close_button.narrate": "Close Pipe Toggle",
 
-  "menu.warp_pipes.warp_pipe.water_spout_button": "",
-  "menu.warp_pipes.warp_pipe.water_spout_button.tooltip": "Water Spout Toggle",
-  "menu.warp_pipes.warp_pipe.water_spout_button.narrate": "Water Spout Toggle",
-  "menu.warp_pipes.warp_pipe.water_spout_slider.height": "Height: ",
-  "menu.warp_pipes.warp_pipe.water_spout_slider.tooltip": "Water Spout Height",
+  "menu.warp_pipes.warp_pipe.rename_button": "",
+  "menu.warp_pipes.warp_pipe.rename_button.tooltip": "Rename Pipe",
+  "menu.warp_pipes.warp_pipe.rename_button.narrate": "Rename Pipe",
+  "menu.warp_pipes.warp_pipe.rename_box.tooltip": "Rename Pipe",
+  "menu.warp_pipes.warp_pipe.rename_box.narrate": "Rename Pipe",
 
   "menu.warp_pipes.warp_pipe.bubbles_button": "",
   "menu.warp_pipes.warp_pipe.bubbles_button.tooltip": "Pipe Bubbles Toggle",
   "menu.warp_pipes.warp_pipe.bubbles_button.narrate": "Pipe Bubbles Toggle",
   "menu.warp_pipes.warp_pipe.bubbles_slider.height": "Distance: ",
   "menu.warp_pipes.warp_pipe.bubbles_slider.tooltip": "Pipe Bubbles Distance",
+
+  "menu.warp_pipes.warp_pipe.water_spout_button": "",
+  "menu.warp_pipes.warp_pipe.water_spout_button.tooltip": "Water Spout Toggle",
+  "menu.warp_pipes.warp_pipe.water_spout_button.narrate": "Water Spout Toggle",
+  "menu.warp_pipes.warp_pipe.water_spout_slider.height": "Height: ",
+  "menu.warp_pipes.warp_pipe.water_spout_slider.tooltip": "Water Spout Height",
 
   "subtitles.warp_pipes.block.pipes_linked": "Pipes linked",
   "subtitles.warp_pipes.block.pipe_closes": "Pipe closes",
