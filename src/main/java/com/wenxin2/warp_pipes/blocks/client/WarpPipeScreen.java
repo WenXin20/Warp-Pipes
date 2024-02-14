@@ -54,6 +54,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     public void renderLabels(GuiGraphics graphics, int x, int y) {
         if (this.renameBox.visible)
             graphics.drawString(this.font, "", this.titleLabelX, this.titleLabelY, 4210752, false);
+        else if (!this.pipeName.isEmpty())
+            graphics.drawString(this.font, this.pipeName, this.titleLabelX, this.titleLabelY, 4210752, false);
         else graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }
