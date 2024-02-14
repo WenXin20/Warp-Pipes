@@ -26,14 +26,16 @@ public class SCloseStatePacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeBoolean(closePipe);
+        if (this.pos != null) {
+            buffer.writeBlockPos(this.pos);
+            buffer.writeBoolean(closePipe);
+        }
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             ServerPlayer player = context.get().getSender();
-            if (player == null)
+            if (player == null && this.pos == null)
                 return;
             Level world = player.level();
             BlockEntity blockEntity = world.getBlockEntity(pos);

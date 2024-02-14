@@ -27,8 +27,10 @@ public class SRenamePipePacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeUtf(customName);
+        if (this.pos != null) {
+            buffer.writeBlockPos(this.pos);
+            buffer.writeUtf(customName);
+        }
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
@@ -39,24 +41,10 @@ public class SRenamePipePacket {
             Level world = player.level();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity) {
-//                changeState(player, (WarpPipeBlockEntity) blockEntity);
                 ((WarpPipeBlockEntity) blockEntity).sendData();
                 ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.literal(customName));
                 blockEntity.setChanged();
             }
         });
     }
-
-//    public void changeState(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
-//        Level world = pipeBlockEntity.getLevel();
-//        if (world == null)
-//            return;
-//        BlockPos pos = pipeBlockEntity.getBlockPos();
-//        BlockState state = world.getBlockState(pos);
-//
-//        if (!(state.getBlock() instanceof WarpPipeBlock))
-//            return;
-//
-//        pipeBlockEntity.closePipe(player);
-//    }
 }

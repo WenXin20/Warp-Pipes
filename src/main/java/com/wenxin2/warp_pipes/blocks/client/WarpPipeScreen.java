@@ -115,7 +115,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final Component rename = Component.translatable("menu.warp_pipes.warp_pipe.rename_button");
         this.renameButton = this.addRenderableWidget(new Button.Builder(rename, (b) -> {
             final String pipeRename = this.renameBox.getValue();
-            if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused()) {
+            if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused() && this.getClickedPos() != null) {
                 PacketHandler.sendToServer(new SRenamePipePacket(this.getClickedPos(), this.renameBox.getValue()));
                 this.pipeName = pipeRename;
             }
@@ -215,7 +215,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                 || keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
             if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
                 final String pipeRename = this.renameBox.getValue();
-                if (!pipeRename.equals(this.pipeName) && this.renameBox.isVisible() && !this.renameBox.getValue().equals("")) {
+                if (!pipeRename.equals(this.pipeName) && this.renameBox.isVisible() && !this.renameBox.getValue().equals("") && this.getClickedPos() != null) {
                     PacketHandler.sendToServer(new SRenamePipePacket(this.getClickedPos(), this.renameBox.getValue()));
                     this.pipeName = pipeRename;
                 }
@@ -249,7 +249,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.close_pipes.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SCloseStatePacket(this.getClickedPos(), Boolean.TRUE));
+        else if (this.getClickedPos() != null) PacketHandler.sendToServer(new SCloseStatePacket(this.getClickedPos(), Boolean.TRUE));
     }
 
     public void bubblesButtonOnPress() {
@@ -257,7 +257,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SPipeBubblesStatePacket(this.getClickedPos(), Boolean.TRUE));
+        else if (this.getClickedPos() != null) PacketHandler.sendToServer(new SPipeBubblesStatePacket(this.getClickedPos(), Boolean.TRUE));
     }
 
     public void bubblesSliderOnPress() {
@@ -265,7 +265,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
-        else if (bubblesSlider.isFocused()) {
+        else if (bubblesSlider.isFocused() && this.getClickedPos() != null) {
             int bubblesDistance = bubblesSlider.getValueInt();
             BlockPos clickedPos = this.getClickedPos();
             PacketHandler.sendToServer(new SPipeBubblesSliderPacket(clickedPos, bubblesDistance));
@@ -277,7 +277,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-        else PacketHandler.sendToServer(new SWaterSpoutStatePacket(this.getClickedPos(), Boolean.TRUE));
+        else if (this.getClickedPos() != null) PacketHandler.sendToServer(new SWaterSpoutStatePacket(this.getClickedPos(), Boolean.TRUE));
     }
 
     public void waterSpoutSliderOnPress() {
@@ -285,7 +285,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-        else if (waterSpoutSlider.isFocused()) {
+        else if (waterSpoutSlider.isFocused() && this.getClickedPos() != null) {
             int spoutHeight = waterSpoutSlider.getValueInt();
             BlockPos clickedPos = this.getClickedPos();
             PacketHandler.sendToServer(new SWaterSpoutSliderPacket(clickedPos, spoutHeight));

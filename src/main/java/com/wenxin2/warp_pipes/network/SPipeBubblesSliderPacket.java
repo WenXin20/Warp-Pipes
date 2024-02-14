@@ -27,8 +27,10 @@ public class SPipeBubblesSliderPacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeInt(bubblesDistance);
+        if (this.pos != null) {
+            buffer.writeBlockPos(this.pos);
+            buffer.writeInt(bubblesDistance);
+        }
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {

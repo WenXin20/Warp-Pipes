@@ -26,8 +26,10 @@ public class SPipeBubblesStatePacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeBoolean(hasPipeBubbles);
+        if (this.pos != null) {
+            buffer.writeBlockPos(this.pos);
+            buffer.writeBoolean(hasPipeBubbles);
+        }
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {

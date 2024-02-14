@@ -26,8 +26,10 @@ public class SWaterSpoutStatePacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeBoolean(hasWaterSpout);
+        if (this.pos != null) {
+            buffer.writeBlockPos(this.pos);
+            buffer.writeBoolean(hasWaterSpout);
+        }
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {

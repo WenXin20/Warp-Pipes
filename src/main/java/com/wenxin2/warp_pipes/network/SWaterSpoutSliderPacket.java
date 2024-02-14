@@ -27,8 +27,10 @@ public class SWaterSpoutSliderPacket {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeInt(waterSpoutHeight);
+        if (this.pos != null) {
+            buffer.writeBlockPos(this.pos);
+            buffer.writeInt(waterSpoutHeight);
+        }
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
