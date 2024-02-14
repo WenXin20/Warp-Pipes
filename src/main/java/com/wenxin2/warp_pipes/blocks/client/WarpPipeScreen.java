@@ -7,6 +7,7 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.network.PacketHandler;
 import com.wenxin2.warp_pipes.network.SCloseStatePacket;
+import com.wenxin2.warp_pipes.network.SPipeBubblesSliderPacket;
 import com.wenxin2.warp_pipes.network.SPipeBubblesStatePacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutSliderPacket;
 import com.wenxin2.warp_pipes.network.SWaterSpoutStatePacket;
@@ -35,7 +36,6 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Button closeButton;
     Button waterSpoutButton;
     Button bubblesButton;
-    private double spoutHeight = 4;
     public static ForgeSlider waterSpoutSlider;
     public static ForgeSlider bubblesSlider;
 
@@ -99,7 +99,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         // Only returning default of 4
         BlockPos clickedPos = getClickedPos();
-        double spoutHeight = this.spoutHeight; // Default value
+        int spoutHeight = 4; // Default value
         if (clickedPos != null && Minecraft.getInstance().level != null) {
             BlockEntity blockEntity = Minecraft.getInstance().level.getBlockEntity(clickedPos);
             if (blockEntity instanceof WarpPipeBlockEntity) {
@@ -120,9 +120,20 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.narrate")).build());
         this.bubblesButton.setAlpha(0);
 
+
+        // Only returning default of 3
+        clickedPos = getClickedPos();
+        int bubblesDistance = 3; // Default value
+        if (clickedPos != null && Minecraft.getInstance().level != null) {
+            BlockEntity blockEntity = Minecraft.getInstance().level.getBlockEntity(clickedPos);
+            if (blockEntity instanceof WarpPipeBlockEntity) {
+                bubblesDistance = ((WarpPipeBlockEntity) blockEntity).getBubblesDistance();
+            }
+        }
+
         final Component distance = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.height");
         bubblesSlider = this.addRenderableWidget(new BubblesSlider(x + 61, y + 45, 108, 24,
-                distance, Component.literal(""), 0D, 16D, 3D, 1D, 0, true));
+                distance, Component.literal(""), 0D, 16D, bubblesDistance, 1D, 0, true));
         bubblesSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.tooltip")));
     }
 
@@ -155,6 +166,11 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         ClientLevel world = Minecraft.getInstance().level;
         if (world != null && !player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
+        else if (bubblesSlider.isMouseOver(mouseX, mouseY)) {
+            int bubblesDistance = bubblesSlider.getValueInt();
+            BlockPos clickedPos = this.getClickedPos();
+            PacketHandler.sendToServer(new SPipeBubblesSliderPacket(clickedPos, bubblesDistance));
+        }
     }
 
     public void waterSpoutButtonOnPress() {

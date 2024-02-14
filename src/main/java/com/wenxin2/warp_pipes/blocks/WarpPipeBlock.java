@@ -218,22 +218,24 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
 
-        if (state.getValue(WATER_SPOUT) && pipeBlockEntity != null && state.getValue(FACING) == Direction.UP && serverWorld.dimension() != Level.NETHER) {
+        if (state.getValue(WATER_SPOUT) && pipeBlockEntity != null && state.getValue(FACING) == Direction.UP
+                && serverWorld.dimension() != Level.NETHER) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.spoutHeight);
             serverWorld.scheduleTick(pos, this, 3);
         }
-        if (state.getValue(FACING) == Direction.UP) {
-            PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state);
-        } else if (state.getValue(FACING) == Direction.DOWN) {
-            PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state);
-        } else if (state.getValue(FACING) == Direction.NORTH) {
-            PipeBubblesBlock.repeatColumnNorth(serverWorld, pos.north(), state);
-        } else if (state.getValue(FACING) == Direction.SOUTH) {
-            PipeBubblesBlock.repeatColumnSouth(serverWorld, pos.south(), state);
-        } else if (state.getValue(FACING) == Direction.EAST) {
-            PipeBubblesBlock.repeatColumnEast(serverWorld, pos.east(), state);
-        } else if (state.getValue(FACING) == Direction.WEST) {
-            PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state);
+
+        if (state.getValue(FACING) == Direction.UP && pipeBlockEntity != null) {
+            PipeBubblesBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.bubblesDistance);
+        } else if (state.getValue(FACING) == Direction.DOWN && pipeBlockEntity != null) {
+            PipeBubblesBlock.repeatColumnDown(serverWorld, pos.below(), state, pipeBlockEntity.bubblesDistance);
+        } else if (state.getValue(FACING) == Direction.NORTH && pipeBlockEntity != null) {
+            PipeBubblesBlock.repeatColumnNorth(serverWorld, pos.north(), state, pipeBlockEntity.bubblesDistance);
+        } else if (state.getValue(FACING) == Direction.SOUTH && pipeBlockEntity != null) {
+            PipeBubblesBlock.repeatColumnSouth(serverWorld, pos.south(), state, pipeBlockEntity.bubblesDistance);
+        } else if (state.getValue(FACING) == Direction.EAST && pipeBlockEntity != null) {
+            PipeBubblesBlock.repeatColumnEast(serverWorld, pos.east(), state, pipeBlockEntity.bubblesDistance);
+        } else if (state.getValue(FACING) == Direction.WEST && pipeBlockEntity != null) {
+            PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state, pipeBlockEntity.bubblesDistance);
         }
 
         if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {

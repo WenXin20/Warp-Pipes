@@ -1,5 +1,6 @@
 package com.wenxin2.warp_pipes.blocks.entities;
 
+import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
@@ -7,6 +8,7 @@ import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -29,13 +31,13 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
     public static final String SPOUT_HEIGHT = "SpoutHeight";
+    public static final String BUBBLES_DISTANCE = "BubblesDistance";
 
     private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
     @Nullable
@@ -45,6 +47,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public BlockPos destinationPos;
     public String dimensionTag;
     public int spoutHeight = 4;
+    public int bubblesDistance = 3;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -132,12 +135,14 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public void load(CompoundTag tag) {
         super.load(tag);
         this.lockKey = LockCode.fromTag(tag);
-//        System.out.println("SetDestPos: " +  this.destinationPos);
+        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
+        tag.putInt(BUBBLES_DISTANCE, this.bubblesDistance);
 
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
 
+//        System.out.println("SetDestPos: " +  this.destinationPos);
         if (tag.contains(WARP_POS)) {
             this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
             this.setDestinationPos(this.destinationPos);
@@ -146,14 +151,14 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
         if (tag.contains(WARP_DIMENSION))
             this.dimensionTag = tag.getString(WARP_DIMENSION);
-
-        this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         this.lockKey.addToTag(tag);
+        tag.putInt(BUBBLES_DISTANCE, this.bubblesDistance);
+        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
 
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
@@ -168,8 +173,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             tag.putString(WARP_DIMENSION, this.dimensionTag);
 //            System.out.println("WarpDim: " + this.dimensionTag);
         }
-
-        tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
     }
 
     public void closePipe(ServerPlayer player) {
@@ -182,7 +185,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             } else {
                 if (this.level.getBlockState(menuPos.above()).getBlock() instanceof WaterSpoutBlock)
                     this.level.destroyBlock(menuPos.above(), false);
-                
+
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.CLOSED, Boolean.TRUE)
                         .setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE)
                         .setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 4);
@@ -215,7 +218,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public void setSpoutHeight(int spoutHeight) {
         Level world = this.level;
-
         if (world != null) {
             BlockPos pos = this.getBlockPos();
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -223,7 +225,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
                 if (world.getBlockState(pos.above()).getBlock() instanceof WaterSpoutBlock)
                     world.destroyBlock(pos.above(), false);
                 this.spoutHeight = spoutHeight;
-//                spoutHeightStatic = spoutHeight;
                 this.setChanged();
                 pipeBlockEntity.setChanged();
             }
@@ -233,6 +234,54 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     // Only returning default of 4
     public int getSpoutHeight() {
         return this.spoutHeight;
+    }
+
+    public void bubblesDistance(ServerPlayer player, int bubblesDistance) {
+        if (this.level != null && this.getUpdatePacket() != null &&player.containerMenu instanceof WarpPipeMenu) {
+            if ( this.level.getBlockState(this.getBlockPos()).getBlock() instanceof WarpPipeBlock) {
+                this.setBubblesDistance(bubblesDistance);
+            }
+        }
+    }
+
+    public void setBubblesDistance(int bubblesDistance) {
+        Level world = this.level;
+
+        if (world != null) {
+            BlockPos pos = this.getBlockPos();
+            BlockState state = world.getBlockState(pos);
+            BlockState stateAbove = world.getBlockState(pos.above());
+            BlockState stateBelow = world.getBlockState(pos.below());
+            BlockState stateNorth = world.getBlockState(pos.north());
+            BlockState stateSouth = world.getBlockState(pos.south());
+            BlockState stateEast = world.getBlockState(pos.east());
+            BlockState stateWest = world.getBlockState(pos.west());
+
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                if (stateAbove.getBlock() instanceof PipeBubblesBlock && state.getValue(WarpPipeBlock.FACING) == Direction.UP)
+                    world.destroyBlock(pos.above(), false);
+                if (stateBelow.getBlock() instanceof PipeBubblesBlock && state.getValue(WarpPipeBlock.FACING) == Direction.DOWN)
+                    world.destroyBlock(pos.below(), false);
+                if (stateNorth.getBlock() instanceof PipeBubblesBlock && state.getValue(WarpPipeBlock.FACING) == Direction.NORTH)
+                    world.destroyBlock(pos.north(), false);
+                if (stateSouth.getBlock() instanceof PipeBubblesBlock && state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH)
+                    world.destroyBlock(pos.south(), false);
+                if (stateEast.getBlock() instanceof PipeBubblesBlock && state.getValue(WarpPipeBlock.FACING) == Direction.EAST)
+                    world.destroyBlock(pos.east(), false);
+                if (stateWest.getBlock() instanceof PipeBubblesBlock && state.getValue(WarpPipeBlock.FACING) == Direction.WEST)
+                    world.destroyBlock(pos.west(), false);
+
+                this.bubblesDistance = bubblesDistance;
+                this.setChanged();
+                pipeBlockEntity.setChanged();
+            }
+        }
+    }
+
+    // Only returning default of 3
+    public int getBubblesDistance() {
+        return this.bubblesDistance;
     }
 
     public void togglePipeBubbles(ServerPlayer player) {

@@ -38,6 +38,11 @@ public class PacketHandler {
                 .decoder(SPipeBubblesStatePacket::new)
                 .consumerMainThread(SPipeBubblesStatePacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SPipeBubblesSliderPacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SPipeBubblesSliderPacket::encode)
+                .decoder(SPipeBubblesSliderPacket::new)
+                .consumerMainThread(SPipeBubblesSliderPacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {
