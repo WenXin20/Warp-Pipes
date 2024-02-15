@@ -36,7 +36,8 @@
                 "state": {
                   "Name": "warp_pipes:lime_warp_pipe",
                   "Properties": {
-                    "entrance": "false"
+                    "entrance": "false",
+                    "water_spout": "true"
                   }
                 }
               }
@@ -48,7 +49,8 @@
                 "state": {
                   "Name": "warp_pipes:lime_warp_pipe",
                   "Properties": {
-                    "entrance": "true"
+                    "entrance": "true",
+                    "water_spout": "true"
                   }
                 }
               }
