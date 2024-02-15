@@ -217,12 +217,10 @@ public class LinkerItem extends TieredItem {
     @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag tooltip) {
         CompoundTag tag = stack.getTag();
-        if (getBound()) {
-            if (tag != null && !tag.isEmpty()) {
-                list.add(Component.translatable("", true));
-                list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z),
-                        tag.getString(WARP_DIMENSION), true).withStyle(ChatFormatting.GOLD));
-            }
+        if (getBound() && tag != null && tag.contains(POS_X) && tag.contains(POS_Y) && tag.contains(POS_Z) && tag.contains(WARP_DIMENSION)) {
+            list.add(Component.translatable("", true));
+            list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip", tag.getInt(POS_X), tag.getInt(POS_Y), tag.getInt(POS_Z),
+                    tag.getString(WARP_DIMENSION), true).withStyle(ChatFormatting.GOLD));
         }
         else {
             list.add(Component.translatable("", true));
