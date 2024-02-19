@@ -178,7 +178,7 @@ public abstract class PlayerMixin extends Entity {
     }
 
     public void displayNoTeleportMessage() {
-        if (!Config.TELEPORT_PLAYERS.get() || !this.getType().is(ModTags.WARP_BlACKLIST)) {
+        if (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST)) {
             this.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
                     .withStyle(ChatFormatting.RED), true);
         }
