@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.mixin;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.init.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -76,7 +77,7 @@ public abstract class PlayerMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && Config.TELEPORT_PLAYERS.get()) {
+                && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
@@ -136,7 +137,7 @@ public abstract class PlayerMixin extends Entity {
                     } else this.displayCooldownMessage();
                 }
             }
-        } else if (!state.getValue(WarpPipeBlock.CLOSED) && !Config.TELEPORT_PLAYERS.get()) {
+        } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST))) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage();
@@ -177,7 +178,7 @@ public abstract class PlayerMixin extends Entity {
     }
 
     public void displayNoTeleportMessage() {
-        if (!Config.TELEPORT_PLAYERS.get()) {
+        if (!Config.TELEPORT_PLAYERS.get() || !this.getType().is(ModTags.WARP_BlACKLIST)) {
             this.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
                     .withStyle(ChatFormatting.RED), true);
         }

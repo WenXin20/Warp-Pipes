@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.blocks;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.init.ModTags;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import java.util.HashMap;
@@ -536,7 +537,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (entity instanceof Player player && warpPipeBE.hasDestinationPos() && Config.TELEPORT_PLAYERS.get()) {
+            if (entity instanceof Player player && warpPipeBE.hasDestinationPos()
+                    && Config.TELEPORT_PLAYERS.get() && !entity.getType().is(ModTags.WARP_BlACKLIST)) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (entity.portalCooldown == 0) {
@@ -545,7 +547,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         entity.portalCooldown = Config.WARP_COOLDOWN.get();
                     } else this.displayCooldownMessage(player);
                 }
-            } else if (state.getValue(FACING) == Direction.DOWN && entity instanceof Player player && !Config.TELEPORT_PLAYERS.get()) {
+            } else if (state.getValue(FACING) == Direction.DOWN && entity instanceof Player player
+                    && (!Config.TELEPORT_PLAYERS.get() || entity.getType().is(ModTags.WARP_BlACKLIST))) {
                 player.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
                         .withStyle(ChatFormatting.RED), true);
             }

@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.mixin;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.init.ModTags;
 import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -74,7 +75,8 @@ public abstract class LivingEntityMixin extends Entity {
         // Ensure particle count does not exceed the maximum limit
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
-        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && Config.TELEPORT_MOBS.get()) {
+        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
+                && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

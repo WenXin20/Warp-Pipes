@@ -1,6 +1,15 @@
 package com.wenxin2.warp_pipes.init;
 
+import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.function.Predicate;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class Config
 {
@@ -74,4 +83,6 @@ public class Config
                 .define("debug_water_spout_selection_box", false);
         BUILDER.pop();
     }
+
+    private static final List<Predicate<Entity>> _blacklist = Lists.newArrayList();
 }

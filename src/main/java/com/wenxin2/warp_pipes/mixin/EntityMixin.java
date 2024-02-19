@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.mixin;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.init.ModTags;
 import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,6 +53,8 @@ public abstract class EntityMixin {
     @Shadow public abstract double getRandomY();
 
     @Shadow public abstract double getRandomZ(double p_20263_);
+
+    @Shadow public abstract EntityType<?> getType();
 
     private static final int MAX_PARTICLE_COUNT = 100;
 
@@ -96,7 +100,8 @@ public abstract class EntityMixin {
         // Ensure particle count does not exceed the maximum limit
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
-        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && Config.TELEPORT_NON_MOBS.get()) {
+        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
+                && Config.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
