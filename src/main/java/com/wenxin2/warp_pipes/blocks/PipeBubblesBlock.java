@@ -124,38 +124,50 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
             return Blocks.WATER.defaultBlockState();
         }
 
-        if (state.getValue(FACING) == Direction.UP && !(stateBelow.getBlock() instanceof WarpPipeBlock)
-                && !(stateBelow.getBlock() instanceof PipeBubblesBlock)) {
+        if (state.getValue(FACING) == Direction.UP
+                && ((!(stateBelow.getBlock() instanceof WarpPipeBlock) && !(stateBelow.getBlock() instanceof PipeBubblesBlock))
+                || (stateBelow.getBlock() instanceof WarpPipeBlock
+                && (stateBelow.getValue(WarpPipeBlock.CLOSED) || !stateBelow.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
 
-        if (state.getValue(FACING) == Direction.DOWN && !(stateAbove.getBlock() instanceof WarpPipeBlock)
-                && !(stateAbove.getBlock() instanceof PipeBubblesBlock)) {
+        if (state.getValue(FACING) == Direction.DOWN
+                && ((!(stateAbove.getBlock() instanceof WarpPipeBlock) && !(stateAbove.getBlock() instanceof PipeBubblesBlock))
+                || (stateAbove.getBlock() instanceof WarpPipeBlock
+                && (stateAbove.getValue(WarpPipeBlock.CLOSED) || !stateAbove.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
 
-        if (state.getValue(FACING) == Direction.NORTH && !(stateSouth.getBlock() instanceof WarpPipeBlock)
-                && !(stateSouth.getBlock() instanceof PipeBubblesBlock)) {
+        if (state.getValue(FACING) == Direction.NORTH
+                && ((!(stateSouth.getBlock() instanceof WarpPipeBlock) && !(stateSouth.getBlock() instanceof PipeBubblesBlock))
+                || (stateSouth.getBlock() instanceof WarpPipeBlock
+                && (stateSouth.getValue(WarpPipeBlock.CLOSED) || !stateSouth.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
 
-        if (state.getValue(FACING) == Direction.SOUTH && !(stateNorth.getBlock() instanceof WarpPipeBlock)
-                && !(stateNorth.getBlock() instanceof PipeBubblesBlock)) {
+        if (state.getValue(FACING) == Direction.SOUTH
+                && ((!(stateNorth.getBlock() instanceof WarpPipeBlock) && !(stateNorth.getBlock() instanceof PipeBubblesBlock))
+                || (stateNorth.getBlock() instanceof WarpPipeBlock
+                && (stateNorth.getValue(WarpPipeBlock.CLOSED) || !stateNorth.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
 
-        if (state.getValue(FACING) == Direction.EAST && !(stateWest.getBlock() instanceof WarpPipeBlock)
-                && !(stateWest.getBlock() instanceof PipeBubblesBlock)) {
+        if (state.getValue(FACING) == Direction.EAST
+                && ((!(stateEast.getBlock() instanceof WarpPipeBlock) && !(stateEast.getBlock() instanceof PipeBubblesBlock))
+                || (stateEast.getBlock() instanceof WarpPipeBlock
+                && (stateEast.getValue(WarpPipeBlock.CLOSED) || !stateEast.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
 
-        if (state.getValue(FACING) == Direction.WEST && !(stateEast.getBlock() instanceof WarpPipeBlock)
-                && !(stateEast.getBlock() instanceof PipeBubblesBlock)) {
+        if (state.getValue(FACING) == Direction.WEST
+                && ((!(stateWest.getBlock() instanceof WarpPipeBlock) && !(stateWest.getBlock() instanceof PipeBubblesBlock))
+                || (stateWest.getBlock() instanceof WarpPipeBlock
+                && (stateWest.getValue(WarpPipeBlock.CLOSED) || !stateWest.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
@@ -493,6 +505,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
                 PipeBubblesBlock.repeatColumnWest(serverWorld, pos, state, serverWorld.getBlockState(pos.east()), pipeBlockEntity.bubblesDistance);
             }
         }
+        else PipeBubblesBlock.repeatColumnUp(serverWorld, pos, state, serverWorld.getBlockState(pos.below()), 0);
     }
 
     public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, int bubblesDistance) {
