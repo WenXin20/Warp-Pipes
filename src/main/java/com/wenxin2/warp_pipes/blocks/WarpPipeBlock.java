@@ -8,6 +8,7 @@ import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -89,10 +90,11 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
-                ((WarpPipeBlockEntity)blockEntity).setCustomName(stack.getHoverName());
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+            if (stack.hasCustomHoverName()) {
+                pipeBlockEntity.setCustomName(stack.getHoverName());
+                pipeBlockEntity.setChanged();
             }
         }
     }
@@ -218,6 +220,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
 
+        if (!serverWorld.isClientSide && pipeBlockEntity != null && pipeBlockEntity.getUuid() == null) {
+            UUID uuid = UUID.randomUUID();
+            pipeBlockEntity.setUuid(uuid);
+            pipeBlockEntity.setChanged();
+            System.out.println("UUID: " + uuid);
+        }
+
         if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && pipeBlockEntity != null
                 && serverWorld.dimension() != Level.NETHER) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.spoutHeight);
@@ -261,6 +270,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
             destinationPos = warpPipeBE.destinationPos;
             world.scheduleTick(pos, this, 3);
+        }
+
+        if (!world.isClientSide && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+            UUID uuid = UUID.randomUUID();
+            pipeBlockEntity.setUuid(uuid);
+            pipeBlockEntity.setChanged();
+            System.out.println("UUID: " + uuid);
         }
 
         if (state.getValue(FACING) == Direction.UP) {

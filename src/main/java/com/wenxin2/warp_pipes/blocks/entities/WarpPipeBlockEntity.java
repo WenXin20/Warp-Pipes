@@ -6,6 +6,7 @@ import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +37,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
+    public static final String WARP_UUID = "WarpUUID";
+    public static final String UUID = "UUID";
     public static final String SPOUT_HEIGHT = "SpoutHeight";
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
 
@@ -48,6 +51,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public String dimensionTag;
     public int spoutHeight = 4;
     public int bubblesDistance = 3;
+    public UUID uuid;
+    public UUID warpUuid;
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
@@ -131,6 +136,22 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
     }
 
+    public UUID getUuid() {
+        return this.uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public UUID getWarpUuid() {
+        return this.warpUuid;
+    }
+
+    public void setWarpUuid(UUID uuid) {
+        this.warpUuid = uuid;
+    }
+
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
@@ -151,6 +172,16 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
         if (tag.contains(WARP_DIMENSION))
             this.dimensionTag = tag.getString(WARP_DIMENSION);
+
+        if (tag.contains(UUID)) {
+            this.uuid = tag.getUUID(UUID);
+            System.out.println("Load UUID: " + UUID);
+        }
+
+        if (tag.contains(WARP_UUID)) {
+            this.warpUuid = tag.getUUID(WARP_UUID);
+            System.out.println("Load Warp UUID: " + WARP_UUID);
+        }
     }
 
     @Override
@@ -172,6 +203,18 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (this.dimensionTag != null) {
             tag.putString(WARP_DIMENSION, this.dimensionTag);
 //            System.out.println("WarpDim: " + this.dimensionTag);
+        }
+
+        if (this.uuid != null) {
+            tag.putUUID(UUID, this.getUuid());
+            System.out.println("Save UUID: " + this.uuid);
+            System.out.println("Save UUID get: " + this.getUuid());
+        }
+
+        if (this.warpUuid != null) {
+            tag.putUUID(WARP_UUID, this.getWarpUuid());
+            System.out.println("Save Warp UUID: " + this.warpUuid);
+            System.out.println("Save Warp UUID get: " + this.getWarpUuid());
         }
     }
 

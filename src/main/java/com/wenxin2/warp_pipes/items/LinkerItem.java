@@ -8,6 +8,7 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.ChatFormatting;
@@ -38,6 +39,7 @@ import org.slf4j.Logger;
 public class LinkerItem extends TieredItem {
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
+    public static final String WARP_UUID = "WarpUUID";
     public static final String POS_X = "X";
     public static final String POS_Y = "Y";
     public static final String POS_Z = "Z";
@@ -76,8 +78,9 @@ public class LinkerItem extends TieredItem {
                     .withStyle(ChatFormatting.RED), true);
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else if (player != null) {
-            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock) && state.getValue(WarpPipeBlock.ENTRANCE))) && player.isShiftKeyDown()) {
-
+            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock)
+                    && state.getValue(WarpPipeBlock.ENTRANCE))) && player.isShiftKeyDown() && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                UUID uuid = pipeBlockEntity.getUuid();
                 if (getBound() == Boolean.FALSE) {
                     if (wrenchTag == null) {
                         wrenchTag = new CompoundTag();
@@ -91,6 +94,8 @@ public class LinkerItem extends TieredItem {
                     wrenchTag.putInt(POS_Z, pos.getZ());
                     wrenchTag.put(WARP_POS, NbtUtils.writeBlockPos(warpPos));
                     wrenchTag.putString(WARP_DIMENSION, dimension);
+                    if (uuid != null)
+                        wrenchTag.putUUID(WARP_UUID, uuid);
                     this.setBound(Boolean.TRUE);
 
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
@@ -120,12 +125,12 @@ public class LinkerItem extends TieredItem {
                     if (globalPos == null)
                         return super.useOn(useOnContext);
                     BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
-                    
-                    if (blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                            && blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal
-                            && LinkerItem.isLinked(item)) {
+
+                    WarpPipeBlockEntity warpPipeBE = (WarpPipeBlockEntity) blockEntity;
+                    if (blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
 
                         wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
+                        wrenchTag.putUUID(WarpPipeBlockEntity.WARP_UUID, wrenchTag.getUUID(WARP_UUID));
                         this.link(pos, world, wrenchTag, warpPipeBE, warpPipeBEGlobal);
                     } else {
                         if (player1 != null) {
@@ -149,6 +154,7 @@ public class LinkerItem extends TieredItem {
         wrenchTag.remove(POS_Y);
         wrenchTag.remove(POS_Z);
         wrenchTag.remove(WARP_DIMENSION);
+        wrenchTag.remove(WARP_UUID);
     }
 
     public static boolean isLinked(ItemStack stack) {
@@ -160,14 +166,16 @@ public class LinkerItem extends TieredItem {
         System.out.println("Current Dimension: " + world.dimension());
 
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
+        warpPipeBE.setWarpUuid(tag.getUUID(WARP_UUID));
         warpPipeBE.setChanged();
         if (warpPipeBEGlobal.getLevel() != null) {
             warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel().dimension());
-            System.out.println("Global Dimension: " + warpPipeBEGlobal.getLevel().dimension());
-        } else System.out.println("World is null!");
+            // System.out.println("Global Dimension: " + warpPipeBEGlobal.getLevel().dimension());
+        } /*else System.out.println("World is null!");*/
 
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world.dimension());
+        warpPipeBEGlobal.setWarpUuid(warpPipeBE.getUuid());
         warpPipeBEGlobal.setChanged();
         this.clearTags(tag);
     }
