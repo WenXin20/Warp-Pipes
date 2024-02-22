@@ -185,9 +185,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             } else {
                 if (this.level.getBlockState(menuPos.above()).getBlock() instanceof WaterSpoutBlock)
                     this.level.destroyBlock(menuPos.above(), false);
-                this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.CLOSED, Boolean.TRUE)
-                        .setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE)
-                        .setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 0);
+                this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.CLOSED, Boolean.TRUE), 0);
                 this.playSound(this.level, menuPos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
             }
         }

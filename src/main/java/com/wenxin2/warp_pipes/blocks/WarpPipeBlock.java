@@ -31,7 +31,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -133,22 +132,26 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos posNeighbor, boolean b) {
+        boolean isClosed = state.getValue(CLOSED);
+        boolean isPowered = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above());
 
-        if (!world.isClientSide) {
-            boolean isClosed = state.getValue(CLOSED);
-            if (isClosed != world.hasNeighborSignal(pos)) {
-                if (isClosed) {
-                    world.scheduleTick(pos, this, 4);
+        if (isClosed != isPowered) {
+            if (isClosed) {
+                world.scheduleTick(pos, this, 4);
+                world.setBlock(pos, state.cycle(CLOSED), 2);
 
-                } else {
-                    world.setBlock(pos, state.cycle(CLOSED).cycle(BUBBLES), 2);
-                }
-                if (isClosed) {
-                    this.playSound(world, pos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
-                } else this.playSound(world, pos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
+            } else {
+                world.setBlock(pos, state.cycle(CLOSED), 2);
             }
+
+            if (isClosed) {
+                this.playSound(world, pos, SoundRegistry.PIPE_CLOSES.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
+            } else this.playSound(world, pos, SoundRegistry.PIPE_OPENS.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
         }
+
+        super.neighborChanged(state, world, pos, block, posNeighbor, b);
     }
+
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
@@ -166,10 +169,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         boolean facingSouth = state.getValue(FACING) == Direction.SOUTH;
         boolean facingEast = state.getValue(FACING) == Direction.EAST;
         boolean facingWest = state.getValue(FACING) == Direction.WEST;
-
-        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
-            worldAccessor.scheduleTick(pos, this, 20);
-        }
 
         if (facingUp) {
             if (blockAbove == this) {
@@ -219,7 +218,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
 
-        if (state.getValue(WATER_SPOUT) && pipeBlockEntity != null && state.getValue(FACING) == Direction.UP
+        if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && pipeBlockEntity != null
                 && serverWorld.dimension() != Level.NETHER) {
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos.above(), state, pipeBlockEntity.spoutHeight);
             serverWorld.scheduleTick(pos, this, 3);
@@ -243,10 +242,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         } else if (state.getValue(BUBBLES) && state.getValue(FACING) == Direction.WEST && pipeBlockEntity != null) {
             PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state, pipeBlockEntity.bubblesDistance);
             serverWorld.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
-            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
         }
     }
 

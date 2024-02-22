@@ -98,11 +98,6 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             return Blocks.AIR.defaultBlockState();
         }
 
-        if (!state.canSurvive(worldAccessor, pos) && !(neighborState.getBlock() instanceof WaterSpoutBlock)
-                 && canExistIn(worldAccessor, neighborPos)) {
-            worldAccessor.scheduleTick(pos, this, 3);
-        }
-
         if (stateAbove.getBlock() != ModRegistry.WATER_SPOUT.get()) {
             return state.setValue(TOP, Boolean.TRUE);
         }
@@ -242,13 +237,14 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
 
     @Override
     public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-        WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos);
-        if (pipeBlockEntity != null)
+        WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) serverWorld.getBlockEntity(pos.below());
+        if (pipeBlockEntity != null && pipeBlockEntity.getBlockState().getValue(WarpPipeBlock.WATER_SPOUT))
             WaterSpoutBlock.repeatColumnUp(serverWorld, pos, state, serverWorld.getBlockState(pos.below()), pipeBlockEntity.spoutHeight);
         else WaterSpoutBlock.repeatColumnUp(serverWorld, pos, state, serverWorld.getBlockState(pos.below()), 0);
     }
 
     public static void repeatColumnUp(LevelAccessor worldAccessor, BlockPos pos, BlockState state, int spoutHeight) {
+
         repeatColumnUp(worldAccessor, pos, worldAccessor.getBlockState(pos), state, spoutHeight);
     }
 
@@ -264,6 +260,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
                     worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.TRUE), 2);
                 } else worldAccessor.setBlock(pos, pipeColumnState.setValue(TOP, Boolean.FALSE), 2);
             } else worldAccessor.setBlock(pos, pipeColumnState, 2);
+            worldAccessor.scheduleTick(pos, ModRegistry.WATER_SPOUT.get(), 3);
 
             // Used 4 - 1 since this somehow places one more block than intended
             while (WaterSpoutBlock.canExistIn(worldAccessor, mutablePos) && initialDistance < spoutHeight - 1) {

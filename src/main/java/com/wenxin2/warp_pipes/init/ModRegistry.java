@@ -61,8 +61,7 @@ public class ModRegistry {
         CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
                 () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
                         .sound(SoundType.GLASS).isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
-                        .isRedstoneConductor(ModRegistry::never).strength(3.0F, 500.0F)
-                        .requiresCorrectToolForDrops().noOcclusion()));
+                        .strength(3.0F, 500.0F).requiresCorrectToolForDrops().noOcclusion()));
 
         BLACK_WARP_PIPE = registerBlock("black_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)

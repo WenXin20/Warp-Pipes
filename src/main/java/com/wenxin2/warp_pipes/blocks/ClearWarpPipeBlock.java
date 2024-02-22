@@ -28,7 +28,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -333,10 +332,6 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
         }
 
-        if (facingUp && direction == Direction.UP && neighborState.is(Blocks.WATER) && !state.getValue(CLOSED)) {
-            worldAccessor.scheduleTick(pos, this, 20);
-        }
-
         if (facingUp) {
             if (blockAbove instanceof WarpPipeBlock) {
                 return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
@@ -407,10 +402,6 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         } else if (state.getValue(BUBBLES) && state.getValue(FACING) == Direction.WEST && pipeBlockEntity != null) {
             PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state, pipeBlockEntity.bubblesDistance);
             serverWorld.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(CLOSED) && !serverWorld.hasNeighborSignal(pos)) {
-            serverWorld.setBlock(pos, state.cycle(CLOSED), 2);
         }
     }
 
