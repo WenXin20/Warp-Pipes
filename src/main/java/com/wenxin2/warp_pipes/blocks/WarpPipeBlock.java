@@ -553,7 +553,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (entity.portalCooldown == 0) {
-                        WarpPipeBlock.warp(entity, warpPos, world, state);
+                        if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        else WarpPipeBlock.warp(entity, warpPos, world, state);
                         entity.setPortalCooldown();
                         entity.portalCooldown = Config.WARP_COOLDOWN.get();
                     } else this.displayCooldownMessage(player);
@@ -567,6 +569,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (!(entity instanceof LivingEntity) && warpPipeBE.hasDestinationPos() && Config.TELEPORT_NON_MOBS.get()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                        WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
                     entity.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -576,6 +580,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos() && Config.TELEPORT_MOBS.get()) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                        WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     WarpPipeBlock.warp(entity, warpPos, world, state);
                     entity.setPortalCooldown();
                     entity.portalCooldown = Config.WARP_COOLDOWN.get();
@@ -594,5 +600,38 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         .withStyle(ChatFormatting.RED), true);
             }
         }
+    }
+
+    public static BlockPos findMatchingUUID(UUID uuid, Level world, BlockPos pos) {
+        BlockPos closestPos = null;
+        double closestDistanceSq = Double.MAX_VALUE;
+        int maxDistance = 64; // Adjust this value based on how far you want to search for warp pipes
+
+        for (int x = -maxDistance; x <= maxDistance; x++) {
+            for (int y = -maxDistance; y <= maxDistance; y++) {
+                for (int z = -maxDistance; z <= maxDistance; z++) {
+                    BlockPos checkingPos = pos.offset(x, y, z);
+                    BlockState blockState = world.getBlockState(checkingPos);
+                    Block block = blockState.getBlock();
+
+                    if (block instanceof WarpPipeBlock) {
+                        BlockEntity blockEntity = world.getBlockEntity(checkingPos);
+
+                        if (blockEntity instanceof WarpPipeBlockEntity pipeTileEntity) {
+                            UUID warpUUID = pipeTileEntity.getWarpUuid();
+
+                            if (uuid.equals(warpUUID)) {
+                                double distanceSq = pos.distToCenterSqr(checkingPos.getX(), checkingPos.getY(), checkingPos.getZ());
+                                if (distanceSq < closestDistanceSq) {
+                                    closestPos = checkingPos.immutable();
+                                    closestDistanceSq = distanceSq;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return closestPos;
     }
 }

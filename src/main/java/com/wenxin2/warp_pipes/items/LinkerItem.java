@@ -130,7 +130,8 @@ public class LinkerItem extends TieredItem {
                     if (blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
 
                         wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
-                        wrenchTag.putUUID(WarpPipeBlockEntity.WARP_UUID, wrenchTag.getUUID(WARP_UUID));
+                        if (uuid != null)
+                            wrenchTag.putUUID(WarpPipeBlockEntity.WARP_UUID, wrenchTag.getUUID(WARP_UUID));
                         this.link(pos, world, wrenchTag, warpPipeBE, warpPipeBEGlobal);
                     } else {
                         if (player1 != null) {
@@ -163,10 +164,13 @@ public class LinkerItem extends TieredItem {
     }
 
     public void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
-        System.out.println("Current Dimension: " + world.dimension());
+        // System.out.println("Current Dimension: " + world.dimension());
+        UUID uuid = warpPipeBE.getUuid();
+        UUID uuidGlobal = warpPipeBEGlobal.getUuid();
 
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
-        warpPipeBE.setWarpUuid(tag.getUUID(WARP_UUID));
+        if (uuid != null)
+            warpPipeBE.setWarpUuid(tag.getUUID(WARP_UUID));
         warpPipeBE.setChanged();
         if (warpPipeBEGlobal.getLevel() != null) {
             warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel().dimension());
@@ -175,7 +179,8 @@ public class LinkerItem extends TieredItem {
 
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world.dimension());
-        warpPipeBEGlobal.setWarpUuid(warpPipeBE.getUuid());
+        if (uuidGlobal != null)
+            warpPipeBEGlobal.setWarpUuid(warpPipeBE.getUuid());
         warpPipeBEGlobal.setChanged();
         this.clearTags(tag);
     }
