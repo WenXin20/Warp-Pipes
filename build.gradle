@@ -29,6 +29,7 @@ dependencies {
     // Imports
     implementation fg.deobf("curse.maven:architectury-api-${architectury_api_version}")
     implementation fg.deobf("curse.maven:cloth-config-${cloth_config_version}")
+    implementation fg.deobf("curse.maven:fusion-connected-textures-${fusion_version}")
     implementation fg.deobf("curse.maven:roughly-enough-items-${rei_version}")
     implementation fg.deobf("curse.maven:roughly-enough-items-hacks-${reipc_version}")
     implementation fg.deobf("curse.maven:spark-${spark_version}")
