@@ -175,12 +175,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
         if (tag.contains(UUID)) {
             this.uuid = tag.getUUID(UUID);
-            System.out.println("Load UUID: " + UUID);
+//            System.out.println("Load UUID: " + UUID);
         }
 
         if (tag.contains(WARP_UUID)) {
             this.warpUuid = tag.getUUID(WARP_UUID);
-            System.out.println("Load Warp UUID: " + WARP_UUID);
+//            System.out.println("Load Warp UUID: " + WARP_UUID);
         }
     }
 
@@ -207,14 +207,14 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
         if (this.uuid != null) {
             tag.putUUID(UUID, this.getUuid());
-            System.out.println("Save UUID: " + this.uuid);
-            System.out.println("Save UUID get: " + this.getUuid());
+//            System.out.println("Save UUID: " + this.uuid);
+//            System.out.println("Save UUID get: " + this.getUuid());
         }
 
         if (this.warpUuid != null) {
             tag.putUUID(WARP_UUID, this.getWarpUuid());
-            System.out.println("Save Warp UUID: " + this.warpUuid);
-            System.out.println("Save Warp UUID get: " + this.getWarpUuid());
+//            System.out.println("Save Warp UUID: " + this.warpUuid);
+//            System.out.println("Save Warp UUID get: " + this.getWarpUuid());
         }
     }
 

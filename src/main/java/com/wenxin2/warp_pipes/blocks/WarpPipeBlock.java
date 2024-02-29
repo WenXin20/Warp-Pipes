@@ -224,7 +224,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             UUID uuid = UUID.randomUUID();
             pipeBlockEntity.setUuid(uuid);
             pipeBlockEntity.setChanged();
-            System.out.println("UUID: " + uuid);
         }
 
         if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && pipeBlockEntity != null
@@ -276,7 +275,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             UUID uuid = UUID.randomUUID();
             pipeBlockEntity.setUuid(uuid);
             pipeBlockEntity.setChanged();
-            System.out.println("UUID: " + uuid);
         }
 
         if (state.getValue(FACING) == Direction.UP) {
