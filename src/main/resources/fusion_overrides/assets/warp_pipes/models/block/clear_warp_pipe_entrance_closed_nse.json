@@ -2,11 +2,25 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_bottom_top",
 	"render_type": "cutout",
+	"loader": "fusion:model",
+	"type": "connecting",
+	"connections": {
+		"top": {
+			"type": "match_state",
+			"block": "warp_pipes:clear_warp_pipe",
+			"properties": { "closed": ["true"], "bubbles": ["true", "false"], "entrance": ["true"],
+				"water_spout": ["true", "false"], "waterlogged": ["true", "false"],
+				"north": ["true", "false"], "south": ["true", "false"],
+				"east": ["true", "false"], "west": ["true", "false"],
+				"up": ["true", "false"], "down": ["true", "false"] }
+		},
+		"default": { "type": "is_same_block" }
+	},
 	"textures": {
-		"bottom": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_ns",
-		"bottom_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_inner_nse",
-		"side_ew": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_ew",
-		"side_inner_ew": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_inner_ew",
+		"bottom": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom",
+		"bottom_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_bottom_inner",
+		"side": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side",
+		"side_inner": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_inner",
 		"top": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_top_closed",
 		"closed": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side_closed",
 		"particle": "warp_pipes:block/clear_warp_pipe/entrance/clear_warp_pipe_entrance_side"
@@ -18,8 +32,8 @@
 			"to": [3, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#side_inner_ew"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#side_ew", "cullface": "west"}
+				"east": {"uv": [0, 0, 16, 16], "texture": "#side_inner"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "west"}
 			}
 		},
 		{

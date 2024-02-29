@@ -3,7 +3,7 @@
 	"parent": "minecraft:block/cube_bottom_top",
 	"render_type": "cutout",
 	"textures": {
-		"4": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_ns",
+		"side_ns": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_ns",
 		"particle": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side",
 		"side_new": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_new",
 		"inner_ns": "warp_pipes:block/clear_warp_pipe/clear_warp_pipe_side_inner_ns",
@@ -37,7 +37,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"up": {"uv": [0, 0, 16, 16], "texture": "#inner_ns"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#4", "cullface": "down"}
+				"down": {"uv": [0, 0, 16, 16], "texture": "#side_ns", "cullface": "down"}
 			}
 		}
 	]
