@@ -1,0 +1,17 @@
+{
+  "values": [
+    "#forge:is_mushroom",
+    "#forge:is_plains",
+    "#forge:is_spooky",
+    "#forge:is_swamp",
+    "#minecraft:is_forest",
+    "#minecraft:is_hill",
+    "#minecraft:is_jungle",
+    "#minecraft:is_savanna",
+    "#minecraft:is_taiga",
+    "minecraft:mushroom_fields",
+    "minecraft:plains",
+    "minecraft:snowy_plains",
+    "minecraft:sunflower_plains"
+  ]
+}
