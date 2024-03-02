@@ -27,6 +27,7 @@ public abstract class LivingEntityMixin extends Entity {
     public LivingEntityMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
+
     private static final int MAX_PARTICLE_COUNT = 100;
 
     @Inject(at = @At("TAIL"), method = "baseTick")
@@ -72,7 +73,8 @@ public abstract class LivingEntityMixin extends Entity {
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
+                && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

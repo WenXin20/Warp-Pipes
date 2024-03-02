@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
+import com.wenxin2.warp_pipes.event_handlers.SpawnEventHandler;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModCreativeTabs;
 import com.wenxin2.warp_pipes.init.ModRegistry;
@@ -37,8 +38,11 @@ public class WarpPipes
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, WarpPipes.MODID);
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, WarpPipes.MODID);;
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, WarpPipes.MODID);;
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, WarpPipes.MODID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, WarpPipes.MODID);
+
+    // Bus for Forge Events
+    public static final IEventBus FORGE_BUS = MinecraftForge.EVENT_BUS;
 
     public WarpPipes()
     {
@@ -56,6 +60,8 @@ public class WarpPipes
 
         ModRegistry.init();
         SoundRegistry.init();
+
+        SpawnEventHandler.register();
         // PipeBubblesSoundHandler.init();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);

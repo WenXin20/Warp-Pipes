@@ -547,7 +547,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
 
             if (entity instanceof Player player && warpPipeBE.hasDestinationPos()
-                    && Config.TELEPORT_PLAYERS.get() && !entity.getType().is(ModTags.WARP_BlACKLIST)) {
+                    && Config.TELEPORT_PLAYERS.get() && !entity.getType().is(ModTags.WARP_BlACKLIST)
+                    && entity.getPersistentData().getBoolean("warp_pipes:can_warp")) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (entity.portalCooldown == 0) {
@@ -575,7 +576,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
             }
 
-            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos() && Config.TELEPORT_MOBS.get()) {
+            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos() && Config.TELEPORT_MOBS.get()
+                    && entity.getPersistentData().getBoolean("warp_pipes:can_warp")) {
                 if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
