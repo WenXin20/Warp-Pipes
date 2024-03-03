@@ -73,7 +73,7 @@ public abstract class LivingEntityMixin extends Entity {
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && warpPipeBE.canWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
