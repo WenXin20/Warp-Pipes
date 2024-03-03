@@ -101,7 +101,7 @@ public abstract class EntityMixin {
         particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && Config.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
+                && warpPipeBE.canWarp && Config.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

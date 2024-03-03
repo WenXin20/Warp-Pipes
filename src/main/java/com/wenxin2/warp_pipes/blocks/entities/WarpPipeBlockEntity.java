@@ -41,6 +41,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static final String UUID = "UUID";
     public static final String SPOUT_HEIGHT = "SpoutHeight";
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
+    public static final String CAN_WARP = "CanWarp";
 
     private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
     @Nullable
@@ -51,6 +52,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public String dimensionTag;
     public int spoutHeight = 4;
     public int bubblesDistance = 3;
+    public boolean canWarp = true;
     public UUID uuid;
     public UUID warpUuid;
 
@@ -144,6 +146,14 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.uuid = uuid;
     }
 
+    public void setCanWarp(boolean canWarp) {
+        this.canWarp = canWarp;
+    }
+
+    public boolean getCanWarp() {
+        return this.canWarp;
+    }
+
     public UUID getWarpUuid() {
         return this.warpUuid;
     }
@@ -173,6 +183,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (tag.contains(WARP_DIMENSION))
             this.dimensionTag = tag.getString(WARP_DIMENSION);
 
+        if (tag.contains(CAN_WARP))
+            this.canWarp = tag.getBoolean(CAN_WARP);
+
         if (tag.contains(UUID)) {
             this.uuid = tag.getUUID(UUID);
 //            System.out.println("Load UUID: " + UUID);
@@ -190,6 +203,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.lockKey.addToTag(tag);
         tag.putInt(BUBBLES_DISTANCE, this.bubblesDistance);
         tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
+        tag.putBoolean(CAN_WARP, this.canWarp);
 
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
