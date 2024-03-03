@@ -12,7 +12,8 @@ public class SpawnEventHandler {
     {
         if (!(event.getEntity() instanceof LivingEntity) && !(event.getEntity() instanceof Player)) return;
 
-        event.getEntity().getPersistentData().putBoolean("warp_pipes:can_warp", true);
+        if (event.getEntity() != null && !event.getEntity().getPersistentData().contains("warp_pipes:can_warp"))
+            event.getEntity().getPersistentData().putBoolean("warp_pipes:can_warp", true);
     }
 
     public static void register()
