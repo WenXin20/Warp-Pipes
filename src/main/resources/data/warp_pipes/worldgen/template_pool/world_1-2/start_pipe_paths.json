@@ -6,8 +6,8 @@
       "weight": 5,
       "element": {
         "location": "warp_pipes:world_1-2/start_pipe_path",
-        "element_type": "minecraft:legacy_single_pool_element",
-        "processors": "minecraft:street_plains",
+        "element_type": "minecraft:single_pool_element",
+        "processors": "warp_pipes:path_decay",
         "projection": "terrain_matching"
       }
     },
@@ -15,8 +15,8 @@
       "weight": 1,
       "element": {
         "location": "warp_pipes:world_1-2/start_pipe_path_curve",
-        "element_type": "minecraft:legacy_single_pool_element",
-        "processors": "minecraft:street_plains",
+        "element_type": "minecraft:single_pool_element",
+        "processors": "warp_pipes:path_decay",
         "projection": "terrain_matching"
       }
     }
