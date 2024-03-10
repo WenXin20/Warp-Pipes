@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.init;
 
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.Entity;
@@ -30,6 +31,7 @@ public class Config
     public static ForgeConfigSpec.IntValue WARP_COOLDOWN;
     public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
     public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> HOSTILE_NAMES;
 
     static
     {
@@ -65,6 +67,8 @@ public class Config
                 .define("teleport_players", true);
         WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[20 ticks = 1 second] " + "[Default: 30]")
                 .defineInRange("warp_cooldown", 50, 0, 8000);
+        HOSTILE_NAMES = BUILDER.comment("List of custom named peaceful mobs that will attack the player when named this.")
+                        .define("hostileNames", getDefaultTurtleNames());
         BUILDER.pop();
 
         BUILDER.comment("Warp Pipes Config").push(CATEGORY_DEBUG);
@@ -77,6 +81,14 @@ public class Config
         DEBUG_WATER_SPOUT_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Water Spouts. Creative Only. " + "[Default: false]")
                 .define("debug_water_spout_selection_box", false);
         BUILDER.pop();
+    }
+
+    private static List<String> getDefaultTurtleNames() {
+        List<String> defaultNames = new ArrayList<>();
+        defaultNames.add("Koopa");
+        defaultNames.add("Bowser");
+        defaultNames.add("Goomba");
+        return defaultNames;
     }
 
     private static final List<Predicate<Entity>> _blacklist = Lists.newArrayList();
