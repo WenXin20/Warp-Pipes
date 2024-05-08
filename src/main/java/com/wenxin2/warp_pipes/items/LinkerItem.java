@@ -134,7 +134,7 @@ public class LinkerItem extends TieredItem {
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world);
         warpPipeBEGlobal.setChanged();
-        
+
         tag.remove(WARP_PIPE_POS);
         tag.remove(WARP_PIPE_DIMENSION);
         tag.remove("X");
