@@ -4,12 +4,15 @@
   "key": {
     "C": {
       "tag": "forge:ingots/copper"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
     }
   },
   "pattern": [
     "C C",
     " C ",
-    " C "
+    " I "
   ],
   "result": {
     "item": "warp_pipes:pipe_wrench",
