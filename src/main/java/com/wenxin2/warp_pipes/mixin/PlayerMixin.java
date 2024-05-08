@@ -24,6 +24,7 @@ public abstract class PlayerMixin extends Entity {
     @Shadow protected abstract float getBlockSpeedFactor();
 
     @Shadow public abstract void displayClientMessage(Component p_36216_, boolean p_36217_);
+    private int tickCounter = 0;
 
     public PlayerMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -179,13 +180,16 @@ public abstract class PlayerMixin extends Entity {
     }
 
     public void displayCooldownMessage() {
+        tickCounter++;
+
         if (this.portalCooldown >= 10) {
-            if (Config.WARP_COOLDOWN_MESSAGE.get()) {
+            if (Config.WARP_COOLDOWN_MESSAGE.get() && tickCounter >= 10) {
                 if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
                     this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
                             this.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
                 else this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
                         .withStyle(ChatFormatting.RED), true);
+                tickCounter = 0;
             }
         }
     }

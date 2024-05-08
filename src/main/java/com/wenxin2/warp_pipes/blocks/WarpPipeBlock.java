@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -591,14 +592,19 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         }
     }
 
+    private int tickCounter = 0;
+
     public void displayCooldownMessage(Player player) {
+        tickCounter++;
+
         if (player.portalCooldown >= 10) {
-            if (Config.WARP_COOLDOWN_MESSAGE.get()) {
+            if (Config.WARP_COOLDOWN_MESSAGE.get() && tickCounter >= 10) {
                 if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
                     player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
                             player.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
                 else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
                         .withStyle(ChatFormatting.RED), true);
+                tickCounter = 0;
             }
         }
     }
