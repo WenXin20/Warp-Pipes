@@ -612,7 +612,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static BlockPos findMatchingUUID(UUID uuid, Level world, BlockPos pos) {
         BlockPos closestPos = null;
         double closestDistanceSq = Double.MAX_VALUE;
-        int maxDistance = 64; // Adjust this value based on how far you want to search for warp pipes
+        int maxDistance = Config.PIPE_SEARCH_DISTANCE.get(); // Adjust this value based on how far you want to search for warp pipes
 
         for (int x = -maxDistance; x <= maxDistance; x++) {
             for (int y = -maxDistance; y <= maxDistance; y++) {

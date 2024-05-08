@@ -24,6 +24,7 @@ public class Config
     public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ForgeConfigSpec.IntValue PIPE_SEARCH_DISTANCE;
     public static ForgeConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ForgeConfigSpec.BooleanValue TELEPORT_NON_MOBS;
     public static ForgeConfigSpec.BooleanValue TELEPORT_PLAYERS;
@@ -57,6 +58,8 @@ public class Config
                 .define("creative_wrench_pipe_linking", false);
         ALLOW_FAST_TRAVEL = BUILDER.comment("Allow fast travel through Clear Warp Pipes. " + "[Default: true]")
                 .define("allow_fast_travel", true);
+        PIPE_SEARCH_DISTANCE = BUILDER.comment("Maximum block radius for pipes to search for a matching UUID when warping. A bigger radius will be more resource intensive" + "[Default: 128]")
+                .defineInRange("max_pipe_search_distance", 128, 0, 1024);
         TELEPORT_MOBS = BUILDER.comment("Allow mobs to teleport. " + "[Default: true]")
                 .define("teleport_mobs", true);
         TELEPORT_NON_MOBS = BUILDER.comment("Allow non living entities to teleport. " + "[Default: true]")
