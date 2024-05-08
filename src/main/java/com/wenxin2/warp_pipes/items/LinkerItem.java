@@ -129,8 +129,12 @@ public class LinkerItem extends TieredItem {
     private void link(BlockPos pos, Level world, CompoundTag tag, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
         warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
         warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel());
+        warpPipeBE.setChanged();
+
         warpPipeBEGlobal.setDestinationPos(pos);
         warpPipeBEGlobal.setDestinationDim(world);
+        warpPipeBEGlobal.setChanged();
+        
         tag.remove(WARP_PIPE_POS);
         tag.remove(WARP_PIPE_DIMENSION);
         tag.remove("X");
