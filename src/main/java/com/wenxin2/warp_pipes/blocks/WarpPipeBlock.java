@@ -1,16 +1,21 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.init.ModTags;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -220,12 +225,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             UUID uuid = UUID.randomUUID();
             pipeBlockEntity.setUuid(uuid);
             pipeBlockEntity.setChanged();
-            addWarpPipe(uuid, pos);
-        }
-
-        if (!serverWorld.isClientSide && pipeBlockEntity != null && !isUUIDAlreadyPresent(pipeBlockEntity.getUuid(), pos)) {
-            UUID uuid = pipeBlockEntity.getUuid();
-            addWarpPipe(uuid, pos);
         }
 
         if (state.getValue(WATER_SPOUT) && state.getValue(FACING) == Direction.UP && pipeBlockEntity != null
@@ -256,18 +255,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
-        BlockEntity blockEntity = serverWorld.getBlockEntity(pos);
-        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !serverWorld.isClientSide && !isUUIDAlreadyPresent(pipeBlockEntity.getUuid(), pos)) {
-            UUID uuid = pipeBlockEntity.getUuid();
-            BlockPos pipePos = pipeBlockEntity.getBlockPos();
-            addWarpPipe(uuid, pipePos);
-        }
-        super.randomTick(state, serverWorld, pos, random);
-    }
-
-    @Override
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState neighborState, boolean b) {
+
         Block blockAbove = world.getBlockState(pos.above()).getBlock();
         Block blockBelow = world.getBlockState(pos.below()).getBlock();
         Block blockNorth = world.getBlockState(pos.north()).getBlock();
@@ -288,12 +277,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             pipeBlockEntity.setPreventWarp(Boolean.FALSE);
             pipeBlockEntity.setUuid(uuid);
             pipeBlockEntity.setChanged();
-            addWarpPipe(uuid, pos);
-        }
-
-        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !world.isClientSide && !isUUIDAlreadyPresent(pipeBlockEntity.getUuid(), pos)) {
-            UUID uuid = pipeBlockEntity.getUuid();
-            addWarpPipe(uuid, pos);
         }
 
         if (state.getValue(FACING) == Direction.UP) {
@@ -452,7 +435,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos pos, Level world, BlockState state) {
-//        BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
         if (world.getBlockState(pos).getBlock() instanceof WarpPipeBlock && !state.getValue(CLOSED)) {
             Entity passengerEntity = entity.getControllingPassenger();
 
@@ -559,7 +542,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             warpPos = warpPipeBE.destinationPos;
             int entityId = entity.getId();
 
-
             if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
                 WarpPipeBlock.spawnParticles(entity, world);
                 // Reset the teleport status for the entity
@@ -628,61 +610,36 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 //        }
 //    }
 
-    private static final HashMap<UUID, BlockPos> warpPipeMap = new HashMap<>();
-
-    public static void addWarpPipe(UUID uuid, BlockPos pos) {
-        warpPipeMap.put(uuid, pos);
-    }
-
-    public static boolean isUUIDAlreadyPresent(UUID uuid, BlockPos pos) {
-        for (Map.Entry<UUID, BlockPos> entry : warpPipeMap.entrySet()) {
-            UUID existingUUID = entry.getKey();
-            BlockPos existingPos = entry.getValue();
-            // Check if the UUID is already present in the hashmap with the same block position
-            if (existingUUID.equals(uuid) && existingPos.equals(pos)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static BlockPos findMatchingUUID(UUID uuid, Level world, BlockPos pos) {
-        for (Map.Entry<UUID, BlockPos> entry : warpPipeMap.entrySet()) {
-            if (entry.getKey().equals(uuid)) {
-                return entry.getValue(); // Return the corresponding position if the UUID matches
+        BlockPos closestPos = null;
+        double closestDistanceSq = Double.MAX_VALUE;
+        int maxDistance = Config.PIPE_SEARCH_DISTANCE.get(); // Adjust this value based on how far you want to search for warp pipes
+
+        for (int x = -maxDistance; x <= maxDistance; x++) {
+            for (int y = -maxDistance; y <= maxDistance; y++) {
+                for (int z = -maxDistance; z <= maxDistance; z++) {
+                    BlockPos checkingPos = pos.offset(x, y, z);
+                    BlockState blockState = world.getBlockState(checkingPos);
+                    Block block = blockState.getBlock();
+
+                    if (block instanceof WarpPipeBlock) {
+                        BlockEntity blockEntity = world.getBlockEntity(checkingPos);
+
+                        if (blockEntity instanceof WarpPipeBlockEntity pipeTileEntity) {
+                            UUID warpUUID = pipeTileEntity.getWarpUuid();
+
+                            if (uuid.equals(warpUUID)) {
+                                double distanceSq = pos.distToCenterSqr(checkingPos.getX(), checkingPos.getY(), checkingPos.getZ());
+                                if (distanceSq < closestDistanceSq) {
+                                    closestPos = checkingPos.immutable();
+                                    closestDistanceSq = distanceSq;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        return null;
-//        return warpPipeMap.get(warpUUID);
-//        BlockPos closestPos = null;
-//        double closestDistanceSq = Double.MAX_VALUE;
-//        int maxDistance = Config.PIPE_SEARCH_DISTANCE.get(); // Adjust this value based on how far you want to search for warp pipes
-//
-//        for (int x = -maxDistance; x <= maxDistance; x++) {
-//            for (int y = -maxDistance; y <= maxDistance; y++) {
-//                for (int z = -maxDistance; z <= maxDistance; z++) {
-//                    BlockPos checkingPos = pos.offset(x, y, z);
-//                    BlockState blockState = world.getBlockState(checkingPos);
-//                    Block block = blockState.getBlock();
-//
-//                    if (block instanceof WarpPipeBlock) {
-//                        BlockEntity blockEntity = world.getBlockEntity(checkingPos);
-//
-//                        if (blockEntity instanceof WarpPipeBlockEntity pipeTileEntity) {
-//                            UUID warpUUID = pipeTileEntity.getWarpUuid();
-//
-//                            if (uuid.equals(warpUUID)) {
-//                                double distanceSq = pos.distToCenterSqr(checkingPos.getX(), checkingPos.getY(), checkingPos.getZ());
-//                                if (distanceSq < closestDistanceSq) {
-//                                    closestPos = checkingPos.immutable();
-//                                    closestDistanceSq = distanceSq;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return closestPos;
+        return closestPos;
     }
 }
