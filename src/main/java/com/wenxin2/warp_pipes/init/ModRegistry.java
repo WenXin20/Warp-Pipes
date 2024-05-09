@@ -90,7 +90,7 @@ public class ModRegistry {
 
         GREEN_WARP_PIPE = registerBlock("green_warp_pipe",
                 () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN)
-                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always)
+                        .sound(SoundType.NETHERITE_BLOCK).isViewBlocking(ModRegistry::always).randomTicks()
                         .strength(3.5F, 1000.0F).requiresCorrectToolForDrops()));
 
         LIGHT_BLUE_WARP_PIPE = registerBlock("light_blue_warp_pipe",
