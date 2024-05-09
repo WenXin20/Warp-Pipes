@@ -102,6 +102,12 @@ public abstract class PlayerMixin extends Entity {
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
             warpPos = warpPipeBE.destinationPos;
+            int entityId = this.getId();
+
+            if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                this.spawnParticles(this, world);
+                WarpPipeBlock.teleportedEntities.put(entityId, false);
+            }
 
             if (warpPipeBE.hasDestinationPos()) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && this.getDeltaMovement().y > 0
