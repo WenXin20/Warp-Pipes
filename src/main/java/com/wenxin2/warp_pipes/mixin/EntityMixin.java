@@ -83,6 +83,32 @@ public abstract class EntityMixin {
         }
     }
 
+    public void spawnParticles(Entity entity, Level world) {
+        RandomSource random = world.getRandom();
+
+        // Calculate a scaling factor based on entity dimensions
+        float scaleFactor = this.getBbHeight() * this.getBbWidth();
+        // Calculate the particle count based on the scaling factor
+        int particleCount = (int) (scaleFactor * 40);
+        // Ensure particle count does not exceed the maximum limit
+        particleCount = Math.min(particleCount, MAX_PARTICLE_AMOUNT);
+
+        Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        for (ServerPlayer player : players) {
+            for (int i = 0; i < particleCount; ++i) {
+                player.connection.send(new ClientboundLevelParticlesPacket(
+                        ParticleTypes.ENCHANT,      // Particle type
+                        false,                       // Long distance
+                        this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), // Position
+                        (random.nextFloat() - 0.5F) * 2.0F, -random.nextFloat(),
+                        (random.nextFloat() - 0.5F) * 2.0F, // Motion
+                        0,                          // Particle data
+                        2                           // Particle count
+                ));
+            }
+        }
+    }
+
     public int getWarpCooldown() {
         return warpCooldown;
     }
@@ -103,35 +129,14 @@ public abstract class EntityMixin {
         int blockX = pos.getX();
         int blockZ = pos.getZ();
 
-        // Calculate a scaling factor based on entity dimensions
-        float scaleFactor = this.getBbHeight() * this.getBbWidth();
-
-        // Calculate the particle count based on the scaling factor
-        int particleCount = (int) (scaleFactor * 40);
-
-        // Ensure particle count does not exceed the maximum limit
-        particleCount = Math.min(particleCount, MAX_PARTICLE_AMOUNT);
-
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-                for (ServerPlayer player : players) {
-                    for (int i = 0; i < particleCount; ++i) {
-                        player.connection.send(new ClientboundLevelParticlesPacket(
-                                ParticleTypes.ENCHANT,      // Particle type
-                                false,                       // Long distance
-                                this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), // Position
-                                (random.nextFloat() - 0.5F) * 2.0F, -random.nextFloat(),
-                                (random.nextFloat() - 0.5F) * 2.0F, // Motion
-                                0,                          // Particle data
-                                2                           // Particle count
-                        ));
-                    }
-                }
+                this.spawnParticles((Entity) (Object) this, world);
+                
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
@@ -162,35 +167,14 @@ public abstract class EntityMixin {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        // Calculate a scaling factor based on entity dimensions
-        float scaleFactor = this.getBbHeight() * this.getBbWidth(); // You can adjust this formula as needed
-
-        // Calculate the particle count based on the scaling factor
-        int particleCount = (int) (scaleFactor * 40); // You can adjust the multiplier to control particle density
-
-        // Ensure particle count does not exceed the maximum limit
-        particleCount = Math.min(particleCount, MAX_PARTICLE_AMOUNT);
-
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
                 && !warpPipeBE.preventWarp && Config.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-                for (ServerPlayer player : players) {
-                    for (int i = 0; i < particleCount; ++i) {
-                        player.connection.send(new ClientboundLevelParticlesPacket(
-                                ParticleTypes.ENCHANT,      // Particle type
-                                false,                       // Long distance
-                                this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), // Position
-                                (random.nextFloat() - 0.5F) * 2.0F, -random.nextFloat(),
-                                (random.nextFloat() - 0.5F) * 2.0F, // Motion
-                                0,                          // Particle data
-                                2                           // Particle count
-                        ));
-                    }
-                }
+                this.spawnParticles((Entity) (Object) this, world);
+
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }

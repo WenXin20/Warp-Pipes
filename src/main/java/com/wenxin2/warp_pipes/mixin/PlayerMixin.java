@@ -106,6 +106,8 @@ public abstract class PlayerMixin extends Entity {
 
             if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
                 this.spawnParticles(this, world);
+
+                // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
@@ -146,6 +148,8 @@ public abstract class PlayerMixin extends Entity {
 
             if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
                 this.spawnParticles(this, world);
+
+                // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
