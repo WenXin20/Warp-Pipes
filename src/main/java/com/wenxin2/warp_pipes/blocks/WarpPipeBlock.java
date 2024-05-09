@@ -566,56 +566,68 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-                            WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                        else WarpPipeBlock.warp(entity, warpPos, world, state);
-                        entity.setPortalCooldown();
-                        entity.portalCooldown = Config.WARP_COOLDOWN.get();
-                    } else this.displayCooldownMessage(player);
-                }
-            } else if (state.getValue(FACING) == Direction.DOWN && entity instanceof Player player
-                    && (!Config.TELEPORT_PLAYERS.get() || entity.getType().is(ModTags.WARP_BlACKLIST))) {
-                player.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
-                        .withStyle(ChatFormatting.RED), true);
-            }
-
-            if (!(entity instanceof LivingEntity) && warpPipeBE.hasDestinationPos() && !warpPipeBE.preventWarp && Config.TELEPORT_NON_MOBS.get()) {
-                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    WarpPipeBlock.warp(entity, warpPos, world, state);
-                    entity.setPortalCooldown();
-                    entity.portalCooldown = Config.WARP_COOLDOWN.get();
-                }
-            }
-
-            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos() && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get()
-                    && entity.getPersistentData().getBoolean("warp_pipes:can_warp")) {
-                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    WarpPipeBlock.warp(entity, warpPos, world, state);
-                    entity.setPortalCooldown();
-                    entity.portalCooldown = Config.WARP_COOLDOWN.get();
-                }
-            }
+//            if (entity instanceof Player player && warpPipeBE.hasDestinationPos() && !warpPipeBE.preventWarp
+//                    && Config.TELEPORT_PLAYERS.get() && !entity.getType().is(ModTags.WARP_BlACKLIST)
+//                    && entity.getPersistentData().getBoolean("warp_pipes:can_warp")) {
+//                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.0)
+//                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+//                    if (this.getWarpCooldown() == 0) {
+//                        if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+//                            WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+//                        else WarpPipeBlock.warp(entity, warpPos, world, state);
+//                        cooldownUtils.setWarpCooldown(Config.WARP_COOLDOWN.get());
+//                    } else this.displayCooldownMessage(player);
+//                }
+//            } else if (state.getValue(FACING) == Direction.DOWN && entity instanceof Player player
+//                    && (!Config.TELEPORT_PLAYERS.get() || entity.getType().is(ModTags.WARP_BlACKLIST))) {
+//                player.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
+//                        .withStyle(ChatFormatting.RED), true);
+//            }
+//
+//            if (!(entity instanceof LivingEntity) && warpPipeBE.hasDestinationPos() && !warpPipeBE.preventWarp && Config.TELEPORT_NON_MOBS.get()) {
+//                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
+//                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+//                    if (this.getWarpCooldown() == 0) {
+//                        if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+//                            WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+//                        WarpPipeBlock.warp(entity, warpPos, world, state);
+//                        cooldownUtils.setWarpCooldown(Config.WARP_COOLDOWN.get());
+//                    }
+//                }
+//            }
+//
+//            if (!(entity instanceof Player) && warpPipeBE.hasDestinationPos() && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get()
+//                    && entity.getPersistentData().getBoolean("warp_pipes:can_warp")) {
+//                if (state.getValue(FACING) == Direction.DOWN && (entityY + entity.getBbHeight() < blockY + 1.5)
+//                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+//                    if (this.getWarpCooldown() == 0) {
+//                        if (warpPipeBE.getUuid() != null && findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+//                            WarpPipeBlock.warp(entity, findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+//                        WarpPipeBlock.warp(entity, warpPos, world, state);
+//                        cooldownUtils.setWarpCooldown(Config.WARP_COOLDOWN.get());
+//                    }
+//                }
+//            }
         }
     }
 
     private int tickCounter = 0;
 
-    public void displayCooldownMessage(Player player) {
-        tickCounter++;
+//    public void displayCooldownMessage(Player player) {
+//        tickCounter++;
+//
+//        if (this.getWarpCooldown() >= 10) {
+//            if (Config.WARP_COOLDOWN_MESSAGE.get() && tickCounter >= 10) {
+//                if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
+//                    player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
+//                            this.getWarpCooldown()).withStyle(ChatFormatting.RED), true);
+//                else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
+//                        .withStyle(ChatFormatting.RED), true);
+//                tickCounter = 0;
+//            }
+//        }
+//    }
 
-        if (player.portalCooldown >= 10) {
-            if (Config.WARP_COOLDOWN_MESSAGE.get() && tickCounter >= 10) {
-                if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
-                    player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
-                            player.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
-                else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
-                        .withStyle(ChatFormatting.RED), true);
-                tickCounter = 0;
     private static final HashMap<UUID, BlockPos> warpPipeMap = new HashMap<>();
 
     public static void addWarpPipe(UUID uuid, BlockPos pos) {
