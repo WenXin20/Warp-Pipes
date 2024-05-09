@@ -61,10 +61,10 @@ public abstract class PlayerMixin extends Entity {
         }
         super.baseTick();
 
-        if (stateAboveEntity.is(Blocks.BRICKS) && this.getDeltaMovement().y > 0)
-        {
-            world.destroyBlock(pos.above(Math.round(this.getBbHeight())), true);
-        }
+//        if (stateAboveEntity.is(Blocks.BRICKS) && this.getDeltaMovement().y > 0)
+//        {
+//            world.destroyBlock(pos.above(Math.round(this.getBbHeight())), true);
+//        }
     }
 
     public void spawnParticles(Entity entity, Level world) {
@@ -86,17 +86,14 @@ public abstract class PlayerMixin extends Entity {
     }
     public void entityBelow(BlockPos pos) {
         Level world = this.level();
-        BlockState state = world.getBlockState(pos);
         BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
         BlockEntity blockEntity = world.getBlockEntity(pos.above(Math.round(this.getBbHeight())));
         BlockPos warpPos;
 
         double entityX = this.getX();
-        double entityY = this.getY();
         double entityZ = this.getZ();
 
         int blockX = pos.getX();
-        int blockY = pos.getY();
         int blockZ = pos.getZ();
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
