@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,13 +26,13 @@ public abstract class PlayerMixin extends Entity {
     @Shadow protected abstract float getBlockSpeedFactor();
 
     @Shadow public abstract void displayClientMessage(Component p_36216_, boolean p_36217_);
+
+    private static final int MAX_PARTICLE_AMOUNT = 40;
     private int warpCooldown;
 
     public PlayerMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
-
-    private static final int MAX_PARTICLE_COUNT = 100;
 
     @Override
     public void baseTick() {
@@ -45,15 +46,15 @@ public abstract class PlayerMixin extends Entity {
             BlockState offsetState = world.getBlockState(offsetPos);
 
             if (offsetState.getBlock() instanceof WarpPipeBlock) {
-                this.entityInside(offsetPos);
+                this.enterPipe(offsetPos);
             }
             if (state.getBlock() instanceof WarpPipeBlock) {
-                this.entityInside(pos);
+                this.enterPipe(pos);
             }
         }
 
         if (stateAboveEntity.getBlock() instanceof WarpPipeBlock) {
-            this.entityBelow(pos);
+            this.enterPipeBelow(pos);
         }
 
         if (this.warpCooldown > 0) {
@@ -69,7 +70,7 @@ public abstract class PlayerMixin extends Entity {
 
     public void spawnParticles(Entity entity, Level world) {
         RandomSource random = world.getRandom();
-        for(int i = 0; i < 40; ++i) {
+        for(int i = 0; i < MAX_PARTICLE_AMOUNT; ++i) {
             world.addParticle(ParticleTypes.ENCHANT,
                     entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
                     (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
@@ -84,7 +85,8 @@ public abstract class PlayerMixin extends Entity {
     public void setWarpCooldown(int cooldown) {
         this.warpCooldown = cooldown;
     }
-    public void entityBelow(BlockPos pos) {
+
+    public void enterPipeBelow(BlockPos pos) {
         Level world = this.level();
         BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
         BlockEntity blockEntity = world.getBlockEntity(pos.above(Math.round(this.getBbHeight())));
@@ -102,8 +104,8 @@ public abstract class PlayerMixin extends Entity {
             warpPos = warpPipeBE.destinationPos;
 
             if (warpPipeBE.hasDestinationPos()) {
-                if (stateAboveEntity.getBlock() instanceof WarpPipeBlock && stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
-                        && this.getDeltaMovement().y > 0 && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && this.getDeltaMovement().y > 0
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     System.out.println("Below Pipe ");
                     if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
@@ -116,7 +118,7 @@ public abstract class PlayerMixin extends Entity {
         }
     }
     
-    public void entityInside(BlockPos pos) {
+    public void enterPipe(BlockPos pos) {
         Level world = this.level();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);

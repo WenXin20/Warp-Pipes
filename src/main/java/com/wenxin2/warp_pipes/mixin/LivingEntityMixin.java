@@ -24,30 +24,36 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+    private static final int MAX_PARTICLE_AMOUNT = 100;
+    private int warpCooldown;
+
     public LivingEntityMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
-
-    private static final int MAX_PARTICLE_COUNT = 100;
-    private int warpCooldown;
 
     @Inject(at = @At("TAIL"), method = "baseTick")
     public void baseTick(CallbackInfo ci) {
         Level world = this.level();
         BlockPos pos = this.blockPosition();
         BlockState state = world.getBlockState(pos);
+        BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
 
-//        for (Direction facing : Direction.values()) {
-//            BlockPos offsetPos = pos.relative(facing);
-//            BlockState offsetState = world.getBlockState(offsetPos);
-//
-//            if (offsetState.getBlock() instanceof WarpPipeBlock) {
-//                this.entityInside(offsetPos);
-//            }
-//            if (state.getBlock() instanceof WarpPipeBlock) {
-//                this.entityInside(pos);
-//            }
-//        }
+        for (Direction facing : Direction.values()) {
+            BlockPos offsetPos = pos.relative(facing);
+            BlockState offsetState = world.getBlockState(offsetPos);
+
+            if (offsetState.getBlock() instanceof WarpPipeBlock) {
+                this.enterPipe(offsetPos);
+            }
+            if (state.getBlock() instanceof WarpPipeBlock) {
+                this.enterPipe(pos);
+            }
+        }
+
+        if (stateAboveEntity.getBlock() instanceof WarpPipeBlock) {
+            this.enterPipeBelow(pos);
+        }
+
         if (this.warpCooldown > 0) {
             --this.warpCooldown;
         }
@@ -61,7 +67,36 @@ public abstract class LivingEntityMixin extends Entity {
         this.warpCooldown = cooldown;
     }
 
-    public void entityInside(BlockPos pos) {
+    public void enterPipeBelow(BlockPos pos) {
+        Level world = this.level();
+        BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
+        BlockEntity blockEntity = world.getBlockEntity(pos.above(Math.round(this.getBbHeight())));
+        BlockPos warpPos;
+
+        double entityX = this.getX();
+        double entityZ = this.getZ();
+
+        int blockX = pos.getX();
+        int blockZ = pos.getZ();
+
+        if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
+                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
+            warpPos = warpPipeBE.destinationPos;
+
+            if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
+                if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
+                    else WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
+                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                }
+            }
+        }
+    }
+
+    public void enterPipe(BlockPos pos) {
         Level world = this.level();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -82,7 +117,7 @@ public abstract class LivingEntityMixin extends Entity {
         int particleCount = (int) (scaleFactor * 40); // You can adjust the multiplier to control particle density
 
         // Ensure particle count does not exceed the maximum limit
-        particleCount = Math.min(particleCount, MAX_PARTICLE_COUNT);
+        particleCount = Math.min(particleCount, MAX_PARTICLE_AMOUNT);
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
                 && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
@@ -111,13 +146,6 @@ public abstract class LivingEntityMixin extends Entity {
 
             if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    else WarpPipeBlock.warp(this, warpPos, world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
