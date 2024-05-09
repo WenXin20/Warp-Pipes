@@ -24,7 +24,7 @@ public abstract class PlayerMixin extends Entity {
     @Shadow protected abstract float getBlockSpeedFactor();
 
     @Shadow public abstract void displayClientMessage(Component p_36216_, boolean p_36217_);
-    private int tickCounter = 0;
+    private int warpCooldown;
 
     public PlayerMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -49,7 +49,9 @@ public abstract class PlayerMixin extends Entity {
                 this.entityInside(pos);
             }
         }
-
+        if (this.warpCooldown > 0) {
+            --this.warpCooldown;
+        }
         super.baseTick();
     }
 
@@ -61,6 +63,14 @@ public abstract class PlayerMixin extends Entity {
                     (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
                     (random.nextDouble() - 0.5D) * 2.0D);
         }
+    }
+
+    public int getWarpCooldown() {
+        return warpCooldown;
+    }
+
+    public void setWarpCooldown(int cooldown) {
+        this.warpCooldown = cooldown;
     }
     
     public void entityInside(BlockPos pos) {
@@ -77,6 +87,8 @@ public abstract class PlayerMixin extends Entity {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
+        System.out.println("BlockPos: " + this.blockPosition().below());
+
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
@@ -92,62 +104,57 @@ public abstract class PlayerMixin extends Entity {
 
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.portalCooldown == 0) {
+                    if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getWarpUuid(), world, pos), world, state);
                         else WarpPipeBlock.warp(this, warpPos, world, state);
-                        this.setPortalCooldown();
-                        this.portalCooldown = Config.WARP_COOLDOWN.get();
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
                     } else this.displayCooldownMessage();
                 }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (entityY < blockY + this.getBbHeight())
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.portalCooldown == 0) {
+                    System.out.println("Below Pipe ");
+                    if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getWarpUuid(), world, pos), world, state);
                         else WarpPipeBlock.warp(this, warpPos, world, state);
-                        this.setPortalCooldown();
-                        this.portalCooldown = Config.WARP_COOLDOWN.get();
+                       this.setWarpCooldown(Config.WARP_COOLDOWN.get());
                     } else this.displayCooldownMessage();
                 }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH /*&& !this.isShiftKeyDown()*/ && this.getMotionDirection() == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    if (this.portalCooldown == 0) {
+                    if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getWarpUuid(), world, pos), world, state);
                         else WarpPipeBlock.warp(this, warpPos, world, state);
-                        this.setPortalCooldown();
-                        this.portalCooldown = Config.WARP_COOLDOWN.get();
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
                     } else this.displayCooldownMessage();
                 }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH /*&& !this.isShiftKeyDown()*/ && this.getMotionDirection() == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
-                    if (this.portalCooldown == 0) {
+                    if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getWarpUuid(), world, pos), world, state);
                         else WarpPipeBlock.warp(this, warpPos, world, state);
-                        this.setPortalCooldown();
-                        this.portalCooldown = Config.WARP_COOLDOWN.get();
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
                     } else this.displayCooldownMessage();
                 }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST /*&& !this.isShiftKeyDown()*/ && this.getMotionDirection() == Direction.WEST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.portalCooldown == 0) {
+                    if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getWarpUuid(), world, pos), world, state);
                         else WarpPipeBlock.warp(this, warpPos, world, state);
-                        this.setPortalCooldown();
-                        this.portalCooldown = Config.WARP_COOLDOWN.get();
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
                     } else this.displayCooldownMessage();
                 }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST /*&& !this.isShiftKeyDown()*/ && this.getMotionDirection() == Direction.EAST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.portalCooldown == 0) {
+                    if (this.getWarpCooldown() == 0) {
                         if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getWarpUuid(), world, pos), world, state);
                         else WarpPipeBlock.warp(this, warpPos, world, state);
-                        this.setPortalCooldown();
-                        this.portalCooldown = Config.WARP_COOLDOWN.get();
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
                     } else this.displayCooldownMessage();
                 }
             }
@@ -180,16 +187,16 @@ public abstract class PlayerMixin extends Entity {
     }
 
     public void displayCooldownMessage() {
-        tickCounter++;
+//        tickCounter++;
 
-        if (this.portalCooldown >= 10) {
-            if (Config.WARP_COOLDOWN_MESSAGE.get() && tickCounter >= 10) {
+        if (this.getWarpCooldown() >= 10) {
+            if (Config.WARP_COOLDOWN_MESSAGE.get()/* && tickCounter >= 10*/) {
                 if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
                     this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
-                            this.getPortalCooldown()).withStyle(ChatFormatting.RED), true);
+                            this.getWarpCooldown()).withStyle(ChatFormatting.RED), true);
                 else this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
                         .withStyle(ChatFormatting.RED), true);
-                tickCounter = 0;
+//                tickCounter = 0;
             }
         }
     }
