@@ -83,7 +83,7 @@ public abstract class EntityMixin {
         }
     }
 
-    public void spawnParticles(Entity entity, Level world) {
+    public void spawnParticles(Level world) {
         RandomSource random = world.getRandom();
 
         // Calculate a scaling factor based on entity dimensions
@@ -135,7 +135,7 @@ public abstract class EntityMixin {
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles((Entity) (Object) this, world);
+                this.spawnParticles(world);
 
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
@@ -173,7 +173,7 @@ public abstract class EntityMixin {
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles((Entity) (Object) this, world);
+                this.spawnParticles(world);
 
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);

@@ -78,17 +78,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public static final VoxelShape PIPE_FACING_UP = Shapes.or(
             Block.box(0, 13, 0, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_FACING_NORTH = Shapes.or(
-            Block.box(0, 0.02, 0, 16, 16, 3),
-            Block.box(0, 0, 0, 16, 16, 0.02)).optimize();
+            Block.box(0, 0, 0, 16, 16, 3)).optimize();
     public static final VoxelShape PIPE_FACING_SOUTH = Shapes.or(
-            Block.box(0, 0.02, 13, 16, 16, 16),
-            Block.box(0, 0, 15.98, 16, 16, 16)).optimize();
+            Block.box(0, 0, 13, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_FACING_EAST = Shapes.or(
-            Block.box(13, 0.02, 0, 16, 16, 16),
-            Block.box(15.98, 0, 0, 16, 16, 16)).optimize();
+            Block.box(13, 0, 0, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_FACING_WEST = Shapes.or(
-            Block.box(0, 0.02, 0, 3, 16, 16),
-            Block.box(0, 0, 0, 0.02, 16, 16)).optimize();
+            Block.box(0, 0, 0, 3, 16, 16)).optimize();
     public static final VoxelShape PIPE_FACING_DOWN = Shapes.or(
             Block.box(0, 0, 0, 16, 3, 16)).optimize();
     public static final VoxelShape PIPE_ALL = Shapes.or(
@@ -138,7 +134,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         }
 
         // Combine shapes based on the directional block states
-        if (!(state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED))) {
+        if (!state.getValue(ENTRANCE) && state.getValue(CLOSED)) {
             if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
                 shape = Shapes.or(shape, PIPE_DOWN);
             }
@@ -422,17 +418,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             if (!world.isClientSide) {
                 if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
                     if (random.nextInt(10) == 0) {
-                        Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-                        for (ServerPlayer player : players) {
-                            for (int i = 0; i < 2; i++) {
-                                player.connection.send(new ClientboundLevelParticlesPacket(
-                                        ParticleTypes.EFFECT, false,
-                                        entityX, entityY, entityZ,
-                                        0.25F, 0.15F, 0.25F,
-                                        0, 2
-                                ));
-                            }
-                        }
+                        this.spawnParticles(entity);
                     }
                 }
             }
@@ -464,5 +450,23 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             }
         }
         entity.resetFallDistance();
+    }
+
+    public void spawnParticles(Entity entity) {
+        double entityX = entity.getX();
+        double entityY = entity.getY();
+        double entityZ = entity.getZ();
+
+        Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        for (ServerPlayer player : players) {
+            for (int i = 0; i < 2; i++) {
+                player.connection.send(new ClientboundLevelParticlesPacket(
+                        ParticleTypes.EFFECT, false,
+                        entityX, entityY, entityZ,
+                        0.25F, 0.15F, 0.25F,
+                        0, 2
+                ));
+            }
+        }
     }
 }

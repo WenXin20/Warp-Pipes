@@ -60,7 +60,7 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    public void spawnParticles(Entity entity, Level world) {
+    public void spawnParticles(Level world) {
         RandomSource random = world.getRandom();
 
         // Calculate a scaling factor based on entity dimensions
@@ -113,7 +113,7 @@ public abstract class LivingEntityMixin extends Entity {
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(this, world);
+                this.spawnParticles(world);
 
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
@@ -152,7 +152,7 @@ public abstract class LivingEntityMixin extends Entity {
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(this, world);
+                this.spawnParticles(world);
 
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
