@@ -53,6 +53,11 @@ public abstract class PlayerMixin extends Entity {
             --this.warpCooldown;
         }
         super.baseTick();
+
+//        if (world.getBlockState(pos.above(Math.round(this.getBbHeight()))).is(Blocks.BRICKS) && this.getDeltaMovement().y > 0)
+//        {
+//            world.destroyBlock(pos.above(Math.round(this.getBbHeight())), true);
+//        }
     }
 
     public void spawnParticles(Entity entity, Level world) {
