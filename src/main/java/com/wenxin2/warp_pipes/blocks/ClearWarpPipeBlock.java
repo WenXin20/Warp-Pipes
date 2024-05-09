@@ -185,23 +185,21 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public VoxelShape noCollisionShape(BlockState state, CollisionContext context) {
         VoxelShape shape = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
-        Player player = (Player) ((EntityCollisionContext) context).getEntity();
+        if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player) {
+            if (!state.getValue(CLOSED)) {
+                if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
+                        state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||
+                        (state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                                state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.UP) ||
+                        (state.getValue(UP) && state.getValue(DOWN) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                                state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.NORTH) ||
+                        (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(EAST) && state.getValue(WEST) &&
+                                state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.SOUTH) ||
+                        (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(WEST) &&
+                                state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.EAST) ||
+                        (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) &&
+                                state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.WEST)) {
 
-        if (!state.getValue(CLOSED)) {
-            if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
-                    state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||
-                    (state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
-                            state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.UP) ||
-                    (state.getValue(UP) && state.getValue(DOWN) && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST) &&
-                            state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.NORTH) ||
-                    (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(EAST) && state.getValue(WEST) &&
-                            state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.SOUTH) ||
-                    (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(WEST) &&
-                            state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.EAST) ||
-                    (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) &&
-                            state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.WEST)) {
-
-                if (player!= null) {
                     if (player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
                             || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
@@ -212,12 +210,10 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                     }
                 }
             }
-        }
 
-        if (!state.getValue(ENTRANCE) && state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH)
-                && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST)) {
+            if (!state.getValue(ENTRANCE) && state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH)
+                    && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST)) {
 
-            if (player!= null) {
                 if (player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
                         || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem

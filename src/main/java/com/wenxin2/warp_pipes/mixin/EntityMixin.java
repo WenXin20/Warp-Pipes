@@ -136,7 +136,7 @@ public abstract class EntityMixin {
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
                 this.spawnParticles((Entity) (Object) this, world);
-                
+
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
