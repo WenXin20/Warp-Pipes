@@ -59,7 +59,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             stack.translate(TEXT_OFFSET.x, TEXT_OFFSET.y, TEXT_OFFSET.z);
 
             int rotation = state.getValue(WarpPipeBlock.FACING).get2DDataValue();
-            stack.mulPose(Axis.YP.rotationDegrees(-90F * rotation + 180F));
+            stack.mulPose(Axis.YP.rotationDegrees(0F * rotation + 180F));
             stack.mulPose(Axis.XP.rotationDegrees(-0F));
 
             stack.scale(1.0F, -1.0F, -1.0F);
@@ -73,7 +73,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
                 stack.translate(-this.font.width(lines.get(j)) / 2.0, (j * this.font.lineHeight), 0.0);
                 if (world != null) {
                     BlockState stateNorth = world.getBlockState(pos.north());
-                    if (!(stateNorth.isSolid() && stateNorth.isSolidRender(world, pos.north())) || !stateNorth.is(ModRegistry.CLEAR_WARP_PIPE.get())) {
+                    if (!(stateNorth.isSolid() && stateNorth.isSolidRender(world, pos.north())) && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateNorth.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
                         if (flag) {
                             this.font.drawInBatch8xOutline(lines.get(j), 0, 0, textColor, darkTextColor, stack.last().pose(), buffer, packedLightL);
                         } else {
