@@ -1,58 +1,40 @@
 package com.wenxin2.warp_pipes.blocks.entities;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
-import java.util.List;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import javax.annotation.Nullable;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.FilteredText;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
-import org.slf4j.Logger;
 
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
 
@@ -244,20 +226,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.color = DyeColor.byName(tag.getString("color"), DyeColor.BLACK);
         this.hasGlowingText = tag.getBoolean("has_glowing_text");
 
-//        this.signText.ge(tag.getList("Text", 8));
-
-//        if (tag.contains("front_text")) {
-//            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound("front_text")).resultOrPartial(LOGGER::error).ifPresent((p_278212_) -> {
-//                this.frontText = this.loadLines(p_278212_);
-//            });
-//        }
-//data merge block -2586 84 5582 {front_text:{has_glowing_text:1b, color:"black", messages:['{"text":"test"}','{"text":"test"}','{"text":"test"}','{"text":"test"}']}}
-//        if (tag.contains("back_text")) {
-//            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound("back_text")).resultOrPartial(LOGGER::error).ifPresent((p_278213_) -> {
-//                this.backText = this.loadLines(p_278213_);
-//            });
-//        }
-
 //        System.out.println("SetDestPos: " +  this.destinationPos);
         if (tag.contains(WARP_POS)) {
             this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
@@ -295,16 +263,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
         tag.putString("color", this.color.getName());
         tag.putBoolean("has_glowing_text", this.hasGlowingText);
-
-//        tag.put("Text", this.signText.toTag());
-
-//        SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.frontText).resultOrPartial(LOGGER::error).ifPresent((text) -> {
-//            tag.put("front_text", text);
-//        });
-//
-//        SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.backText).resultOrPartial(LOGGER::error).ifPresent((text) -> {
-//            tag.put("back_text", text);
-//        });
 
         if (this.hasDestinationPos() && this.destinationPos != null) {
             tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));

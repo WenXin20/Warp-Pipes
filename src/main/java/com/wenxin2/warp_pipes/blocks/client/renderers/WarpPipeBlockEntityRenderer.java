@@ -18,7 +18,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -71,7 +70,6 @@ public class WarpPipeBlockEntityRenderer /*extends SignRenderer */implements Blo
             for (int j = 0; j < lines.size(); j++) {
                 stack.pushPose();
                 stack.translate(-this.font.width(lines.get(j)) / 2.0, (j * this.font.lineHeight), 0.0);
-//                this.font.drawInBatch(lines.get(j), 0, 0, packedOverlay, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, packedLight);
                 if (flag) {
                     this.font.drawInBatch8xOutline(lines.get(j), 0, 0, textColor, darkTextColor, stack.last().pose(), buffer, packedLightL);
                 } else {
@@ -81,68 +79,6 @@ public class WarpPipeBlockEntityRenderer /*extends SignRenderer */implements Blo
             }
             stack.popPose(); //Pop
         }
-//        this.renderSignWithText(blockEntity, stack, buffer, packedLight);
-    }
-
-//    void renderSignWithText(WarpPipeBlockEntity blockEntity, PoseStack stack, MultiBufferSource buffer, int packedLight) {
-//        stack.pushPose();
-//        this.renderText(blockEntity, blockEntity.getBlockPos(), blockEntity.getSignText(), stack, buffer, packedLight, blockEntity.getTextLineHeight(), blockEntity.getMaxTextLineWidth(), true);
-//        stack.popPose();
-//    }
-
-//    public void renderText(WarpPipeBlockEntity blockEntity, BlockPos pos, SignText text, PoseStack stack, MultiBufferSource buffer, int packedLight, int lineHeight, int maxWidth, boolean isFrontText) {
-//        WarpPipeBlockEntity blockEntity =
-//        stack.pushPose();
-//        this.translateSignText(stack, isFrontText, this.getTextOffset());
-//        int darkTextColor = getDarkColor(text);
-//        int j = 4 * lineHeight / 2;
-//        List<FormattedCharSequence> lines = this.font.split(FormattedText.of(blockEntity.getDisplayName().getString()), 60);
-//        FormattedCharSequence[] lines = text.getRenderMessages(Minecraft.getInstance().isTextFilteringEnabled(), (texts) -> {
-//            List<FormattedCharSequence> list = this.font.split(texts, maxWidth);
-//            return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
-//        });
-//        int textColor;
-//        boolean flag;
-//        int packedLightL;
-//        if (text.hasGlowingText()) {
-//            textColor = text.getColor().getTextColor();
-//            flag = isOutlineVisible(pos, textColor);
-//            packedLightL = 15728880;
-//        } else {
-//            textColor = darkTextColor;
-//            flag = false;
-//            packedLightL = packedLight;
-//        }
-//
-//        for(int i1 = 0; i1 < 4; ++i1) {
-//            FormattedCharSequence line = lines.get(i1);
-//            float f = (float)(-this.font.width(lines.get(i1)) / 2);
-//            if (flag) {
-//                this.font.drawInBatch8xOutline(lines.get(i1), 0, 0, textColor, darkTextColor, stack.last().pose(), buffer, packedLightL);
-//            } else {
-//                this.font.drawInBatch(lines.get(i1), 0, 0, textColor, false, stack.last().pose(), buffer, Font.DisplayMode.POLYGON_OFFSET, 0, packedLightL);
-//            }
-//        }
-//
-//        stack.popPose();
-//    }
-
-    private void translateSignText(PoseStack stack, boolean isFrontText, Vec3 offset) {
-        if (!isFrontText) {
-            stack.mulPose(Axis.YP.rotationDegrees(180.0F));
-        }
-
-        float textScale = 0.015625F * this.getSignTextRenderScale();
-        stack.translate(offset.x, offset.y, offset.z);
-        stack.scale(textScale, -textScale, textScale);
-    }
-
-    public float getSignTextRenderScale() {
-        return TEXT_RENDER_SCALE;
-    }
-
-    Vec3 getTextOffset() {
-        return TEXT_OFFSET;
     }
 
     static boolean isOutlineVisible(BlockPos pos, int textColor) {
