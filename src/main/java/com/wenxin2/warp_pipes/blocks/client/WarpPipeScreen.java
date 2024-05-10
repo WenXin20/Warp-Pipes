@@ -26,10 +26,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.minecraftforge.common.ForgeMod;
 import org.lwjgl.glfw.GLFW;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
@@ -43,7 +46,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Inventory inventory;
     public static ForgeSlider waterSpoutSlider;
     public static ForgeSlider bubblesSlider;
-    private String pipeName = "";
+    public String pipeName = "";
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -237,9 +240,16 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     }
 
     public BlockPos getClickedPos() {
-        HitResult hitResult = Minecraft.getInstance().hitResult;
-        if (hitResult instanceof BlockHitResult) {
-            return ((BlockHitResult) hitResult).getBlockPos();
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level != null && minecraft.player != null) {
+            double reachDistance = minecraft.player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();
+            Vec3 start = minecraft.player.getEyePosition(1.0f);
+            Vec3 end = start.add(minecraft.player.getLookAngle().scale(reachDistance));
+            BlockHitResult hitResult =
+                    minecraft.level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, minecraft.player));
+            if (hitResult.getType() == HitResult.Type.BLOCK) {
+                return hitResult.getBlockPos();
+            }
         }
         return null;
     }

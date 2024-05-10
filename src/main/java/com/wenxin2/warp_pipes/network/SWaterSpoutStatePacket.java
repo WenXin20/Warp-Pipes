@@ -13,11 +13,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SWaterSpoutStatePacket {
     public final BlockPos pos;
-    public static boolean hasWaterSpout;
+    public final boolean hasWaterSpout;
 
     public SWaterSpoutStatePacket(BlockPos pos, Boolean hasWaterSpout) {
         this.pos = pos;
-        SWaterSpoutStatePacket.hasWaterSpout = hasWaterSpout;
+        this.hasWaterSpout = hasWaterSpout;
     }
 
     // Read and write in the same order!
@@ -62,13 +62,13 @@ public class SWaterSpoutStatePacket {
 
     public static SWaterSpoutStatePacket waterSpoutOn(BlockPos pos, Boolean hasWaterSpout) {
         SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
-        SWaterSpoutStatePacket.hasWaterSpout = false;
+        hasWaterSpout = false;
         return packet;
     }
 
     public static SWaterSpoutStatePacket waterSpoutOff(BlockPos pos, Boolean hasWaterSpout) {
         SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
-        SWaterSpoutStatePacket.hasWaterSpout = true;
+        hasWaterSpout = true;
         return packet;
     }
 }

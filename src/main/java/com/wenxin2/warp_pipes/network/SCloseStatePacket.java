@@ -13,11 +13,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SCloseStatePacket {
     public final BlockPos pos;
-    public static boolean closePipe;
+    public final boolean closePipe;
 
     public SCloseStatePacket(BlockPos pos, Boolean closePipe) {
         this.pos = pos;
-        SCloseStatePacket.closePipe = closePipe;
+        this.closePipe = closePipe;
     }
 
     // Read and write in the same order!
@@ -62,13 +62,13 @@ public class SCloseStatePacket {
 
     public static SCloseStatePacket openPipe(BlockPos pos, Boolean closePipe) {
         SCloseStatePacket packet = new SCloseStatePacket(pos, closePipe);
-        SCloseStatePacket.closePipe = false;
+        closePipe = false;
         return packet;
     }
 
     public static SCloseStatePacket closePipe(BlockPos pos, Boolean closePipe) {
         SCloseStatePacket packet = new SCloseStatePacket(pos, closePipe);
-        SCloseStatePacket.closePipe = true;
+        closePipe = true;
         return packet;
     }
 }

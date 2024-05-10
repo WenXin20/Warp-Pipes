@@ -13,11 +13,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SPipeBubblesStatePacket {
     public final BlockPos pos;
-    public static boolean hasPipeBubbles;
+    public final boolean hasPipeBubbles;
 
     public SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) {
         this.pos = pos;
-        SPipeBubblesStatePacket.hasPipeBubbles = hasPipeBubbles;
+        this.hasPipeBubbles = hasPipeBubbles;
     }
 
     // Read and write in the same order!
@@ -62,13 +62,13 @@ public class SPipeBubblesStatePacket {
 
     public static SPipeBubblesStatePacket pipeBubblesOn(BlockPos pos, Boolean hasPipeBubbles) {
         SPipeBubblesStatePacket packet = new SPipeBubblesStatePacket(pos, hasPipeBubbles);
-        SPipeBubblesStatePacket.hasPipeBubbles = false;
+        hasPipeBubbles = false;
         return packet;
     }
 
     public static SPipeBubblesStatePacket pipeBubblesOff(BlockPos pos, Boolean hasPipeBubbles) {
         SPipeBubblesStatePacket packet = new SPipeBubblesStatePacket(pos, hasPipeBubbles);
-        SPipeBubblesStatePacket.hasPipeBubbles = true;
+        hasPipeBubbles = true;
         return packet;
     }
 }

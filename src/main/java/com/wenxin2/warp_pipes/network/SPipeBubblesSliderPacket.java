@@ -14,11 +14,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SPipeBubblesSliderPacket {
     public final BlockPos pos;
-    public static int bubblesDistance;
+    public final int bubblesDistance;
 
     public SPipeBubblesSliderPacket(BlockPos pos, int bubblesDistance) {
         this.pos = pos;
-        SPipeBubblesSliderPacket.bubblesDistance = bubblesDistance;
+        this.bubblesDistance = bubblesDistance;
     }
 
     // Read and write in the same order!

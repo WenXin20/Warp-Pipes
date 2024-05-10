@@ -14,11 +14,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SWaterSpoutSliderPacket {
     public final BlockPos pos;
-    public static int waterSpoutHeight;
+    public final int waterSpoutHeight;
 
     public SWaterSpoutSliderPacket(BlockPos pos, int waterSpoutHeight) {
         this.pos = pos;
-        SWaterSpoutSliderPacket.waterSpoutHeight = waterSpoutHeight;
+        this.waterSpoutHeight = waterSpoutHeight;
     }
 
     // Read and write in the same order!

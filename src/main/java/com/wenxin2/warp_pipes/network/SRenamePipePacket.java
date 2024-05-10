@@ -14,11 +14,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SRenamePipePacket {
     public final BlockPos pos;
-    public static String customName;
+    public final String customName;
 
     public SRenamePipePacket(BlockPos pos, String customName) {
         this.pos = pos;
-        SRenamePipePacket.customName = customName;
+        this.customName = customName;
     }
 
     // Read and write in the same order!
@@ -42,7 +42,7 @@ public class SRenamePipePacket {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 ((WarpPipeBlockEntity) blockEntity).sendData();
-                ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.literal(customName));
+                ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.translatable(customName));
                 blockEntity.setChanged();
             }
         });
