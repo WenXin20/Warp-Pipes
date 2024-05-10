@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipeBlockEntity> {
-    private static final Vec3 TEXT_OFFSET = new Vec3(0.5D, 1.25F, 0.5F);
     private static final float TEXT_RENDER_SCALE = 0.6666667F;
     private static final int OUTLINE_RENDER_DISTANCE = Mth.square(16);
     private final Font font;
@@ -56,7 +55,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
                 packedLightL = packedLight;
             }
 
-            stack.translate(TEXT_OFFSET.x, TEXT_OFFSET.y, TEXT_OFFSET.z);
+            stack.translate(0.5, 0.85, -0.001);
 
             int rotation = state.getValue(WarpPipeBlock.FACING).get2DDataValue();
             stack.mulPose(Axis.YP.rotationDegrees(0F * rotation + 180F));

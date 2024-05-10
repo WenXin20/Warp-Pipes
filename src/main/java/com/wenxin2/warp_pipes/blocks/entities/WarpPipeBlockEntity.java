@@ -155,6 +155,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public boolean setColor(DyeColor newColor) {
         if (newColor != this.color) {
             this.color = newColor;
+            this.setChanged();
             return true;
         }
         return false;

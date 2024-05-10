@@ -100,26 +100,28 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
         if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
             boolean isSuccesful = false;
-//            boolean commandSuccess = pipeBlockEntity.executeClickCommandsIfPresent(player, world, pos);
 
             if (item == Items.INK_SAC) {
                 if (pipeBlockEntity.hasGlowingText) {
                     world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     pipeBlockEntity.hasGlowingText = false;
+                    pipeBlockEntity.setChanged();
                     isSuccesful = true;
                 }
             } else if (item == Items.GLOW_INK_SAC) {
                 if (!pipeBlockEntity.hasGlowingText) {
                     world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     pipeBlockEntity.hasGlowingText = true;
+                    pipeBlockEntity.setChanged();
                     isSuccesful = true;
                 }
             } else {
                 if (DyeColor.getColor(stack) != null) {
                     if (pipeBlockEntity.setColor(DyeColor.getColor(stack))) {
                         world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        pipeBlockEntity.setChanged();
+                        isSuccesful = true;
                     }
-                    isSuccesful = true;
                 }
             }
 
@@ -133,8 +135,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }
-
-//            if (commandSuccess) return InteractionResult.sidedSuccess(world.isClientSide);
         }
         return InteractionResult.PASS;
     }
