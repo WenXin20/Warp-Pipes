@@ -134,7 +134,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         }
 
         // Combine shapes based on the directional block states
-        if (!state.getValue(ENTRANCE) && state.getValue(CLOSED)) {
+        if (!(state.getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE) && !state.getValue(CLOSED))) {
             if (!state.getValue(DOWN) && !(state.getValue(ENTRANCE) && (state.getValue(FACING) == Direction.DOWN))) {
                 shape = Shapes.or(shape, PIPE_DOWN);
             }
