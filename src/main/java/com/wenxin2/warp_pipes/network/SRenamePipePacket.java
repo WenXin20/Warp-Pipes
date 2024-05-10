@@ -42,7 +42,7 @@ public class SRenamePipePacket {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 ((WarpPipeBlockEntity) blockEntity).sendData();
-                ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.translatable(customName));
+                ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.literal(customName));
                 blockEntity.setChanged();
             }
         });
