@@ -14,6 +14,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -39,12 +41,12 @@ import net.minecraft.world.level.block.state.BlockState;
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
 
     private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
-    private final SignText signText = new SignText();
+//    private final SignText signText = new SignText();
     private static final int MAX_TEXT_LINE_WIDTH = 90;
     private static final int MAX_TEXT_LINES = 1;
     private static final int TEXT_LINE_HEIGHT = 10;
-    public SignText frontText = this.createDefaultSignText();
-    public SignText backText = this.createDefaultSignText();
+//    public SignText frontText = this.createDefaultSignText();
+//    public SignText backText = this.createDefaultSignText();
     public DyeColor color = DyeColor.BLACK;
     public boolean hasGlowingText = false;
     public static final String WARP_POS = "WarpPos";
@@ -54,6 +56,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static final String SPOUT_HEIGHT = "SpoutHeight";
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
     public static final String PREVENT_WARP = "PreventWarp";
+    @Nullable
     public Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
     @Nullable
@@ -87,7 +90,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public void setCustomName(Component name) {
         this.name = name;
-        this.signText.setMessage(0, name);
+//        this.signText.setMessage(0, name);
+        this.getUpdatePacket();
         this.setChanged();
     }
 
@@ -97,8 +101,13 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     @Override
+    @Nullable
     public Component getCustomName() {
         return this.name;
+    }
+
+    public Component getCustomName(Component name) {
+        return this.name = name;
     }
 
     @Override
@@ -107,37 +116,37 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
 
-    public SignText getSignText() {
-        return signText;
-    }
-
-    protected SignText createDefaultSignText() {
-        return new SignText();
-    }
-
-    public SignText getFrontText() {
-        return this.frontText;
-    }
-
-    public SignText getBackText() {
-        return this.backText;
-    }
-
-    public int getTextLineHeight() {
-        return TEXT_LINE_HEIGHT;
-    }
-
-    public int getMaxTextLineWidth() {
-        return MAX_TEXT_LINE_WIDTH;
-    }
+//    public SignText getSignText() {
+//        return signText;
+//    }
+//
+//    protected SignText createDefaultSignText() {
+//        return new SignText();
+//    }
+//
+//    public SignText getFrontText() {
+//        return this.frontText;
+//    }
+//
+//    public SignText getBackText() {
+//        return this.backText;
+//    }
+//
+//    public int getTextLineHeight() {
+//        return TEXT_LINE_HEIGHT;
+//    }
+//
+//    public int getMaxTextLineWidth() {
+//        return MAX_TEXT_LINE_WIDTH;
+//    }
 
     public boolean hasGlowingText() {
         return this.hasGlowingText;
     }
-
-    public void setHasGlowingText(boolean glowing) {
-        this.hasGlowingText = glowing;
-    }
+//
+//    public void setHasGlowingText(boolean glowing) {
+//        this.hasGlowingText = glowing;
+//    }
 
     public DyeColor getColor() {
         return this.color;

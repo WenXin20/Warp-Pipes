@@ -14,7 +14,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class SRenamePipePacket {
     public final BlockPos pos;
-    public final String customName;
+    public String customName;
 
     public SRenamePipePacket(BlockPos pos, String customName) {
         this.pos = pos;
@@ -46,5 +46,9 @@ public class SRenamePipePacket {
                 blockEntity.setChanged();
             }
         });
+    }
+
+    public void getCustomName (String name) {
+        customName = name;
     }
 }
