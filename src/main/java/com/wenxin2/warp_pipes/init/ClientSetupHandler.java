@@ -2,9 +2,11 @@ package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
+import com.wenxin2.warp_pipes.blocks.client.renderers.WarpPipeBlockEntityRenderer;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,5 +25,9 @@ public class ClientSetupHandler {
     @SubscribeEvent
     public static void setupClient(final FMLClientSetupEvent event) {
         MenuScreens.register(ModRegistry.WARP_PIPE_MENU.get(), WarpPipeScreen::new);
+    }
+
+    public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), WarpPipeBlockEntityRenderer::new);
     }
 }

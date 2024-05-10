@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.event_handlers.SpawnEventHandler;
+import com.wenxin2.warp_pipes.init.ClientSetupHandler;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModCreativeTabs;
 import com.wenxin2.warp_pipes.init.ModRegistry;
@@ -12,9 +13,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -60,6 +63,10 @@ public class WarpPipes
 
         ModRegistry.init();
         SoundRegistry.init();
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            modEventBus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
+        });
 
         SpawnEventHandler.register();
         // PipeBubblesSoundHandler.init();

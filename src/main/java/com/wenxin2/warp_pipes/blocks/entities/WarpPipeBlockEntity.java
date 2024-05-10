@@ -1,40 +1,70 @@
 package com.wenxin2.warp_pipes.blocks.entities;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import javax.annotation.Nullable;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
 
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
+
+    private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
+    private final SignText signText = new SignText();
+    private static final int MAX_TEXT_LINE_WIDTH = 90;
+    private static final int MAX_TEXT_LINES = 1;
+    private static final int TEXT_LINE_HEIGHT = 10;
+    public SignText frontText = this.createDefaultSignText();
+    public SignText backText = this.createDefaultSignText();
+    public DyeColor color = DyeColor.BLACK;
+    public boolean hasGlowingText = false;
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
     public static final String WARP_UUID = "WarpUUID";
@@ -42,10 +72,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static final String SPOUT_HEIGHT = "SpoutHeight";
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
     public static final String PREVENT_WARP = "PreventWarp";
-
-    private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
-    @Nullable
-    private Component name;
+    public Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
     @Nullable
     public BlockPos destinationPos;
@@ -78,6 +105,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public void setCustomName(Component name) {
         this.name = name;
+        this.signText.setMessage(0, name);
+        this.setChanged();
     }
 
     @Override
@@ -86,14 +115,58 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     @Override
+    public Component getCustomName() {
+        return this.name;
+    }
+
+    @Override
     public Component getName() {
         return this.name != null ? this.name : DEFAULT_NAME;
     }
 
-    @Override
-    @Nullable
-    public Component getCustomName() {
-        return this.name;
+
+    public SignText getSignText() {
+        return signText;
+    }
+
+    protected SignText createDefaultSignText() {
+        return new SignText();
+    }
+
+    public SignText getFrontText() {
+        return this.frontText;
+    }
+
+    public SignText getBackText() {
+        return this.backText;
+    }
+
+    public int getTextLineHeight() {
+        return TEXT_LINE_HEIGHT;
+    }
+
+    public int getMaxTextLineWidth() {
+        return MAX_TEXT_LINE_WIDTH;
+    }
+
+    public boolean hasGlowingText() {
+        return this.hasGlowingText;
+    }
+
+    public void setHasGlowingText(boolean glowing) {
+        this.hasGlowingText = glowing;
+    }
+
+    public DyeColor getColor() {
+        return this.color;
+    }
+
+    public boolean setColor(DyeColor newColor) {
+        if (newColor != this.color) {
+            this.color = newColor;
+            return true;
+        }
+        return false;
     }
 
     public boolean hasDestinationPos() {
@@ -168,6 +241,22 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
+        this.color = DyeColor.byName(tag.getString("color"), DyeColor.BLACK);
+        this.hasGlowingText = tag.getBoolean("has_glowing_text");
+
+//        this.signText.ge(tag.getList("Text", 8));
+
+//        if (tag.contains("front_text")) {
+//            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound("front_text")).resultOrPartial(LOGGER::error).ifPresent((p_278212_) -> {
+//                this.frontText = this.loadLines(p_278212_);
+//            });
+//        }
+//data merge block -2586 84 5582 {front_text:{has_glowing_text:1b, color:"black", messages:['{"text":"test"}','{"text":"test"}','{"text":"test"}','{"text":"test"}']}}
+//        if (tag.contains("back_text")) {
+//            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound("back_text")).resultOrPartial(LOGGER::error).ifPresent((p_278213_) -> {
+//                this.backText = this.loadLines(p_278213_);
+//            });
+//        }
 
 //        System.out.println("SetDestPos: " +  this.destinationPos);
         if (tag.contains(WARP_POS)) {
@@ -204,6 +293,18 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
+        tag.putString("color", this.color.getName());
+        tag.putBoolean("has_glowing_text", this.hasGlowingText);
+
+//        tag.put("Text", this.signText.toTag());
+
+//        SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.frontText).resultOrPartial(LOGGER::error).ifPresent((text) -> {
+//            tag.put("front_text", text);
+//        });
+//
+//        SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.backText).resultOrPartial(LOGGER::error).ifPresent((text) -> {
+//            tag.put("back_text", text);
+//        });
 
         if (this.hasDestinationPos() && this.destinationPos != null) {
             tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));

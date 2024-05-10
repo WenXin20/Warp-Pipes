@@ -11,14 +11,18 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +31,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -80,13 +87,56 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                  final Player player, final InteractionHand hand, final BlockHitResult hit)
     {
         BlockEntity blockEntity = world.getBlockEntity(pos);
+        ItemStack stack = player.getItemInHand(hand);
+        Item item = stack.getItem();
+
         if (state.getValue(ENTRANCE) && player.getItemInHand(hand).getItem() == ModRegistry.PIPE_WRENCH.get()) {
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WarpPipeMenu(id,
                         playerInventory, ContainerLevelAccess.create(world, pos), pos), ((WarpPipeBlockEntity) blockEntity).getDisplayName()));
             }
             return InteractionResult.SUCCESS;
-        } else return InteractionResult.PASS;
+        }
+
+        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+            boolean isSuccesful = false;
+//            boolean commandSuccess = pipeBlockEntity.executeClickCommandsIfPresent(player, world, pos);
+
+            if (item == Items.INK_SAC) {
+                if (pipeBlockEntity.hasGlowingText) {
+                    world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pipeBlockEntity.hasGlowingText = false;
+                    isSuccesful = true;
+                }
+            } else if (item == Items.GLOW_INK_SAC) {
+                if (!pipeBlockEntity.hasGlowingText) {
+                    world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pipeBlockEntity.hasGlowingText = true;
+                    isSuccesful = true;
+                }
+            } else {
+                if (DyeColor.getColor(stack) != null) {
+                    if (pipeBlockEntity.setColor(DyeColor.getColor(stack))) {
+                        world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    }
+                    isSuccesful = true;
+                }
+            }
+
+            if (isSuccesful) {
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                }
+                return InteractionResult.sidedSuccess(world.isClientSide);
+            }
+
+//            if (commandSuccess) return InteractionResult.sidedSuccess(world.isClientSide);
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
