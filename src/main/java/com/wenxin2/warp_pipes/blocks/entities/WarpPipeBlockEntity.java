@@ -86,14 +86,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-        CompoundTag tag = packet.getTag();
-        if (tag != null) {
-            this.load(tag);
-        }
-    }
-
     @Nullable
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new WarpPipeMenu(id, inventory, ContainerLevelAccess.create(this.level, this.getBlockPos()));
