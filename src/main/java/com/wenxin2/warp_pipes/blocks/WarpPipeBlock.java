@@ -102,26 +102,22 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             boolean isSuccesful = false;
 
             if (item == Items.INK_SAC) {
-                if (pipeBlockEntity.hasGlowingText) {
+                if (pipeBlockEntity.hasGlowingText()) {
                     world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.hasGlowingText = false;
-                    pipeBlockEntity.setChanged();
+                    pipeBlockEntity.setHasGlowingText(false);
                     isSuccesful = true;
                 }
             } else if (item == Items.GLOW_INK_SAC) {
-                if (!pipeBlockEntity.hasGlowingText) {
+                if (!pipeBlockEntity.hasGlowingText()) {
                     world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.hasGlowingText = true;
-                    pipeBlockEntity.setChanged();
+                    pipeBlockEntity.setHasGlowingText(true);
                     isSuccesful = true;
                 }
             } else {
                 if (DyeColor.getColor(stack) != null) {
-                    if (pipeBlockEntity.setColor(DyeColor.getColor(stack))) {
-                        world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        pipeBlockEntity.setChanged();
-                        isSuccesful = true;
-                    }
+                    world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pipeBlockEntity.setColor(DyeColor.getColor(stack));
+                    isSuccesful = true;
                 }
             }
 

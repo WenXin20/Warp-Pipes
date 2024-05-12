@@ -13,9 +13,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,20 +34,13 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
 
     private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
-//    private final SignText signText = new SignText();
-    private static final int MAX_TEXT_LINE_WIDTH = 90;
-    private static final int MAX_TEXT_LINES = 1;
-    private static final int TEXT_LINE_HEIGHT = 10;
-//    public SignText frontText = this.createDefaultSignText();
-//    public SignText backText = this.createDefaultSignText();
-    public DyeColor color = DyeColor.BLACK;
-    public boolean hasGlowingText = false;
+    public DyeColor color;
+    private boolean hasGlowingText;
     public static final String WARP_POS = "WarpPos";
     public static final String WARP_DIMENSION = "Dimension";
     public static final String WARP_UUID = "WarpUUID";
@@ -70,11 +62,13 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public WarpPipeBlockEntity(final BlockPos pos, final BlockState state)
     {
-        this(ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), pos, state);
+        this(ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), pos, state, DyeColor.ORANGE, false);
     }
 
-    public WarpPipeBlockEntity(final BlockEntityType<?> tileEntity, BlockPos pos, BlockState state) {
+    public WarpPipeBlockEntity(final BlockEntityType<?> tileEntity, BlockPos pos, BlockState state, DyeColor color, boolean hasGlowingText) {
         super(tileEntity, pos, state);
+        this.color = color;
+        this.hasGlowingText = hasGlowingText;
     }
 
     @Override
@@ -82,17 +76,23 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+        CompoundTag tag = packet.getTag();
+        if (tag != null) {
+            this.load(tag);
+        }
+    }
 
     @Nullable
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new WarpPipeMenu(i, inventory, ContainerLevelAccess.create(this.level, this.getBlockPos()));
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return new WarpPipeMenu(id, inventory, ContainerLevelAccess.create(this.level, this.getBlockPos()));
     }
 
     public void setCustomName(Component name) {
         this.name = name;
-//        this.signText.setMessage(0, name);
+        this.markUpdated();
         this.getUpdatePacket();
-        this.setChanged();
     }
 
     @Override
@@ -115,50 +115,24 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         return this.name != null ? this.name : DEFAULT_NAME;
     }
 
-
-//    public SignText getSignText() {
-//        return signText;
-//    }
-//
-//    protected SignText createDefaultSignText() {
-//        return new SignText();
-//    }
-//
-//    public SignText getFrontText() {
-//        return this.frontText;
-//    }
-//
-//    public SignText getBackText() {
-//        return this.backText;
-//    }
-//
-//    public int getTextLineHeight() {
-//        return TEXT_LINE_HEIGHT;
-//    }
-//
-//    public int getMaxTextLineWidth() {
-//        return MAX_TEXT_LINE_WIDTH;
-//    }
-
     public boolean hasGlowingText() {
         return this.hasGlowingText;
     }
-//
-//    public void setHasGlowingText(boolean glowing) {
-//        this.hasGlowingText = glowing;
-//    }
+
+    public void setHasGlowingText(boolean glowing) {
+        this.markUpdated();
+        this.getUpdatePacket();
+        this.hasGlowingText = glowing;
+    }
 
     public DyeColor getColor() {
         return this.color;
     }
 
-    public boolean setColor(DyeColor newColor) {
-        if (newColor != this.color) {
-            this.color = newColor;
-            this.setChanged();
-            return true;
-        }
-        return false;
+    public void setColor(DyeColor newColor) {
+        this.getUpdatePacket();
+        this.markUpdated();
+        this.color = newColor;
     }
 
     public boolean hasDestinationPos() {
@@ -223,6 +197,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.warpUuid = uuid;
     }
 
+    public void markUpdated() {
+        this.setChanged();
+        if (this.level != null)
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+    }
+
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
@@ -233,8 +213,14 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
-        this.color = DyeColor.byName(tag.getString("color"), DyeColor.BLACK);
+
+        this.color = DyeColor.byName(tag.getString("color"), DyeColor.BLUE);
         this.hasGlowingText = tag.getBoolean("has_glowing_text");
+
+        System.out.println("Loading color: " + tag.getString("color"));
+        System.out.println("Loading has_glowing_text: " + tag.getBoolean("has_glowing_text"));
+        System.out.println("Loaded color: " + getColor());
+        System.out.println("Loaded has_glowing_text: " + hasGlowingText());
 
 //        System.out.println("SetDestPos: " +  this.destinationPos);
         if (tag.contains(WARP_POS)) {
@@ -271,8 +257,13 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
-        tag.putString("color", this.color.getName());
-        tag.putBoolean("has_glowing_text", this.hasGlowingText);
+        tag.putString("color", getColor().getName());
+        tag.putBoolean("has_glowing_text", hasGlowingText());
+
+        System.out.println("Saving color: " + tag.getString("color"));
+        System.out.println("Saving has_glowing_text: " + tag.getBoolean("has_glowing_text"));
+        System.out.println("Saved color: " + getColor().getName());
+        System.out.println("Saved has_glowing_text: " + hasGlowingText());
 
         if (this.hasDestinationPos() && this.destinationPos != null) {
             tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
@@ -328,7 +319,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public void waterSpoutHeight(ServerPlayer player, int spoutHeight) {
-        if (this.level != null && this.getUpdatePacket() != null &&player.containerMenu instanceof WarpPipeMenu) {
+        if (this.level != null && this.getUpdatePacket() != null && player.containerMenu instanceof WarpPipeMenu) {
             if ( this.level.getBlockState(this.getBlockPos()).getBlock() instanceof WarpPipeBlock) {
                 this.setSpoutHeight(spoutHeight);
             }
@@ -355,7 +346,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public void bubblesDistance(ServerPlayer player, int bubblesDistance) {
-        if (this.level != null && this.getUpdatePacket() != null &&player.containerMenu instanceof WarpPipeMenu) {
+        if (this.level != null && this.getUpdatePacket() != null && player.containerMenu instanceof WarpPipeMenu) {
             if ( this.level.getBlockState(this.getBlockPos()).getBlock() instanceof WarpPipeBlock) {
                 this.setBubblesDistance(bubblesDistance);
             }

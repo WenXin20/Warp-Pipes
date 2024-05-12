@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
@@ -37,44 +38,53 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
         BlockState state = blockEntity.getBlockState();
         BlockPos pos = blockEntity.getBlockPos();
         Level world = blockEntity.getLevel();
-        WarpPipeBlock warpPipeBlock = (WarpPipeBlock)state.getBlock();
-        int darkTextColor = getDarkColor(blockEntity);
-        if (blockEntity.getDisplayName() != null) {
-            stack.pushPose(); //Push
+        if (world != null && world.getBlockEntity(pos) instanceof WarpPipeBlockEntity pipeBlockEntity) {
+            stack.pushPose();
 
             int textColor;
             boolean flag;
             int packedLightL;
-            if (blockEntity.hasGlowingText()) {
-                textColor = blockEntity.getColor().getTextColor();
+            if (pipeBlockEntity.hasGlowingText()) {
+                textColor = pipeBlockEntity.getColor().getTextColor();
                 flag = isOutlineVisible(pos, textColor);
                 packedLightL = 15728880;
             } else {
-                textColor = darkTextColor;
-                flag = false;
+                textColor = getDarkColor(pipeBlockEntity);;
                 packedLightL = packedLight;
+                flag = false;
             }
 
-            stack.translate(0.5, 0.85, -0.001);
-
-            int rotation = state.getValue(WarpPipeBlock.FACING).get2DDataValue();
-            stack.mulPose(Axis.YP.rotationDegrees(0F * rotation + 180F));
-            stack.mulPose(Axis.XP.rotationDegrees(-0F));
-
-            stack.scale(1.0F, -1.0F, -1.0F);
-            stack.scale(0.0125F, 0.0125F, 0.0125F);
-
-            List<FormattedCharSequence> lines = this.font.split(FormattedText.of(blockEntity.getDisplayName().getString()), 60);
-            stack.translate(0.0, -(lines.size() * this.font.lineHeight - 1.0) / 2.0, 0);
-
-            for (int j = 0; j < lines.size(); j++) {
+            if (pipeBlockEntity.getDisplayName() != null && state.getValue(WarpPipeBlock.ENTRANCE)) {
                 stack.pushPose();
-                stack.translate(-this.font.width(lines.get(j)) / 2.0, (j * this.font.lineHeight), 0.0);
-                if (world != null) {
-                    BlockState stateNorth = world.getBlockState(pos.north());
-                    if (!(stateNorth.isSolid() && stateNorth.isSolidRender(world, pos.north())) && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateNorth.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.UP) {
+                    stack.translate(0.5, 0.8, 1.001);
+                    stack.mulPose(Axis.YP.rotationDegrees(0F));
+                } else if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN){
+                    stack.translate(0.5, 0.2, 1.001);
+                    stack.mulPose(Axis.YP.rotationDegrees(0F));
+                    stack.mulPose(Axis.ZP.rotationDegrees(180F));
+                } else if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST){
+                    stack.translate(0.8, 0.5, 1.001);
+                    stack.mulPose(Axis.YP.rotationDegrees(0F));
+                    stack.mulPose(Axis.ZP.rotationDegrees(270F));
+                } else if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST){
+                    stack.translate(0.2, 0.5, 1.001);
+                    stack.mulPose(Axis.YP.rotationDegrees(0F));
+                    stack.mulPose(Axis.ZP.rotationDegrees(90F));
+                }
+
+                stack.scale(1.0F, -1.0F, -1.0F);
+                stack.scale(0.0125F, 0.0125F, 0.0125F);
+
+                List<FormattedCharSequence> lines = this.font.split(FormattedText.of(pipeBlockEntity.getDisplayName().getString()), 60);
+                stack.translate(0.0, -(lines.size() * this.font.lineHeight - 1.0) / 2.0, 0);
+
+                for (int j = 0; j < lines.size(); j++) {
+                    stack.translate(-this.font.width(lines.get(j)) / 2.0, (j * this.font.lineHeight), 0.0);
+                    BlockState stateSouth = world.getBlockState(pos.south());
+                    if (!(stateSouth.isSolid() && stateSouth.isSolidRender(world, pos.south())) && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateSouth.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
                         if (flag) {
-                            this.font.drawInBatch8xOutline(lines.get(j), 0, 0, textColor, darkTextColor, stack.last().pose(), buffer, packedLightL);
+                            this.font.drawInBatch8xOutline(lines.get(j), 0, 0, textColor, getDarkColor(pipeBlockEntity), stack.last().pose(), buffer, packedLightL);
                         } else {
                             this.font.drawInBatch(lines.get(j), 0, 0, textColor, false, stack.last().pose(), buffer, Font.DisplayMode.POLYGON_OFFSET, 0, packedLightL);
                         }
@@ -82,7 +92,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
                 }
                 stack.popPose();
             }
-            stack.popPose(); //Pop
+            stack.popPose();
         }
     }
 
@@ -96,7 +106,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
                 return true;
             } else {
                 Entity entity = minecraft.getCameraEntity();
-                return entity != null && entity.distanceToSqr(Vec3.atCenterOf(pos)) < (double)OUTLINE_RENDER_DISTANCE;
+                return entity != null && entity.distanceToSqr(Vec3.atCenterOf(pos)) < (double) OUTLINE_RENDER_DISTANCE;
             }
         }
     }
