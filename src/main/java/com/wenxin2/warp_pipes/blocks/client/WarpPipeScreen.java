@@ -36,8 +36,7 @@ import net.minecraftforge.common.ForgeMod;
 import org.lwjgl.glfw.GLFW;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
-    public static ResourceLocation WARP_PIPE_GUI =
-            new ResourceLocation(WarpPipes.MODID, "textures/gui/warp_pipe.png");
+    public static ResourceLocation WARP_PIPE_GUI = new ResourceLocation(WarpPipes.MODID, "textures/gui/warp_pipe.png");
     Button bubblesButton;
     Button closeButton;
     Button renameButton;
@@ -46,7 +45,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Inventory inventory;
     public static ForgeSlider waterSpoutSlider;
     public static ForgeSlider bubblesSlider;
-    public String pipeName = "";
+    private String pipeName = "";
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -58,8 +57,12 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.renameBox.visible)
             graphics.drawString(this.font, "", this.titleLabelX, this.titleLabelY, 4210752, false);
         else if (!this.pipeName.isEmpty())
+            // Warp Pipe Name
             graphics.drawString(this.font, this.pipeName, this.titleLabelX, this.titleLabelY, 4210752, false);
+        // Warp Pipe
         else graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
+
+        // Inventory
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }
 
@@ -112,7 +115,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.renameBox.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.rename_box.tooltip")));
         this.renameBox.setBordered(false);
         this.renameBox.setVisible(false);
-        this.renameBox.setMaxLength(26);
+        this.renameBox.setMaxLength(Math.min(50, this.font.width(this.renameBox.getValue()) + 10));
         this.addRenderableWidget(this.renameBox);
 
         final Component rename = Component.translatable("menu.warp_pipes.warp_pipe.rename_button");

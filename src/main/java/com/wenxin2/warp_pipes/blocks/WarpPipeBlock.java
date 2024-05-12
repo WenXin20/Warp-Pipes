@@ -1,22 +1,17 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
-import com.wenxin2.warp_pipes.init.ModTags;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -55,9 +50,6 @@ import net.minecraft.world.level.material.LavaFluid;
 import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -102,21 +94,22 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             boolean isSuccesful = false;
 
             if (item == Items.INK_SAC) {
-                if (pipeBlockEntity.hasGlowingText()) {
+                if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(false))) {
                     world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.setHasGlowingText(false);
+                    pipeBlockEntity.getUpdateTag();
                     isSuccesful = true;
                 }
             } else if (item == Items.GLOW_INK_SAC) {
-                if (!pipeBlockEntity.hasGlowingText()) {
+                if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(true))) {
                     world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.setHasGlowingText(true);
+                    pipeBlockEntity.getUpdateTag();
                     isSuccesful = true;
                 }
             } else {
-                if (DyeColor.getColor(stack) != null) {
+                if (DyeColor.getColor(stack) != null
+                        && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(DyeColor.getColor(stack)))) {
                     world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.setColor(DyeColor.getColor(stack));
+                    pipeBlockEntity.getUpdateTag();
                     isSuccesful = true;
                 }
             }

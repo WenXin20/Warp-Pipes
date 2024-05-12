@@ -1,6 +1,5 @@
 package com.wenxin2.warp_pipes.network;
 
-import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -9,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent;
 
 public class SRenamePipePacket {
@@ -43,7 +41,9 @@ public class SRenamePipePacket {
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 ((WarpPipeBlockEntity) blockEntity).sendData();
                 ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.literal(customName));
-                blockEntity.setChanged();
+                ((WarpPipeBlockEntity) blockEntity).updateText(pipeText -> pipeText.setMessage(0, Component.literal(customName)));
+                ((WarpPipeBlockEntity) blockEntity).markUpdated();
+                ((WarpPipeBlockEntity) blockEntity).getUpdateTag();
             }
         });
     }
