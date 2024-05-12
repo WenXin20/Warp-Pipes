@@ -98,7 +98,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             });
             stack.translate(0.0, -(lines.size() * this.font.lineHeight - 1.0) / 2.0, 0);
 
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 1; j++) {
                 BlockState stateSouth = world.getBlockState(pos.south());
                 FormattedCharSequence formattedcharsequence = lines2[j];
                 stack.translate(-this.font.width(formattedcharsequence) / 2.0, (j * this.font.lineHeight + 2), 0.0);
