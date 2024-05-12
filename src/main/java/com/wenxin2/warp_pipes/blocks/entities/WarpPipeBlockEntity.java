@@ -59,7 +59,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
     public static final String PREVENT_WARP = "PreventWarp";
     @Nullable
-    public Component name_old;
+    public Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
     @Nullable
     public BlockPos destinationPos;
@@ -85,7 +85,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public void setCustomName(Component name) {
-        this.name_old = name;
+        this.name = name;
         this.markUpdated();
         this.getUpdatePacket();
     }
@@ -98,17 +98,17 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     @Override
     @Nullable
     public Component getCustomName() {
-        return this.name_old;
+        return this.name;
     }
 
     public Component getCustomName(Component name) {
-        return this.name_old = name;
+        return this.name = name;
     }
 
     @Override
     public Component getName() {
         return !this.pipeName.getMessage(0, false).contains(Component.empty())
-                ? this.pipeName.getMessage(0, false) : DEFAULT_NAME;
+                ? this.pipeName.getMessage(0, false) : this.name != null ? this.name : DEFAULT_NAME;
     }
 
     protected PipeText createDefaultPipeText() {
@@ -129,7 +129,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public Component getPipeNameComponent() {
         return !this.pipeName.getMessage(0, false).contains(Component.empty())
-                ? this.pipeName.getMessage(0, false) : DEFAULT_NAME;
+                ? this.pipeName.getMessage(0, false) : this.name != null ? this.name : DEFAULT_NAME;
     }
 
     public boolean updateText(UnaryOperator<PipeText> text) {
@@ -256,7 +256,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.bubblesDistance = tag.getInt(BUBBLES_DISTANCE);
 
         if (tag.contains("CustomName", 8)) {
-            this.name_old = Component.Serializer.fromJson(tag.getString("CustomName"));
+            this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
 
         if (tag.contains("PipeName")) {
@@ -297,8 +297,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
         tag.putBoolean(PREVENT_WARP, this.preventWarp);
 
-        if (this.name_old != null) {
-            tag.putString("CustomName", Component.Serializer.toJson(this.name_old));
+        if (this.name != null) {
+            tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
 
         PipeText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.pipeName).resultOrPartial(LOGGER::error).ifPresent((pipeName) -> {
