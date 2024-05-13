@@ -71,7 +71,7 @@ public class LinkerItem extends TieredItem {
         ItemStack stack = useOnContext.getItemInHand();
         CompoundTag wrenchTag = stack.getTag();
         String dimension = world.dimension().location().toString();
-        
+
         if (wrenchTag != null && wrenchTag.contains("Bound")) {
             isBound = wrenchTag.getBoolean("Bound");
         }

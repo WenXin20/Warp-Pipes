@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -66,26 +65,27 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             hasGlowingText = isOutlineVisible(pos, textColor);
             packedLightL = 15728880;
         } else {
-            textColor = getDarkColor(pipeText);;
-            packedLightL = packedLight;
+            textColor = getDarkColor(pipeText);
+            packedLightL = 0xFFFFFF;
             hasGlowingText = false;
         }
 
         if (world != null && state.getValue(WarpPipeBlock.ENTRANCE)) {
             stack.pushPose();
+
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP) {
-                stack.translate(0.5, 0.8, 1.001);
+                stack.translate(0.5, 0.85, 1.001);
                 stack.mulPose(Axis.YP.rotationDegrees(0F));
             } else if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN){
-                stack.translate(0.5, 0.2, 1.001);
+                stack.translate(0.5, 0.15, 1.001);
                 stack.mulPose(Axis.YP.rotationDegrees(0F));
                 stack.mulPose(Axis.ZP.rotationDegrees(180F));
             } else if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST){
-                stack.translate(0.8, 0.5, 1.001);
+                stack.translate(0.85, 0.5, 1.001);
                 stack.mulPose(Axis.YP.rotationDegrees(0F));
                 stack.mulPose(Axis.ZP.rotationDegrees(270F));
             } else if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST){
-                stack.translate(0.2, 0.5, 1.001);
+                stack.translate(0.15, 0.5, 1.001);
                 stack.mulPose(Axis.YP.rotationDegrees(0F));
                 stack.mulPose(Axis.ZP.rotationDegrees(90F));
             }

@@ -41,8 +41,6 @@ public class PipeText {
     private final DyeColor color;
     private final boolean hasGlowingText;
     @Nullable
-    public Component name_old;
-    @Nullable
     private FormattedCharSequence[] renderMessages;
     private boolean renderMessagedFiltered;
 
