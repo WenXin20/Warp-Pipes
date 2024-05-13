@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
@@ -88,33 +89,64 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
             if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 if (this.renameButton.isHoveredOrFocused() && !pipeBlockEntity.isWaxed())
-                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 97, 24, 24);
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 170, 24, 24);
                 else if (pipeBlockEntity.isWaxed())
-                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 121, 24, 24);
-                else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 73, 24, 24);
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 194, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 146, 24, 24);
 
                 if (this.renameBox.visible && !pipeBlockEntity.isWaxed())
                     graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
             }
+
+            BlockState state = world.getBlockState(this.getClickedPos());
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
+                if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
+                        || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()))
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 24, 24, 24);
+                else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 48, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 0, 24, 24);
+            } else {
+                if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
+                        || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()))
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
+                else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 48, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 0, 24, 24);
+            }
+
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
+                if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get())
+                        || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()))
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 97, 24, 24);
+                else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 121, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 73, 24, 24);
+            } else {
+                if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get())
+                        || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()))
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 97, 24, 24);
+                else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 121, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 73, 24, 24);
+            }
+
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
+                if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get())
+                        || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()))
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 97, 24, 24);
+                else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 121, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 73, 24, 24);
+            } else {
+                if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get())
+                        || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()))
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
+                else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 0, 24, 24);
+            }
         }
-
-        if (this.closeButton.isHoveredOrFocused() && (!Config.CREATIVE_CLOSE_PIPES.get() || player.isCreative()))
-            graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
-        else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
-            graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 48, 24, 24);
-        else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 0, 24, 24);
-
-        if (this.waterSpoutButton.isHoveredOrFocused() && (!Config.CREATIVE_CLOSE_PIPES.get() || player.isCreative()))
-            graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 24, 24, 24);
-        else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
-            graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 48, 24, 24);
-        else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 0, 24, 24);
-
-        if (this.bubblesButton.isHoveredOrFocused() && (!Config.CREATIVE_CLOSE_PIPES.get() || player.isCreative()))
-            graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
-        else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
-            graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
-        else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 0, 24, 24);
     }
 
     @Override
@@ -144,7 +176,6 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.closeButton = this.addRenderableWidget(new Button.Builder(close, (b) -> {
             this.closeButtonOnPress();
         }).bounds(x + 7, y + 45, 24, 24)
-                .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.close_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.close_button.narrate")).build());
         this.closeButton.setAlpha(0);
 
@@ -152,7 +183,6 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.waterSpoutButton = this.addRenderableWidget(new Button.Builder(waterSpout, (b) -> {
             this.waterSpoutButtonOnPress();
         }).bounds(x + 34, y + 18, 24, 24)
-                .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.water_spout_button.narrate")).build());
         this.waterSpoutButton.setAlpha(0);
 
@@ -175,7 +205,6 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.bubblesButton = this.addRenderableWidget(new Button.Builder(bubbles, (b) -> {
             this.bubblesButtonOnPress();
         }).bounds(x + 34, y + 45, 24, 24)
-                .tooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.tooltip")))
                 .createNarration(supplier -> Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button.narrate")).build());
         this.bubblesButton.setAlpha(0);
 
@@ -202,6 +231,37 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderTooltip(graphics, mouseX, mouseY);
+
+        Component tooltip = Component.literal("");
+
+        if (this.getClickedPos() != null) {
+            BlockState state = world.getBlockState(this.getClickedPos());
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button.tooltip");
+            } else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.close_button.tooltip");
+        }
+        this.closeButton.setTooltip(Tooltip.create(tooltip));
+
+        if (this.getClickedPos() != null) {
+            BlockState state = world.getBlockState(this.getClickedPos());
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button.tooltip");
+            } else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_on_button.tooltip");
+        }
+        this.waterSpoutButton.setTooltip(Tooltip.create(tooltip));
+
+        if (this.getClickedPos() != null) {
+            BlockState state = world.getBlockState(this.getClickedPos());
+            if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_off_button.tooltip");
+            } else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_on_button.tooltip");
+        }
+        this.bubblesButton.setTooltip(Tooltip.create(tooltip));
     }
 
     @Override
@@ -270,14 +330,14 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         Player player = this.inventory.player;
         final String pipeRename = this.renameBox.getValue();
         BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
-        if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
-            player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
-        else if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused() && this.getClickedPos() != null) {
+        if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused() && this.getClickedPos() != null
+                && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed()) {
             PacketHandler.sendToServer(new SRenamePipePacket(this.getClickedPos(), this.renameBox.getValue()));
             this.pipeName = pipeRename;
-            this.renameBox.setVisible(!this.renameBox.visible);
-        }
+        } else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
 
+        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed()) this.renameBox.setVisible(!this.renameBox.visible);
     }
 
     public void closeButtonOnPress() {
@@ -314,6 +374,14 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (world != null && !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
             player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
         else if (this.getClickedPos() != null) PacketHandler.sendToServer(new SWaterSpoutStatePacket(this.getClickedPos(), Boolean.TRUE));
+
+        if ((world != null && this.getClickedPos() != null && !Config.CREATIVE_WATER_SPOUT.get())
+                || (world != null && Config.CREATIVE_WATER_SPOUT.get() && !player.isCreative())) {
+            BlockState state = world.getBlockState(this.getClickedPos());
+            if (state.getBlock() instanceof ClearWarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(ClearWarpPipeBlock.WATERLOGGED)) {
+                player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_waterlogging").withStyle(ChatFormatting.RED), true);
+            }
+        }
     }
 
     public void waterSpoutSliderOnPress() {
