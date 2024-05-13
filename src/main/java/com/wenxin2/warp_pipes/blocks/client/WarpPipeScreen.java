@@ -98,19 +98,19 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             }
         }
 
-        if (this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
+        if (this.closeButton.isHoveredOrFocused() && (!Config.CREATIVE_CLOSE_PIPES.get() || player.isCreative()))
             graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
         else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
             graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 48, 24, 24);
         else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 0, 24, 24);
 
-        if (this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get())
+        if (this.waterSpoutButton.isHoveredOrFocused() && (!Config.CREATIVE_CLOSE_PIPES.get() || player.isCreative()))
             graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 24, 24, 24);
         else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
             graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 48, 24, 24);
         else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 0, 24, 24);
 
-        if (this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get())
+        if (this.bubblesButton.isHoveredOrFocused() && (!Config.CREATIVE_CLOSE_PIPES.get() || player.isCreative()))
             graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
         else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
             graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
