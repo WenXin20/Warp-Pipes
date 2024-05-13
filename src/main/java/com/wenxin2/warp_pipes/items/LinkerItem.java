@@ -71,12 +71,7 @@ public class LinkerItem extends TieredItem {
         ItemStack stack = useOnContext.getItemInHand();
         CompoundTag wrenchTag = stack.getTag();
         String dimension = world.dimension().location().toString();
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-            player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
-        }
-
+        
         if (wrenchTag != null && wrenchTag.contains("Bound")) {
             isBound = wrenchTag.getBoolean("Bound");
         }
