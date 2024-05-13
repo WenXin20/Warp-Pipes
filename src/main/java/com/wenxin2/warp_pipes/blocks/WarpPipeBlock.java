@@ -93,6 +93,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WarpPipeMenu(id,
                         playerInventory, ContainerLevelAccess.create(world, pos), pos), ((WarpPipeBlockEntity) blockEntity).getDisplayName()));
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                }
             }
             return InteractionResult.SUCCESS;
         }

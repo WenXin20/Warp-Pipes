@@ -64,9 +64,7 @@ public class WrenchItem extends LinkerItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity livingEntity, LivingEntity hurtEntity) {
-        stack.hurtAndBreak(2, hurtEntity, (entity) -> {
-            entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-        });
+        stack.hurtAndBreak(2, hurtEntity, entity -> { entity.broadcastBreakEvent(EquipmentSlot.MAINHAND); });
         return true;
     }
 

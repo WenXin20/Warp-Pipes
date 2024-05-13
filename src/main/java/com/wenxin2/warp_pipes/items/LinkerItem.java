@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -21,8 +22,10 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -65,9 +68,14 @@ public class LinkerItem extends TieredItem {
         BlockPos pos = useOnContext.getClickedPos();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        ItemStack item = useOnContext.getItemInHand();
-        CompoundTag wrenchTag = item.getTag();
+        ItemStack stack = useOnContext.getItemInHand();
+        CompoundTag wrenchTag = stack.getTag();
         String dimension = world.dimension().location().toString();
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+            player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+        }
 
         if (wrenchTag != null && wrenchTag.contains("Bound")) {
             isBound = wrenchTag.getBoolean("Bound");
@@ -110,12 +118,12 @@ public class LinkerItem extends TieredItem {
                     }
                     wrenchTag.putBoolean("Bound", Boolean.FALSE);
                     this.setBound(Boolean.FALSE);
-                    this.writeTag(world.dimension(), pos, item.getOrCreateTag());
+                    this.writeTag(world.dimension(), pos, stack.getOrCreateTag());
 
                     BlockPos warpPos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
 
                     if (player1 != null) {
-                        item.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
+                        stack.hurtAndBreak(1, player1, p -> p.broadcastBreakEvent(useOnContext.getHand()));
                         player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
                                         wrenchTag.getInt(POS_X), wrenchTag.getInt(POS_Y), wrenchTag.getInt(POS_Z), wrenchTag.getString(WARP_DIMENSION))
                                 .withStyle(ChatFormatting.GOLD), true);
@@ -127,7 +135,7 @@ public class LinkerItem extends TieredItem {
                     BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
 
                     WarpPipeBlockEntity warpPipeBE = (WarpPipeBlockEntity) blockEntity;
-                    if (blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(item)) {
+                    if (blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(stack)) {
 
                         wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
                         if (uuid != null)
