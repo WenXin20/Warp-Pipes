@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
@@ -18,6 +19,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -28,10 +30,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -52,6 +56,7 @@ import net.minecraft.world.level.material.LavaFluid;
 import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.Tags;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -92,34 +97,51 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
 
-        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed()) {
+        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
             boolean isSuccesful = false;
 
-            if (item == Items.INK_SAC) {
-                if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(false))) {
-                    world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            if (!pipeBlockEntity.isWaxed()) {
+                if (item == Items.INK_SAC) {
+                    if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.FALSE))) {
+                        world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesful = true;
+                    }
+                } else if (item == Items.GLOW_INK_SAC) {
+                    if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.TRUE))) {
+                        world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesful = true;
+                    }
+                } else if (item == Items.HONEYCOMB) {
+                    pipeBlockEntity.setWaxed(Boolean.TRUE);
+                    world.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_ON, UniformInt.of(3, 5));
                     pipeBlockEntity.getUpdateTag();
                     isSuccesful = true;
+                } else {
+                    if (DyeColor.getColor(stack) != null
+                            && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(DyeColor.getColor(stack)))) {
+                        world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesful = true;
+                    }
                 }
-            } else if (item == Items.GLOW_INK_SAC) {
-                if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(true))) {
-                    world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.getUpdateTag();
-                    isSuccesful = true;
-                }
-            } else if (item == Items.HONEYCOMB) {
-                pipeBlockEntity.setWaxed(true);
-                world.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
-                ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_ON, UniformInt.of(3, 5));
+            } else if (Config.ALLOW_PIPE_UNWAXING.get() && (stack.is(ItemTags.AXES) || item instanceof AxeItem)) {
+                pipeBlockEntity.setWaxed(Boolean.FALSE);
+                world.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_OFF, UniformInt.of(3, 5));
                 pipeBlockEntity.getUpdateTag();
-                isSuccesful = true;
-            } else {
-                if (DyeColor.getColor(stack) != null
-                        && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(DyeColor.getColor(stack)))) {
-                    world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.getUpdateTag();
-                    isSuccesful = true;
+
+                if (!player.isCreative()) {
+                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
                 }
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                }
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
 
             if (isSuccesful) {

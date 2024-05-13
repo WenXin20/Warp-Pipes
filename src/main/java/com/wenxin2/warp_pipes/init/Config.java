@@ -16,6 +16,7 @@ public class Config
     public static final String CATEGORY_COMMON = "Common";
 
     public static ForgeConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
+    public static ForgeConfigSpec.BooleanValue ALLOW_PIPE_UNWAXING;
     public static ForgeConfigSpec.BooleanValue CREATIVE_BUBBLES;
     public static ForgeConfigSpec.BooleanValue CREATIVE_CLOSE_PIPES;
     public static ForgeConfigSpec.BooleanValue CREATIVE_WATER_SPOUT;
@@ -24,6 +25,7 @@ public class Config
     public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ForgeConfigSpec.BooleanValue DISABLE_TEXT;
     public static ForgeConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ForgeConfigSpec.BooleanValue TELEPORT_NON_MOBS;
     public static ForgeConfigSpec.BooleanValue TELEPORT_PLAYERS;
@@ -40,6 +42,8 @@ public class Config
     public static void initializeConfig()
     {
         BUILDER.push(CATEGORY_CLIENT);
+        DISABLE_TEXT = BUILDER.comment("Disable text displaying on pipes. " + "[Default: false]")
+                .define("disable_text", false);
         WARP_COOLDOWN_MESSAGE = BUILDER.comment("Display a warp cooldown message. " + "[Default: false]")
                 .define("warp_cooldown_message", true);
         WARP_COOLDOWN_MESSAGE_TICKS = BUILDER.comment("Display a warp cooldown message with ticks. Requires \"warp_cooldown_message\". " + "[Default: false]")
@@ -57,6 +61,8 @@ public class Config
                 .define("creative_wrench_pipe_linking", false);
         ALLOW_FAST_TRAVEL = BUILDER.comment("Allow fast travel through Clear Warp Pipes. " + "[Default: true]")
                 .define("allow_fast_travel", true);
+        ALLOW_PIPE_UNWAXING = BUILDER.comment("Allow pipes to be unwaxed with an axe. " + "[Default: false]")
+                .define("allow_pipe_unwaxing", false);
         TELEPORT_MOBS = BUILDER.comment("Allow mobs to teleport. " + "[Default: true]")
                 .define("teleport_mobs", true);
         TELEPORT_NON_MOBS = BUILDER.comment("Allow non living entities to teleport. " + "[Default: true]")
