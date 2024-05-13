@@ -113,9 +113,10 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         this.renameBox = new EditBox(this.font, x + 8, y + 6, 160, 12,
                 Component.translatable("menu.warp_pipes.warp_pipe.rename_box.narrate"));
         this.renameBox.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.rename_box.tooltip")));
+        this.renameBox.setValue(this.renameBox.getValue());
         this.renameBox.setBordered(false);
         this.renameBox.setVisible(false);
-        this.renameBox.setMaxLength(Math.min(50, this.font.width(this.renameBox.getValue()) + 10));
+        this.renameBox.setMaxLength(27);
         this.addRenderableWidget(this.renameBox);
 
         final Component rename = Component.translatable("menu.warp_pipes.warp_pipe.rename_button");

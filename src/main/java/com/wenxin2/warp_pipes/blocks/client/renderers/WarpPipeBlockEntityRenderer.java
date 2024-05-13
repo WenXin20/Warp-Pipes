@@ -50,6 +50,11 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
         BlockState state = pipeBlockEntity.getBlockState();
         Level world = pipeBlockEntity.getLevel();
 
+        FormattedCharSequence[] pipeNameArray = pipeText.getRenderMessages(Minecraft.getInstance().isTextFilteringEnabled(), (text) -> {
+            List<FormattedCharSequence> list = this.font.split(text, maxWidth);
+            return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
+        });
+
         stack.pushPose();
 
         int textColor;
@@ -86,29 +91,19 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
 
             stack.scale(1.0F, -1.0F, -1.0F);
             stack.scale(TEXT_RENDER_SCALE, TEXT_RENDER_SCALE, TEXT_RENDER_SCALE);
-
-            FormattedCharSequence[] aformattedcharsequence = pipeText.getRenderMessages(Minecraft.getInstance().isTextFilteringEnabled(), (text) -> {
-                List<FormattedCharSequence> list = this.font.split(text, maxWidth);
-                return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
-            });
-            List<FormattedCharSequence> lines = this.font.split(FormattedText.of(pipeBlockEntity.getPipeNameComponent().getString()), 60);
-            FormattedCharSequence[] lines2 = pipeText.getRenderMessages(Minecraft.getInstance().isTextFilteringEnabled(), (text) -> {
-                List<FormattedCharSequence> list = this.font.split(FormattedText.of(pipeBlockEntity.getPipeNameComponent().getString()), maxWidth);
-                return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
-            });
-            stack.translate(0.0, -(lines.size() * this.font.lineHeight - 1.0) / 2.0, 0);
+            stack.translate(0.0, -(this.font.lineHeight - 1.0) / 2.0, 0);
 
             for (int j = 0; j < 1; j++) {
                 BlockState stateSouth = world.getBlockState(pos.south());
-                FormattedCharSequence formattedcharsequence = lines2[j];
-                stack.translate(-this.font.width(formattedcharsequence) / 2.0, (j * this.font.lineHeight + 2), 0.0);
+                FormattedCharSequence pipeName = pipeNameArray[j];
+                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateSouth.isSolid() && stateSouth.isSolidRender(world, pos.south())) && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateSouth.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
                     if (hasGlowingText) {
-                        this.font.drawInBatch8xOutline(formattedcharsequence, 0, 0, textColor, getDarkColor(pipeText),
+                        this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
                     } else {
-                        this.font.drawInBatch(formattedcharsequence, 0, 0, textColor, false,
+                        this.font.drawInBatch(pipeName, 0, 0, textColor, false,
                                 stack.last().pose(), buffer, Font.DisplayMode.POLYGON_OFFSET, 0, packedLightL);
                     }
                 }

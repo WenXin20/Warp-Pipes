@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.network;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import java.util.function.Supplier;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -46,9 +47,5 @@ public class SRenamePipePacket {
                 ((WarpPipeBlockEntity) blockEntity).getUpdateTag();
             }
         });
-    }
-
-    public void getCustomName (String name) {
-        customName = name;
     }
 }

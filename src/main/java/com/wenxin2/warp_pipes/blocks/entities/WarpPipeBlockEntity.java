@@ -19,7 +19,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -49,7 +48,7 @@ import org.slf4j.Logger;
 public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Nameable {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Component DEFAULT_NAME = Component.translatable("menu.warp_pipes.warp_pipe");
-    private static final int MAX_TEXT_LINE_WIDTH = 64;
+    private static final int MAX_TEXT_LINE_WIDTH = 78;
     private static final int TEXT_LINE_HEIGHT = 10;
 
     public PipeText pipeName = this.createDefaultPipeText();
@@ -340,9 +339,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
 
-        PipeText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.pipeName).resultOrPartial(LOGGER::error).ifPresent((pipeName) -> {
-            tag.put("PipeName", pipeName);
-        });
+        this.saveAdditional(tag);
         return tag;
     }
 
