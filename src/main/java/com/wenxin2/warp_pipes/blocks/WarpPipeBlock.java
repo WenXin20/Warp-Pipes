@@ -18,7 +18,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -90,7 +92,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
 
-        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed()) {
             boolean isSuccesful = false;
 
             if (item == Items.INK_SAC) {
@@ -105,6 +107,12 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     pipeBlockEntity.getUpdateTag();
                     isSuccesful = true;
                 }
+            } else if (item == Items.HONEYCOMB) {
+                pipeBlockEntity.setWaxed(true);
+                world.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_ON, UniformInt.of(3, 5));
+                pipeBlockEntity.getUpdateTag();
+                isSuccesful = true;
             } else {
                 if (DyeColor.getColor(stack) != null
                         && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(DyeColor.getColor(stack)))) {

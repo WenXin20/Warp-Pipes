@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
@@ -27,7 +28,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -46,10 +49,12 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     public static ForgeSlider waterSpoutSlider;
     public static ForgeSlider bubblesSlider;
     private String pipeName = "";
+    private Level world;
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
         this.inventory = inventory;
+        this.world = inventory.player.level();
     }
 
     @Override
@@ -69,6 +74,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         Player player = this.inventory.player;
+//        WarpPipeBlockEntity pipeBlockEntity = blockEntity.getBlockPos();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, WARP_PIPE_GUI);
@@ -78,12 +84,19 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final int y = (this.height - this.imageHeight) / 2;
         graphics.blit(WARP_PIPE_GUI, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        if (this.renameButton.isHoveredOrFocused())
-            graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 97, 24, 24);
-        else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 73, 24, 24);
+        if (this.getClickedPos() != null) {
+            BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                if (this.renameButton.isHoveredOrFocused() && !pipeBlockEntity.isWaxed())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 97, 24, 24);
+                else if (pipeBlockEntity.isWaxed())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 121, 24, 24);
+                else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 73, 24, 24);
 
-        if (this.renameBox.visible)
-            graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
+                if (this.renameBox.visible && !pipeBlockEntity.isWaxed())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
+            }
+        }
 
         if (this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
             graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
@@ -256,6 +269,20 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             }
         }
         return null;
+    }
+
+    public void renameButtonOnPress() {
+        Player player = this.inventory.player;
+        final String pipeRename = this.renameBox.getValue();
+        BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
+        if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
+        else if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused() && this.getClickedPos() != null) {
+            PacketHandler.sendToServer(new SRenamePipePacket(this.getClickedPos(), this.renameBox.getValue()));
+            this.pipeName = pipeRename;
+            this.renameBox.setVisible(!this.renameBox.visible);
+        }
+
     }
 
     public void closeButtonOnPress() {

@@ -59,6 +59,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static final String SPOUT_HEIGHT = "SpoutHeight";
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
     public static final String PREVENT_WARP = "PreventWarp";
+    public static final String IS_WAXED = "IsWaxed";
+    public static final String CUSTOM_NAME = "CustomName";
+    public static final String PIPE_NAME = "PipeName";
     @Nullable
     public Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
@@ -68,6 +71,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public int spoutHeight = 4;
     public int bubblesDistance = 3;
     public boolean preventWarp = Boolean.FALSE;
+    public boolean isWaxed;
     public UUID uuid;
     public UUID warpUuid;
 
@@ -148,6 +152,21 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public boolean setText(PipeText text) {
         if (text != this.pipeName) {
             this.pipeName = text;
+            this.markUpdated();
+            this.getUpdatePacket();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isWaxed() {
+        return this.isWaxed;
+    }
+
+    public boolean setWaxed(boolean isWaxed) {
+        if (this.isWaxed != isWaxed) {
+            this.isWaxed = isWaxed;
             this.markUpdated();
             this.getUpdatePacket();
             return true;
@@ -260,22 +279,21 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.lockKey = LockCode.fromTag(tag);
         this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
         this.bubblesDistance = tag.getInt(BUBBLES_DISTANCE);
+        this.isWaxed = tag.getBoolean(IS_WAXED);
 
-        if (tag.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
+        if (tag.contains(CUSTOM_NAME, 8)) {
+            this.name = Component.Serializer.fromJson(tag.getString(CUSTOM_NAME));
         }
 
-        if (tag.contains("PipeName")) {
-            PipeText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound("PipeName")).resultOrPartial(LOGGER::error).ifPresent((text) -> {
+        if (tag.contains(PIPE_NAME)) {
+            PipeText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound(PIPE_NAME)).resultOrPartial(LOGGER::error).ifPresent((text) -> {
                 this.pipeName = this.loadLines(text);
             });
         }
 
-//        System.out.println("SetDestPos: " +  this.destinationPos);
         if (tag.contains(WARP_POS)) {
             this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
             this.setDestinationPos(this.destinationPos);
-//            System.out.println("SetWarpPos: " + this.destinationPos);
         }
 
         if (tag.contains(WARP_DIMENSION))
@@ -286,12 +304,10 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
         if (tag.contains(UUID)) {
             this.uuid = tag.getUUID(UUID);
-//            System.out.println("Load UUID: " + UUID);
         }
 
         if (tag.contains(WARP_UUID)) {
             this.warpUuid = tag.getUUID(WARP_UUID);
-//            System.out.println("Load Warp UUID: " + WARP_UUID);
         }
     }
 
@@ -302,35 +318,30 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         tag.putInt(BUBBLES_DISTANCE, this.bubblesDistance);
         tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
         tag.putBoolean(PREVENT_WARP, this.preventWarp);
+        tag.putBoolean(IS_WAXED, this.isWaxed);
 
         if (this.name != null) {
-            tag.putString("CustomName", Component.Serializer.toJson(this.name));
+            tag.putString(CUSTOM_NAME, Component.Serializer.toJson(this.name));
         }
 
         PipeText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.pipeName).resultOrPartial(LOGGER::error).ifPresent((pipeName) -> {
-            tag.put("PipeName", pipeName);
+            tag.put(PIPE_NAME, pipeName);
         });
 
         if (this.hasDestinationPos() && this.destinationPos != null) {
             tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
-//            System.out.println("WarpPos: " + NbtUtils.writeBlockPos(this.destinationPos));
         }
 
         if (this.dimensionTag != null) {
             tag.putString(WARP_DIMENSION, this.dimensionTag);
-//            System.out.println("WarpDim: " + this.dimensionTag);
         }
 
         if (this.uuid != null) {
             tag.putUUID(UUID, this.getUuid());
-//            System.out.println("Save UUID: " + this.uuid);
-//            System.out.println("Save UUID get: " + this.getUuid());
         }
 
         if (this.warpUuid != null) {
             tag.putUUID(WARP_UUID, this.getWarpUuid());
-//            System.out.println("Save Warp UUID: " + this.warpUuid);
-//            System.out.println("Save Warp UUID get: " + this.getWarpUuid());
         }
     }
 
