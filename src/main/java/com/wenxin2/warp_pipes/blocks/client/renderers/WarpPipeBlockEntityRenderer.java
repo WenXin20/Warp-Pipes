@@ -45,25 +45,31 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
         stack.pushPose();
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.NORTH || state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH)) {
-            this.renderPipeTextNorth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
-                    pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
-            this.renderPipeTextSouth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
-                    pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
+            if (pipeBlockEntity.hasTextNorth())
+                this.renderPipeTextNorth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                        pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
+            if (pipeBlockEntity.hasTextSouth())
+                this.renderPipeTextSouth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                        pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
 
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.EAST || state.getValue(WarpPipeBlock.FACING) == Direction.WEST)) {
-            this.renderPipeTextEast(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+            if (pipeBlockEntity.hasTextEast())
+                this.renderPipeTextEast(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
-            this.renderPipeTextWest(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+            if (pipeBlockEntity.hasTextWest())
+                this.renderPipeTextWest(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
 
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.UP || state.getValue(WarpPipeBlock.FACING) == Direction.DOWN)) {
-            this.renderPipeTextAbove(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+            if (pipeBlockEntity.hasTextAbove())
+                this.renderPipeTextAbove(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
-            this.renderPipeTextBelow(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+            if (pipeBlockEntity.hasTextBelow())
+                this.renderPipeTextBelow(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
         stack.popPose();

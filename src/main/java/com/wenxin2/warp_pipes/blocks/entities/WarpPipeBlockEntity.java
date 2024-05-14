@@ -60,6 +60,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public static final String BUBBLES_DISTANCE = "BubblesDistance";
     public static final String PREVENT_WARP = "PreventWarp";
     public static final String IS_WAXED = "IsWaxed";
+    public static final String DISPLAY_TEXT_NORTH = "displayTextNorth";
+    public static final String DISPLAY_TEXT_SOUTH = "displayTextSouth";
+    public static final String DISPLAY_TEXT_EAST = "displayTextEast";
+    public static final String DISPLAY_TEXT_WEST = "displayTextWest";
+    public static final String DISPLAY_TEXT_ABOVE = "displayTextAbove";
+    public static final String DISPLAY_TEXT_BELOW = "displayTextBelow";
     public static final String CUSTOM_NAME = "CustomName";
     public static final String PIPE_NAME = "PipeName";
     @Nullable
@@ -72,6 +78,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public int bubblesDistance = 3;
     public boolean preventWarp = Boolean.FALSE;
     public boolean isWaxed;
+    public boolean displayTextNorth = Boolean.TRUE;
+    public boolean displayTextSouth = Boolean.TRUE;
+    public boolean displayTextEast = Boolean.TRUE;
+    public boolean displayTextWest = Boolean.TRUE;
+    public boolean displayTextAbove = Boolean.TRUE;
+    public boolean displayTextBelow = Boolean.TRUE;
     public UUID uuid;
     public UUID warpUuid;
 
@@ -155,23 +167,90 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             this.markUpdated();
             this.getUpdatePacket();
             return true;
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
     public boolean isWaxed() {
         return this.isWaxed;
     }
 
-    public boolean setWaxed(boolean isWaxed) {
+    public void setWaxed(boolean isWaxed) {
         if (this.isWaxed != isWaxed) {
             this.isWaxed = isWaxed;
             this.markUpdated();
             this.getUpdatePacket();
-            return true;
-        } else {
-            return false;
+        }
+    }
+
+    public boolean hasTextNorth() {
+        return this.displayTextNorth;
+    }
+
+    public boolean hasTextSouth() {
+        return this.displayTextSouth;
+    }
+
+    public boolean hasTextEast() {
+        return this.displayTextEast;
+    }
+
+    public boolean hasTextWest() {
+        return this.displayTextWest;
+    }
+
+    public boolean hasTextAbove() {
+        return this.displayTextAbove;
+    }
+
+    public boolean hasTextBelow() {
+        return this.displayTextBelow;
+    }
+
+    public void setTextNorth(boolean displayTextNorth) {
+        if (this.displayTextNorth != displayTextNorth) {
+            this.displayTextNorth = displayTextNorth;
+            this.markUpdated();
+            this.getUpdatePacket();
+        }
+    }
+
+    public void setTextSouth(boolean displayTextSouth) {
+        if (this.displayTextSouth != displayTextSouth) {
+            this.displayTextSouth = displayTextSouth;
+            this.markUpdated();
+            this.getUpdatePacket();
+        }
+    }
+
+    public void setTextEast(boolean displayTextEast) {
+        if (this.displayTextEast != displayTextEast) {
+            this.displayTextEast = displayTextEast;
+            this.markUpdated();
+            this.getUpdatePacket();
+        }
+    }
+
+    public void setTextWest(boolean displayTextWest) {
+        if (this.displayTextWest != displayTextWest) {
+            this.displayTextWest = displayTextWest;
+            this.markUpdated();
+            this.getUpdatePacket();
+        }
+    }
+
+    public void setTextAbove(boolean displayTextAbove) {
+        if (this.displayTextAbove != displayTextAbove) {
+            this.displayTextAbove = displayTextAbove;
+            this.markUpdated();
+            this.getUpdatePacket();
+        }
+    }
+
+    public void setTextBelow(boolean displayTextBelow) {
+        if (this.displayTextBelow != displayTextBelow) {
+            this.displayTextBelow = displayTextBelow;
+            this.markUpdated();
+            this.getUpdatePacket();
         }
     }
 
@@ -280,6 +359,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
         this.bubblesDistance = tag.getInt(BUBBLES_DISTANCE);
         this.isWaxed = tag.getBoolean(IS_WAXED);
+        this.displayTextNorth = tag.getBoolean(DISPLAY_TEXT_NORTH);
+        this.displayTextSouth = tag.getBoolean(DISPLAY_TEXT_SOUTH);
+        this.displayTextEast = tag.getBoolean(DISPLAY_TEXT_EAST);
+        this.displayTextWest = tag.getBoolean(DISPLAY_TEXT_WEST);
+        this.displayTextAbove = tag.getBoolean(DISPLAY_TEXT_ABOVE);
+        this.displayTextBelow = tag.getBoolean(DISPLAY_TEXT_BELOW);
 
         if (tag.contains(CUSTOM_NAME, 8)) {
             this.name = Component.Serializer.fromJson(tag.getString(CUSTOM_NAME));
@@ -319,6 +404,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
         tag.putBoolean(PREVENT_WARP, this.preventWarp);
         tag.putBoolean(IS_WAXED, this.isWaxed);
+        tag.putBoolean(DISPLAY_TEXT_NORTH, this.displayTextNorth);
+        tag.putBoolean(DISPLAY_TEXT_SOUTH, this.displayTextSouth);
+        tag.putBoolean(DISPLAY_TEXT_EAST, this.displayTextEast);
+        tag.putBoolean(DISPLAY_TEXT_WEST, this.displayTextWest);
+        tag.putBoolean(DISPLAY_TEXT_ABOVE, this.displayTextAbove);
+        tag.putBoolean(DISPLAY_TEXT_BELOW, this.displayTextBelow);
 
         if (this.name != null) {
             tag.putString(CUSTOM_NAME, Component.Serializer.toJson(this.name));
