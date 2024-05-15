@@ -8,17 +8,22 @@ import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.items.LinkerItem;
 import java.util.Collection;
 import java.util.Map;
+import javax.annotation.Nullable;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DebugStickItem;
@@ -402,27 +407,27 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         RandomSource random = world.getRandom();
         Vec3 moveVec = entity.getDeltaMovement();
 
-        double entityX = entity.getX();
-        double entityY = entity.getY();
-        double entityZ = entity.getZ();
-
-        int blockX = pos.getX();
-        int blockY = pos.getY();
-        int blockZ = pos.getZ();
-
-        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
-                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()
-                && Config.ALLOW_FAST_TRAVEL.get()) {
-            this.moveSidewaysInPipe(entity);
-
-            if (!world.isClientSide) {
-                if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
-                    if (random.nextInt(10) == 0) {
-                        this.spawnParticles(entity);
-                    }
-                }
-            }
-        }
+//        double entityX = entity.getX();
+//        double entityY = entity.getY();
+//        double entityZ = entity.getZ();
+//
+//        int blockX = pos.getX();
+//        int blockY = pos.getY();
+//        int blockZ = pos.getZ();
+//
+//        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
+//                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()
+//                && Config.ALLOW_FAST_TRAVEL.get()) {
+//            this.moveSidewaysInPipe(entity);
+//
+//            if (!world.isClientSide) {
+//                if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
+//                    if (random.nextInt(10) == 0) {
+//                        this.spawnParticles(entity);
+//                    }
+//                }
+//            }
+//        }
         super.entityInside(state, world, pos, entity);
     }
 
