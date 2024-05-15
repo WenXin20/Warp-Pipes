@@ -30,10 +30,12 @@ dependencies {
     implementation fg.deobf("curse.maven:architectury-api-${architectury_api_version}")
     implementation fg.deobf("curse.maven:cloth-config-${cloth_config_version}")
     implementation fg.deobf("curse.maven:fusion-connected-textures-${fusion_version}")
+    implementation fg.deobf("curse.maven:selene-${moonlight_version}")
     implementation fg.deobf("curse.maven:roughly-enough-items-${rei_version}")
     implementation fg.deobf("curse.maven:roughly-enough-items-hacks-${reipc_version}")
     implementation fg.deobf("curse.maven:spark-${spark_version}")
     implementation fg.deobf("curse.maven:structure-gel-api-${structure_gel_version}")
+    implementation fg.deobf("curse.maven:supplementaries-${supplementaries_version}")
 
     // implementation fg.deobf("curse.maven:jei-${jei_version}")
     // implementation fg.deobf("curse.maven:ctm-${ctm_version}")

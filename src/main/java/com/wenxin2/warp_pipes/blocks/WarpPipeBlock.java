@@ -4,6 +4,7 @@ import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
+import com.wenxin2.warp_pipes.integration.CompatRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +22,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -55,6 +58,7 @@ import net.minecraft.world.level.material.LavaFluid;
 import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
@@ -107,19 +111,19 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (!pipeBlockEntity.isWaxed()) {
                 if (item == Items.INK_SAC) {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.FALSE))) {
-                        world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         pipeBlockEntity.getUpdateTag();
                         isSuccesful = true;
                     }
                 } else if (item == Items.GLOW_INK_SAC) {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.TRUE))) {
-                        world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         pipeBlockEntity.getUpdateTag();
                         isSuccesful = true;
                     }
                 } else if (item == Items.HONEYCOMB) {
                     pipeBlockEntity.setWaxed(Boolean.TRUE);
-                    world.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(player, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
                     ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_ON, UniformInt.of(3, 5));
                     pipeBlockEntity.getUpdateTag();
                     isSuccesful = true;
@@ -137,7 +141,59 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     } else if (hit.getDirection() == Direction.DOWN) {
                         pipeBlockEntity.setTextBelow(!pipeBlockEntity.hasTextBelow());
                     }
-                    world.playSound(null, pos, SoundEvents.BRUSH_SAND_COMPLETED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(player, pos, SoundEvents.BRUSH_SAND_COMPLETED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pipeBlockEntity.getUpdateTag();
+                    isSuccesfulTool = true;
+                } else if (stack.is(CompatRegistry.BUBBLE_BLOWER.get()) || stack.is(CompatRegistry.SOAP.get())) {
+                    if (hit.getDirection() == Direction.NORTH && pipeBlockEntity.hasTextNorth()) {
+                        pipeBlockEntity.setTextNorth(Boolean.FALSE);
+                        world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        ParticleUtils.spawnParticlesOnBlockFace(world, pos, (ParticleOptions) CompatRegistry.SUDS_PARTICLE.get(),
+                                UniformInt.of(5, 8), Direction.NORTH,
+                                () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F)),  0.55);
+                    } else if (hit.getDirection() == Direction.SOUTH && pipeBlockEntity.hasTextSouth()) {
+                        pipeBlockEntity.setTextSouth(Boolean.FALSE);
+                        world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        ParticleUtils.spawnParticlesOnBlockFace(world, pos, (ParticleOptions) CompatRegistry.SUDS_PARTICLE.get(),
+                                UniformInt.of(5, 8), Direction.SOUTH,
+                                () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                    } else if (hit.getDirection() == Direction.EAST && pipeBlockEntity.hasTextEast()) {
+                        pipeBlockEntity.setTextEast(Boolean.FALSE);
+                        world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        ParticleUtils.spawnParticlesOnBlockFace(world, pos, (ParticleOptions) CompatRegistry.SUDS_PARTICLE.get(),
+                                UniformInt.of(5, 8), Direction.EAST,
+                                () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                    } else if (hit.getDirection() == Direction.WEST && pipeBlockEntity.hasTextWest()) {
+                        pipeBlockEntity.setTextWest(Boolean.FALSE);
+                        world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        ParticleUtils.spawnParticlesOnBlockFace(world, pos, (ParticleOptions) CompatRegistry.SUDS_PARTICLE.get(),
+                                UniformInt.of(5, 8), Direction.WEST,
+                                () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                    } else if (hit.getDirection() == Direction.UP && pipeBlockEntity.hasTextAbove()) {
+                        pipeBlockEntity.setTextAbove(Boolean.FALSE);
+                        world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        ParticleUtils.spawnParticlesOnBlockFace(world, pos, (ParticleOptions) CompatRegistry.SUDS_PARTICLE.get(),
+                                UniformInt.of(5, 8), Direction.UP,
+                                () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                    } else if (hit.getDirection() == Direction.DOWN && pipeBlockEntity.hasTextBelow()) {
+                        pipeBlockEntity.setTextBelow(Boolean.FALSE);
+                        world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        ParticleUtils.spawnParticlesOnBlockFace(world, pos, (ParticleOptions) CompatRegistry.SUDS_PARTICLE.get(),
+                                UniformInt.of(5, 8), Direction.DOWN,
+                                () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F),
+                                        Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                    }
                     pipeBlockEntity.getUpdateTag();
                     isSuccesfulTool = true;
                 } else {
