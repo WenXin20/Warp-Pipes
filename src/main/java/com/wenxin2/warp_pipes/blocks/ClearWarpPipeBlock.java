@@ -407,27 +407,27 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         RandomSource random = world.getRandom();
         Vec3 moveVec = entity.getDeltaMovement();
 
-//        double entityX = entity.getX();
-//        double entityY = entity.getY();
-//        double entityZ = entity.getZ();
-//
-//        int blockX = pos.getX();
-//        int blockY = pos.getY();
-//        int blockZ = pos.getZ();
-//
-//        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
-//                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()
-//                && Config.ALLOW_FAST_TRAVEL.get()) {
-//            this.moveSidewaysInPipe(entity);
-//
-//            if (!world.isClientSide) {
-//                if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
-//                    if (random.nextInt(10) == 0) {
-//                        this.spawnParticles(entity);
-//                    }
-//                }
-//            }
-//        }
+        double entityX = entity.getX();
+        double entityY = entity.getY();
+        double entityZ = entity.getZ();
+
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02) && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
+                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02) && !entity.isShiftKeyDown()
+                && Config.ALLOW_FAST_TRAVEL.get()) {
+            this.moveSidewaysInPipe(entity);
+
+            if (!world.isClientSide) {
+                if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
+                    if (random.nextInt(10) == 0) {
+                        this.spawnParticles(entity);
+                    }
+                }
+            }
+        }
         super.entityInside(state, world, pos, entity);
     }
 
