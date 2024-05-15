@@ -24,7 +24,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -80,23 +82,26 @@ public abstract class LivingEntityMixin extends Entity {
         d1 = pos.getY();
         boolean flag = false;
         boolean flag1 = false;
-//        BaseRailBlock baserailblock = (BaseRailBlock) state.getBlock();
         if (state.getBlock() instanceof ClearWarpPipeBlock) {
             flag = !state.getValue(ClearWarpPipeBlock.CLOSED);
             flag1 = !flag;
         }
 
-//        double d3 = getSlopeAdjustment();
-//        if (this.isInWater()) {
-//            d3 *= 0.2D;
-//        }
-
         Vec3 vec31 = this.getDeltaMovement();
-//        Pair<Vec3i, Vec3i> pair = exits(railshape);
-        Vec3i vec3i = Direction.WEST.getNormal();
-        Vec3i vec3i1 = Direction.EAST.getNormal();
-        double d4 = vec3i1.getX() - vec3i.getX();
-        double d5 = vec3i1.getZ() - vec3i.getZ();
+        Vec3i facingNormal;
+
+        // Determine facing normal based on the direction of movement
+        if (Math.abs(vec31.x) > Math.abs(vec31.z)) {
+            // Moving mainly in the x direction
+            facingNormal = vec31.x > 0 ? Direction.EAST.getNormal() : Direction.WEST.getNormal();
+        } else {
+            // Moving mainly in the z direction
+            facingNormal = vec31.z > 0 ? Direction.SOUTH.getNormal() : Direction.NORTH.getNormal();
+        }
+
+        Vec3i oppositeNormal = new Vec3i(-facingNormal.getX(), -facingNormal.getY(), -facingNormal.getZ());
+        double d4 = oppositeNormal.getX() - facingNormal.getX();
+        double d5 = oppositeNormal.getZ() - facingNormal.getZ();
         double d6 = Math.sqrt(d4 * d4 + d5 * d5);
         double d7 = vec31.x * d4 + vec31.z * d5;
         if (d7 < 0.0D) {
@@ -113,7 +118,7 @@ public abstract class LivingEntityMixin extends Entity {
             double d9 = vec32.horizontalDistanceSqr();
             double d11 = this.getDeltaMovement().horizontalDistanceSqr();
             if (d9 > 1.0E-4D && d11 < 0.01D) {
-                this.setDeltaMovement(this.getDeltaMovement().add(vec32.x * 0.1D, 0.0D, vec32.z * 0.1D));
+                this.setDeltaMovement(this.getDeltaMovement().add(vec32.x * 0.1D, 0.5D, vec32.z * 0.1D));
                 flag1 = false;
             }
         }
@@ -127,17 +132,18 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
 
-        double d23 = (double)pos.getX() + 0.5D + (double)vec3i.getX() * 0.5D;
-        double d10 = (double)pos.getZ() + 0.5D + (double)vec3i.getZ() * 0.5D;
-        double d12 = (double)pos.getX() + 0.5D + (double)vec3i1.getX() * 0.5D;
-        double d13 = (double)pos.getZ() + 0.5D + (double)vec3i1.getZ() * 0.5D;
+        // Update entity's position along the pipe
+        double d23 = (double) pos.getX() + 0.5D + (double) facingNormal.getX() * 0.5D;
+        double d10 = (double) pos.getZ() + 0.5D + (double) facingNormal.getZ() * 0.5D;
+        double d12 = (double) pos.getX() + 0.5D + (double) oppositeNormal.getX() * 0.5D;
+        double d13 = (double) pos.getZ() + 0.5D + (double) oppositeNormal.getZ() * 0.5D;
         d4 = d12 - d23;
         d5 = d13 - d10;
         double d14;
         if (d4 == 0.0D) {
-            d14 = d2 - (double)pos.getZ();
+            d14 = d2 - (double) pos.getZ();
         } else if (d5 == 0.0D) {
-            d14 = d0 - (double)pos.getX();
+            d14 = d0 - (double) pos.getX();
         } else {
             double d15 = d0 - d23;
             double d16 = d2 - d10;
@@ -146,12 +152,44 @@ public abstract class LivingEntityMixin extends Entity {
 
         d0 = d23 + d4 * d14;
         d2 = d10 + d5 * d14;
+//        this.setPos(d0, d1, d2);
+
+        // Perform collision check
+        VoxelShape collisionShape = state.getCollisionShape(this.level(), pos).move(pos.getX(), pos.getY(), pos.getZ());
+        if (!collisionShape.isEmpty()) {
+            AABB entityBoundingBox = this.getBoundingBox();
+            AABB blockBoundingBox = collisionShape.bounds();
+
+            facingNormal = getFacingNormalForMovement();
+            oppositeNormal = new Vec3i(-facingNormal.getX(), -facingNormal.getY(), -facingNormal.getZ());
+
+            // Check if the entity's bounding box intersects with the pipe's bounding box
+            boolean intersects = entityBoundingBox.intersects(blockBoundingBox);
+
+            if (intersects) {
+                // Calculate the direction towards the center of the hitbox
+                Vec3 centerOfHitbox = blockBoundingBox.getCenter();
+                Vec3 entityPosition = this.position();
+                Vec3 direction = centerOfHitbox.subtract(entityPosition).normalize();
+
+                // Move the entity towards the center of the hitbox
+                double distanceToMove = entityBoundingBox.distanceToSqr(centerOfHitbox);
+                double maxMoveDistance = Math.sqrt(distanceToMove); // Move at most the distance to the center
+                double moveX = direction.x * maxMoveDistance;
+                double moveY = direction.y * maxMoveDistance;
+                double moveZ = direction.z * maxMoveDistance;
+
+                // Adjust the entity's position
+                this.setPos(this.getX() + moveX, this.getY() + moveY, this.getZ() + moveZ);
+            }
+        }
+
         this.setPos(d0, d1, d2);
         this.moveEntityOnPipe(pos);
-        if (vec3i.getY() != 0 && Mth.floor(this.getX()) - pos.getX() == vec3i.getX() && Mth.floor(this.getZ()) - pos.getZ() == vec3i.getZ()) {
-            this.setPos(this.getX(), this.getY() + (double)vec3i.getY(), this.getZ());
-        } else if (vec3i1.getY() != 0 && Mth.floor(this.getX()) - pos.getX() == vec3i1.getX() && Mth.floor(this.getZ()) - pos.getZ() == vec3i1.getZ()) {
-            this.setPos(this.getX(), this.getY() + (double)vec3i1.getY(), this.getZ());
+        if (facingNormal.getY() != 0 && Mth.floor(this.getX()) - pos.getX() == facingNormal.getX() && Mth.floor(this.getZ()) - pos.getZ() == facingNormal.getZ()) {
+            this.setPos(this.getX(), this.getY() + (double)facingNormal.getY(), this.getZ());
+        } else if (oppositeNormal.getY() != 0 && Mth.floor(this.getX()) - pos.getX() == oppositeNormal.getX() && Mth.floor(this.getZ()) - pos.getZ() == oppositeNormal.getZ()) {
+            this.setPos(this.getX(), this.getY() + (double)oppositeNormal.getY(), this.getZ());
         }
 
         this.applyNaturalSlowdown();
@@ -180,33 +218,21 @@ public abstract class LivingEntityMixin extends Entity {
             double d27 = vec36.horizontalDistance();
             if (d27 > 0.01D) {
                 double d19 = 0.06D;
-                this.setDeltaMovement(vec36.add(vec36.x / d27 * 0.06D, 0.0D, vec36.z / d27 * 0.06D));
+                this.setDeltaMovement(vec36.add(vec36.x / d27 * 0.06D, 0.5D, vec36.z / d27 * 0.06D));
             } else {
                 Vec3 vec37 = this.getDeltaMovement();
                 double d20 = vec37.x;
                 double d21 = vec37.z;
-//                if (railshape == RailShape.EAST_WEST) {
-//                    if (this.isRedstoneConductor(pos.west())) {
-//                        d20 = 0.02D;
-//                    } else if (this.isRedstoneConductor(pos.east())) {
-//                        d20 = -0.02D;
-//                    }
-//                } else {
-//                    if (railshape != RailShape.NORTH_SOUTH) {
-//                        return;
-//                    }
-//
-//                    if (this.isRedstoneConductor(pos.north())) {
-//                        d21 = 0.02D;
-//                    } else if (this.isRedstoneConductor(pos.south())) {
-//                        d21 = -0.02D;
-//                    }
-//                }
-
                 this.setDeltaMovement(d20, vec37.y, d21);
             }
         }
 
+    }
+
+    private Vec3i getFacingNormalForMovement() {
+        Vec3 vec3 = this.getDeltaMovement();
+        return Math.abs(vec3.x) > Math.abs(vec3.z) ? (vec3.x > 0 ? Direction.EAST.getNormal() : Direction.WEST.getNormal()) :
+                (vec3.z > 0 ? Direction.SOUTH.getNormal() : Direction.NORTH.getNormal());
     }
 
     @Nullable
@@ -214,46 +240,29 @@ public abstract class LivingEntityMixin extends Entity {
         int i = Mth.floor(x);
         int j = Mth.floor(y);
         int k = Mth.floor(z);
-        if (this.level().getBlockState(new BlockPos(i, j - 1, k)).is(BlockTags.RAILS)) {
-            --j;
-        }
 
-        BlockState state = this.level().getBlockState(new BlockPos(i, j, k));
-        if (state.getBlock() instanceof ClearWarpPipeBlock) {
-//            RailShape railshape = ((BaseRailBlock)state.getBlock()).getRailDirection(state, this.level(), new BlockPos(i, j, k), this);
-//            Pair<Vec3i, Vec3i> pair = exits(railshape);
-            Vec3i vec3i = Direction.WEST.getNormal();
-            Vec3i vec3i1 = Direction.EAST.getNormal();
-            double d0 = (double)i + 0.5D + (double)vec3i.getX() * 0.5D;
-            double d1 = (double)j + 0.0625D + (double)vec3i.getY() * 0.5D;
-            double d2 = (double)k + 0.5D + (double)vec3i.getZ() * 0.5D;
-            double d3 = (double)i + 0.5D + (double)vec3i1.getX() * 0.5D;
-            double d4 = (double)j + 0.0625D + (double)vec3i1.getY() * 0.5D;
-            double d5 = (double)k + 0.5D + (double)vec3i1.getZ() * 0.5D;
-            double d6 = d3 - d0;
-            double d7 = (d4 - d1) * 2.0D;
-            double d8 = d5 - d2;
-            double d9;
-            if (d6 == 0.0D) {
-                d9 = z - (double)k;
-            } else if (d8 == 0.0D) {
-                d9 = x - (double)i;
+        BlockPos pos = new BlockPos(i, j, k);
+        if (this.level().getBlockState(pos).getBlock() instanceof ClearWarpPipeBlock) {
+            Vec3i facingNormal;
+            Vec3 vec3 = this.getDeltaMovement();
+            if (Math.abs(vec3.x) > Math.abs(vec3.z)) {
+                // Moving mainly in the x direction
+                facingNormal = vec3.x > 0 ? Direction.EAST.getNormal() : Direction.WEST.getNormal();
             } else {
-                double d10 = x - d0;
-                double d11 = z - d2;
-                d9 = (d10 * d6 + d11 * d8) * 2.0D;
+                // Moving mainly in the z direction
+                facingNormal = vec3.z > 0 ? Direction.SOUTH.getNormal() : Direction.NORTH.getNormal();
+            }
+            double d0 = (double)i + 0.5D + (double)facingNormal.getX() * 0.5D;
+            double d1 = (double)j + 0.0625D + (double)facingNormal.getY() * 0.5D;
+            double d2 = (double)k + 0.5D + (double)facingNormal.getZ() * 0.5D;
+
+            // Adjust position if moving vertically
+            if (facingNormal.getY() != 0 && Mth.floor(this.getX()) - i == facingNormal.getX() &&
+                    Mth.floor(this.getZ()) - k == facingNormal.getZ()) {
+                d1 += facingNormal.getY();
             }
 
-            x = d0 + d6 * d9;
-            y = d1 + d7 * d9;
-            z = d2 + d8 * d9;
-            if (d7 < 0.0D) {
-                ++y;
-            } else if (d7 > 0.0D) {
-                y += 0.5D;
-            }
-
-            return new Vec3(x, y, z);
+            return new Vec3(d0, d1, d2);
         } else {
             return null;
         }
@@ -269,7 +278,7 @@ public abstract class LivingEntityMixin extends Entity {
         }
         double clampedX = Mth.clamp(d24 * vec3d1.x, -d25, d25);
         double clampedZ = Mth.clamp(d24 * vec3d1.z, -d25, d25);
-        this.move(MoverType.SELF, new Vec3(clampedX, 0.0D, clampedZ));
+        this.move(MoverType.SELF, new Vec3(clampedX, 0.5D, clampedZ));
     }
 
     public double getMaxSpeedWithPipe(Level world) { //Non-default because getMaximumSpeed is protected
