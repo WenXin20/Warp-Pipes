@@ -153,6 +153,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F)),  0.55);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.SOUTH && pipeBlockEntity.hasTextSouth()) {
                         pipeBlockEntity.setTextSouth(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -161,6 +163,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.EAST && pipeBlockEntity.hasTextEast()) {
                         pipeBlockEntity.setTextEast(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -169,6 +173,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.WEST && pipeBlockEntity.hasTextWest()) {
                         pipeBlockEntity.setTextWest(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -177,6 +183,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.UP && pipeBlockEntity.hasTextAbove()) {
                         pipeBlockEntity.setTextAbove(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -185,6 +193,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.DOWN && pipeBlockEntity.hasTextBelow()) {
                         pipeBlockEntity.setTextBelow(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -193,9 +203,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                                 () -> new Vec3(Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F),
                                         Mth.nextDouble(random, -0.005F, 0.005F)), 0.55);
+                        pipeBlockEntity.getUpdateTag();
+                        isSuccesfulTool = true;
                     }
-                    pipeBlockEntity.getUpdateTag();
-                    isSuccesfulTool = true;
                 } else {
                     if (DyeColor.getColor(stack) != null
                             && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(DyeColor.getColor(stack)))) {
