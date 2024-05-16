@@ -145,7 +145,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         return MAX_TEXT_LINE_WIDTH;
     }
 
-    public PipeText getPipeName() {
+    public PipeText getPipeText() {
         return this.pipeName;
     }
 
@@ -155,7 +155,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public boolean updateText(UnaryOperator<PipeText> text) {
-        PipeText pipeText = this.getPipeName();
+        PipeText pipeText = this.getPipeText();
         this.markUpdated();
         this.getUpdatePacket();
         return this.setText(text.apply(pipeText));
