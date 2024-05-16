@@ -117,16 +117,14 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 if (item == Items.INK_SAC) {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.FALSE))) {
                         world.playSound(player, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        spawnParticlesOnBlockFaces(world, pos, ParticleTypes.SQUID_INK, UniformInt.of(1, 2),
-                                new Vec3(0, 0, 0));
+                        coloredDustParticles(world, pos, new Vector3f(0, 0, 0), UniformInt.of(8, 12));
                         pipeBlockEntity.getUpdateTag();
                         isSuccesful = true;
                     }
                 } else if (item == Items.GLOW_INK_SAC) {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.TRUE))) {
                         world.playSound(player, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        spawnParticlesOnBlockFaces(world, pos, ParticleTypes.GLOW_SQUID_INK, UniformInt.of(1, 2),
-                                new Vec3(0, 0, 0));
+                        spawnParticlesOnBlockFaces(world, pos, ParticleTypes.GLOW, new Vec3(0, 0, 0), UniformInt.of(3, 5));
                         pipeBlockEntity.getUpdateTag();
                         isSuccesful = true;
                     }
@@ -139,22 +137,22 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 } else if (stack.is(Items.BRUSH)) {
                     if (hit.getDirection() == Direction.NORTH) {
                         pipeBlockEntity.setTextNorth(!pipeBlockEntity.hasTextNorth());
-                        this.coloredDustParticles(pipeBlockEntity, world, pos, Direction.NORTH);
+                        this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.NORTH);
                     } else if (hit.getDirection() == Direction.SOUTH) {
                         pipeBlockEntity.setTextSouth(!pipeBlockEntity.hasTextSouth());
-                        this.coloredDustParticles(pipeBlockEntity, world, pos, Direction.SOUTH);
+                        this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.SOUTH);
                     } else if (hit.getDirection() == Direction.EAST) {
                         pipeBlockEntity.setTextEast(!pipeBlockEntity.hasTextEast());
-                        this.coloredDustParticles(pipeBlockEntity, world, pos, Direction.EAST);
+                        this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.EAST);
                     } else if (hit.getDirection() == Direction.WEST) {
                         pipeBlockEntity.setTextWest(!pipeBlockEntity.hasTextWest());
-                        this.coloredDustParticles(pipeBlockEntity, world, pos, Direction.WEST);
+                        this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.WEST);
                     } else if (hit.getDirection() == Direction.UP) {
                         pipeBlockEntity.setTextAbove(!pipeBlockEntity.hasTextAbove());
-                        this.coloredDustParticles(pipeBlockEntity, world, pos, Direction.UP);
+                        this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.UP);
                     } else if (hit.getDirection() == Direction.DOWN) {
                         pipeBlockEntity.setTextBelow(!pipeBlockEntity.hasTextBelow());
-                        this.coloredDustParticles(pipeBlockEntity, world, pos, Direction.DOWN);
+                        this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.DOWN);
                     }
                     world.playSound(player, pos, SoundEvents.BRUSH_SAND_COMPLETED, SoundSource.BLOCKS, 1.0F, 1.0F);
                     pipeBlockEntity.getUpdateTag();
@@ -702,7 +700,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 .withStyle(ChatFormatting.RED), true);
     }
 
-    public void coloredDustParticles(WarpPipeBlockEntity pipeBlockEntity, Level world, BlockPos pos, Direction direction) {
+    public void dyedDustParticles(WarpPipeBlockEntity pipeBlockEntity, Level world, BlockPos pos, Direction direction) {
         RandomSource random = world.getRandom();
         int textColor = pipeBlockEntity.getPipeText().getColor().getTextColor();
         float red = (float)(textColor >> 16 & 255) / 255.0F;
@@ -717,6 +715,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         Mth.nextDouble(random, -0.005F, 0.005F)),  0.55);
     }
 
+    public void coloredDustParticles(Level world, BlockPos pos, Vector3f colorVec, UniformInt amount) {
+        ParticleUtils.spawnParticlesOnBlockFaces(world, pos, new DustParticleOptions(colorVec, 0.5F), amount);
+    }
+
     public void sudParticles(Level world, BlockPos pos, Direction direction) {
         RandomSource random = world.getRandom();
 
@@ -727,9 +729,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         Mth.nextDouble(random, -0.005F, 0.005F)),  0.55);
     }
 
-    public static void spawnParticlesOnBlockFaces(Level world, BlockPos pos, ParticleOptions particles, IntProvider intRange, Vec3 speedRange) {
+    public static void spawnParticlesOnBlockFaces(Level world, BlockPos pos, ParticleOptions particles, Vec3 speedRange, IntProvider amountRange) {
         for(Direction direction : Direction.values()) {
-            ParticleUtils.spawnParticlesOnBlockFace(world, pos, particles, intRange, direction, () -> speedRange, 0.55D);
+            ParticleUtils.spawnParticlesOnBlockFace(world, pos, particles, amountRange, direction, () -> speedRange, 0.55D);
         }
     }
 }
