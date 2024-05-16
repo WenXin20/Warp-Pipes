@@ -2,11 +2,11 @@ package com.wenxin2.warp_pipes.blocks.client.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.PipeText;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
-import com.wenxin2.warp_pipes.init.ModRegistry;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -46,30 +46,30 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.NORTH || state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH)) {
             if (pipeBlockEntity.hasTextNorth())
-                this.renderPipeTextNorth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                this.renderPipeTextNorth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
                         pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
             if (pipeBlockEntity.hasTextSouth())
-                this.renderPipeTextSouth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                this.renderPipeTextSouth(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
                         pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
 
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.EAST || state.getValue(WarpPipeBlock.FACING) == Direction.WEST)) {
             if (pipeBlockEntity.hasTextEast())
-                this.renderPipeTextEast(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                this.renderPipeTextEast(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
             if (pipeBlockEntity.hasTextWest())
-                this.renderPipeTextWest(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                this.renderPipeTextWest(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
 
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.UP || state.getValue(WarpPipeBlock.FACING) == Direction.DOWN)) {
             if (pipeBlockEntity.hasTextAbove())
-                this.renderPipeTextAbove(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                this.renderPipeTextAbove(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
             if (pipeBlockEntity.hasTextBelow())
-                this.renderPipeTextBelow(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeName(), stack, buffer, packedLight,
+                this.renderPipeTextBelow(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
                     pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
         stack.popPose();
@@ -126,10 +126,12 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             for (int j = 0; j < 1; j++) {
                 BlockState stateNorth = world.getBlockState(pos.north());
                 FormattedCharSequence pipeName = pipeNameArray[j];
-                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
+                if (state.getBlock() instanceof ClearWarpPipeBlock)
+                    stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 7, 0.0);
+                else stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateNorth.isSolid() && stateNorth.isSolidRender(world, pos.north()))
-                        && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateNorth.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                        && !(state.getBlock() instanceof ClearWarpPipeBlock && stateNorth.getBlock() instanceof ClearWarpPipeBlock)) {
                     if (hasGlowingText) {
                         this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
@@ -195,10 +197,12 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             for (int j = 0; j < 1; j++) {
                 BlockState stateSouth = world.getBlockState(pos.south());
                 FormattedCharSequence pipeName = pipeNameArray[j];
-                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
+                if (state.getBlock() instanceof ClearWarpPipeBlock)
+                    stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 7, 0.0);
+                else stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateSouth.isSolid() && stateSouth.isSolidRender(world, pos.south()))
-                        && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateSouth.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                        && !(state.getBlock() instanceof ClearWarpPipeBlock && stateSouth.getBlock() instanceof ClearWarpPipeBlock)) {
                     if (hasGlowingText) {
                         this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
@@ -264,10 +268,12 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             for (int j = 0; j < 1; j++) {
                 BlockState stateEast = world.getBlockState(pos.east());
                 FormattedCharSequence pipeName = pipeNameArray[j];
-                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
+                if (state.getBlock() instanceof ClearWarpPipeBlock)
+                    stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 7, 0.0);
+                else stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateEast.isSolid() && stateEast.isSolidRender(world, pos.east()))
-                        && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateEast.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                        && !(state.getBlock() instanceof ClearWarpPipeBlock && stateEast.getBlock() instanceof ClearWarpPipeBlock)) {
                     if (hasGlowingText) {
                         this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
@@ -333,10 +339,12 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             for (int j = 0; j < 1; j++) {
                 BlockState stateWest = world.getBlockState(pos.west());
                 FormattedCharSequence pipeName = pipeNameArray[j];
-                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
+                if (state.getBlock() instanceof ClearWarpPipeBlock)
+                    stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 7, 0.0);
+                else stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateWest.isSolid() && stateWest.isSolidRender(world, pos.west()))
-                        && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateWest.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                        && !(state.getBlock() instanceof ClearWarpPipeBlock && stateWest.getBlock() instanceof ClearWarpPipeBlock)) {
                     if (hasGlowingText) {
                         this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
@@ -402,10 +410,12 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             for (int j = 0; j < 1; j++) {
                 BlockState stateAbove = world.getBlockState(pos.above());
                 FormattedCharSequence pipeName = pipeNameArray[j];
-                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
+                if (state.getBlock() instanceof ClearWarpPipeBlock)
+                    stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 7, 0.0);
+                else stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateAbove.isSolid() && stateAbove.isSolidRender(world, pos.above()))
-                        && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateAbove.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                        && !(state.getBlock() instanceof ClearWarpPipeBlock && stateAbove.getBlock() instanceof ClearWarpPipeBlock)) {
                     if (hasGlowingText) {
                         this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
@@ -471,10 +481,12 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
             for (int j = 0; j < 1; j++) {
                 BlockState stateBelow = world.getBlockState(pos.below());
                 FormattedCharSequence pipeName = pipeNameArray[j];
-                stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
+                if (state.getBlock() instanceof ClearWarpPipeBlock)
+                    stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 7, 0.0);
+                else stack.translate((-this.font.width(pipeName) / 2.0) + 0.5, 2, 0.0);
 
                 if (!(stateBelow.isSolid() && stateBelow.isSolidRender(world, pos.below()))
-                        && !(state.is(ModRegistry.CLEAR_WARP_PIPE.get()) && stateBelow.is(ModRegistry.CLEAR_WARP_PIPE.get()))) {
+                        && !(state.getBlock() instanceof ClearWarpPipeBlock && stateBelow.getBlock() instanceof ClearWarpPipeBlock)) {
                     if (hasGlowingText) {
                         this.font.drawInBatch8xOutline(pipeName, 0, 0, textColor, getDarkColor(pipeText),
                                 stack.last().pose(), buffer, packedLightL);
