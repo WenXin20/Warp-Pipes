@@ -10,14 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -655,9 +653,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
             WarpPipeBlock.markEntityTeleported(entity);
         }
-        if (!(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock) && entity instanceof Player player)
-            displayDestinationMissingMessage(player);
-
         world.gameEvent(GameEvent.TELEPORT, warpPos, GameEvent.Context.of(entity));
         world.playSound(null, warpPos, SoundRegistry.PIPE_WARPS.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
     }
@@ -693,11 +688,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
         }
         return closestPos;
-    }
-
-    public static void displayDestinationMissingMessage(Player player) {
-        player.displayClientMessage(Component.translatable("display.warp_pipes.warp_destination_missing")
-                .withStyle(ChatFormatting.RED), true);
     }
 
     public void dyedDustParticles(WarpPipeBlockEntity pipeBlockEntity, Level world, BlockPos pos, Direction direction) {
