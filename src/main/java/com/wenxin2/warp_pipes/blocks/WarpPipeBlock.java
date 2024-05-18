@@ -663,7 +663,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         int maxDistance = 64; // How far it searches for warp pipes with a matching UUID
 
         for (int x = -maxDistance; x <= maxDistance; x++) {
-            for (int y = -maxDistance; y <= maxDistance; y++) {
+            for (int y = Math.max(-maxDistance, world.getMinBuildHeight() - pos.getY()); y <= Math.min(maxDistance, world.getMaxBuildHeight() - pos.getY()); y++) {
                 for (int z = -maxDistance; z <= maxDistance; z++) {
                     BlockPos checkingPos = pos.offset(x, y, z);
                     BlockState blockState = world.getBlockState(checkingPos);
