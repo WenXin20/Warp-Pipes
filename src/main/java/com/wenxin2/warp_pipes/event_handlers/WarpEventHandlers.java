@@ -19,10 +19,13 @@ public class WarpEventHandlers {
         CompoundTag tag = event.getEntity().getPersistentData();
         if (!(event.getEntity() instanceof LivingEntity) && !(event.getEntity() instanceof Player)) return;
 
-        if (event.getEntity() != null && !tag.getBoolean("warp_pipes:can_warp"))
+        if (event.getEntity() != null && tag.getBoolean("warp_pipes:can_warp") == Boolean.FALSE)
             tag.putBoolean("warp_pipes:prevent_warp", true);
 
         if (event.getEntity() != null && !tag.contains("warp_pipes:prevent_warp"))
+            tag.putBoolean("warp_pipes:prevent_warp", false);
+
+        if (event.getEntity() != null && event.getEntity() instanceof Player)
             tag.putBoolean("warp_pipes:prevent_warp", false);
     }
 
