@@ -37,6 +37,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
@@ -47,6 +49,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Button waterSpoutButton;
     EditBox renameBox;
     Inventory inventory;
+
+    public static BlockPos lastClickedPos = null;
     public static ForgeSlider waterSpoutSlider;
     public static ForgeSlider bubblesSlider;
     private String pipeName = "";
@@ -75,7 +79,6 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         Player player = this.inventory.player;
-//        WarpPipeBlockEntity pipeBlockEntity = blockEntity.getBlockPos();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, WARP_PIPE_GUI);
@@ -152,6 +155,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     @Override
     public void init() {
         super.init();
+        this.lastClickedPos = this.getClickedPos();
         final int x = (this.width - this.imageWidth) / 2;
         final int y = (this.height - this.imageHeight) / 2;
 
@@ -312,18 +316,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     }
 
     public BlockPos getClickedPos() {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.level != null && minecraft.player != null) {
-            double reachDistance = minecraft.player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();
-            Vec3 start = minecraft.player.getEyePosition(1.0f);
-            Vec3 end = start.add(minecraft.player.getLookAngle().scale(reachDistance));
-            BlockHitResult hitResult =
-                    minecraft.level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, minecraft.player));
-            if (hitResult.getType() == HitResult.Type.BLOCK) {
-                return hitResult.getBlockPos();
-            }
-        }
-        return null;
+        return lastClickedPos;
     }
 
     public void renameButtonOnPress() {

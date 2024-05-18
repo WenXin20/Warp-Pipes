@@ -1,7 +1,7 @@
 package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
-import com.wenxin2.warp_pipes.event_handlers.SpawnEventHandler;
+import com.wenxin2.warp_pipes.event_handlers.WarpEventHandlers;
 import com.wenxin2.warp_pipes.init.ClientSetupHandler;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModCreativeTabs;
@@ -68,7 +68,7 @@ public class WarpPipes
             modEventBus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
         });
 
-        SpawnEventHandler.register();
+        WarpEventHandlers.register();
         // PipeBubblesSoundHandler.init();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
