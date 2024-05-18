@@ -2,13 +2,13 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "rolls": 3,
+      "rolls": 6,
       "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "minecraft:golden_sword",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -27,7 +27,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_sword",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -46,12 +46,12 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_sword",
-          "weight": 6
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:diamond",
-          "weight": 5,
+          "weight": 10,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -68,7 +68,7 @@
           "type": "minecraft:tag",
           "name": "warp_pipes:warp_pipes",
           "expand": true,
-          "weight": 5,
+          "weight": 10,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -84,7 +84,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:golden_apple",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_name",
@@ -94,22 +94,22 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 6
+          "weight": 8
         }
       ]
     },
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 3,
-        "max": 4
+        "min": 4,
+        "max": 6
       },
       "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "minecraft:gold_ingot",
-          "weight": 3,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -129,7 +129,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:amethyst_shard",
-          "weight": 3,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -144,22 +144,22 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 3
+          "weight": 6
         }
       ]
     },
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 3,
-        "max": 4
+        "min": 1,
+        "max": 2
       },
       "bonus_rolls": 0,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "minecraft:red_mushroom",
-          "weight": 2,
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -179,7 +179,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:brown_mushroom",
-          "weight": 2,
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -198,7 +198,7 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 3
+          "weight": 4
         }
       ]
     },
@@ -208,11 +208,12 @@
       "entries": [
         {
           "type": "minecraft:empty",
-          "weight": 5
+          "weight": 10
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:skull_banner_pattern"
+          "name": "minecraft:skull_banner_pattern",
+          "weight": 5
         }
       ]
     },
