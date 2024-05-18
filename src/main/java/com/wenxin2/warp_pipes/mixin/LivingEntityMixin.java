@@ -108,7 +108,7 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
-                && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
+                && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
@@ -148,7 +148,7 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
                 && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
-                && this.getPersistentData().getBoolean("warp_pipes:can_warp")) {
+                && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

@@ -4,6 +4,7 @@ import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,10 +16,14 @@ import net.minecraftforge.fml.common.Mod;
 public class WarpEventHandlers {
     public static void onJoinWorld(final EntityJoinLevelEvent event)
     {
+        CompoundTag tag = event.getEntity().getPersistentData();
         if (!(event.getEntity() instanceof LivingEntity) && !(event.getEntity() instanceof Player)) return;
 
-        if (event.getEntity() != null && !event.getEntity().getPersistentData().contains("warp_pipes:can_warp"))
-            event.getEntity().getPersistentData().putBoolean("warp_pipes:can_warp", true);
+        if (event.getEntity() != null && !tag.getBoolean("warp_pipes:can_warp"))
+            tag.putBoolean("warp_pipes:prevent_warp", true);
+
+        if (event.getEntity() != null && !tag.contains("warp_pipes:prevent_warp"))
+            tag.putBoolean("warp_pipes:prevent_warp", false);
     }
 
     public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
