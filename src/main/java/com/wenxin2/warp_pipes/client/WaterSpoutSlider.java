@@ -1,13 +1,17 @@
-package com.wenxin2.warp_pipes.blocks.client;
+package com.wenxin2.warp_pipes.client;
 
+import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.client.TexturedSlider;
 import com.wenxin2.warp_pipes.init.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class BubblesSlider extends TexturedSlider {
+public class WaterSpoutSlider extends TexturedSlider {
+    public static final ResourceLocation SLIDER_LOCATION = new ResourceLocation(WarpPipes.MODID, "textures/gui/slider.png");
 
     /**
      * @param x x position of upper left corner
@@ -23,8 +27,8 @@ public class BubblesSlider extends TexturedSlider {
      * @param precision Only used when {@code stepSize} is 0. Limited to a maximum of 4 (inclusive).
      * @param drawString Should text be displayed on the widget
      */
-    public BubblesSlider(int x, int y, int width, int height, Component prefix, Component suffix,
-                         double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString){
+    public WaterSpoutSlider(int x, int y, int width, int height, Component prefix, Component suffix,
+                            double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString){
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
 
@@ -37,7 +41,7 @@ public class BubblesSlider extends TexturedSlider {
         guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX(), this.getY(), 0, getTextureY(), this.width, this.height,
                 200, 24, 2, 3, 2, 2);
 
-        if (player != null && requiresCreativeBubbles(player))
+        if (player != null && requiresCreativeWaterSpout(player))
             guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                     0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
         else guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
@@ -46,7 +50,7 @@ public class BubblesSlider extends TexturedSlider {
         renderScrollingString(guiGraphics, mc.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
-    public boolean requiresCreativeBubbles(LocalPlayer player) {
-        return !player.isCreative() && Config.CREATIVE_BUBBLES.get();
+    public boolean requiresCreativeWaterSpout(LocalPlayer player) {
+        return !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get();
     }
 }

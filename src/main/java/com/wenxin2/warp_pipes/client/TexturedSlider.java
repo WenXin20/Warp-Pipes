@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.blocks.client;
+package com.wenxin2.warp_pipes.client;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import net.minecraft.client.Minecraft;
