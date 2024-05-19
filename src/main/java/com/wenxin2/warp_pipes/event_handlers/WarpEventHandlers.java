@@ -24,9 +24,6 @@ public class WarpEventHandlers {
 
         if (event.getEntity() != null && !tag.contains("warp_pipes:prevent_warp"))
             tag.putBoolean("warp_pipes:prevent_warp", false);
-
-        if (event.getEntity() != null && event.getEntity() instanceof Player)
-            tag.putBoolean("warp_pipes:prevent_warp", false);
     }
 
     public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {

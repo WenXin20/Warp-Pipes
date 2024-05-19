@@ -55,7 +55,7 @@
       ]
     },
     {
-      "rolls": 6,
+      "rolls": 3,
       "bonus_rolls": 0,
       "entries": [
         {
@@ -67,8 +67,8 @@
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 2,
-                "max": 6
+                "min": 1,
+                "max": 4
               },
               "add": false
             }
@@ -82,6 +82,15 @@
             {
               "function": "minecraft:set_name",
               "name": "Star"
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
             }
           ]
         },
