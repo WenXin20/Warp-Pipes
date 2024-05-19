@@ -91,5 +91,20 @@
   "display.warp_pipes.warp_cooldown": "Pipe warping on cooldown!",
   "display.warp_pipes.warp_cooldown.ticks": "Pipe warping on cooldown for %1$s ticks!",
 
-  "display.warp_pipes.warp_destination_missing": "Warp destination not found!"
+  "display.warp_pipes.warp_destination_missing": "Warp destination not found!",
+
+  "advancements.adventure.warp_pipes.brush_a_pipe.description": "Brush a pipe to remove text",
+  "advancements.adventure.warp_pipes.brush_a_pipe.title": "Text Erasure",
+  "advancements.adventure.warp_pipes.configure_pipes.description": "Configure a pipe using a pipe wrench",
+  "advancements.adventure.warp_pipes.configure_pipes.title": "Pipe Personalization!",
+  "advancements.adventure.warp_pipes.dye_a_pipe.description": "Dye a pipe any color",
+  "advancements.adventure.warp_pipes.dye_a_pipe.title": "Pipe Dyed",
+  "advancements.adventure.warp_pipes.dyeable_warp_pipes.description": "Obtain all 16 colors of warp pipes",
+  "advancements.adventure.warp_pipes.dyeable_warp_pipes.title": "Mario Maniac",
+  "advancements.adventure.warp_pipes.make_a_pipe_glow.description": "Make the text of any kind of pipe glow",
+  "advancements.adventure.warp_pipes.make_a_pipe_glow.title": "Pipe down and glow up!",
+  "advancements.adventure.warp_pipes.pipe_wrench.description": "Obtain a pipe wrench",
+  "advancements.adventure.warp_pipes.pipe_wrench.title": "Put a wrench in it",
+  "advancements.adventure.warp_pipes.travel_in_clear_pipe.description": "Travel inside a clear warp pipe",
+  "advancements.adventure.warp_pipes.travel_in_clear_pipe.title": "Travel in style"
 }
