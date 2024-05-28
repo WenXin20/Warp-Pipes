@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
 public class CompatRegistry {
+    public static final Supplier<Item> ANTIQUE_INK = make("supplementaries:antique_ink", BuiltInRegistries.ITEM);
     public static final Supplier<Item> BUBBLE_BLOWER = make("supplementaries:bubble_blower", BuiltInRegistries.ITEM);
     public static final Supplier<Item> SOAP = make("supplementaries:soap", BuiltInRegistries.ITEM);
     public static final Supplier<SoundEvent> BUBBLE_BLOWER_SOUND = make("supplementaries:item.bubble_blower", BuiltInRegistries.SOUND_EVENT);
