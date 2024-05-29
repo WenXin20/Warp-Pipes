@@ -37,6 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -194,9 +195,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         isSuccesfulTool = true;
                     }
                 } else {
-                    if (DyeColor.getColor(stack) != null
-                            && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(DyeColor.getColor(stack)))) {
-                        int textColor = DyeColor.getColor(stack).getTextColor();
+                    if (item instanceof DyeItem dyeItem
+                            && pipeBlockEntity.updateText((pipeText) -> pipeText.setColor(dyeItem.getDyeColor()))) {
+                        int textColor = dyeItem.getDyeColor().getTextColor();
                         float red = (float)(textColor >> 16 & 255) / 255.0F;
                         float green = (float)(textColor >> 8 & 255) / 255.0F;
                         float blue = (float)(textColor & 255) / 255.0F;
