@@ -62,9 +62,9 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.renameBox.visible)
             graphics.drawString(this.font, "", this.titleLabelX, this.titleLabelY, 4210752, false);
         else if (!this.pipeName.isEmpty())
-            // Warp Pipe Name
+            // Warp Pipe "Name"
             graphics.drawString(this.font, this.pipeName, this.titleLabelX, this.titleLabelY, 4210752, false);
-        // Warp Pipe
+        // "Warp Pipe"
         else graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 
         // Inventory
@@ -150,7 +150,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     @Override
     public void init() {
         super.init();
-        this.lastClickedPos = this.getClickedPos();
+        lastClickedPos = this.getClickedPos();
         final int x = (this.width - this.imageWidth) / 2;
         final int y = (this.height - this.imageHeight) / 2;
 
