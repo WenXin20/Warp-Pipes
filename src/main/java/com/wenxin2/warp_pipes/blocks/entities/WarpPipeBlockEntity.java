@@ -78,12 +78,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public int bubblesDistance = 3;
     public boolean preventWarp = Boolean.FALSE;
     public boolean isWaxed;
-    public boolean displayTextNorth = Boolean.TRUE;
-    public boolean displayTextSouth = Boolean.TRUE;
-    public boolean displayTextEast = Boolean.TRUE;
-    public boolean displayTextWest = Boolean.TRUE;
-    public boolean displayTextAbove = Boolean.TRUE;
-    public boolean displayTextBelow = Boolean.TRUE;
+    public boolean displayTextNorth;
+    public boolean displayTextSouth;
+    public boolean displayTextEast;
+    public boolean displayTextWest;
+    public boolean displayTextAbove;
+    public boolean displayTextBelow;
     public UUID uuid;
     public UUID warpUuid;
 
@@ -94,6 +94,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public WarpPipeBlockEntity(final BlockEntityType<?> tileEntity, BlockPos pos, BlockState state) {
         super(tileEntity, pos, state);
+        this.displayTextNorth = Boolean.TRUE;
+        this.displayTextSouth = Boolean.TRUE;
+        this.displayTextEast = Boolean.TRUE;
+        this.displayTextWest = Boolean.TRUE;
+        this.displayTextAbove = Boolean.TRUE;
+        this.displayTextBelow = Boolean.TRUE;
     }
 
     @Override
