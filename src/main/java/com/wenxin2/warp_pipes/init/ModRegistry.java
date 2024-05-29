@@ -44,11 +44,6 @@ public class ModRegistry {
 
     static
     {
-        Arrays.stream(DyeColor.values()).forEach(color ->
-                WARP_PIPES.put(color, registerBlock(color.getName() + "_warp_pipe",
-                        () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(color)
-                                .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
-                                .isViewBlocking(ModRegistry::always).requiresCorrectToolForDrops()))));
 
         PIPE_WRENCH = registerItem("pipe_wrench",
                 () -> new WrenchItem(new Item.Properties().durability(128), Tiers.IRON));
@@ -57,6 +52,12 @@ public class ModRegistry {
                 () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
                         .sound(SoundType.GLASS).isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
                         .strength(3.0F, 500.0F).requiresCorrectToolForDrops().noOcclusion()));
+
+        Arrays.stream(DyeColor.values()).forEach(color ->
+                WARP_PIPES.put(color, registerBlock(color.getName() + "_warp_pipe",
+                        () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(color)
+                                .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
+                                .isViewBlocking(ModRegistry::always).requiresCorrectToolForDrops()))));
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
                 () -> new PipeBubblesBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY)
