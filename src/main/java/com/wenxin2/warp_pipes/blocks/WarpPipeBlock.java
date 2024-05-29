@@ -578,7 +578,6 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     public static void warp(Entity entity, BlockPos warpPos, Level world, BlockState state) {
-        BlockEntity blockEntity = world.getBlockEntity(warpPos);
         if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock && !state.getValue(CLOSED)) {
             Entity passengerEntity = entity.getControllingPassenger();
 
@@ -614,9 +613,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.NORTH && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
-                    entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + entity.getBbWidth() - 1.0);
+                    entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() - entity.getBbWidth());
                 } else {
-                    entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + entity.getBbWidth() - 1.0);
+                    entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() - entity.getBbWidth());
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
@@ -644,9 +643,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             }
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.WEST && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
-                    entity.teleportTo(warpPos.getX() + entity.getBbWidth() - 1.0, warpPos.getY(), warpPos.getZ() + 0.5);
+                    entity.teleportTo(warpPos.getX() - entity.getBbWidth(), warpPos.getY(), warpPos.getZ() + 0.5);
                 } else {
-                    entity.teleportTo(warpPos.getX() + entity.getBbWidth() - 1.0, warpPos.getY(), warpPos.getZ() + 0.5);
+                    entity.teleportTo(warpPos.getX() - entity.getBbWidth(), warpPos.getY(), warpPos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
                         entity.unRide();
                     }
