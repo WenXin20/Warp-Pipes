@@ -27,11 +27,13 @@ public class WarpEventHandlers {
     }
 
     public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
-        BlockPos clickedPos = event.getPos();
-        BlockEntity blockEntity = event.getLevel().getBlockEntity(clickedPos);
-        if (blockEntity instanceof WarpPipeBlockEntity) {
-            // Update the last clicked position
-            WarpPipeScreen.lastClickedPos = clickedPos;
+        if (event.getLevel().isClientSide()) {
+            BlockPos clickedPos = event.getPos();
+            BlockEntity blockEntity = event.getLevel().getBlockEntity(clickedPos);
+            if (blockEntity instanceof WarpPipeBlockEntity) {
+                // Update the last clicked position
+                WarpPipeScreen.lastClickedPos = clickedPos;
+            }
         }
     }
 
