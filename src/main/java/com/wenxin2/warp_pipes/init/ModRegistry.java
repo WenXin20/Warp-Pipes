@@ -53,6 +53,7 @@ public class ModRegistry {
                         .sound(SoundType.GLASS).isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
                         .strength(3.0F, 500.0F).requiresCorrectToolForDrops().noOcclusion()));
 
+        // Keep below CLEAR_WARP_PIPE to prevent crash
         Arrays.stream(DyeColor.values()).forEach(color ->
                 WARP_PIPES.put(color, registerBlock(color.getName() + "_warp_pipe",
                         () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(color)
