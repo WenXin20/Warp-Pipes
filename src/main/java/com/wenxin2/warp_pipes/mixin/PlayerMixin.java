@@ -119,7 +119,7 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() == 0 && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
+                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
                             || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
                             && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
                         displayDestinationMissingMessage();
@@ -166,7 +166,7 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() == 0 && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
+                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
                              || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
                             && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
                         displayDestinationMissingMessage();
@@ -180,7 +180,7 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() == 0 && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
+                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
                             || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
                             && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
                         displayDestinationMissingMessage();
@@ -194,7 +194,7 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() == 0 && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
+                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
                             || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
                             && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
                         displayDestinationMissingMessage();
@@ -208,7 +208,7 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() == 0 && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
+                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
                             || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
                             && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
                         displayDestinationMissingMessage();
@@ -222,7 +222,7 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() == 0 && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
+                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
                             || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
                             && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
                         displayDestinationMissingMessage();
