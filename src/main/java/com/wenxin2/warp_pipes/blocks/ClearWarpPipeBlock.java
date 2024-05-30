@@ -196,7 +196,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                         (state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH) && state.getValue(SOUTH) && state.getValue(EAST) &&
                                 state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.WEST)) {
 
-                    if (player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
+                    if ((player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get())
                             || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem
@@ -210,7 +210,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             if (!state.getValue(ENTRANCE) && state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH)
                     && state.getValue(SOUTH) && state.getValue(EAST) && state.getValue(WEST)) {
 
-                if (player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get()
+                if ((player.isCreative() && Config.DEBUG_SELECTION_BOX_CREATIVE.get() || Config.DEBUG_SELECTION_BOX.get())
                         || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem
