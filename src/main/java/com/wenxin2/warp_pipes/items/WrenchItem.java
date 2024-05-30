@@ -28,8 +28,8 @@ public class WrenchItem extends LinkerItem {
     public WrenchItem(final Item.Properties properties, Tier tier) {
         super(properties, tier);
         this.tier = tier;
-        this.attackDamage = 2.0F + tier.getAttackDamageBonus();
-        float attackSpeedModifier = -1f;
+        this.attackDamage = 0.0F + tier.getAttackDamageBonus();
+        float attackSpeedModifier = -3.2f;
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeedModifier, AttributeModifier.Operation.ADDITION));
@@ -71,11 +71,6 @@ public class WrenchItem extends LinkerItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
-    }
-
-    @Override
-    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
-        return net.minecraftforge.common.ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
     }
 
     @Override
