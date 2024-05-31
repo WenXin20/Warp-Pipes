@@ -157,17 +157,17 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
         }
 
         if (state.getValue(FACING) == Direction.EAST
-                && ((!(stateEast.getBlock() instanceof WarpPipeBlock) && !(stateEast.getBlock() instanceof PipeBubblesBlock))
-                || (stateEast.getBlock() instanceof WarpPipeBlock
-                && (stateEast.getValue(WarpPipeBlock.CLOSED) || !stateEast.getValue(WarpPipeBlock.BUBBLES))))) {
+                && ((!(stateWest.getBlock() instanceof WarpPipeBlock) && !(stateWest.getBlock() instanceof PipeBubblesBlock))
+                || (stateWest.getBlock() instanceof WarpPipeBlock
+                && (stateWest.getValue(WarpPipeBlock.CLOSED) || !stateWest.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
 
         if (state.getValue(FACING) == Direction.WEST
-                && ((!(stateWest.getBlock() instanceof WarpPipeBlock) && !(stateWest.getBlock() instanceof PipeBubblesBlock))
-                || (stateWest.getBlock() instanceof WarpPipeBlock
-                && (stateWest.getValue(WarpPipeBlock.CLOSED) || !stateWest.getValue(WarpPipeBlock.BUBBLES))))) {
+                && ((!(stateEast.getBlock() instanceof WarpPipeBlock) && !(stateEast.getBlock() instanceof PipeBubblesBlock))
+                || (stateEast.getBlock() instanceof WarpPipeBlock
+                && (stateEast.getValue(WarpPipeBlock.CLOSED) || !stateEast.getValue(WarpPipeBlock.BUBBLES))))) {
             worldAccessor.destroyBlock(pos, true);
             return Blocks.WATER.defaultBlockState();
         }
