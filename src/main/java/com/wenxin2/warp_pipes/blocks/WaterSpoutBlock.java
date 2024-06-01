@@ -61,7 +61,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         Player player = (Player) ((EntityCollisionContext) context).getEntity();
         if (player!= null) {
             if ((player.hasPermissions(1) && player.isCreative() && Config.DEBUG_WATER_SPOUT_SELECTION_BOX.get())
-                    || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
+                    || (((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
+                    && Config.WATER_SPOUTS_BUCKETABLE.get())
                     || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
                 if (state.getValue(TOP)) {
                     return SPOUT_TOP;
@@ -276,8 +277,10 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
     }
 
     public ItemStack pickupBlock(LevelAccessor worldAccessor, BlockPos pos, BlockState state) {
-        worldAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        return new ItemStack(Items.WATER_BUCKET);
+        if (Config.WATER_SPOUTS_BUCKETABLE.get()) {
+            worldAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            return new ItemStack(Items.WATER_BUCKET);
+        } else return ItemStack.EMPTY;
     }
 
     public Optional<SoundEvent> getPickupSound() {

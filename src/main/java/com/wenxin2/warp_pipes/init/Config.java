@@ -32,6 +32,7 @@ public class Config
     public static ForgeConfigSpec.IntValue WARP_COOLDOWN;
     public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
     public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
+    public static ForgeConfigSpec.BooleanValue WATER_SPOUTS_BUCKETABLE;
 
     static
     {
@@ -71,6 +72,8 @@ public class Config
                 .define("teleport_players", true);
         WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[20 ticks = 1 second] " + "[Default: 30]")
                 .defineInRange("warp_cooldown", 50, 0, 8000);
+        WATER_SPOUTS_BUCKETABLE = BUILDER.comment("Allow players to bucket water spouts. " + "[Default: true]")
+                .define("water_spouts_bucketable", true);
         BUILDER.pop();
 
         BUILDER.comment("Warp Pipes Config").push(CATEGORY_DEBUG);
