@@ -119,10 +119,8 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
-                            || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
-                            && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
-                        displayDestinationMissingMessage();
+                    } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */
                     else this.displayCooldownMessage();
                 }
             }
@@ -161,15 +159,13 @@ public abstract class PlayerMixin extends Entity {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (this.getWarpCooldown() == 0) {
-                         if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                             WarpPipeBlock.warp(this, warpPos, world, state);
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
-                             || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
-                            && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
-                        displayDestinationMissingMessage();
+                    } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */
                     else this.displayCooldownMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
@@ -180,10 +176,8 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
-                            || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
-                            && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
-                        displayDestinationMissingMessage();
+                    } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */
                     else this.displayCooldownMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
@@ -194,10 +188,8 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
-                            || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
-                            && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
-                        displayDestinationMissingMessage();
+                    } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */
                     else this.displayCooldownMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
@@ -208,10 +200,8 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
-                            || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
-                            && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
-                        displayDestinationMissingMessage();
+                    } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */
                     else this.displayCooldownMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
@@ -222,10 +212,8 @@ public abstract class PlayerMixin extends Entity {
                         else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                             WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                         this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } else if (this.getWarpCooldown() <= Config.WARP_COOLDOWN.get() && ((warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock))
-                            || (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null
-                            && !(world.getBlockState(WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos)).getBlock() instanceof WarpPipeBlock))))
-                        displayDestinationMissingMessage();
+                    } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */
                     else this.displayCooldownMessage();
                 }
             }
