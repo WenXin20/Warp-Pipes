@@ -8,12 +8,16 @@ import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
+import dev.architectury.registry.registries.RegistrarManager;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -27,20 +31,23 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
-    public static final EnumMap<DyeColor, RegistryObject<Block>> WARP_PIPES =
+    public static final EnumMap<DyeColor, DeferredBlock<Block>> WARP_PIPES =
             new EnumMap<>(DyeColor.class);
-    public static final RegistryObject<Item> PIPE_WRENCH;
-    public static final RegistryObject<Block> CLEAR_WARP_PIPE;
-    public static final RegistryObject<Block> PIPE_BUBBLES;
-    public static final RegistryObject<Block> WATER_SPOUT;
+    public static final DeferredItem<Item> PIPE_WRENCH;
+    public static final DeferredBlock<Block> CLEAR_WARP_PIPE;
+    public static final DeferredBlock<Block> PIPE_BUBBLES;
+    public static final DeferredBlock<Block> WATER_SPOUT;
 
-    public static final RegistryObject<BlockEntityType<WarpPipeBlockEntity>> WARP_PIPE_BLOCK_ENTITY;
-    public static final RegistryObject<MenuType<WarpPipeMenu>> WARP_PIPE_MENU;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WarpPipeBlockEntity>> WARP_PIPE_BLOCK_ENTITY;
+    public static final DeferredHolder<MenuType<?>, MenuType<AbstractContainerMenu>> WARP_PIPE_MENU;
 
     static
     {
@@ -72,29 +79,30 @@ public class ModRegistry {
 
         WARP_PIPE_BLOCK_ENTITY = WarpPipes.BLOCK_ENTITIES.register("warp_pipe",
                 () -> BlockEntityType.Builder.of(WarpPipeBlockEntity::new,
-                                Stream.concat(WARP_PIPES.values().stream().map(RegistryObject::get),
+                                Stream.concat(WARP_PIPES.values().stream().map(DeferredBlock::get),
                                         Stream.of(CLEAR_WARP_PIPE.get())).toArray(Block[]::new))
                         .build(null));
 
         WARP_PIPE_MENU = WarpPipes.MENUS.register("warp_pipe", () -> new MenuType<>(WarpPipeMenu::new, FeatureFlags.REGISTRY.allFlags()));
     }
 
-    public static RegistryObject<Block> registerBlock(String name, Supplier<? extends Block> block)
+    public static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
     {
-        RegistryObject<Block> blocks = WarpPipes.BLOCKS.register(name, block);
+        DeferredBlock<T> blocks = WarpPipes.BLOCKS.register(name, block);
         WarpPipes.ITEMS.register(name, () -> new BlockItem(blocks.get(), new Item.Properties()));
         return blocks;
     }
 
-    public static RegistryObject<Block> registerNoItemBlock(String name, Supplier<? extends Block> block)
+    public static <T extends Block> DeferredBlock<T> registerNoItemBlock(String name, Supplier<T> block)
     {
-        RegistryObject<Block> blocks = WarpPipes.BLOCKS.register(name, block);
+        DeferredBlock<T> blocks = WarpPipes.BLOCKS.register(name, block);
         return blocks;
     }
 
-    public static RegistryObject<Item> registerItem(String name, Supplier<? extends Item> item)
+    public static <T extends Item> DeferredItem registerItem(String name, Supplier<T> item)
     {
-        return WarpPipes.ITEMS.register(name, item);
+        DeferredItem<T> items = WarpPipes.ITEMS.register(name, item);
+        return items;
     }
 
     private static boolean always(BlockState state, BlockGetter block, BlockPos pos)

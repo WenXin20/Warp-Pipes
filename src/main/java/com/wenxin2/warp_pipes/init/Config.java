@@ -4,35 +4,35 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config
 {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static ForgeConfigSpec CONFIG;
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static ModConfigSpec CONFIG;
 
     public static final String CATEGORY_DEBUG = "Debug";
     public static final String CATEGORY_CLIENT = "Client";
     public static final String CATEGORY_COMMON = "Common";
 
-    public static ForgeConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
-    public static ForgeConfigSpec.BooleanValue ALLOW_PIPE_UNWAXING;
-    public static ForgeConfigSpec.BooleanValue CREATIVE_BUBBLES;
-    public static ForgeConfigSpec.BooleanValue CREATIVE_CLOSE_PIPES;
-    public static ForgeConfigSpec.BooleanValue CREATIVE_WATER_SPOUT;
-    public static ForgeConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
-    public static ForgeConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
-    public static ForgeConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
-    public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
-    public static ForgeConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
-    public static ForgeConfigSpec.BooleanValue DISABLE_TEXT;
-    public static ForgeConfigSpec.BooleanValue TELEPORT_MOBS;
-    public static ForgeConfigSpec.BooleanValue TELEPORT_NON_MOBS;
-    public static ForgeConfigSpec.BooleanValue TELEPORT_PLAYERS;
-    public static ForgeConfigSpec.IntValue WARP_COOLDOWN;
-    public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
-    public static ForgeConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
-    public static ForgeConfigSpec.BooleanValue WATER_SPOUTS_BUCKETABLE;
+    public static ModConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
+    public static ModConfigSpec.BooleanValue ALLOW_PIPE_UNWAXING;
+    public static ModConfigSpec.BooleanValue CREATIVE_BUBBLES;
+    public static ModConfigSpec.BooleanValue CREATIVE_CLOSE_PIPES;
+    public static ModConfigSpec.BooleanValue CREATIVE_WATER_SPOUT;
+    public static ModConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
+    public static ModConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
+    public static ModConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
+    public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
+    public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ModConfigSpec.BooleanValue DISABLE_TEXT;
+    public static ModConfigSpec.BooleanValue TELEPORT_MOBS;
+    public static ModConfigSpec.BooleanValue TELEPORT_NON_MOBS;
+    public static ModConfigSpec.BooleanValue TELEPORT_PLAYERS;
+    public static ModConfigSpec.IntValue WARP_COOLDOWN;
+    public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
+    public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
+    public static ModConfigSpec.BooleanValue WATER_SPOUTS_BUCKETABLE;
 
     static
     {
