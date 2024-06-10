@@ -1,23 +1,22 @@
 package com.wenxin2.warp_pipes.network;
 
+import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import java.util.function.Supplier;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SRenamePipePacket {
-    public final BlockPos pos;
-    public String customName;
+public record SRenamePipePacket(BlockPos pos, String customName) implements CustomPacketPayload {
+    public static final ResourceLocation RENAME_PIPE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "rename_pipe_payload");
 
-    public SRenamePipePacket(BlockPos pos, String customName) {
-        this.pos = pos;
-        this.customName = customName;
+    @Override
+    public ResourceLocation id() {
+        return RENAME_PIPE_PAYLOAD;
     }
 
     // Read and write in the same order!
@@ -25,19 +24,19 @@ public class SRenamePipePacket {
         this(buffer.readBlockPos(), buffer.readUtf());
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    @Override
+    public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
             buffer.writeUtf(customName);
         }
     }
 
-    public void handle(Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> {
-            ServerPlayer player = context.get().getSender();
-            if (player == null)
+    public void handle(IPayloadContext context) {
+        if (context.flow().isServerbound()) {
+            if (context.level().isEmpty())
                 return;
-            Level world = player.level();
+            Level world = context.level().get();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 ((WarpPipeBlockEntity) blockEntity).sendData();
@@ -46,6 +45,6 @@ public class SRenamePipePacket {
                 ((WarpPipeBlockEntity) blockEntity).markUpdated();
                 ((WarpPipeBlockEntity) blockEntity).getUpdateTag();
             }
-        });
+        }
     }
 }

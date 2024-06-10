@@ -1,64 +1,41 @@
 package com.wenxin2.warp_pipes.network;
 
 import com.wenxin2.warp_pipes.WarpPipes;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import org.lwjgl.system.windows.MSG;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PacketHandler {
-    public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(
-            new ResourceLocation(WarpPipes.MODID, "main"))
-            .serverAcceptedVersions((status) -> true)
-            .clientAcceptedVersions((status) -> true)
-            .networkProtocolVersion(() -> "1")
-            .simpleChannel();
 
-    private static int ID = 0;
-    public static void register() {
-        INSTANCE.messageBuilder(SCloseStatePacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SCloseStatePacket::encode)
-                .decoder(SCloseStatePacket::new)
-                .consumerMainThread(SCloseStatePacket::handle)
-                .add();
-        INSTANCE.messageBuilder(SWaterSpoutStatePacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SWaterSpoutStatePacket::encode)
-                .decoder(SWaterSpoutStatePacket::new)
-                .consumerMainThread(SWaterSpoutStatePacket::handle)
-                .add();
-        INSTANCE.messageBuilder(SWaterSpoutSliderPacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SWaterSpoutSliderPacket::encode)
-                .decoder(SWaterSpoutSliderPacket::new)
-                .consumerMainThread(SWaterSpoutSliderPacket::handle)
-                .add();
-        INSTANCE.messageBuilder(SPipeBubblesStatePacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SPipeBubblesStatePacket::encode)
-                .decoder(SPipeBubblesStatePacket::new)
-                .consumerMainThread(SPipeBubblesStatePacket::handle)
-                .add();
-        INSTANCE.messageBuilder(SPipeBubblesSliderPacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SPipeBubblesSliderPacket::encode)
-                .decoder(SPipeBubblesSliderPacket::new)
-                .consumerMainThread(SPipeBubblesSliderPacket::handle)
-                .add();
-        INSTANCE.messageBuilder(SRenamePipePacket.class, ID++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SRenamePipePacket::encode)
-                .decoder(SRenamePipePacket::new)
-                .consumerMainThread(SRenamePipePacket::handle)
-                .add();
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlerEvent event) {
+        final IPayloadRegistrar registrar = event.registrar("warp_pipes").versioned("1.0.0");
+
+        // Sends to server
+        registrar.play(SCloseStatePacket.CLOSE_STATE_PAYLOAD, SCloseStatePacket::new, SCloseStatePacket::handle);
+        registrar.play(SPipeBubblesSliderPacket.BUBBLES_DISTANCE_PAYLOAD, SPipeBubblesSliderPacket::new, SPipeBubblesSliderPacket::handle);
+        registrar.play(SPipeBubblesStatePacket.BUBBLES_STATE_PAYLOAD, SPipeBubblesStatePacket::new, SPipeBubblesStatePacket::handle);
+        registrar.play(SRenamePipePacket.RENAME_PIPE_PAYLOAD, SRenamePipePacket::new, SRenamePipePacket::handle);
+        registrar.play(SWaterSpoutSliderPacket.SPOUT_HEIGHT_PAYLOAD, SWaterSpoutSliderPacket::new, SWaterSpoutSliderPacket::handle);
+        registrar.play(SWaterSpoutStatePacket.SPOUT_STATE_PAYLOAD, SWaterSpoutStatePacket::new, SWaterSpoutStatePacket::handle);
     }
 
-    public static void sendToServer(Object msg) {
-        INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
+    public static <MSG extends CustomPacketPayload> void sendToServer(MSG message) {
+        PacketDistributor.SERVER.noArg().send(message);
     }
 
-    public static void sentToAllClients(Object msg) {
-        INSTANCE.send(PacketDistributor.ALL.noArg(), msg);
+    public static <MSG extends CustomPacketPayload> void sentToAllClients(MSG message) {
+        PacketDistributor.ALL.noArg().send(message);
     }
 
-    public static void sendToPlayer(Object msg, ServerPlayer player) {
-        INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg);
+    public static <MSG extends CustomPacketPayload> void sendToPlayer(MSG message, ServerPlayer player) {
+        PacketDistributor.PLAYER.with(player).send(message);
     }
 }

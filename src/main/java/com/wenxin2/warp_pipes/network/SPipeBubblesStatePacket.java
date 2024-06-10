@@ -1,23 +1,24 @@
 package com.wenxin2.warp_pipes.network;
 
+import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SPipeBubblesStatePacket {
-    public final BlockPos pos;
-    public final boolean hasPipeBubbles;
+public record SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) implements CustomPacketPayload {
+    public static final ResourceLocation BUBBLES_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "bubbles_state_payload");
 
-    public SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) {
-        this.pos = pos;
-        this.hasPipeBubbles = hasPipeBubbles;
+    @Override
+    public ResourceLocation id() {
+        return BUBBLES_STATE_PAYLOAD;
     }
 
     // Read and write in the same order!
@@ -25,26 +26,27 @@ public class SPipeBubblesStatePacket {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    @Override
+    public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
             buffer.writeBoolean(hasPipeBubbles);
         }
     }
 
-    public void handle(Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> {
-            ServerPlayer player = context.get().getSender();
-            if (player == null)
+    public void handle(IPayloadContext context) {
+        if (context.flow().isServerbound()) {
+            if (context.player().isEmpty() || context.level().isEmpty())
                 return;
-            Level world = player.level();
+            ServerPlayer player = (ServerPlayer) context.player().get();
+            Level world = context.level().get();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 changeState(player, (WarpPipeBlockEntity) blockEntity);
                 ((WarpPipeBlockEntity) blockEntity).sendData();
                 blockEntity.setChanged();
             }
-        });
+        }
     }
 
     public void changeState(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {

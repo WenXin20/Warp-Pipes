@@ -1,24 +1,24 @@
 package com.wenxin2.warp_pipes.network;
 
+import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SWaterSpoutSliderPacket {
-    public final BlockPos pos;
-    public final int waterSpoutHeight;
+public record SWaterSpoutSliderPacket(BlockPos pos, int waterSpoutHeight) implements CustomPacketPayload {
+    public static final ResourceLocation SPOUT_HEIGHT_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "spout_height_payload");
 
-    public SWaterSpoutSliderPacket(BlockPos pos, int waterSpoutHeight) {
-        this.pos = pos;
-        this.waterSpoutHeight = waterSpoutHeight;
+    @Override
+    public ResourceLocation id() {
+        return SPOUT_HEIGHT_PAYLOAD;
     }
 
     // Read and write in the same order!
@@ -26,25 +26,26 @@ public class SWaterSpoutSliderPacket {
         this(buffer.readBlockPos(), buffer.readInt());
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    @Override
+    public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
             buffer.writeInt(waterSpoutHeight);
         }
     }
 
-    public void handle(Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> {
-            ServerPlayer player = context.get().getSender();
-            if (player == null)
+    public void handle(IPayloadContext context) {
+        if (context.flow().isServerbound()) {
+            if (context.player().isEmpty() || context.level().isEmpty())
                 return;
-            Level world = player.level();
+            ServerPlayer player = (ServerPlayer) context.player().get();
+            Level world = context.level().get();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
                 changeHeight(player, (WarpPipeBlockEntity) blockEntity);
                 pipeBlockEntity.sendData();
             }
-        });
+        }
     }
 
     public void changeHeight(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
