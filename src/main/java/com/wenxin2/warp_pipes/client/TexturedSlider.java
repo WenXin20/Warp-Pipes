@@ -6,9 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 
-public class TexturedSlider extends ForgeSlider {
+public class TexturedSlider extends ExtendedSlider {
     public static final ResourceLocation SLIDER_LOCATION = new ResourceLocation(WarpPipes.MODID, "textures/gui/slider.png");
 
     /**
@@ -44,13 +44,13 @@ public class TexturedSlider extends ForgeSlider {
         renderScrollingString(guiGraphics, mc.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
-    @Override
+//    @Override
     public int getHandleTextureY() {
         int i = !this.isHovered && !this.canChangeValue ? 2 : 3;
         return i * 24;
     }
 
-    @Override
+//    @Override
     public int getTextureY() {
         int i = this.isFocused() && !this.canChangeValue ? 1 : 0;
         return i * 24;

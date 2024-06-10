@@ -33,7 +33,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.lwjgl.glfw.GLFW;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
@@ -46,8 +46,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Inventory inventory;
 
     public static BlockPos lastClickedPos = null;
-    public static ForgeSlider waterSpoutSlider;
-    public static ForgeSlider bubblesSlider;
+    public static ExtendedSlider waterSpoutSlider;
+    public static ExtendedSlider bubblesSlider;
     private String pipeName = "";
     private Level world;
 
@@ -227,7 +227,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     @Override
     // Draws the screen and all the components in it.
     public void render(final GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTicks) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }

@@ -5,21 +5,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class SoundRegistry {
     public static final SoundType WATER_SPOUT = new SoundType(1.0F, 1.0F, SoundEvents.BUCKET_FILL,
             SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_EMPTY, SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_FILL);
-    public static final RegistryObject<SoundEvent> PIPES_LINKED;
-    public static final RegistryObject<SoundEvent> PIPE_CLOSES;
-    public static final RegistryObject<SoundEvent> PIPE_OPENS;
-    public static final RegistryObject<SoundEvent> PIPE_WARPS;
-    public static final RegistryObject<SoundEvent> WATER_SPOUT_BREAK;
-    public static final RegistryObject<SoundEvent> WATER_SPOUT_FALL;
-    public static final RegistryObject<SoundEvent> WATER_SPOUT_HIT;
-    public static final RegistryObject<SoundEvent> WATER_SPOUT_PLACE;
-    public static final RegistryObject<SoundEvent> WATER_SPOUT_STEP;
-    public static final RegistryObject<SoundEvent> WRENCH_BOUND;
+    public static final DeferredHolder<SoundEvent, SoundEvent> PIPES_LINKED;
+    public static final DeferredHolder<SoundEvent, SoundEvent> PIPE_CLOSES;
+    public static final DeferredHolder<SoundEvent, SoundEvent> PIPE_OPENS;
+    public static final DeferredHolder<SoundEvent, SoundEvent> PIPE_WARPS;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_BREAK;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_FALL;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_HIT;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_PLACE;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_STEP;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_BOUND;
 
     static {
         PIPES_LINKED = WarpPipes.SOUNDS.register("block.pipes_linked",

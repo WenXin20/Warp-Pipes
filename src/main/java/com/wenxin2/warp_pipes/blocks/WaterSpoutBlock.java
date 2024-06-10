@@ -37,6 +37,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 public class WaterSpoutBlock extends Block implements BucketPickup {
     public static final BooleanProperty TOP = BooleanProperty.create("top");
@@ -276,7 +277,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
         }
     }
 
-    public ItemStack pickupBlock(LevelAccessor worldAccessor, BlockPos pos, BlockState state) {
+    @Override
+    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor worldAccessor, BlockPos pos, BlockState state) {
         if (Config.WATER_SPOUTS_BUCKETABLE.get()) {
             worldAccessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             return new ItemStack(Items.WATER_BUCKET);

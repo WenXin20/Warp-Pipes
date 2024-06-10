@@ -1,5 +1,6 @@
 package com.wenxin2.warp_pipes.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModRegistry;
@@ -45,6 +46,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -65,6 +67,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
+    public static final MapCodec<WarpPipeBlock> CODEC = simpleCodec(WarpPipeBlock::new);
     public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
     public static final BooleanProperty BUBBLES = BooleanProperty.create("bubbles");
@@ -74,6 +77,11 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(WATER_SPOUT, Boolean.FALSE)
                 .setValue(BUBBLES, Boolean.TRUE).setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE));
+    }
+
+    @Override
+    public MapCodec<WarpPipeBlock> codec() {
+        return CODEC;
     }
 
     @Override

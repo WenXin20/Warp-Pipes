@@ -115,94 +115,12 @@ runs {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-//minecraft {
-//    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-//    // See more information here: https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
-//    mappings channel: 'official', version: '1.20.4'
-//
-//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    // Default run configurations.
-//    runs {
-//        client {
-//            workingDirectory project.file('run')
-//            property 'forge.logging.markers', 'REGISTRIES'
-//            property 'forge.logging.console.level', 'debug'
-//            property 'forge.enabledGameTestNamespaces', 'warp_pipes'
-//            arg "-mixin.config=warp_pipes.mixins.json"
-//
-//            mods {
-//                warp_pipes {
-//                    source sourceSets.main
-//                }
-//            }
-//        }
-//
-//        server {
-//            workingDirectory project.file('run')
-//            property 'forge.logging.markers', 'REGISTRIES'
-//            property 'forge.logging.console.level', 'debug'
-//            property 'forge.enabledGameTestNamespaces', 'warp_pipes'
-//            arg "-mixin.config=warp_pipes.mixins.json"
-//
-//            mods {
-//                warp_pipes {
-//                    source sourceSets.main
-//                }
-//            }
-//        }
-//
-//        // This run config launches GameTestServer and runs all registered gametests, then exits.
-//        // By default, the server will crash when no gametests are provided.
-//        // The gametest system is also enabled by default for other run configs under the /test command.
-//        gameTestServer {
-//            workingDirectory project.file('run')
-//
-//            property 'forge.logging.markers', 'REGISTRIES'
-//
-//            property 'forge.logging.console.level', 'debug'
-//
-//            property 'forge.enabledGameTestNamespaces', 'warp_pipes'
-//
-//            mods {
-//                warp_pipes {
-//                    source sourceSets.main
-//                }
-//            }
-//        }
-//
-//        data {
-//            workingDirectory project.file('run')
-//
-//            property 'forge.logging.markers', 'REGISTRIES'
-//
-//            property 'forge.logging.console.level', 'debug'
-//
-//            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-//            args '--mod', 'warp_pipes', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-//
-//            mods {
-//                warp_pipes {
-//                    source sourceSets.main
-//                }
-//            }
-//        }
-//    }
-//}
-
-//jar {
-//    manifest {
-//        attributes([
-//                "Specification-Title"     : "warp_pipes",
-//                "Specification-Vendor"    : "warp_pipes_vendor",
-//                "Specification-Version"   : "1", // We are version 1 of ourselves
-//                "Implementation-Title"    : project.name,
-//                "Implementation-Version"  : project.jar.archiveVersion,
-//                "Implementation-Vendor"   : "warp_pipes_vendor",
-//                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-//        ])
-//    }
-//}
+minecraft {
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
+}
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [

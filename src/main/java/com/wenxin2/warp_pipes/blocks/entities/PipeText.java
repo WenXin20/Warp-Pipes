@@ -11,20 +11,21 @@ import net.minecraft.Util;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 
 public class PipeText {
-    private static final Codec<Component[]> LINES_CODEC = ExtraCodecs.FLAT_COMPONENT.listOf().comapFlatMap((list) -> {
-        return Util.fixedSize(list, 1).map((components) -> {
-            return new Component[]{components.get(0)};
-        });
-    }, (components) -> {
-        return List.of(components[0]);
-    });
+    private static final Codec<Component[]> LINES_CODEC = ComponentSerialization.FLAT_CODEC.listOf()
+            .comapFlatMap((list) -> {
+                return Util.fixedSize(list, 1).map((components) -> {
+                    return new Component[]{components.get(0)};
+                });
+            }, (components) -> {
+                return List.of(components[0]);
+            });
     public static final Codec<PipeText> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(LINES_CODEC.fieldOf("pipe_name").forGetter((pipeText) -> {
             return pipeText.messages;
