@@ -15,7 +15,7 @@ import org.lwjgl.system.windows.MSG;
 public class PacketHandler {
 
     @SubscribeEvent
-    public static void register(final RegisterPayloadHandlerEvent event) {
+    public static void registerPackets(final RegisterPayloadHandlerEvent event) {
         final IPayloadRegistrar registrar = event.registrar("warp_pipes").versioned("1.0.0");
 
         // Sends to server

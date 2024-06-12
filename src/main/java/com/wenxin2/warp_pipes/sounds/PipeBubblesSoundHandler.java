@@ -1,6 +1,5 @@
 package com.wenxin2.warp_pipes.sounds;
 
-import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import net.minecraft.client.player.LocalPlayer;
@@ -10,10 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(modid = WarpPipes.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 
 public class PipeBubblesSoundHandler implements AmbientSoundHandler {
     private final LocalPlayer player;

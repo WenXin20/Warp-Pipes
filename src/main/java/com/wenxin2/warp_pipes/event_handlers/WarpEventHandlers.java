@@ -8,13 +8,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = WarpPipes.MODID)
+@Mod.EventBusSubscriber(modid = WarpPipes.MODID)
 public class WarpEventHandlers {
-    public static void onJoinWorld(final EntityJoinLevelEvent event)
+
+    @SubscribeEvent
+    public static void onJoinWorld(EntityJoinLevelEvent event)
     {
         CompoundTag tag = event.getEntity().getPersistentData();
         if (!(event.getEntity() instanceof LivingEntity) && !(event.getEntity() instanceof Player)) return;
@@ -26,6 +30,7 @@ public class WarpEventHandlers {
             tag.putBoolean("warp_pipes:prevent_warp", false);
     }
 
+    @SubscribeEvent
     public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide()) {
             BlockPos clickedPos = event.getPos();
@@ -37,9 +42,10 @@ public class WarpEventHandlers {
         }
     }
 
-    public static void register()
-    {
-        WarpPipes.FORGE_BUS.addListener(WarpEventHandlers::onJoinWorld);
-        WarpPipes.FORGE_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
-    }
+//    @SubscribeEvent
+//    public static void register(Object msg)
+//    {
+//        WarpPipes.FORGE_BUS.addListener(WarpEventHandlers::onJoinWorld);
+//        WarpPipes.FORGE_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
+//    }
 }

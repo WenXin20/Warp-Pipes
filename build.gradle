@@ -7,7 +7,7 @@ plugins {
 //    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-version = mod_jar_version
+version = mod_version
 group = mod_group_id
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -37,7 +37,7 @@ configurations {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neoforge_version}"
+    implementation "net.neoforged:neoforge:${neo_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
 
@@ -126,13 +126,13 @@ tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version       : minecraft_version,
             minecraft_version_range : minecraft_version_range,
-            neo_version             : neoforge_version,
-            neo_version_range       : neoforge_version_range,
+            neo_version             : neo_version,
+            neo_version_range       : neo_version_range,
             loader_version_range    : loader_version_range,
             mod_id                  : mod_id,
             mod_name                : mod_name,
             mod_license             : mod_license,
-            mod_version             : mod_jar_version,
+            mod_version             : mod_version,
             mod_authors             : mod_authors,
             mod_description         : mod_description,
             mixin_configs           : mixin_location

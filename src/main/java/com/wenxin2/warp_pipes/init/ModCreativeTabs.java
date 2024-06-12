@@ -1,7 +1,6 @@
 package com.wenxin2.warp_pipes.init;
 
 import com.wenxin2.warp_pipes.WarpPipes;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -32,8 +30,8 @@ public class ModCreativeTabs {
 
             add(event, ModRegistry.CLEAR_WARP_PIPE.get());
 
-            for (DeferredBlock<Block> pipe : ModRegistry.WARP_PIPES.values()) {
-                add(event, pipe);
+            for (DeferredHolder<Block, Block> pipe : ModRegistry.WARP_PIPES.values()) {
+                add(event, pipe.get());
             }
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
@@ -52,7 +50,7 @@ public class ModCreativeTabs {
         if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
             add(event, ModRegistry.CLEAR_WARP_PIPE.get());
 
-            for (DeferredBlock<Block> pipe : ModRegistry.WARP_PIPES.values()) {
+            for (DeferredHolder<Block, Block> pipe : ModRegistry.WARP_PIPES.values()) {
                 add(event, pipe.get());
             }
         }
@@ -60,7 +58,7 @@ public class ModCreativeTabs {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             addAfter(event, Items.RESPAWN_ANCHOR, ModRegistry.CLEAR_WARP_PIPE.get());
 
-            for (DeferredBlock<Block> pipe : ModRegistry.WARP_PIPES.values()) {
+            for (DeferredHolder<Block, Block> pipe : ModRegistry.WARP_PIPES.values()) {
                 addAfter(event, ModRegistry.CLEAR_WARP_PIPE.get(), pipe.get());
             }
 

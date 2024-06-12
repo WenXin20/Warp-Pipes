@@ -10,19 +10,14 @@ import com.wenxin2.warp_pipes.init.SoundRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -70,6 +65,7 @@ public class WarpPipes
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
 
         // Register ourselves for server and other game events we are interested in
-        NeoForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onJoinWorld);
+        NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
     }
 }
