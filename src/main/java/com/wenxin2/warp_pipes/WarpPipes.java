@@ -31,8 +31,6 @@ public class WarpPipes
     // Create a Deferred Register to hold blocks/items which will all be registered under the "warp_pipes" namespace
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-//    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, MODID);
-//    public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.FLUID_TYPES, MODID);
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, WarpPipes.MODID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, WarpPipes.MODID);
@@ -46,8 +44,6 @@ public class WarpPipes
         // Register the Deferred Register to the mod event bus so blocks/items get registered
         BLOCKS.register(bus);
         ITEMS.register(bus);
-//        FLUIDS.register(bus);
-//        FLUID_TYPES.register(bus);
         BLOCK_ENTITIES.register(bus);
         MENUS.register(bus);
         SOUNDS.register(bus);
@@ -59,7 +55,7 @@ public class WarpPipes
         if (dist.isClient())
             bus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
 
-        WarpEventHandlers.register();
+//        WarpEventHandlers.register();
         // PipeBubblesSoundHandler.init();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
