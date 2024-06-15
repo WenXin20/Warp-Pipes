@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.network;
+package com.wenxin2.warp_pipes.network.server_bound;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
@@ -13,24 +13,24 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SWaterSpoutSliderPacket(BlockPos pos, int waterSpoutHeight) implements CustomPacketPayload {
-    public static final ResourceLocation SPOUT_HEIGHT_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "spout_height_payload");
+public record PipeBubblesButtonPayload(BlockPos pos, Boolean hasPipeBubbles) implements CustomPacketPayload {
+    public static final ResourceLocation BUBBLES_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "bubbles_state_payload");
 
     @Override
     public ResourceLocation id() {
-        return SPOUT_HEIGHT_PAYLOAD;
+        return BUBBLES_STATE_PAYLOAD;
     }
 
     // Read and write in the same order!
-    public SWaterSpoutSliderPacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos(), buffer.readInt());
+    public PipeBubblesButtonPayload(FriendlyByteBuf buffer) {
+        this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
     @Override
     public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
-            buffer.writeInt(waterSpoutHeight);
+            buffer.writeBoolean(hasPipeBubbles);
         }
     }
 
@@ -42,15 +42,16 @@ public record SWaterSpoutSliderPacket(BlockPos pos, int waterSpoutHeight) implem
                 ServerPlayer player = (ServerPlayer) context.player().get();
                 Level world = context.level().get();
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
-                    changeHeight(player, (WarpPipeBlockEntity) blockEntity);
-                    pipeBlockEntity.sendData();
+                if (blockEntity instanceof WarpPipeBlockEntity) {
+                    changeState(player, (WarpPipeBlockEntity) blockEntity);
+                    ((WarpPipeBlockEntity) blockEntity).sendData();
+                    blockEntity.setChanged();
                 }
             });
         }
     }
 
-    public void changeHeight(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
+    public void changeState(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
         Level world = pipeBlockEntity.getLevel();
         if (world == null)
             return;
@@ -59,6 +60,19 @@ public record SWaterSpoutSliderPacket(BlockPos pos, int waterSpoutHeight) implem
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-        pipeBlockEntity.waterSpoutHeight(player, waterSpoutHeight);
+
+        pipeBlockEntity.togglePipeBubbles(player);
+    }
+
+    public static PipeBubblesButtonPayload pipeBubblesOn(BlockPos pos, Boolean hasPipeBubbles) {
+        PipeBubblesButtonPayload packet = new PipeBubblesButtonPayload(pos, hasPipeBubbles);
+        hasPipeBubbles = false;
+        return packet;
+    }
+
+    public static PipeBubblesButtonPayload pipeBubblesOff(BlockPos pos, Boolean hasPipeBubbles) {
+        PipeBubblesButtonPayload packet = new PipeBubblesButtonPayload(pos, hasPipeBubbles);
+        hasPipeBubbles = true;
+        return packet;
     }
 }

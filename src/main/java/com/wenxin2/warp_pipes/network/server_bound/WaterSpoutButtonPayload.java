@@ -1,30 +1,28 @@
-package com.wenxin2.warp_pipes.network;
+package com.wenxin2.warp_pipes.network.server_bound;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SCloseStatePacket(BlockPos pos, Boolean closePipe) implements CustomPacketPayload {
-    public static final ResourceLocation CLOSE_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "close_state_payload");
+public record WaterSpoutButtonPayload(BlockPos pos, Boolean hasWaterSpout) implements CustomPacketPayload {
+    public static final ResourceLocation SPOUT_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "spout_state_payload");
 
     @Override
     public ResourceLocation id() {
-        return CLOSE_STATE_PAYLOAD;
+        return SPOUT_STATE_PAYLOAD;
     }
 
     // Read and write in the same order!
-    public SCloseStatePacket(FriendlyByteBuf buffer) {
+    public WaterSpoutButtonPayload(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
@@ -32,19 +30,18 @@ public record SCloseStatePacket(BlockPos pos, Boolean closePipe) implements Cust
     public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
-            buffer.writeBoolean(closePipe);
+            buffer.writeBoolean(hasWaterSpout);
         }
     }
 
     public void handle(IPayloadContext context) {
         if (context.flow().isServerbound()) {
             context.workHandler().execute(() -> {
-                if (context.player().isEmpty() && this.pos == null || context.level().isEmpty())
+                if (context.player().isEmpty() || context.level().isEmpty())
                     return;
                 ServerPlayer player = (ServerPlayer) context.player().get();
-                Level world = player.level();
-                BlockEntity blockEntity = world.getBlockEntity(this.pos.immutable());
-                System.out.println("Block Entity: " + world.getBlockEntity(this.pos.immutable()) + " at " + this.pos.immutable());
+                Level world = context.level().get();
+                BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (blockEntity instanceof WarpPipeBlockEntity) {
                     changeState(player, (WarpPipeBlockEntity) blockEntity);
                     ((WarpPipeBlockEntity) blockEntity).sendData();
@@ -64,18 +61,18 @@ public record SCloseStatePacket(BlockPos pos, Boolean closePipe) implements Cust
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
 
-        pipeBlockEntity.closePipe(player);
+        pipeBlockEntity.toggleWaterSpout(player);
     }
 
-    public static SCloseStatePacket openPipe(BlockPos pos, Boolean closePipe) {
-        SCloseStatePacket packet = new SCloseStatePacket(pos, closePipe);
-        closePipe = false;
+    public static WaterSpoutButtonPayload waterSpoutOn(BlockPos pos, Boolean hasWaterSpout) {
+        WaterSpoutButtonPayload packet = new WaterSpoutButtonPayload(pos, hasWaterSpout);
+        hasWaterSpout = false;
         return packet;
     }
 
-    public static SCloseStatePacket closePipe(BlockPos pos, Boolean closePipe) {
-        SCloseStatePacket packet = new SCloseStatePacket(pos, closePipe);
-        closePipe = true;
+    public static WaterSpoutButtonPayload waterSpoutOff(BlockPos pos, Boolean hasWaterSpout) {
+        WaterSpoutButtonPayload packet = new WaterSpoutButtonPayload(pos, hasWaterSpout);
+        hasWaterSpout = true;
         return packet;
     }
 }

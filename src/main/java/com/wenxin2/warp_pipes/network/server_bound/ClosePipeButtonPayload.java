@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.network;
+package com.wenxin2.warp_pipes.network.server_bound;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
@@ -13,16 +13,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SWaterSpoutStatePacket(BlockPos pos, Boolean hasWaterSpout) implements CustomPacketPayload {
-    public static final ResourceLocation SPOUT_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "spout_state_payload");
+public record ClosePipeButtonPayload(BlockPos pos, Boolean closePipe) implements CustomPacketPayload {
+    public static final ResourceLocation CLOSE_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "close_state_payload");
 
     @Override
     public ResourceLocation id() {
-        return SPOUT_STATE_PAYLOAD;
+        return CLOSE_STATE_PAYLOAD;
     }
 
     // Read and write in the same order!
-    public SWaterSpoutStatePacket(FriendlyByteBuf buffer) {
+    public ClosePipeButtonPayload(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
@@ -30,18 +30,18 @@ public record SWaterSpoutStatePacket(BlockPos pos, Boolean hasWaterSpout) implem
     public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
-            buffer.writeBoolean(hasWaterSpout);
+            buffer.writeBoolean(closePipe);
         }
     }
 
     public void handle(IPayloadContext context) {
         if (context.flow().isServerbound()) {
             context.workHandler().execute(() -> {
-                if (context.player().isEmpty() || context.level().isEmpty())
+                if (context.player().isEmpty() && this.pos == null || context.level().isEmpty())
                     return;
                 ServerPlayer player = (ServerPlayer) context.player().get();
-                Level world = context.level().get();
-                BlockEntity blockEntity = world.getBlockEntity(pos);
+                Level world = player.level();
+                BlockEntity blockEntity = world.getBlockEntity(this.pos.immutable());
                 if (blockEntity instanceof WarpPipeBlockEntity) {
                     changeState(player, (WarpPipeBlockEntity) blockEntity);
                     ((WarpPipeBlockEntity) blockEntity).sendData();
@@ -61,18 +61,18 @@ public record SWaterSpoutStatePacket(BlockPos pos, Boolean hasWaterSpout) implem
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
 
-        pipeBlockEntity.toggleWaterSpout(player);
+        pipeBlockEntity.closePipe(player);
     }
 
-    public static SWaterSpoutStatePacket waterSpoutOn(BlockPos pos, Boolean hasWaterSpout) {
-        SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
-        hasWaterSpout = false;
+    public static ClosePipeButtonPayload openPipe(BlockPos pos, Boolean closePipe) {
+        ClosePipeButtonPayload packet = new ClosePipeButtonPayload(pos, closePipe);
+        closePipe = false;
         return packet;
     }
 
-    public static SWaterSpoutStatePacket waterSpoutOff(BlockPos pos, Boolean hasWaterSpout) {
-        SWaterSpoutStatePacket packet = new SWaterSpoutStatePacket(pos, hasWaterSpout);
-        hasWaterSpout = true;
+    public static ClosePipeButtonPayload closePipe(BlockPos pos, Boolean closePipe) {
+        ClosePipeButtonPayload packet = new ClosePipeButtonPayload(pos, closePipe);
+        closePipe = true;
         return packet;
     }
 }

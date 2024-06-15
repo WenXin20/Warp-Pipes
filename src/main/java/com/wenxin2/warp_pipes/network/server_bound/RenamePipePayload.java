@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.network;
+package com.wenxin2.warp_pipes.network.server_bound;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SRenamePipePacket(BlockPos pos, String customName) implements CustomPacketPayload {
+public record RenamePipePayload(BlockPos pos, String customName) implements CustomPacketPayload {
     public static final ResourceLocation RENAME_PIPE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "rename_pipe_payload");
 
     @Override
@@ -20,7 +20,7 @@ public record SRenamePipePacket(BlockPos pos, String customName) implements Cust
     }
 
     // Read and write in the same order!
-    public SRenamePipePacket(FriendlyByteBuf buffer) {
+    public RenamePipePayload(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readUtf());
     }
 

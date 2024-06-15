@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.network;
+package com.wenxin2.warp_pipes.network.server_bound;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
@@ -13,24 +13,24 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) implements CustomPacketPayload {
-    public static final ResourceLocation BUBBLES_STATE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "bubbles_state_payload");
+public record PipeBubblesSliderPayload(BlockPos pos, int bubblesDistance) implements CustomPacketPayload {
+    public static final ResourceLocation BUBBLES_DISTANCE_PAYLOAD = new ResourceLocation(WarpPipes.MODID, "bubbles_distance_payload");
 
     @Override
     public ResourceLocation id() {
-        return BUBBLES_STATE_PAYLOAD;
+        return BUBBLES_DISTANCE_PAYLOAD;
     }
 
     // Read and write in the same order!
-    public SPipeBubblesStatePacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos(), buffer.readBoolean());
+    public PipeBubblesSliderPayload(FriendlyByteBuf buffer) {
+        this(buffer.readBlockPos(), buffer.readInt());
     }
 
     @Override
     public void write(FriendlyByteBuf buffer) {
         if (this.pos != null) {
             buffer.writeBlockPos(this.pos);
-            buffer.writeBoolean(hasPipeBubbles);
+            buffer.writeInt(bubblesDistance);
         }
     }
 
@@ -42,16 +42,15 @@ public record SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) impl
                 ServerPlayer player = (ServerPlayer) context.player().get();
                 Level world = context.level().get();
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof WarpPipeBlockEntity) {
-                    changeState(player, (WarpPipeBlockEntity) blockEntity);
-                    ((WarpPipeBlockEntity) blockEntity).sendData();
-                    blockEntity.setChanged();
+                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                    changeDistance(player, (WarpPipeBlockEntity) blockEntity);
+                    pipeBlockEntity.sendData();
                 }
             });
         }
     }
 
-    public void changeState(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
+    public void changeDistance(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
         Level world = pipeBlockEntity.getLevel();
         if (world == null)
             return;
@@ -60,19 +59,6 @@ public record SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) impl
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-
-        pipeBlockEntity.togglePipeBubbles(player);
-    }
-
-    public static SPipeBubblesStatePacket pipeBubblesOn(BlockPos pos, Boolean hasPipeBubbles) {
-        SPipeBubblesStatePacket packet = new SPipeBubblesStatePacket(pos, hasPipeBubbles);
-        hasPipeBubbles = false;
-        return packet;
-    }
-
-    public static SPipeBubblesStatePacket pipeBubblesOff(BlockPos pos, Boolean hasPipeBubbles) {
-        SPipeBubblesStatePacket packet = new SPipeBubblesStatePacket(pos, hasPipeBubbles);
-        hasPipeBubbles = true;
-        return packet;
+        pipeBlockEntity.bubblesDistance(player, bubblesDistance);
     }
 }
