@@ -34,17 +34,19 @@ public record SRenamePipePacket(BlockPos pos, String customName) implements Cust
 
     public void handle(IPayloadContext context) {
         if (context.flow().isServerbound()) {
-            if (context.level().isEmpty())
-                return;
-            Level world = context.level().get();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
-                ((WarpPipeBlockEntity) blockEntity).sendData();
-                ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.literal(customName));
-                ((WarpPipeBlockEntity) blockEntity).updateText(pipeText -> pipeText.setMessage(0, Component.literal(customName)));
-                ((WarpPipeBlockEntity) blockEntity).markUpdated();
-                ((WarpPipeBlockEntity) blockEntity).getUpdateTag();
-            }
+            context.workHandler().execute(() -> {
+                if (context.level().isEmpty())
+                    return;
+                Level world = context.level().get();
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof WarpPipeBlockEntity) {
+                    ((WarpPipeBlockEntity) blockEntity).sendData();
+                    ((WarpPipeBlockEntity) blockEntity).setCustomName(Component.literal(customName));
+                    ((WarpPipeBlockEntity) blockEntity).updateText(pipeText -> pipeText.setMessage(0, Component.literal(customName)));
+                    ((WarpPipeBlockEntity) blockEntity).markUpdated();
+                    ((WarpPipeBlockEntity) blockEntity).getUpdateTag();
+                }
+            });
         }
     }
 }

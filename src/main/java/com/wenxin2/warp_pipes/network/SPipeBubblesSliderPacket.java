@@ -36,15 +36,17 @@ public record SPipeBubblesSliderPacket(BlockPos pos, int bubblesDistance) implem
 
     public void handle(IPayloadContext context) {
         if (context.flow().isServerbound()) {
-            if (context.player().isEmpty() || context.level().isEmpty())
-                return;
-            ServerPlayer player = (ServerPlayer) context.player().get();
-            Level world = context.level().get();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
-                changeDistance(player, (WarpPipeBlockEntity) blockEntity);
-                pipeBlockEntity.sendData();
-            }
+            context.workHandler().execute(() -> {
+                if (context.player().isEmpty() || context.level().isEmpty())
+                    return;
+                ServerPlayer player = (ServerPlayer) context.player().get();
+                Level world = context.level().get();
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                    changeDistance(player, (WarpPipeBlockEntity) blockEntity);
+                    pipeBlockEntity.sendData();
+                }
+            });
         }
     }
 

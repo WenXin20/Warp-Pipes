@@ -36,16 +36,18 @@ public record SPipeBubblesStatePacket(BlockPos pos, Boolean hasPipeBubbles) impl
 
     public void handle(IPayloadContext context) {
         if (context.flow().isServerbound()) {
-            if (context.player().isEmpty() || context.level().isEmpty())
-                return;
-            ServerPlayer player = (ServerPlayer) context.player().get();
-            Level world = context.level().get();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
-                changeState(player, (WarpPipeBlockEntity) blockEntity);
-                ((WarpPipeBlockEntity) blockEntity).sendData();
-                blockEntity.setChanged();
-            }
+            context.workHandler().execute(() -> {
+                if (context.player().isEmpty() || context.level().isEmpty())
+                    return;
+                ServerPlayer player = (ServerPlayer) context.player().get();
+                Level world = context.level().get();
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof WarpPipeBlockEntity) {
+                    changeState(player, (WarpPipeBlockEntity) blockEntity);
+                    ((WarpPipeBlockEntity) blockEntity).sendData();
+                    blockEntity.setChanged();
+                }
+            });
         }
     }
 

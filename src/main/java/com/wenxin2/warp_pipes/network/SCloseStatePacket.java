@@ -3,11 +3,13 @@ package com.wenxin2.warp_pipes.network;
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,17 +38,19 @@ public record SCloseStatePacket(BlockPos pos, Boolean closePipe) implements Cust
 
     public void handle(IPayloadContext context) {
         if (context.flow().isServerbound()) {
-//            context.workHandler().submitAsync()
-            if (context.player().isEmpty() && this.pos == null || context.level().isEmpty())
-                return;
-            ServerPlayer player = (ServerPlayer) context.player().get();
-            Level world = context.level().get();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
-                changeState(player, (WarpPipeBlockEntity) blockEntity);
-                ((WarpPipeBlockEntity) blockEntity).sendData();
-                blockEntity.setChanged();
-            }
+            context.workHandler().execute(() -> {
+                if (context.player().isEmpty() && this.pos == null || context.level().isEmpty())
+                    return;
+                ServerPlayer player = (ServerPlayer) context.player().get();
+                Level world = player.level();
+                BlockEntity blockEntity = world.getBlockEntity(this.pos.immutable());
+                System.out.println("Block Entity: " + world.getBlockEntity(this.pos.immutable()) + " at " + this.pos.immutable());
+                if (blockEntity instanceof WarpPipeBlockEntity) {
+                    changeState(player, (WarpPipeBlockEntity) blockEntity);
+                    ((WarpPipeBlockEntity) blockEntity).sendData();
+                    blockEntity.setChanged();
+                }
+            });
         }
     }
 
