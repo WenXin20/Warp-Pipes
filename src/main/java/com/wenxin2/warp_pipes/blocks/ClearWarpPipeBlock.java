@@ -409,7 +409,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (!entity.isShiftKeyDown())
+        if (!entity.isShiftKeyDown() && Config.ALLOW_FAST_TRAVEL.get())
             entity.setSwimming(true);
 
         if ((entityY < blockY + 0.98 && entityY > blockY + 0.02)
