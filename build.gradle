@@ -79,7 +79,6 @@ runs {
         dataGenerator false
         gameTest false
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
     }
 
     gameTestServer {
