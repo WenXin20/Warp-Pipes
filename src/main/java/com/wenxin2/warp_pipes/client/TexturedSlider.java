@@ -44,13 +44,11 @@ public class TexturedSlider extends ExtendedSlider {
         renderScrollingString(guiGraphics, mc.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
-//    @Override
     public int getHandleTextureY() {
         int i = !this.isHovered && !this.canChangeValue ? 2 : 3;
         return i * 24;
     }
 
-//    @Override
     public int getTextureY() {
         int i = this.isFocused() && !this.canChangeValue ? 1 : 0;
         return i * 24;

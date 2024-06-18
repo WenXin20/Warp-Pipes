@@ -9,6 +9,7 @@ plugins {
 version = mod_version
 group = mod_group_id
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
 base {
     archivesName = mod_id
