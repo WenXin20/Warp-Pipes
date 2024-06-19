@@ -14,6 +14,7 @@ public class ModTags {
     public static final TagKey<Item> DYEABLE_WARP_PIPE_ITEMS = itemTags(WarpPipes.MODID, "dyeable_warp_pipes");
     public static final TagKey<Item> WARP_PIPE_ITEMS = itemTags(WarpPipes.MODID, "warp_pipes");
     public static final TagKey<EntityType<?>> WARP_BlACKLIST = entityTypeTags(WarpPipes.MODID, "warp_blacklist");
+    public static final TagKey<EntityType<?>> QUICK_TRAVEL_BlACKLIST = entityTypeTags(WarpPipes.MODID, "quick_travel_blacklist");
 
     public static TagKey<Block> blockTags(String id, String name) {
         return TagKey.create(Registries.BLOCK, new ResourceLocation(id, name));
