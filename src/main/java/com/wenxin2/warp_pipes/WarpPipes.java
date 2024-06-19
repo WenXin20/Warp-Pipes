@@ -37,8 +37,6 @@ public class WarpPipes
     // Create a Deferred Register to hold blocks/items which will all be registered under the "warp_pipes" namespace
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, MODID);
-    public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, MODID);
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, WarpPipes.MODID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, WarpPipes.MODID);
@@ -54,8 +52,6 @@ public class WarpPipes
         // Register the Deferred Register to the mod event bus so blocks/items get registered
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
-        FLUIDS.register(modEventBus);
-        FLUID_TYPES.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
         SOUNDS.register(modEventBus);
