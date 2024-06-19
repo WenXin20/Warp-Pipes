@@ -244,6 +244,11 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     @Override
+    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
+        return false;
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
         FluidState fluidState = placeContext.getLevel().getFluidState(placeContext.getClickedPos());
         Direction direction = placeContext.getClickedFace();
@@ -474,10 +479,5 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                 ));
             }
         }
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
-        return false;
     }
 }
