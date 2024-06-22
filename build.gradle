@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle.userdev' version '7.0.107'
 }
 
 version = minecraft_version + "-" + mod_version
@@ -124,7 +124,7 @@ tasks.withType(ProcessResources).configureEach {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', '*.mixins.json']) {
+    filesMatching(['META-INF/warp_pipes.mods.toml', '*.mixins.json']) {
         expand replaceProperties
     }
 }
