@@ -3,12 +3,12 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.97'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
 }
 
 version = minecraft_version + "-" + mod_version
 group = mod_group_id
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
 base {
@@ -42,14 +42,14 @@ dependencies {
     // Imports
     implementation "curse.maven:architectury-api-${architectury_api_version}"
     implementation "curse.maven:cloth-config-${cloth_config_version}"
-    implementation "curse.maven:fusion-connected-textures-${fusion_version}"
-    implementation "curse.maven:selene-${moonlight_version}"
     implementation "curse.maven:roughly-enough-items-${rei_version}"
     implementation "curse.maven:spark-${spark_version}"
-    implementation "curse.maven:structure-gel-api-${structure_gel_version}"
 
     // implementation 'curse.maven:ctm-${ctm_version}'
+    // implementation "curse.maven:fusion-connected-textures-${fusion_version}"
     // implementation 'curse.maven:jei-${jei_version}'
+    // implementation "curse.maven:selene-${moonlight_version}"
+    // implementation "curse.maven:structure-gel-api-${structure_gel_version}"
     // implementation 'curse.maven:supplementaries-${supplementaries_version}'
 }
 
