@@ -1,2 +1,2 @@
 # Warp Pipes
- A mod adding Mario warp pipes to Minecraft
+ A new form of transportation from the Mario universe!
