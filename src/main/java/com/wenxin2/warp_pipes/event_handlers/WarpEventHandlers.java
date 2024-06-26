@@ -41,11 +41,4 @@ public class WarpEventHandlers {
             }
         }
     }
-
-//    @SubscribeEvent
-//    public static void register(Object msg)
-//    {
-//        WarpPipes.FORGE_BUS.addListener(WarpEventHandlers::onJoinWorld);
-//        WarpPipes.FORGE_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
-//    }
 }
