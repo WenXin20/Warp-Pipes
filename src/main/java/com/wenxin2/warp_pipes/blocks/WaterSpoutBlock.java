@@ -59,8 +59,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        Player player = (Player) ((EntityCollisionContext) context).getEntity();
-        if (player!= null) {
+        if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player) {
             if ((player.hasPermissions(1) && player.isCreative() && Config.DEBUG_WATER_SPOUT_SELECTION_BOX.get())
                     || (((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
                     && Config.WATER_SPOUTS_BUCKETABLE.get())
