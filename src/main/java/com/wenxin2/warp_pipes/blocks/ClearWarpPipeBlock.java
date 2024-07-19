@@ -183,7 +183,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public VoxelShape noCollisionShape(BlockState state, CollisionContext context) {
         VoxelShape shape = Shapes.box(8, 8, 8, 8.00001, 8.00001, 8.00001);
 
-        if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player) {
+        if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player) {
             if (!state.getValue(CLOSED)) {
                 if ((state.getValue(UP) && state.getValue(NORTH) && state.getValue(SOUTH) &&
                         state.getValue(EAST) && state.getValue(WEST) && state.getValue(ENTRANCE) && state.getValue(FACING) == Direction.DOWN) ||

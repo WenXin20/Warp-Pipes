@@ -54,7 +54,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player
+        if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player player
                 && player.hasPermissions(1) && player.isCreative() && Config.DEBUG_PIPE_BUBBLES_SELECTION_BOX.get()) {
             return Shapes.block();
         }
