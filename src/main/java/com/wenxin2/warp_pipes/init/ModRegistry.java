@@ -46,7 +46,9 @@ public class ModRegistry {
     {
 
         PIPE_WRENCH = registerItem("pipe_wrench",
-                () -> new WrenchItem(new Item.Properties().durability(128), Tiers.IRON));
+                () -> new WrenchItem(new Item.Properties()
+                        .attributes(WrenchItem.createAttributes(Tiers.IRON, 3, -3.2F))
+                        .durability(128), Tiers.IRON));
 
         CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
                 () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
