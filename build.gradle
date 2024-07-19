@@ -1,9 +1,9 @@
-plugins {
+ plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.107'
+    id 'net.neoforged.gradle.userdev' version '7.0.151'
 }
 
 version = minecraft_version + "-" + mod_version
@@ -18,9 +18,7 @@ base {
 repositories {
     maven {
         url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
+        content { includeGroup "curse.maven" }
     }
     maven { url "https://maven.neoforged.net/releases" }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
@@ -59,6 +57,7 @@ runs {
         systemProperty 'forge.logging.markers', 'REGISTRIES'
         systemProperty 'forge.logging.console.level', 'debug'
         programArguments '-mixin.config=warp_pipes.mixins.json'
+        programArguments.addAll '--username', 'WenXin2'
 
         modSource project.sourceSets.main
     }
@@ -124,7 +123,7 @@ tasks.withType(ProcessResources).configureEach {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/warp_pipes.mods.toml', '*.mixins.json']) {
+    filesMatching(['META-INF/neoforge.mods.toml', '*.mixins.json']) {
         expand replaceProperties
     }
 }

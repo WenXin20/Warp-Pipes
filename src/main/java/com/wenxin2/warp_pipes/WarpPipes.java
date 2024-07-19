@@ -51,6 +51,7 @@ public class WarpPipes
 
         ModRegistry.init();
         SoundRegistry.init();
+        Config.register();
 
         if (dist.isClient())
             bus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
@@ -58,7 +59,7 @@ public class WarpPipes
 //        WarpEventHandlers.register();
         // PipeBubblesSoundHandler.init();
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
+        // ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
 
         // Register ourselves for server and other game events we are interested in
         NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onJoinWorld);

@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -69,7 +70,7 @@ public class LinkerItem extends TieredItem {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         ItemStack stack = useOnContext.getItemInHand();
-        CompoundTag wrenchTag = stack.getTag();
+        DataComponents wrenchTag = stack.getComponents().get(DataComponents.SUSPICIOUS_STEW_EFFECTS);
         String dimension = world.dimension().location().toString();
 
         if (wrenchTag != null && wrenchTag.contains("Bound")) {
@@ -78,7 +79,7 @@ public class LinkerItem extends TieredItem {
 
         if (player != null && !player.isCreative() && Config.CREATIVE_WRENCH_PIPE_LINKING.get()) {
             player.displayClientMessage(Component.translatable("display.warp_pipes.linker.requires_creative")
-                    .withStyle(ChatFormatting.RED), true);
+                    .withStyle(), true);
             return InteractionResult.sidedSuccess(world.isClientSide);
         } else if (player != null) {
             if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock)

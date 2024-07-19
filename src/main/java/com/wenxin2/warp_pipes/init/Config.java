@@ -88,5 +88,7 @@ public class Config
         BUILDER.pop();
     }
 
-    private static final List<Predicate<Entity>> _blacklist = Lists.newArrayList();
+    public static void register() {
+        initializeConfig();
+    }
 }
