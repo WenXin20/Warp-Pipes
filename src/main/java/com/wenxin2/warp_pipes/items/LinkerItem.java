@@ -70,7 +70,7 @@ public class LinkerItem extends TieredItem {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         ItemStack stack = useOnContext.getItemInHand();
-        DataComponents wrenchTag = stack.getComponents().get(DataComponents.SUSPICIOUS_STEW_EFFECTS);
+        CompoundTag wrenchTag = stack.getTag();
         String dimension = world.dimension().location().toString();
 
         if (wrenchTag != null && wrenchTag.contains("Bound")) {
