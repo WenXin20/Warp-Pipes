@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.wenxin2.warp_pipes.WarpPipes;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -33,6 +34,10 @@ public class LinkerDataComponents {
             COMPONENTS.register("warp_pos",
                     () -> DataComponentType.<BlockPos>builder().persistent(BlockPos.CODEC)
                             .networkSynchronized(BlockPos.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> GLOBAL_WARP_POS =
+            COMPONENTS.register("global_warp_pos",
+                    () -> DataComponentType.<GlobalPos>builder().persistent(GlobalPos.CODEC)
+                            .networkSynchronized(GlobalPos.STREAM_CODEC).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> WARP_DIMENSION =
             COMPONENTS.register("warp_dimension",
                     () -> DataComponentType.<String>builder().persistent(Codec.STRING)
