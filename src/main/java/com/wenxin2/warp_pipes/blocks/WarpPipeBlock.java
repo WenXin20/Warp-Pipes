@@ -14,6 +14,8 @@ import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,6 +33,7 @@ import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -92,12 +95,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(final BlockState state, final Level world, final BlockPos pos,
-                                 final Player player, final InteractionHand hand, final BlockHitResult hit)
-    {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hit) {
         RandomSource random = world.getRandom();
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
 
         if (state.getValue(ENTRANCE) && player.getItemInHand(hand).getItem() == ModRegistry.PIPE_WRENCH.get()) {
@@ -109,7 +110,7 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 }
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
 
         if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
@@ -121,21 +122,24 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.FALSE))) {
                         world.playSound(player, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         coloredDustParticles(world, pos, new Vector3f(0, 0, 0), UniformInt.of(8, 12));
-                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.getUpdateTag(pipeBlockEntity.getLevel().registryAccess());
+//                        pipeBlockEntity.markUpdated();
                         isSuccesful = true;
                     }
                 } else if (item == Items.GLOW_INK_SAC) {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.TRUE))) {
                         world.playSound(player, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         spawnParticlesOnBlockFaces(world, pos, ParticleTypes.GLOW, new Vec3(0, 0, 0), UniformInt.of(3, 5));
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesful = true;
                     }
                 } else if (item == Items.HONEYCOMB) {
                     pipeBlockEntity.setWaxed(Boolean.TRUE);
                     world.playSound(player, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
                     ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_ON, UniformInt.of(3, 5));
-                    pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                    pipeBlockEntity.markUpdated();
                     isSuccesful = true;
                 } else if (stack.is(Items.BRUSH)) {
                     if (hit.getDirection() == Direction.NORTH) {
@@ -158,44 +162,51 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                         this.dyedDustParticles(pipeBlockEntity, world, pos, Direction.DOWN);
                     }
                     world.playSound(player, pos, SoundEvents.BRUSH_SAND_COMPLETED, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                    pipeBlockEntity.markUpdated();
                     isSuccesfulTool = true;
                 } else if (stack.is(CompatRegistry.BUBBLE_BLOWER.get()) || stack.is(CompatRegistry.SOAP.get())) {
                     if (hit.getDirection() == Direction.NORTH && pipeBlockEntity.hasTextNorth()) {
                         pipeBlockEntity.setTextNorth(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                         this.sudParticles(world, pos, Direction.NORTH);
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.SOUTH && pipeBlockEntity.hasTextSouth()) {
                         pipeBlockEntity.setTextSouth(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                         this.sudParticles(world, pos, Direction.SOUTH);
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.EAST && pipeBlockEntity.hasTextEast()) {
                         pipeBlockEntity.setTextEast(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                         this.sudParticles(world, pos, Direction.EAST);
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.WEST && pipeBlockEntity.hasTextWest()) {
                         pipeBlockEntity.setTextWest(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                         this.sudParticles(world, pos, Direction.WEST);
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.UP && pipeBlockEntity.hasTextAbove()) {
                         pipeBlockEntity.setTextAbove(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                         this.sudParticles(world, pos, Direction.UP);
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesfulTool = true;
                     } else if (hit.getDirection() == Direction.DOWN && pipeBlockEntity.hasTextBelow()) {
                         pipeBlockEntity.setTextBelow(Boolean.FALSE);
                         world.playSound(player, pos, CompatRegistry.BUBBLE_BLOWER_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                         this.sudParticles(world, pos, Direction.DOWN);
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesfulTool = true;
                     }
                 } else {
@@ -209,7 +220,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
 
                         world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         ParticleUtils.spawnParticlesOnBlockFaces(world, pos, new DustParticleOptions(colorVec, 1.0F), UniformInt.of(8, 12));
-                        pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                        pipeBlockEntity.markUpdated();
                         isSuccesful = true;
                     }
                 }
@@ -217,20 +229,21 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 pipeBlockEntity.setWaxed(Boolean.FALSE);
                 world.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 ParticleUtils.spawnParticlesOnBlockFaces(world, pos, ParticleTypes.WAX_OFF, UniformInt.of(3, 5));
-                pipeBlockEntity.getUpdateTag();
+//                        pipeBlockEntity.getUpdateTag();
+                pipeBlockEntity.markUpdated();
                 isSuccesfulTool = true;
             }
 
             if (isSuccesfulTool) {
                 if (!player.isCreative()) {
-                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+                    stack.hurtAndBreak(1, player, Player.getSlotForHand(player.getUsedItemHand()));
                 }
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return ItemInteractionResult.sidedSuccess(world.isClientSide);
             }
 
             if (isSuccesful) {
@@ -242,17 +255,17 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return ItemInteractionResult.sidedSuccess(world.isClientSide);
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
-            if (stack.hasCustomHoverName()) {
+            if (stack.has(DataComponents.CUSTOM_NAME)) {
                 pipeBlockEntity.setCustomName(stack.getHoverName());
                 pipeBlockEntity.setChanged();
             }
@@ -409,8 +422,9 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         BlockPos destinationPos = null;
 
-        if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE) {
-            destinationPos = warpPipeBE.destinationPos;
+        if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
+                && warpPipeBE.destinationPos != null && warpPipeBE.destinationPos.isPresent()) {
+            destinationPos = warpPipeBE.destinationPos.get();
             world.scheduleTick(pos, this, 3);
         }
 
