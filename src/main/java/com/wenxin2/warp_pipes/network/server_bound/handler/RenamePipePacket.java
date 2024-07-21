@@ -27,7 +27,7 @@ public class RenamePipePacket {
                     ((WarpPipeBlockEntity) blockEntity).setCustomName(((WarpPipeBlockEntity) blockEntity).getCustomName()); // Check this
                     ((WarpPipeBlockEntity) blockEntity).updateText(pipeText -> pipeText.setMessage(0, ((WarpPipeBlockEntity) blockEntity).getCustomName()));
                     ((WarpPipeBlockEntity) blockEntity).markUpdated();
-                    ((WarpPipeBlockEntity) blockEntity).getUpdateTag();
+                    blockEntity.getUpdateTag(blockEntity.getLevel().registryAccess());
                 }
             });
         }
