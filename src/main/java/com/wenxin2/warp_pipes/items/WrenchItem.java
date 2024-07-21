@@ -36,7 +36,7 @@ public class WrenchItem extends LinkerItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level world, List<Component> list, TooltipFlag tooltip) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltip) {
 
         list.add(Component.literal(""));
 
@@ -48,7 +48,7 @@ public class WrenchItem extends LinkerItem {
             list.add(Component.translatable(this.getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
         }
 
-        super.appendHoverText(stack, world, list, tooltip);
+        super.appendHoverText(stack, tooltipContext, list, tooltip);
     }
 
     @Override

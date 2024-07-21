@@ -1,6 +1,5 @@
 package com.wenxin2.warp_pipes.items;
 
-import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
@@ -16,10 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
