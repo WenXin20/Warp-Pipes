@@ -99,29 +99,30 @@ public abstract class PlayerMixin extends Entity {
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
-            warpPos = warpPipeBE.destinationPos;
-            int entityId = this.getId();
+            if (warpPipeBE.destinationPos != null && warpPipeBE.destinationPos.isPresent()) {
+                warpPos = warpPipeBE.destinationPos.get();
+                int entityId = this.getId();
 
-            if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(this, world);
+                if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                    this.spawnParticles(this, world);
 
-                // Reset the teleport status for the entity
-                WarpPipeBlock.teleportedEntities.put(entityId, false);
-            }
+                    // Reset the teleport status for the entity
+                    WarpPipeBlock.teleportedEntities.put(entityId, false);
+                }
 
-            if (warpPipeBE.hasDestinationPos()) {
-                if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && this.getDeltaMovement().y > 0
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    System.out.println("Below Pipe ");
-                    if (this.getWarpCooldown() == 0) {
-                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                            WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
-                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
-                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } /* else if (this.getWarpCooldown() <= 10)
-                        displayDestinationMissingMessage(); */
-                    else this.displayCooldownMessage();
+                if (warpPipeBE.hasDestinationPos()) {
+                    if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && this.getDeltaMovement().y > 0
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        System.out.println("Below Pipe ");
+                        if (this.getWarpCooldown() == 0) {
+                            if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                                WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
+                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                                WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
+                            this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                        } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */ else this.displayCooldownMessage();
+                    }
                 }
             }
         }
@@ -144,103 +145,100 @@ public abstract class PlayerMixin extends Entity {
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
-            warpPos = warpPipeBE.destinationPos;
-            int entityId = this.getId();
+            if (warpPipeBE.destinationPos != null && warpPipeBE.destinationPos.isPresent()) {
+                warpPos = warpPipeBE.destinationPos.get();
+                int entityId = this.getId();
 
-            if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(this, world);
+                if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                    this.spawnParticles(this, world);
 
-                // Reset the teleport status for the entity
-                WarpPipeBlock.teleportedEntities.put(entityId, false);
-            }
+                    // Reset the teleport status for the entity
+                    WarpPipeBlock.teleportedEntities.put(entityId, false);
+                }
 
-            if (warpPipeBE.hasDestinationPos()) {
+                if (warpPipeBE.hasDestinationPos()) {
 
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (this.getWarpCooldown() == 0) {
+                            if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                                WarpPipeBlock.warp(this, warpPos, world, state);
+                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                                WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                        } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */ else this.displayCooldownMessage();
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
+                        if (this.getWarpCooldown() == 0) {
+                            if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                                WarpPipeBlock.warp(this, warpPos, world, state);
+                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                                WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                        } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */ else this.displayCooldownMessage();
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
+                        if (this.getWarpCooldown() == 0) {
+                            if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                                WarpPipeBlock.warp(this, warpPos, world, state);
+                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                                WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                        } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */ else this.displayCooldownMessage();
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
+                            && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (this.getWarpCooldown() == 0) {
+                            if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                                WarpPipeBlock.warp(this, warpPos, world, state);
+                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                                WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                        } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */ else this.displayCooldownMessage();
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
+                            && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (this.getWarpCooldown() == 0) {
+                            if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                                WarpPipeBlock.warp(this, warpPos, world, state);
+                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                                WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                        } /* else if (this.getWarpCooldown() <= 10)
+                        displayDestinationMissingMessage(); */ else this.displayCooldownMessage();
+                    }
+                }
+            } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST))) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.getWarpCooldown() == 0) {
-                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                            WarpPipeBlock.warp(this, warpPos, world, state);
-                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } /* else if (this.getWarpCooldown() <= 10)
-                        displayDestinationMissingMessage(); */
-                    else this.displayCooldownMessage();
+                    this.displayNoTeleportMessage();
+                }
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    this.displayNoTeleportMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    if (this.getWarpCooldown() == 0) {
-                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                            WarpPipeBlock.warp(this, warpPos, world, state);
-                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } /* else if (this.getWarpCooldown() <= 10)
-                        displayDestinationMissingMessage(); */
-                    else this.displayCooldownMessage();
+                    this.displayNoTeleportMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
-                    if (this.getWarpCooldown() == 0) {
-                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                            WarpPipeBlock.warp(this, warpPos, world, state);
-                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } /* else if (this.getWarpCooldown() <= 10)
-                        displayDestinationMissingMessage(); */
-                    else this.displayCooldownMessage();
+                    this.displayNoTeleportMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.getWarpCooldown() == 0) {
-                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                            WarpPipeBlock.warp(this, warpPos, world, state);
-                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } /* else if (this.getWarpCooldown() <= 10)
-                        displayDestinationMissingMessage(); */
-                    else this.displayCooldownMessage();
+                    this.displayNoTeleportMessage();
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.getWarpCooldown() == 0) {
-                        if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                            WarpPipeBlock.warp(this, warpPos, world, state);
-                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                    } /* else if (this.getWarpCooldown() <= 10)
-                        displayDestinationMissingMessage(); */
-                    else this.displayCooldownMessage();
+                    this.displayNoTeleportMessage();
                 }
-            }
-        } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST))) {
-            if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
-                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                this.displayNoTeleportMessage();
-            }
-            if (state.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (this.getBlockY() < blockY)
-                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                this.displayNoTeleportMessage();
-            }
-            if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
-                    && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                this.displayNoTeleportMessage();
-            }
-            if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
-                    && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
-                this.displayNoTeleportMessage();
-            }
-            if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
-                    && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                this.displayNoTeleportMessage();
-            }
-            if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
-                    && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                this.displayNoTeleportMessage();
             }
         }
     }

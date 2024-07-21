@@ -109,24 +109,26 @@ public abstract class LivingEntityMixin extends Entity {
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
-            warpPos = warpPipeBE.destinationPos;
-            int entityId = this.getId();
+            if (warpPipeBE.destinationPos != null && warpPipeBE.destinationPos.isPresent()) {
+                warpPos = warpPipeBE.destinationPos.get();
+                int entityId = this.getId();
 
-            if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(world);
+                if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                    this.spawnParticles(world);
 
-                // Reset the teleport status for the entity
-                WarpPipeBlock.teleportedEntities.put(entityId, false);
-            }
+                    // Reset the teleport status for the entity
+                    WarpPipeBlock.teleportedEntities.put(entityId, false);
+                }
 
-            if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
-                if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
-                    else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
+                    if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                            WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
+                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    }
                 }
             }
         }
@@ -149,56 +151,58 @@ public abstract class LivingEntityMixin extends Entity {
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
                 && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
-            warpPos = warpPipeBE.destinationPos;
-            int entityId = this.getId();
+            if (warpPipeBE.destinationPos != null && warpPipeBE.destinationPos.isPresent()) {
+                warpPos = warpPipeBE.destinationPos.get();
+                int entityId = this.getId();
 
-            if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(world);
+                if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                    this.spawnParticles(world);
 
-                // Reset the teleport status for the entity
-                WarpPipeBlock.teleportedEntities.put(entityId, false);
-            }
+                    // Reset the teleport status for the entity
+                    WarpPipeBlock.teleportedEntities.put(entityId, false);
+                }
 
-            if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp(this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp(this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp(this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST
-                        && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp(this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST
-                        && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp(this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                            WarpPipeBlock.warp(this, warpPos, world, state);
+                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
+                        if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                            WarpPipeBlock.warp(this, warpPos, world, state);
+                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH
+                            && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
+                        if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                            WarpPipeBlock.warp(this, warpPos, world, state);
+                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST
+                            && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                            WarpPipeBlock.warp(this, warpPos, world, state);
+                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    }
+                    if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST
+                            && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                        if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
+                            WarpPipeBlock.warp(this, warpPos, world, state);
+                        else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    }
                 }
             }
         }
