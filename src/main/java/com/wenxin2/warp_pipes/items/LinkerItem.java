@@ -242,7 +242,7 @@ public class LinkerItem extends TieredItem {
         UUID uuid = warpPipeBE.getUuid();
         UUID uuidGlobal = warpPipeBEGlobal.getUuid();
 
-        warpPipeBE.setDestinationPos(warpPipeBEGlobal.getBlockPos());
+        warpPipeBE.setDestinationPos(Optional.of(warpPipeBEGlobal.getBlockPos()));
         if (uuid != null)
             warpPipeBE.setWarpUuid(getWarpUUID(stack));
         warpPipeBE.setChanged();
@@ -251,7 +251,7 @@ public class LinkerItem extends TieredItem {
             // System.out.println("Global Dimension: " + warpPipeBEGlobal.getLevel().dimension());
         } /*else System.out.println("World is null!");*/
 
-        warpPipeBEGlobal.setDestinationPos(pos);
+        warpPipeBEGlobal.setDestinationPos(Optional.ofNullable(pos));
         warpPipeBEGlobal.setDestinationDim(world.dimension());
         if (uuidGlobal != null)
             warpPipeBEGlobal.setWarpUuid(warpPipeBE.getUuid());

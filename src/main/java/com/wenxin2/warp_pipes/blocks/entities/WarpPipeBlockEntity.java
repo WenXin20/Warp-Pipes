@@ -8,6 +8,7 @@ import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import javax.annotation.Nullable;
@@ -15,6 +16,7 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -72,7 +74,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
     @Nullable
-    public BlockPos destinationPos;
+    public Optional<BlockPos> destinationPos;
     public String dimensionTag;
     public int spoutHeight = 4;
     public int bubblesDistance = 3;
@@ -264,9 +266,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         return this.destinationPos != null;
     }
 
-    public void setDestinationPos(@Nullable BlockPos pos) {
+    public void setDestinationPos(@Nullable Optional<BlockPos> pos) {
         this.destinationPos = pos;
-        if (this.level != null && pos != null) {
+        if (this.level != null && pos != null && pos.isPresent()) {
             BlockState state = this.getBlockState();
             this.level.setBlock(this.getBlockPos(), state, 4);
         }
@@ -274,8 +276,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     @Nullable
     public BlockPos getDestinationPos() {
-        if (this.destinationPos != null) {
-            return this.destinationPos;
+        if (this.destinationPos != null && this.destinationPos.isPresent()) {
+            return this.destinationPos.get();
         }
         return null;
     }
@@ -359,8 +361,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
         this.lockKey = LockCode.fromTag(tag);
         this.spoutHeight = tag.getInt(SPOUT_HEIGHT);
         this.bubblesDistance = tag.getInt(BUBBLES_DISTANCE);
@@ -373,7 +375,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         this.displayTextBelow = tag.getBoolean(DISPLAY_TEXT_BELOW);
 
         if (tag.contains(CUSTOM_NAME, 8)) {
-            this.name = Component.Serializer.fromJson(tag.getString(CUSTOM_NAME));
+            this.name = Component.Serializer.fromJson(tag.getString(CUSTOM_NAME), provider);
         }
 
         if (tag.contains(PIPE_NAME)) {
@@ -383,7 +385,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
 
         if (tag.contains(WARP_POS)) {
-            this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS));
+            this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS), "warp_pos");
             this.setDestinationPos(this.destinationPos);
         }
 
@@ -403,8 +405,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         this.lockKey.addToTag(tag);
         tag.putInt(BUBBLES_DISTANCE, this.bubblesDistance);
         tag.putInt(SPOUT_HEIGHT, this.spoutHeight);
@@ -418,15 +420,15 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         tag.putBoolean(DISPLAY_TEXT_BELOW, this.displayTextBelow);
 
         if (this.name != null) {
-            tag.putString(CUSTOM_NAME, Component.Serializer.toJson(this.name));
+            tag.putString(CUSTOM_NAME, Component.Serializer.toJson(this.name, provider));
         }
 
         PipeText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.pipeName).resultOrPartial(LOGGER::error).ifPresent((pipeName) -> {
             tag.put(PIPE_NAME, pipeName);
         });
 
-        if (this.hasDestinationPos() && this.destinationPos != null) {
-            tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
+        if (this.hasDestinationPos() && this.destinationPos != null && this.destinationPos.isPresent()) {
+            tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos.get()));
         }
 
         if (this.dimensionTag != null) {
@@ -444,10 +446,10 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag tag = super.getUpdateTag(provider);
 
-        this.saveAdditional(tag);
+        this.saveAdditional(tag, provider);
         return tag;
     }
 
