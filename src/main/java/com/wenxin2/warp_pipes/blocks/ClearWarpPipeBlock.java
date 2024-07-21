@@ -244,7 +244,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
+    public boolean isPathfindable(BlockState state, PathComputationType pathType) {
         return false;
     }
 
