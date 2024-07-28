@@ -13,9 +13,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ public class WarpPipes
     // Bus for Forge Events
     public static final IEventBus FORGE_BUS = NeoForge.EVENT_BUS;
 
-    public WarpPipes(IEventBus bus, Dist dist)
+    public WarpPipes(IEventBus bus, Dist dist, ModContainer container)
     {
         // Register the Deferred Register to the mod event bus so blocks/items get registered
         BLOCKS.register(bus);
@@ -51,15 +50,13 @@ public class WarpPipes
 
         ModRegistry.init();
         SoundRegistry.init();
-        Config.register();
+        Config.register(container);
 
         if (dist.isClient())
             bus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
 
 //        WarpEventHandlers.register();
         // PipeBubblesSoundHandler.init();
-
-        // ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.CONFIG);
 
         // Register ourselves for server and other game events we are interested in
         NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onJoinWorld);

@@ -1,15 +1,12 @@
 package com.wenxin2.warp_pipes.init;
 
-import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.function.Predicate;
-import net.minecraft.world.entity.Entity;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config
 {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    public static ModConfigSpec CONFIG;
 
     public static final String CATEGORY_DEBUG = "Debug";
     public static final String CATEGORY_CLIENT = "Client";
@@ -33,12 +30,6 @@ public class Config
     public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
     public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
     public static ModConfigSpec.BooleanValue WATER_SPOUTS_BUCKETABLE;
-
-    static
-    {
-        initializeConfig();
-        CONFIG = BUILDER.build();
-    }
 
     public static void initializeConfig()
     {
@@ -88,7 +79,8 @@ public class Config
         BUILDER.pop();
     }
 
-    public static void register() {
+    public static void register(ModContainer container) {
         initializeConfig();
+        container.registerConfig(ModConfig.Type.COMMON, BUILDER.build());
     }
 }
