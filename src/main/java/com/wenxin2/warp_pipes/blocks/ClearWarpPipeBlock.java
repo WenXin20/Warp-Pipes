@@ -48,8 +48,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final BooleanProperty ENTRANCE = BooleanProperty.create("entrance");
-    public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
+    public static final BooleanProperty ENTRANCE = WarpPipeBlock.ENTRANCE;
+    public static final BooleanProperty CLOSED = WarpPipeBlock.CLOSED;
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;

@@ -122,8 +122,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                     if (pipeBlockEntity.updateText((pipeText) -> pipeText.setHasGlowingText(Boolean.FALSE))) {
                         world.playSound(player, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         coloredDustParticles(world, pos, new Vector3f(0, 0, 0), UniformInt.of(8, 12));
-                        pipeBlockEntity.getUpdateTag(pipeBlockEntity.getLevel().registryAccess());
-//                        pipeBlockEntity.markUpdated();
+//                        pipeBlockEntity.getUpdateTag(pipeBlockEntity.getLevel().registryAccess());
+                        pipeBlockEntity.markUpdated();
                         isSuccesful = true;
                     }
                 } else if (item == Items.GLOW_INK_SAC) {
