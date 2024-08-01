@@ -22,16 +22,11 @@ public class PipeText {
             .comapFlatMap((list) -> Util.fixedSize(list, 1)
                     .map((components) -> new Component[]{components.getFirst()}),
                     (components) -> List.of(components[0]));
-    public static final Codec<PipeText> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
-        return instance.group(LINES_CODEC.fieldOf("pipe_name").forGetter((pipeText) -> {
-            return pipeText.messages;
-        }), LINES_CODEC.optionalFieldOf("filtered_pipe_name").forGetter(PipeText::getOnlyFilteredMessages),
-                DyeColor.CODEC.fieldOf("color").orElse(DyeColor.BLACK).forGetter((pipeText) -> {
-            return pipeText.color;
-        }), Codec.BOOL.fieldOf("has_glowing_text").orElse(false).forGetter((pipeText) -> {
-            return pipeText.hasGlowingText;
-        })).apply(instance, PipeText::load);
-    });
+    public static final Codec<PipeText> DIRECT_CODEC =
+            RecordCodecBuilder.create((instance) -> instance.group(LINES_CODEC.fieldOf("pipe_name").forGetter((pipeText) -> pipeText.messages),
+                    LINES_CODEC.optionalFieldOf("filtered_pipe_name").forGetter(PipeText::getOnlyFilteredMessages),
+            DyeColor.CODEC.fieldOf("color").orElse(DyeColor.BLACK).forGetter((pipeText) -> pipeText.color),
+                    Codec.BOOL.fieldOf("has_glowing_text").orElse(false).forGetter((pipeText) -> pipeText.hasGlowingText)).apply(instance, PipeText::load));
     public static final int LINES = 1;
     private final Component[] messages;
     private final Component[] filteredMessages;
