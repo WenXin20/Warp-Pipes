@@ -136,7 +136,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     @Override
-    public Component getName() {
+    public @NotNull Component getName() {
         return !this.pipeName.getMessage(0, false).contains(Component.empty())
                 ? this.pipeName.getMessage(0, false) : this.name != null ? this.name : DEFAULT_NAME;
     }

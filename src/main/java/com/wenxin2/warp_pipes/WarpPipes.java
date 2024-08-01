@@ -7,6 +7,7 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.ModCreativeTabs;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
+import com.wenxin2.warp_pipes.items.data_components.LinkerDataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -46,6 +47,7 @@ public class WarpPipes
         BLOCK_ENTITIES.register(bus);
         MENUS.register(bus);
         SOUNDS.register(bus);
+        LinkerDataComponents.COMPONENTS.register(bus);
         ModCreativeTabs.TABS.register(bus);
 
         ModRegistry.init();
