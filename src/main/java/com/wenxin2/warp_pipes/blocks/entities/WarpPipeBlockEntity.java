@@ -475,9 +475,11 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
             if (state.getValue(WarpPipeBlock.WATER_SPOUT)) {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.WATER_SPOUT, Boolean.FALSE), 3);
+                this.level.scheduleTick(menuPos, state.getBlock(), 3);
                 this.playSound(this.level, menuPos, SoundRegistry.WATER_SPOUT_BREAK.get(), SoundSource.BLOCKS, 1.0F, 0.15F);
             } else {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.WATER_SPOUT, Boolean.TRUE), 3);
+                this.level.scheduleTick(menuPos, state.getBlock(), 3);
                 this.playSound(this.level, menuPos, SoundRegistry.WATER_SPOUT_PLACE.get(), SoundSource.BLOCKS, 1.0F, 0.5F);
             }
         }
@@ -563,9 +565,11 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             BlockPos menuPos = ((WarpPipeMenu) player.containerMenu).getBlockPos();
             if (state.getValue(WarpPipeBlock.BUBBLES)) {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.BUBBLES, Boolean.FALSE), 3);
+                this.level.scheduleTick(menuPos, state.getBlock(), 3);
                 this.playSound(this.level, menuPos, SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, SoundSource.BLOCKS, 1.0F, 0.15F);
             } else {
                 this.level.setBlock(menuPos, state.setValue(WarpPipeBlock.BUBBLES, Boolean.TRUE), 3);
+                this.level.scheduleTick(menuPos, state.getBlock(), 3);
                 this.playSound(this.level, menuPos, SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS, 1.0F, 0.5F);
             }
         }

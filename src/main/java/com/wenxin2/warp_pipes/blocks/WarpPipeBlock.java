@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
@@ -32,7 +31,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -48,6 +46,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -440,6 +439,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+
+            if (blockAbove == Blocks.WATER) {
+                world.scheduleTick(pos, this, 3);
+            }
         }
 
         if (state.getValue(FACING) == Direction.DOWN) {
@@ -447,6 +450,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+
+            if (blockBelow == Blocks.WATER) {
+                world.scheduleTick(pos, this, 3);
+            }
         }
 
         if (state.getValue(FACING) == Direction.NORTH) {
@@ -454,6 +461,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+
+            if (blockNorth == Blocks.WATER) {
+                world.scheduleTick(pos, this, 3);
+            }
         }
 
         if (state.getValue(FACING) == Direction.SOUTH) {
@@ -461,6 +472,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+
+            if (blockSouth == Blocks.WATER) {
+                world.scheduleTick(pos, this, 3);
+            }
         }
 
         if (state.getValue(FACING) == Direction.EAST) {
@@ -468,6 +483,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+
+            if (blockEast == Blocks.WATER) {
+                world.scheduleTick(pos, this, 3);
+            }
         }
 
         if (state.getValue(FACING) == Direction.WEST) {
@@ -475,6 +494,10 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);
             }
             else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE), 3);
+
+            if (blockWest == Blocks.WATER) {
+                world.scheduleTick(pos, this, 3);
+            }
         }
     }
 
