@@ -1,14 +1,9 @@
 package com.wenxin2.warp_pipes.network.server_bound.handler;
 
-import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.network.server_bound.data.ClosePipeButtonPayload;
 import com.wenxin2.warp_pipes.network.server_bound.data.PipeBubblesSliderPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,14 +26,14 @@ public class PipeBubblesSliderPacket {
                 Level world = player.level();
                 BlockEntity blockEntity = world.getBlockEntity(payload.pos());
                 if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
-                    changeDistance(player, (WarpPipeBlockEntity) blockEntity);
+                    changeDistance(payload, player, (WarpPipeBlockEntity) blockEntity);
                     pipeBlockEntity.sendData();
                 }
             });
         }
     }
 
-    public void changeDistance(ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
+    public void changeDistance(final PipeBubblesSliderPayload payload, ServerPlayer player, WarpPipeBlockEntity pipeBlockEntity) {
         Level world = pipeBlockEntity.getLevel();
         if (world == null)
             return;
@@ -47,6 +42,6 @@ public class PipeBubblesSliderPacket {
 
         if (!(state.getBlock() instanceof WarpPipeBlock))
             return;
-        pipeBlockEntity.bubblesDistance(player, pipeBlockEntity.bubblesDistance); // Check this
+        pipeBlockEntity.bubblesDistance(player, payload.bubblesDistance()); // Check this
     }
 }
