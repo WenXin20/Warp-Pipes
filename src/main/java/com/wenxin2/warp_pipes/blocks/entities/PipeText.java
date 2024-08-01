@@ -19,13 +19,9 @@ import net.minecraft.world.item.DyeColor;
 
 public class PipeText {
     private static final Codec<Component[]> LINES_CODEC = ComponentSerialization.FLAT_CODEC.listOf()
-            .comapFlatMap((list) -> {
-                return Util.fixedSize(list, 1).map((components) -> {
-                    return new Component[]{components.get(0)};
-                });
-            }, (components) -> {
-                return List.of(components[0]);
-            });
+            .comapFlatMap((list) -> Util.fixedSize(list, 1)
+                    .map((components) -> new Component[]{components.getFirst()}),
+                    (components) -> List.of(components[0]));
     public static final Codec<PipeText> DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(LINES_CODEC.fieldOf("pipe_name").forGetter((pipeText) -> {
             return pipeText.messages;
@@ -135,13 +131,10 @@ public class PipeText {
         for(int i = 0; i < 1; ++i) {
             Component filteredMessages = this.filteredMessages[i];
             if (!filteredMessages.equals(this.messages[i])) {
-                filteredMessagesArray[i] = filteredMessages;
-                flag = true;
-            } else {
-                filteredMessagesArray[i] = CommonComponents.EMPTY;
+                return Optional.of(this.filteredMessages);
             }
         }
-        return flag ? Optional.of(filteredMessagesArray) : Optional.empty();
+        return Optional.empty();
     }
 
     public boolean hasAnyClickCommands(Player player) {
