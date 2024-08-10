@@ -1,5 +1,6 @@
 package com.wenxin2.warp_pipes.items;
 
+import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
@@ -15,12 +16,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,8 +50,8 @@ public class LinkerItem extends TieredItem {
     }
     public boolean isBound;
 
-    public boolean setBound(boolean isBound) {
-        return this.isBound = isBound;
+    public void setBound(boolean isBound) {
+        this.isBound = isBound;
     }
 
     public boolean getBound() {
@@ -62,11 +66,10 @@ public class LinkerItem extends TieredItem {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         ItemStack stack = useOnContext.getItemInHand();
-//        CompoundTag wrenchTag = stack.getOrDefault(LinkerDataComponents.COMPONENTS);
         String dimension = world.dimension().location().toString();
 
-//        if (stack.get(LinkerDataComponents.IS_BOUND) != null)
-            isBound = getIsBound(stack);
+        // Check if the item is currently bound to a block
+        boolean isBound = getIsBound(stack);
 
         if (player != null && !player.isCreative() && Config.CREATIVE_WRENCH_PIPE_LINKING.get()) {
             player.displayClientMessage(Component.translatable("display.warp_pipes.linker.requires_creative")
@@ -75,72 +78,43 @@ public class LinkerItem extends TieredItem {
         } else if (player != null) {
             if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock)
                     && state.getValue(WarpPipeBlock.ENTRANCE))) && player.isShiftKeyDown() && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+
                 UUID uuid = pipeBlockEntity.getUuid();
-                if (getBound() == Boolean.FALSE) {
-//                    if (wrenchTag == null) {
-//                        wrenchTag = new CompoundTag();
-//                    }
 
-                    BlockPos warpPos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
-
-                    setIsBound(stack, Boolean.TRUE);
-//                    setPosX(stack, pos.getX());
-//                    setPosY(stack, pos.getY());
-//                    setPosZ(stack, pos.getZ());
-                    setWarpPos(stack, warpPos);
+                if (!isBound) {
+                    // First interaction: Bind the first block
+                    setWarpPos(stack, pos);
                     setWarpDimension(stack, dimension);
-
-                    if (uuid != null)
-                        setWarpUUID(stack, uuid);
+                    setWarpUUID(stack, uuid);
+                    setIsBound(stack, true);  // Mark the item as bound
                     this.setBound(Boolean.TRUE);
 
                     player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                                    getWarpPos(stack).getX(), getWarpPos(stack).getY(), getWarpPos(stack).getZ(), getWarpDimension(stack))
+                                    pos.getX(), pos.getY(), pos.getZ(), dimension)
                             .withStyle(ChatFormatting.DARK_GREEN), true);
+
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundRegistry.WRENCH_BOUND.get(), SoundSource.PLAYERS, 1.0F, 0.1F);
-                } else if (getBound()) {
-                    Player player1 = useOnContext.getPlayer();
-//                    if (wrenchTag == null) {
-//                        wrenchTag = new CompoundTag();
-//                    }
-                    setIsBound(stack, Boolean.FALSE);
-                    this.setBound(Boolean.FALSE);
-                    setGlobalWarpPos(stack, GlobalPos.of(world.dimension(), pos));
+                } else {
+                    // Second interaction: Link the blocks
+                    BlockPos firstPos = getWarpPos(stack);
+                    if (firstPos != null && dimension.equals(getWarpDimension(stack))) {
+                        BlockEntity firstBlockEntity = world.getBlockEntity(firstPos);
+                        if (firstBlockEntity instanceof WarpPipeBlockEntity firstPipeBlockEntity) {
 
-                    BlockPos warpPos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
+                            // Perform the linking logic
+                            this.link(firstPos, pos, stack, firstPipeBlockEntity, pipeBlockEntity);
 
-                    if (player1 != null) {
-                        stack.hurtAndBreak(1, player1, LivingEntity.getSlotForHand(useOnContext.getHand()));
-                        player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                                        getWarpPos(stack).getX(), getWarpPos(stack).getY(), getWarpPos(stack).getZ(), getWarpDimension(stack))
-                                .withStyle(ChatFormatting.GOLD), true);
-                    }
+                            player.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
+                                            pos.getX(), pos.getY(), pos.getZ(), dimension)
+                                    .withStyle(ChatFormatting.GOLD), true);
 
-                    GlobalPos globalPos = LinkerItem.getGlobalWarpPos(stack);
-//                    if (globalPos == null)
-//                        return super.useOn(useOnContext);
-                    BlockEntity blockEntity1 = world.getBlockEntity(globalPos.pos());
-
-                    WarpPipeBlockEntity warpPipeBE = (WarpPipeBlockEntity) blockEntity;
-                    if (blockEntity1 instanceof WarpPipeBlockEntity warpPipeBEGlobal && LinkerItem.isLinked(stack)) {
-
-                        setWarpPos(stack, warpPos);
-//                        wrenchTag.put(WarpPipeBlockEntity.WARP_POS, NbtUtils.writeBlockPos(warpPos));
-                        if (uuid != null)
-                            setWarpUUID(stack, getWarpUUID(stack));
-//                            wrenchTag.putUUID(WarpPipeBlockEntity.WARP_UUID, wrenchTag.getUUID(WARP_UUID));
-                        this.link(pos, world, stack, warpPipeBE, warpPipeBEGlobal);
-                    } else {
-                        if (player1 != null) {
-                            player1.displayClientMessage(Component.translatable("display.warp_pipes.linker.dimension_fail",
-                                            getWarpPos(stack).getX(), getWarpPos(stack).getY(), getWarpPos(stack).getZ(), getWarpDimension(stack))
-                                    .withStyle(ChatFormatting.RED), true);
+                            this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
+                            this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
                         }
                     }
-
-                    this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                    this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
+                    setIsBound(stack, false);  // Reset binding
+                    this.setBound(Boolean.FALSE);
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }
@@ -148,76 +122,39 @@ public class LinkerItem extends TieredItem {
         return super.useOn(useOnContext);
     }
 
-    public static boolean getIsBound(ItemStack stack) {
-        return stack.getOrDefault(LinkerDataComponents.IS_BOUND, Boolean.FALSE);
+    public static boolean isLinked(ItemStack stack) {
+//        CompoundTag tag = stack.getTag();
+        return getWarpPos(stack) != null;
     }
 
-    public static void setIsBound(ItemStack stack, boolean isBound) {
-        stack.set(LinkerDataComponents.IS_BOUND, isBound);
+    public void link(BlockPos firstPos, BlockPos secondPos, ItemStack stack, WarpPipeBlockEntity firstPipeBlockEntity, WarpPipeBlockEntity secondPipeBlockEntity) {
+        UUID firstUuid = firstPipeBlockEntity.getUuid();
+        UUID secondUuid = secondPipeBlockEntity.getUuid();
+
+        // Linking logic
+        firstPipeBlockEntity.setDestinationPos(Optional.of(secondPos));
+        secondPipeBlockEntity.setDestinationPos(Optional.of(firstPos));
+
+        if (firstUuid != null) {
+            secondPipeBlockEntity.setWarpUuid(firstUuid);
+        }
+        if (secondUuid != null) {
+            firstPipeBlockEntity.setWarpUuid(secondUuid);
+        }
+
+        firstPipeBlockEntity.setChanged();
+        secondPipeBlockEntity.setChanged();
+
+        clearItemComponents(stack);  // Clear tags after linking
     }
 
-//    public static int getPosX(ItemStack stack) {
-//        return stack.getOrDefault(LinkerDataComponents.POS_X, 0);
-//    }
-//
-//    public static void setPosX(ItemStack stack, int posX) {
-//        stack.set(LinkerDataComponents.POS_X, posX);
-//    }
-//
-//    public static int getPosY(ItemStack stack) {
-//        return stack.getOrDefault(LinkerDataComponents.POS_Y, 0);
-//    }
-//
-//    public static void setPosY(ItemStack stack, int posY) {
-//        stack.set(LinkerDataComponents.POS_Y, posY);
-//    }
-//
-//    public static int getPosZ(ItemStack stack) {
-//        return stack.getOrDefault(LinkerDataComponents.POS_Z, 0);
-//    }
-//
-//    public static void setPosZ(ItemStack stack, int posZ) {
-//        stack.set(LinkerDataComponents.POS_Z, posZ);
-//    }
-
-    public static BlockPos getWarpPos(ItemStack stack) {
-        return stack.getOrDefault(LinkerDataComponents.WARP_POS, null);
+    private void writeTag(ResourceKey<Level> worldKey, BlockPos pos, CompoundTag tag, ItemStack stack) {
+        tag.put(getWarpPos(stack).toString(), NbtUtils.writeBlockPos(pos));
+        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, worldKey)
+                .resultOrPartial(LogUtils.getLogger()::error).ifPresent(nbtElement -> tag.put(getWarpDimension(stack), nbtElement));
     }
 
-    public static void setWarpPos(ItemStack stack, BlockPos warpPos) {
-        stack.set(LinkerDataComponents.WARP_POS, warpPos);
-    }
-
-    public static String getWarpDimension(ItemStack stack) {
-        return stack.getOrDefault(LinkerDataComponents.WARP_DIMENSION, "");
-    }
-
-    public static void setWarpDimension(ItemStack stack, String dimension) {
-        stack.set(LinkerDataComponents.WARP_DIMENSION, dimension);
-    }
-
-    public static UUID getWarpUUID(ItemStack stack) {
-        UUID uuid = UUID.randomUUID();
-        return stack.getOrDefault(LinkerDataComponents.WARP_UUID, null);
-//        if (!stack.has(LinkerDataComponents.WARP_UUID))
-//            return setWarpUUID(stack, uuid);
-//        return stack.get(LinkerDataComponents.WARP_UUID);
-    }
-
-    public static UUID setWarpUUID(ItemStack stack, UUID warpUUID) {
-        stack.set(LinkerDataComponents.WARP_UUID, warpUUID);
-        return warpUUID;
-    }
-
-    public static GlobalPos getGlobalWarpPos(ItemStack stack) {
-        return stack.getOrDefault(LinkerDataComponents.GLOBAL_WARP_POS, null);
-    }
-
-    public static void setGlobalWarpPos(ItemStack stack, GlobalPos globalPos) {
-        stack.set(LinkerDataComponents.GLOBAL_WARP_POS, globalPos);
-    }
-
-    public void clearTags(ItemStack stack) {
+    public void clearItemComponents(ItemStack stack) {
         setWarpPos(stack, null);
         setWarpDimension(stack, "");
         setWarpUUID(stack, null);
@@ -228,31 +165,73 @@ public class LinkerItem extends TieredItem {
 //        wrenchTag.remove(WARP_UUID);
     }
 
-    public static boolean isLinked(ItemStack stack) {
-//        CompoundTag tag = stack.getTag();
-        return getWarpPos(stack) != null;
+    public static boolean getIsBound(ItemStack stack) {
+        return stack.getOrDefault(LinkerDataComponents.IS_BOUND.get(), Boolean.FALSE);
     }
 
-    public void link(BlockPos pos, Level world, ItemStack stack, WarpPipeBlockEntity warpPipeBE, WarpPipeBlockEntity warpPipeBEGlobal) {
-        // System.out.println("Current Dimension: " + world.dimension());
-        UUID uuid = warpPipeBE.getUuid();
-        UUID uuidGlobal = warpPipeBEGlobal.getUuid();
+    public static void setIsBound(ItemStack stack, boolean isBound) {
+        stack.set(LinkerDataComponents.IS_BOUND.get(), isBound);
+    }
 
-        warpPipeBE.setDestinationPos(Optional.of(warpPipeBEGlobal.getBlockPos()));
-        if (uuid != null)
-            warpPipeBE.setWarpUuid(getWarpUUID(stack));
-        warpPipeBE.setChanged();
-        if (warpPipeBEGlobal.getLevel() != null) {
-            warpPipeBE.setDestinationDim(warpPipeBEGlobal.getLevel().dimension());
-            // System.out.println("Global Dimension: " + warpPipeBEGlobal.getLevel().dimension());
-        } /*else System.out.println("World is null!");*/
+//    public static int getPosX(ItemStack stack) {
+//        return stack.getOrDefault(LinkerDataComponents.POS_X.get(), 0);
+//    }
+//
+//    public static void setPosX(ItemStack stack, int posX) {
+//        stack.set(LinkerDataComponents.POS_X.get(), posX);
+//    }
+//
+//    public static int getPosY(ItemStack stack) {
+//        return stack.getOrDefault(LinkerDataComponents.POS_Y.get(), 0);
+//    }
+//
+//    public static void setPosY(ItemStack stack, int posY) {
+//        stack.set(LinkerDataComponents.POS_Y.get(), posY);
+//    }
+//
+//    public static int getPosZ(ItemStack stack) {
+//        return stack.getOrDefault(LinkerDataComponents.POS_Z.get(), 0);
+//    }
+//
+//    public static void setPosZ(ItemStack stack, int posZ) {
+//        stack.set(LinkerDataComponents.POS_Z.get(), posZ);
+//    }
 
-        warpPipeBEGlobal.setDestinationPos(Optional.ofNullable(pos));
-        warpPipeBEGlobal.setDestinationDim(world.dimension());
-        if (uuidGlobal != null)
-            warpPipeBEGlobal.setWarpUuid(warpPipeBE.getUuid());
-        warpPipeBEGlobal.setChanged();
-        this.clearTags(stack);
+    public static BlockPos getWarpPos(ItemStack stack) {
+        return stack.getOrDefault(LinkerDataComponents.WARP_POS.get(), new BlockPos(0, 0, 0));
+    }
+
+    public static void setWarpPos(ItemStack stack, BlockPos warpPos) {
+        stack.set(LinkerDataComponents.WARP_POS.get(), warpPos);
+    }
+
+    public static String getWarpDimension(ItemStack stack) {
+        return stack.getOrDefault(LinkerDataComponents.WARP_DIMENSION.get(), "");
+    }
+
+    public static void setWarpDimension(ItemStack stack, String dimension) {
+        stack.set(LinkerDataComponents.WARP_DIMENSION.get(), dimension);
+    }
+
+    public static UUID getWarpUUID(ItemStack stack) {
+        UUID uuid = UUID.randomUUID();
+        return stack.getOrDefault(LinkerDataComponents.WARP_UUID.get(), null);
+//        if (!stack.has(LinkerDataComponents.WARP_UUID.get()))
+//            return setWarpUUID(stack, uuid);
+//        return stack.get(LinkerDataComponents.WARP_UUID.get());
+    }
+
+    public static UUID setWarpUUID(ItemStack stack, UUID warpUUID) {
+        stack.set(LinkerDataComponents.WARP_UUID.get(), warpUUID);
+        return warpUUID;
+    }
+
+    public static GlobalPos getGlobalWarpPos(ItemStack stack) {
+        return stack.getOrDefault(LinkerDataComponents.GLOBAL_WARP_POS.get(), null);
+    }
+
+    public static void setGlobalWarpPos(ItemStack stack, GlobalPos globalPos) {
+        stack.set(LinkerDataComponents.GLOBAL_WARP_POS.get(), globalPos);
     }
 
 
@@ -282,7 +261,7 @@ public class LinkerItem extends TieredItem {
     @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltip) {
 //        CompoundTag tag = stack.getTag();
-        if (getBound() && getWarpPos(stack) != null) {
+        if (getBound()) {
             list.add(Component.translatable("", true));
             list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip",
                     getWarpPos(stack).getX(), getWarpPos(stack).getY(), getWarpPos(stack).getZ(), getWarpDimension(stack), true)
