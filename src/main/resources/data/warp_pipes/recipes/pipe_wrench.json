@@ -15,7 +15,7 @@
     " I "
   ],
   "result": {
-    "item": "warp_pipes:pipe_wrench",
+    "id": "warp_pipes:pipe_wrench",
     "count": 1
   }
 }
