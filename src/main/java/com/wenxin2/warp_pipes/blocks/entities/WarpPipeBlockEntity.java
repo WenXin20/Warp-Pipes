@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks.entities;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
+import com.wenxin2.warp_pipes.api.WarpPipesAPI;
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
@@ -34,6 +35,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -263,11 +265,12 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public boolean hasDestinationPos() {
-        return this.destinationPos != null;
+        return this.destinationPos != null && this.destinationPos.isPresent();
     }
 
     public void setDestinationPos(@Nullable Optional<BlockPos> pos) {
         this.destinationPos = pos;
+        this.setChanged();
         if (this.level != null && pos != null && pos.isPresent()) {
             BlockState state = this.getBlockState();
             this.level.setBlock(this.getBlockPos(), state, 4);
@@ -302,6 +305,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (this.level != null) {
             this.level.setBlock(this.getBlockPos(), this.getBlockState(), 4);
         }
+        this.setChanged();
     }
 
     public UUID getUuid() {
@@ -322,6 +326,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     public void setWarpUuid(UUID uuid) {
         this.warpUuid = uuid;
+        this.setChanged();
     }
 
     public void markUpdated() {
@@ -379,7 +384,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
 
         if (tag.contains(PIPE_NAME)) {
-            PipeText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound(PIPE_NAME)).resultOrPartial(LOGGER::error).ifPresent((text) -> {
+            PipeText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound(PIPE_NAME)).resultOrPartial(LOGGER::error).ifPresent(text -> {
                 this.pipeName = this.loadLines(text);
             });
         }
@@ -395,13 +400,11 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (tag.contains(PREVENT_WARP))
             this.preventWarp = tag.getBoolean(PREVENT_WARP);
 
-        if (tag.contains(UUID)) {
+        if (tag.contains(UUID))
             this.uuid = tag.getUUID(UUID);
-        }
 
-        if (tag.contains(WARP_UUID)) {
+        if (tag.contains(WARP_UUID))
             this.warpUuid = tag.getUUID(WARP_UUID);
-        }
     }
 
     @Override
@@ -423,7 +426,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             tag.putString(CUSTOM_NAME, Component.Serializer.toJson(this.name, provider));
         }
 
-        PipeText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.pipeName).resultOrPartial(LOGGER::error).ifPresent((pipeName) -> {
+        PipeText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.pipeName).resultOrPartial(LOGGER::error).ifPresent(pipeName -> {
             tag.put(PIPE_NAME, pipeName);
         });
 
@@ -431,17 +434,14 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos.get()));
         }
 
-        if (this.dimensionTag != null) {
+        if (this.dimensionTag != null)
             tag.putString(WARP_DIMENSION, this.dimensionTag);
-        }
 
-        if (this.uuid != null) {
+        if (this.uuid != null)
             tag.putUUID(UUID, this.getUuid());
-        }
 
-        if (this.warpUuid != null) {
+        if (this.warpUuid != null)
             tag.putUUID(WARP_UUID, this.getWarpUuid());
-        }
     }
 
     @NotNull

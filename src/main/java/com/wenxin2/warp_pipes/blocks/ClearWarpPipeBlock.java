@@ -56,7 +56,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
-    public static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = ImmutableMap.copyOf(Util.make(Maps.newEnumMap(Direction.class), (enumMap) -> {
+    public static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = ImmutableMap.copyOf(Util.make(Maps.newEnumMap(Direction.class), enumMap -> {
         enumMap.put(Direction.UP, UP);
         enumMap.put(Direction.DOWN, DOWN);
         enumMap.put(Direction.NORTH, NORTH);
