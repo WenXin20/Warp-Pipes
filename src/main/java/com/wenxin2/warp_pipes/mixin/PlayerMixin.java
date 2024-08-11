@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class PlayerMixin extends Entity {
     @Shadow protected abstract float getBlockSpeedFactor();
 
-    @Shadow public abstract void displayClientMessage(Component p_36216_, boolean p_36217_);
+    @Shadow public abstract void displayClientMessage(Component component, boolean isAboveHotbar);
 
     @Unique
     private static final int MAX_PARTICLE_AMOUNT = 40;
@@ -165,7 +165,7 @@ public abstract class PlayerMixin extends Entity {
                     WarpPipeBlock.teleportedEntities.put(entityId, false);
                 }
 
-                if (warpPipeBE.hasDestinationPos()) {
+                if (warpPipeBE.hasDestinationPos()/* || warpPipeBE.getUuid() != null*/) {
 
                     if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                             && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
@@ -183,8 +183,12 @@ public abstract class PlayerMixin extends Entity {
                         if (this.warpPipes$getWarpCooldown() == 0) {
                             if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                                 WarpPipeBlock.warp(this, warpPos, world, state);
-                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                                 WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                            System.out.println("WarpCooldown:" + this.warpPipes$getWarpCooldown());
+                            System.out.println("UUID:" + warpPipeBE.getUuid());
+                            System.out.println("WarpUUID:" + warpPipeBE.getWarpUuid());
+                            System.out.println("WarpUUIDPos:" + WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos));
                             this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                         } /* else if (this.getWarpCooldown() <= 10)
                         displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
@@ -216,7 +220,7 @@ public abstract class PlayerMixin extends Entity {
                         if (this.warpPipes$getWarpCooldown() == 0) {
                             if (world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                                 WarpPipeBlock.warp(this, warpPos, world, state);
-                            else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                                 WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                             this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                         } /* else if (this.getWarpCooldown() <= 10)
@@ -248,11 +252,68 @@ public abstract class PlayerMixin extends Entity {
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     this.warpPipes$displayNoTeleportMessage();
                 }
+            } else {
+//                warpPos = warpPipeBE.destinationPos.get();
+                int entityId = this.getId();
+
+                if (world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
+                    this.warpPipes$spawnParticles(this, world);
+
+                    // Reset the teleport status for the entity
+                    WarpPipeBlock.teleportedEntities.put(entityId, false);
+                }
+
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    if (this.warpPipes$getWarpCooldown() == 0) {
+                        if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    } /* else if (this.getWarpCooldown() <= 10)
+                    displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                }
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
+                    if (this.warpPipes$getWarpCooldown() == 0) {
+                        if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    } /* else if (this.getWarpCooldown() <= 10)
+                    displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                }
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
+                        && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
+                    if (this.warpPipes$getWarpCooldown() == 0) {
+                        if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    } /* else if (this.getWarpCooldown() <= 10)
+                    displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                }
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
+                        && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    if (this.warpPipes$getWarpCooldown() == 0) {
+                        if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    } /* else if (this.getWarpCooldown() <= 10)
+                    displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                }
+                if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
+                        && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                    if (this.warpPipes$getWarpCooldown() == 0) {
+                        if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
+                            WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
+                        this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    } /* else if (this.getWarpCooldown() <= 10)
+                    displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                }
             }
         }
     }
 
     @Unique
+
     public void warpPipes$displayCooldownMessage() {
         if (this.warpPipes$getWarpCooldown() >= 10) {
             if (Config.WARP_COOLDOWN_MESSAGE.get()) {
