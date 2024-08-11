@@ -436,6 +436,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             pipeBlockEntity.setChanged();
         }
 
+        if (!world.isClientSide) {
+            WarpPipeBlockEntity pipeBlockEntity = (WarpPipeBlockEntity) world.getBlockEntity(pos);
+            if (pipeBlockEntity != null) {
+                pipeBlockEntity.addWarpPosition(pos);
+            }
+        }
+
         if (state.getValue(FACING) == Direction.UP) {
             if (blockAbove == this) {
                 world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE), 3);

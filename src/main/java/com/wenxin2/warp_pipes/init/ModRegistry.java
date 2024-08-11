@@ -8,11 +8,13 @@ import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
+import com.wenxin2.warp_pipes.server.WarpPosSavedData;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -96,6 +98,16 @@ public class ModRegistry {
     public static <T extends Item> DeferredItem<T> registerItem(String name, Supplier<T> item)
     {
         return WarpPipes.ITEMS.register(name, item);
+    }
+
+    public static void registerWarp(ServerLevel world, BlockPos pos) {
+        WarpPosSavedData data = new WarpPosSavedData();
+        data.addWarpPosition(pos);
+    }
+
+    public static boolean removeWarp(ServerLevel world, BlockPos pos) {
+        WarpPosSavedData data = new WarpPosSavedData();
+        return data.removeWarpPosition(pos);
     }
 
     private static boolean always(BlockState state, BlockGetter block, BlockPos pos)

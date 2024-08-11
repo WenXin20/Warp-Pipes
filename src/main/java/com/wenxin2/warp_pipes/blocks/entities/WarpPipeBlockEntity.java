@@ -2,13 +2,13 @@ package com.wenxin2.warp_pipes.blocks.entities;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
-import com.wenxin2.warp_pipes.api.WarpPipesAPI;
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import com.wenxin2.warp_pipes.server.WarpPosSavedData;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -35,7 +35,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -582,5 +581,28 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public void sendData() {
         if (level instanceof ServerLevel serverWorld)
             serverWorld.getChunkSource().blockChanged(getBlockPos());
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
+            ModRegistry.registerWarp(serverLevel, this.getBlockPos());
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
+            ModRegistry.removeWarp(serverLevel, this.getBlockPos());
+        }
+    }
+
+    public void addWarpPosition(BlockPos pos) {
+        if (level instanceof ServerLevel) {
+            WarpPosSavedData data = new WarpPosSavedData();
+            data.addWarpPosition(pos);
+        }
     }
 }
