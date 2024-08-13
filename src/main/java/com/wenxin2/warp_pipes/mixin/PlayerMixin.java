@@ -112,7 +112,6 @@ public abstract class PlayerMixin extends Entity {
             if (warpPipeBE.hasDestinationPos()) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && this.getDeltaMovement().y > 0
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    System.out.println("Below Pipe ");
                     if (this.getWarpCooldown() == 0) {
                         if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                             WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
