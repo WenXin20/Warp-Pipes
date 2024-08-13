@@ -100,15 +100,15 @@ public class ModRegistry {
         return WarpPipes.ITEMS.register(name, item);
     }
 
-    public static void registerWarp(ServerLevel world, BlockPos pos) {
-        WarpPosSavedData data = new WarpPosSavedData();
-        data.addWarpPosition(pos);
-    }
-
-    public static boolean removeWarp(ServerLevel world, BlockPos pos) {
-        WarpPosSavedData data = new WarpPosSavedData();
-        return data.removeWarpPosition(pos);
-    }
+//    public static void registerWarp(ServerLevel world, BlockPos pos) {
+//        WarpPosSavedData data = new WarpPosSavedData();
+//        data.addWarpPosition(pos);
+//    }
+//
+//    public static boolean removeWarp(ServerLevel world, BlockPos pos) {
+//        WarpPosSavedData data = new WarpPosSavedData();
+//        return data.removeWarpPosition(pos);
+//    }
 
     private static boolean always(BlockState state, BlockGetter block, BlockPos pos)
     {

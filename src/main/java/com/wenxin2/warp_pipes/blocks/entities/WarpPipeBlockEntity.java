@@ -583,26 +583,26 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             serverWorld.getChunkSource().blockChanged(getBlockPos());
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
-            ModRegistry.registerWarp(serverLevel, this.getBlockPos());
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
-            ModRegistry.removeWarp(serverLevel, this.getBlockPos());
-        }
-    }
-
-    public void addWarpPosition(BlockPos pos) {
-        if (level instanceof ServerLevel) {
-            WarpPosSavedData data = new WarpPosSavedData();
-            data.addWarpPosition(pos);
-        }
-    }
+//    @Override
+//    public void onLoad() {
+//        super.onLoad();
+//        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
+//            ModRegistry.registerWarp(serverLevel, this.getBlockPos());
+//        }
+//    }
+//
+//    @Override
+//    public void setRemoved() {
+//        super.setRemoved();
+//        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
+//            ModRegistry.removeWarp(serverLevel, this.getBlockPos());
+//        }
+//    }
+//
+//    public void addWarpPosition(BlockPos pos) {
+//        if (level instanceof ServerLevel) {
+//            WarpPosSavedData data = new WarpPosSavedData();
+//            data.addWarpPosition(pos);
+//        }
+//    }
 }
