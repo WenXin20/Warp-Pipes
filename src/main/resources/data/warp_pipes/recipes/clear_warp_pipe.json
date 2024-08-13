@@ -3,16 +3,16 @@
   "group": "clear_warp_pipes",
   "key": {
     "I": {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     "D": {
       "item": "minecraft:glass"
     },
     "G": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "E": {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     }
   },
   "pattern": [
@@ -22,6 +22,6 @@
   ],
   "result": {
     "count": 4,
-    "item": "warp_pipes:clear_warp_pipe"
+    "id": "warp_pipes:clear_warp_pipe"
   }
 }

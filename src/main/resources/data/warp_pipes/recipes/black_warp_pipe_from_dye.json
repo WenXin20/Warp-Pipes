@@ -3,7 +3,7 @@
   "group": "warp_pipes_from_dye",
   "ingredients": [
     {
-      "tag": "forge:dyes/black"
+      "tag": "c:dyes/black"
     },
     {
       "tag": "warp_pipes:dyeable_warp_pipes"

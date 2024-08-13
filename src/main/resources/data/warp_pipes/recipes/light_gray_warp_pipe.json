@@ -3,16 +3,16 @@
   "group": "warp_pipes",
   "key": {
     "I": {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     "D": {
-      "tag": "forge:dyes/light_gray"
+      "tag": "c:dyes/light_gray"
     },
     "G": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "E": {
-      "tag": "forge:ender_pearls"
+      "tag": "c:ender_pearls"
     }
   },
   "pattern": [
@@ -22,6 +22,6 @@
   ],
   "result": {
     "count": 4,
-    "item": "warp_pipes:light_gray_warp_pipe"
+    "id": "warp_pipes:light_gray_warp_pipe"
   }
 }
