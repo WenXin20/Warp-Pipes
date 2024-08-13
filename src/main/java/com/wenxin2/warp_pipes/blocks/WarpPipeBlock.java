@@ -424,8 +424,8 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
         BlockPos destinationPos = null;
 
         if (!state.getValue(CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && warpPipeBE.destinationPos != null && warpPipeBE.destinationPos.isPresent()) {
-            destinationPos = warpPipeBE.destinationPos.get();
+                && warpPipeBE.destinationPos != null) {
+            destinationPos = warpPipeBE.destinationPos;
             world.scheduleTick(pos, this, 3);
         }
 

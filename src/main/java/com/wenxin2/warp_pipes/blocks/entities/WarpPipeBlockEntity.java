@@ -8,8 +8,6 @@ import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.init.ModRegistry;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
-import com.wenxin2.warp_pipes.server.WarpPosSavedData;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import javax.annotation.Nullable;
@@ -75,7 +73,7 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     public Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
     @Nullable
-    public Optional<BlockPos> destinationPos;
+    public BlockPos destinationPos;
     public String dimensionTag;
     public int spoutHeight = 4;
     public int bubblesDistance = 3;
@@ -264,13 +262,13 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
     }
 
     public boolean hasDestinationPos() {
-        return this.destinationPos != null && this.destinationPos.isPresent();
+        return this.destinationPos != null;
     }
 
-    public void setDestinationPos(@Nullable Optional<BlockPos> pos) {
+    public void setDestinationPos(@Nullable BlockPos pos) {
         this.destinationPos = pos;
         this.setChanged();
-        if (this.level != null && pos != null && pos.isPresent()) {
+        if (this.level != null && pos != null) {
             BlockState state = this.getBlockState();
             this.level.setBlock(this.getBlockPos(), state, 4);
         }
@@ -278,8 +276,8 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
 
     @Nullable
     public BlockPos getDestinationPos() {
-        if (this.destinationPos != null && this.destinationPos.isPresent()) {
-            return this.destinationPos.get();
+        if (this.destinationPos != null) {
+            return this.destinationPos;
         }
         return null;
     }
@@ -389,8 +387,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
 
         if (tag.contains(WARP_POS)) {
-            this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS), "warp_pos");
+            this.destinationPos = NbtUtils.readBlockPos(tag, "warp_pos").orElse(null);
             this.setDestinationPos(this.destinationPos);
+            System.out.println("Loaded: " + NbtUtils.readBlockPos(tag, "warp_pos"));
         }
 
         if (tag.contains(WARP_DIMENSION))
@@ -429,8 +428,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             tag.put(PIPE_NAME, pipeName);
         });
 
-        if (this.hasDestinationPos() && this.destinationPos != null && this.destinationPos.isPresent()) {
-            tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos.get()));
+        if (this.hasDestinationPos() && this.destinationPos != null) {
+            tag.put(WARP_POS, NbtUtils.writeBlockPos(this.destinationPos));
+            System.out.println("Saved: " + NbtUtils.writeBlockPos(this.destinationPos));
         }
 
         if (this.dimensionTag != null)
