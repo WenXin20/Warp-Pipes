@@ -1,6 +1,5 @@
 package com.wenxin2.warp_pipes.items;
 
-import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
@@ -8,7 +7,6 @@ import com.wenxin2.warp_pipes.init.Config;
 import com.wenxin2.warp_pipes.init.SoundRegistry;
 import com.wenxin2.warp_pipes.items.data_components.LinkerDataComponents;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.ParametersAreNonnullByDefault;
 import net.minecraft.ChatFormatting;
@@ -16,9 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -77,12 +72,13 @@ public class LinkerItem extends TieredItem {
                 } else {
                     // Second interaction: Link the blocks
                     BlockPos firstPos = getWarpPos(stack);
-                    if (firstPos != null && dimension.equals(getWarpDimension(stack))) {
+                    String firstDim = getWarpDimension(stack);
+//                    if (dimension.equals(getWarpDimension(stack))) {
                         BlockEntity firstBlockEntity = world.getBlockEntity(firstPos);
                         if (firstBlockEntity instanceof WarpPipeBlockEntity firstPipeBlockEntity) {
 
                             // Perform the linking logic
-                            this.link(firstPos, pos, stack, firstPipeBlockEntity, pipeBlockEntity);
+                            this.link(stack, firstPipeBlockEntity, pipeBlockEntity);
 
                             player.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
                                             pos.getX(), pos.getY(), pos.getZ(), dimension)
@@ -91,7 +87,7 @@ public class LinkerItem extends TieredItem {
                             this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                             this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
                         }
-                    }
+//                    }
                     setIsBound(stack, false);  // Reset binding
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
@@ -100,23 +96,35 @@ public class LinkerItem extends TieredItem {
         return super.useOn(useOnContext);
     }
 
-    public void link(BlockPos firstPos, BlockPos secondPos, ItemStack stack, WarpPipeBlockEntity firstPipeBlockEntity, WarpPipeBlockEntity secondPipeBlockEntity) {
+    public void link(ItemStack stack, WarpPipeBlockEntity firstPipeBlockEntity, WarpPipeBlockEntity secondPipeBlockEntity) {
         UUID firstUuid = firstPipeBlockEntity.getUuid();
         UUID secondUuid = secondPipeBlockEntity.getUuid();
 
+        BlockPos firstPos = firstPipeBlockEntity.getBlockPos();
+        BlockPos secondPos = secondPipeBlockEntity.getBlockPos();
+        ResourceKey<Level> firstDim = firstPipeBlockEntity.getDestinationDim();
+        ResourceKey<Level> secondDim = secondPipeBlockEntity.getDestinationDim();
+
         // Linking logic
-        firstPipeBlockEntity.setDestinationPos(Optional.of(secondPos));
-        secondPipeBlockEntity.setDestinationPos(Optional.of(firstPos));
+        firstPipeBlockEntity.setDestinationPos(secondPos);
+        secondPipeBlockEntity.setDestinationPos(firstPos);
 
-        if (firstUuid != null) {
+        if (secondDim != null)
+            firstPipeBlockEntity.setDestinationDim(secondDim);
+        if (firstDim != null)
+            secondPipeBlockEntity.setDestinationDim(firstDim);
+
+        if (firstUuid != null)
             secondPipeBlockEntity.setWarpUuid(firstUuid);
-        }
-        if (secondUuid != null) {
+        if (secondUuid != null)
             firstPipeBlockEntity.setWarpUuid(secondUuid);
-        }
 
+        firstPipeBlockEntity.sendData();
         firstPipeBlockEntity.setChanged();
+        firstPipeBlockEntity.markUpdated();
+        secondPipeBlockEntity.sendData();
         secondPipeBlockEntity.setChanged();
+        secondPipeBlockEntity.markUpdated();
 
         clearItemComponents(stack);  // Clear tags after linking
     }
@@ -136,11 +144,11 @@ public class LinkerItem extends TieredItem {
     }
 
     public static BlockPos getWarpPos(ItemStack stack) {
-        return stack.getOrDefault(LinkerDataComponents.WARP_POS.get(), new BlockPos(0, 0, 0));
+        return stack.getOrDefault(LinkerDataComponents.WARP_POS, null);
     }
 
     public static void setWarpPos(ItemStack stack, BlockPos warpPos) {
-        stack.set(LinkerDataComponents.WARP_POS.get(), warpPos);
+        stack.set(LinkerDataComponents.WARP_POS, warpPos);
     }
 
     public static String getWarpDimension(ItemStack stack) {
