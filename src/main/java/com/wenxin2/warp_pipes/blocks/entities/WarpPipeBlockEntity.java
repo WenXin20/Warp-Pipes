@@ -387,9 +387,9 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         }
 
         if (tag.contains(WARP_POS)) {
-            this.destinationPos = NbtUtils.readBlockPos(tag.getCompound(WARP_POS), "warp_pos").orElse(null);
+            this.destinationPos = NbtUtils.readBlockPos(tag, WARP_POS).orElse(null);
             this.setDestinationPos(this.destinationPos);
-            System.out.println("Loaded: " + NbtUtils.readBlockPos(tag.getCompound(WARP_POS), "warp_pos").orElse(null));
+            System.out.println("Loaded: " + NbtUtils.readBlockPos(tag, WARP_POS).orElse(null));
         }
 
         if (tag.contains(WARP_DIMENSION))
@@ -442,6 +442,10 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (this.warpUuid != null)
             tag.putUUID(WARP_UUID, this.getWarpUuid());
     }
+
+//    public WarpData getWarpData() {
+//        return WarpProxy.getInstance().getWarp(this.warpUuid);
+//    }
 
     @NotNull
     @Override
