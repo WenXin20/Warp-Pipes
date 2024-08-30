@@ -57,7 +57,6 @@ runs {
         systemProperty 'forge.logging.markers', 'REGISTRIES'
         systemProperty 'forge.logging.console.level', 'debug'
         programArguments '-mixin.config=warp_pipes.mixins.json'
-        programArguments.addAll '--username', 'WenXin2'
 
         modSource project.sourceSets.main
     }
@@ -69,6 +68,7 @@ runs {
         dataGenerator false
         gameTest false
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArguments.addAll '--username', 'WenXin2'
     }
 
     server {
