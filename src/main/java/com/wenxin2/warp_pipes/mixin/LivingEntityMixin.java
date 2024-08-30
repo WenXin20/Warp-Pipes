@@ -19,14 +19,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+    @Unique
     private static final int MAX_PARTICLE_AMOUNT = 100;
-    private int warpCooldown;
+    @Unique
+    private int warpPipes$warpCooldown;
 
     public LivingEntityMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -44,23 +47,24 @@ public abstract class LivingEntityMixin extends Entity {
             BlockState offsetState = world.getBlockState(offsetPos);
 
             if (offsetState.getBlock() instanceof WarpPipeBlock) {
-                this.enterPipe(offsetPos);
+                this.warpPipes$enterPipe(offsetPos);
             }
             if (state.getBlock() instanceof WarpPipeBlock) {
-                this.enterPipe(pos);
+                this.warpPipes$enterPipe(pos);
             }
         }
 
         if (stateAboveEntity.getBlock() instanceof WarpPipeBlock) {
-            this.enterPipeBelow(pos);
+            this.warpPipes$enterPipeBelow(pos);
         }
 
-        if (this.warpCooldown > 0) {
-            --this.warpCooldown;
+        if (this.warpPipes$warpCooldown > 0) {
+            --this.warpPipes$warpCooldown;
         }
     }
 
-    public void spawnParticles(Level world) {
+    @Unique
+    public void warpPipes$spawnParticles(Level world) {
         RandomSource random = world.getRandom();
 
         // Calculate a scaling factor based on entity dimensions
@@ -86,15 +90,18 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    public int getWarpCooldown() {
-        return warpCooldown;
+    @Unique
+    public int warpPipes$getWarpCooldown() {
+        return warpPipes$warpCooldown;
     }
 
-    public void setWarpCooldown(int cooldown) {
-        this.warpCooldown = cooldown;
+    @Unique
+    public void warpPipes$setWarpCooldown(int cooldown) {
+        this.warpPipes$warpCooldown = cooldown;
     }
 
-    public void enterPipeBelow(BlockPos pos) {
+    @Unique
+    public void warpPipes$enterPipeBelow(BlockPos pos) {
         Level world = this.level();
         BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
         BlockEntity blockEntity = world.getBlockEntity(pos.above(Math.round(this.getBbHeight())));
@@ -113,26 +120,27 @@ public abstract class LivingEntityMixin extends Entity {
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(world);
+                this.warpPipes$spawnParticles(world);
 
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (this.getWarpCooldown() == 0) {
+            if (this.warpPipes$getWarpCooldown() == 0) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                         WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 }
             }
         }
     }
 
-    public void enterPipe(BlockPos pos) {
+    @Unique
+    public void warpPipes$enterPipe(BlockPos pos) {
         Level world = this.level();
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -153,20 +161,20 @@ public abstract class LivingEntityMixin extends Entity {
             int entityId = this.getId();
 
             if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.spawnParticles(world);
+                this.warpPipes$spawnParticles(world);
 
                 // Reset the teleport status for the entity
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (this.getWarpCooldown() == 0) {
+            if (this.warpPipes$getWarpCooldown() == 0) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
@@ -174,7 +182,7 @@ public abstract class LivingEntityMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
@@ -182,7 +190,7 @@ public abstract class LivingEntityMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
@@ -190,7 +198,7 @@ public abstract class LivingEntityMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
@@ -198,7 +206,7 @@ public abstract class LivingEntityMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 }
             }
         }
