@@ -119,7 +119,7 @@ public abstract class LivingEntityMixin extends Entity {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
+            if (this.getWarpCooldown() == 0) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
@@ -159,7 +159,7 @@ public abstract class LivingEntityMixin extends Entity {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
+            if (this.getWarpCooldown() == 0) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)

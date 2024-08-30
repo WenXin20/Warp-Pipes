@@ -160,7 +160,7 @@ public abstract class EntityMixin {
                 WarpPipeBlock.teleportedEntities.put(entityId, false);
             }
 
-            if (this.getWarpCooldown() == 0 && warpPipeBE.hasDestinationPos()) {
+            if (this.getWarpCooldown() == 0) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                     if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
