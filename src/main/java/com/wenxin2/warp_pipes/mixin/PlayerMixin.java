@@ -150,6 +150,7 @@ public abstract class PlayerMixin extends Entity {
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
                 && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
+//            WarpData warpData = WarpProxy.getInstance().getWarp(warpPipeBE.warpUuid);
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
@@ -163,6 +164,15 @@ public abstract class PlayerMixin extends Entity {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 if (this.warpPipes$getWarpCooldown() == 0) {
+//                        if (warpData != null && world.getServer() != null) {
+//                            ServerLevel targetWorld = world.getServer().getLevel(warpData.getDimension());
+//                            if (targetWorld != null) {
+//                            UUID targetUuid = warpData.getWarpUuid();
+//                            if (targetUuid == warpPipeBE.getWarpUuid()) {
+//                                BlockPos targetPos = warpData.getPosition();
+//                                WarpPipeBlock.warp(this, targetPos, world, state);
+//                            }
+//                        }
                     if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)

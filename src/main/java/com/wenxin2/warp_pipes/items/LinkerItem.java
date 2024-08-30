@@ -126,6 +126,12 @@ public class LinkerItem extends TieredItem {
         secondPipeBlockEntity.setChanged();
         secondPipeBlockEntity.markUpdated();
 
+//        WarpData warpDataFirst = new WarpData(firstPipeBlockEntity.getBlockPos(), firstPipeBlockEntity.getDestinationDim(), firstPipeBlockEntity.getWarpUuid()); // Your custom warp data
+//        WarpProxy.getInstance().registerWarp(firstPipeBlockEntity.getWarpUuid(), warpDataFirst);
+//
+//        WarpData warpDataSecond = new WarpData(secondPipeBlockEntity.getBlockPos(), secondPipeBlockEntity.getDestinationDim(), secondPipeBlockEntity.getWarpUuid()); // Your custom warp data
+//        WarpProxy.getInstance().registerWarp(secondPipeBlockEntity.getWarpUuid(), warpDataSecond);
+
         clearItemComponents(stack);  // Clear tags after linking
     }
 
