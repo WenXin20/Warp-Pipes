@@ -443,10 +443,6 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
             tag.putUUID(WARP_UUID, this.getWarpUuid());
     }
 
-//    public WarpData getWarpData() {
-//        return WarpProxy.getInstance().getWarp(this.warpUuid);
-//    }
-
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
@@ -586,27 +582,4 @@ public class WarpPipeBlockEntity extends BlockEntity implements MenuProvider, Na
         if (level instanceof ServerLevel serverWorld)
             serverWorld.getChunkSource().blockChanged(getBlockPos());
     }
-
-//    @Override
-//    public void onLoad() {
-//        super.onLoad();
-//        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
-//            ModRegistry.registerWarp(serverLevel, this.getBlockPos());
-//        }
-//    }
-//
-//    @Override
-//    public void setRemoved() {
-//        super.setRemoved();
-//        if (level != null && !level.isClientSide && level instanceof ServerLevel serverLevel) {
-//            ModRegistry.removeWarp(serverLevel, this.getBlockPos());
-//        }
-//    }
-//
-//    public void addWarpPosition(BlockPos pos) {
-//        if (level instanceof ServerLevel) {
-//            WarpPosSavedData data = new WarpPosSavedData();
-//            data.addWarpPosition(pos);
-//        }
-//    }
 }
