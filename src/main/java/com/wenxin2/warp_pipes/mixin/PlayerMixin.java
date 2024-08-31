@@ -126,7 +126,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
                     this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
-                displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
         }
     }
@@ -170,7 +170,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
-                displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
             if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.SOUTH
                     && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
@@ -181,7 +181,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
-                displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
             if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.NORTH
                     && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
@@ -192,7 +192,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
-                displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
             if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.WEST
                     && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
@@ -203,7 +203,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
-                displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
             if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !this.isShiftKeyDown() && this.getMotionDirection() == Direction.EAST
                     && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
@@ -214,7 +214,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
                     this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
-                displayDestinationMissingMessage(); */ else this.warpPipes$displayCooldownMessage();
+                displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
         } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST))) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
