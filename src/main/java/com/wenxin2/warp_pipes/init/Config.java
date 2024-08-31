@@ -1,5 +1,7 @@
 package com.wenxin2.warp_pipes.init;
 
+import me.lucko.spark.lib.adventure.text.Component;
+import net.minecraft.client.resources.language.I18n;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -37,47 +39,88 @@ public class Config
     private Config() {
         ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
         BUILDER.push(CATEGORY_CLIENT);
-        DISABLE_TEXT = BUILDER.comment("Disable text displaying on pipes. " + "[Default: false]")
+        DISABLE_TEXT = BUILDER.translation("configuration.warp_pipes.disable_text")
+                .comment("Disable text rendering on pipes.")
+                .comment("§9[Default: false]")
                 .define("disable_text", false);
-        WARP_COOLDOWN_MESSAGE = BUILDER.comment("Display a warp cooldown message. " + "[Default: false]")
+        WARP_COOLDOWN_MESSAGE = BUILDER.translation("configuration.warp_pipes.warp_cooldown_message")
+                .comment("Display a warp cooldown message.")
+                .comment("§9[Default: false]")
                 .define("warp_cooldown_message", true);
-        WARP_COOLDOWN_MESSAGE_TICKS = BUILDER.comment("Display a warp cooldown message with ticks. Requires \"warp_cooldown_message\". " + "[Default: false]")
+        WARP_COOLDOWN_MESSAGE_TICKS = BUILDER.translation("configuration.warp_pipes.warp_cooldown_message_with_ticks")
+                .comment("Display a warp cooldown message with ticks.")
+                .comment("§cRequires \"Warp Cooldown Message\"")
+                .comment("§9[Default: false]")
                 .define("warp_cooldown_message_with_ticks", false);
         BUILDER.pop();
 
         BUILDER.push(CATEGORY_COMMON);
-        CREATIVE_BUBBLES = BUILDER.comment("Require creative to turn bubbles on/off. " + "[Default: false]")
+        CREATIVE_BUBBLES = BUILDER.translation("configuration.warp_pipes.require_creative_bubbles")
+                .comment("Require creative to turn bubbles on/off.")
+                .comment("§9[Default: false]")
                 .define("require_creative_bubbles", false);
-        CREATIVE_CLOSE_PIPES = BUILDER.comment("Require creative to open/close pipes. " + "[Default: false]")
+        CREATIVE_CLOSE_PIPES = BUILDER.translation("configuration.warp_pipes.require_creative_close_pipes")
+                .comment("Require creative to open/close pipes.")
+                .comment("§9[Default: false]")
                 .define("require_creative_close_pipes", false);
-        CREATIVE_WATER_SPOUT = BUILDER.comment("Require creative to turn water spouts on/off. " + "[Default: false]")
+        CREATIVE_WATER_SPOUT = BUILDER.translation("configuration.warp_pipes.require_creative_water_spouts")
+                .comment("Require creative to turn water spouts on/off.")
+                .comment("§9[Default: false]")
                 .define("require_creative_water_spouts", false);
-        CREATIVE_WRENCH_PIPE_LINKING = BUILDER.comment("Require creative to link pipes. " + "[Default: false]")
+        CREATIVE_WRENCH_PIPE_LINKING = BUILDER.translation("configuration.warp_pipes.creative_wrench_pipe_linking")
+                .comment("Require creative to link pipes.")
+                .comment("§9[Default: false]")
                 .define("creative_wrench_pipe_linking", false);
-        ALLOW_FAST_TRAVEL = BUILDER.comment("Allow fast travel through Clear Warp Pipes. " + "[Default: true]")
+        ALLOW_FAST_TRAVEL = BUILDER.translation("configuration.warp_pipes.allow_fast_travel")
+                .comment("Allow fast travel through Clear Warp Pipes.")
+                .comment("§9[Default: true]")
                 .define("allow_fast_travel", true);
-        ALLOW_PIPE_UNWAXING = BUILDER.comment("Allow pipes to be unwaxed with an axe. " + "[Default: false]")
+        ALLOW_PIPE_UNWAXING = BUILDER.translation("configuration.warp_pipes.allow_pipe_unwaxing")
+                .comment("Allow pipes to be unwaxed with an axe.")
+                .comment("§9[Default: false]")
                 .define("allow_pipe_unwaxing", false);
-        TELEPORT_MOBS = BUILDER.comment("Allow mobs to teleport. " + "[Default: true]")
+        TELEPORT_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_mobs")
+                .comment("Allow mobs to teleport.")
+                .comment("§9[Default: true]")
                 .define("teleport_mobs", true);
-        TELEPORT_NON_MOBS = BUILDER.comment("Allow non living entities to teleport. " + "[Default: true]")
+        TELEPORT_NON_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_non_mobs")
+                .comment("Allow non living entities to teleport.")
+                .comment("§9[Default: true]")
                 .define("teleport_non_mobs", true);
-        TELEPORT_PLAYERS = BUILDER.comment("Allow players to teleport. " + "[Default: true]")
+        TELEPORT_PLAYERS = BUILDER.translation("configuration.warp_pipes.teleport_players")
+                .comment("Allow players to teleport.")
+                .comment("§9[Default: true]")
                 .define("teleport_players", true);
-        WARP_COOLDOWN = BUILDER.comment("Cooldown between teleports in ticks. " + "[20 ticks = 1 second] " + "[Default: 30]")
+        WARP_COOLDOWN = BUILDER.translation("configuration.warp_pipes.warp_cooldown")
+                .comment("Cooldown between teleports in ticks.")
+                .comment("§6[20 ticks = 1 second]")
+                .comment("§9[Default: 50]§b")
                 .defineInRange("warp_cooldown", 50, 0, 8000);
-        WATER_SPOUTS_BUCKETABLE = BUILDER.comment("Allow players to bucket water spouts. " + "[Default: true]")
+        WATER_SPOUTS_BUCKETABLE = BUILDER.translation("configuration.warp_pipes.water_spouts_bucketable")
+                .comment("Allow players to bucket water spouts.")
+                .comment("§9[Default: true]")
                 .define("water_spouts_bucketable", true);
         BUILDER.pop();
 
         BUILDER.comment("Warp Pipes Config").push(CATEGORY_DEBUG);
-        DEBUG_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Clear Warp Pipes. " + "[Default: false]")
+        DEBUG_SELECTION_BOX = BUILDER.translation("configuration.warp_pipes.debug_selection_box")
+                .comment("Enable debug selection box for Clear Warp Pipes.")
+                .comment("§9[Default: false]")
                 .define("debug_selection_box", false);
-        DEBUG_SELECTION_BOX_CREATIVE = BUILDER.comment("Enable debug selection box for Clear Warp Pipes in Creative. " + "[Default: true]")
+        DEBUG_SELECTION_BOX_CREATIVE = BUILDER.translation("configuration.warp_pipes.debug_selection_box_creative")
+                .comment("Enable debug selection box for Clear Warp Pipes in Creative.")
+                .comment("§cCreative Only")
+                .comment("§9[Default: true]")
                 .define("debug_selection_box_creative", true);
-        DEBUG_PIPE_BUBBLES_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Pipe Bubbles. Creative Only. " + "[Default: false]")
+        DEBUG_PIPE_BUBBLES_SELECTION_BOX = BUILDER.translation("configuration.warp_pipes.debug_pipe_bubbles_selection_box")
+                .comment("Enable debug selection box for Pipe Bubbles.")
+                .comment("§cCreative Only")
+                .comment("§9[Default: false]")
                 .define("debug_pipe_bubbles_selection_box", false);
-        DEBUG_WATER_SPOUT_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Water Spouts. Creative Only. " + "[Default: false]")
+        DEBUG_WATER_SPOUT_SELECTION_BOX = BUILDER.translation("configuration.warp_pipes.debug_water_spout_selection_box")
+                .comment("Enable debug selection box for Water Spouts.")
+                .comment("§cCreative Only")
+                .comment("§9[Default: false]")
                 .define("debug_water_spout_selection_box", false);
         BUILDER.pop();
 
@@ -87,9 +130,5 @@ public class Config
     public static void register(ModContainer container) {
         container.registerConfig(ModConfig.Type.COMMON, INSTANCE.CONFIG_SPEC, "warp_pipes-common.toml");
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
-
-    public static boolean creativeBubbles() {
-        return CREATIVE_BUBBLES.get();
     }
 }

@@ -106,5 +106,27 @@
   "advancements.adventure.warp_pipes.pipe_wrench.description": "Obtain a pipe wrench",
   "advancements.adventure.warp_pipes.pipe_wrench.title": "Put a wrench in it",
   "advancements.adventure.warp_pipes.travel_in_clear_pipe.description": "Travel inside a clear warp pipe",
-  "advancements.adventure.warp_pipes.travel_in_clear_pipe.title": "Travel in style"
+  "advancements.adventure.warp_pipes.travel_in_clear_pipe.title": "Travel in style",
+
+  "warp_pipes.configuration.Client": "Client Config",
+  "warp_pipes.configuration.Common": "Common Config",
+  "warp_pipes.configuration.Debug": "Debug Config",
+  "configuration.warp_pipes.allow_fast_travel": "Allow Fast Travel",
+  "configuration.warp_pipes.allow_pipe_unwaxing": "Allow Pipe Unwaxing",
+  "configuration.warp_pipes.creative_wrench_pipe_linking": "Link Pipes Creative Only",
+  "configuration.warp_pipes.debug_pipe_bubbles_selection_box": "Pipe Bubbles Debug Selection Box",
+  "configuration.warp_pipes.debug_selection_box": "Clear Pipes Debug Selection Box",
+  "configuration.warp_pipes.debug_selection_box_creative": "Debug Selection Box Creative Only",
+  "configuration.warp_pipes.debug_water_spout_selection_box": "Water Spout Debug Selection Box",
+  "configuration.warp_pipes.disable_text": "Disable Text",
+  "configuration.warp_pipes.require_creative_bubbles": "Pipe Bubbles Creative Only",
+  "configuration.warp_pipes.require_creative_close_pipes": "Closing Pipes Creative Only",
+  "configuration.warp_pipes.require_creative_water_spouts": "Water Spouts Creative Only",
+  "configuration.warp_pipes.teleport_mobs": "Teleport Mobs",
+  "configuration.warp_pipes.teleport_non_mobs": "Teleport Non Mobs",
+  "configuration.warp_pipes.teleport_players": "Teleport Players",
+  "configuration.warp_pipes.warp_cooldown": "Warp Cooldown Duration",
+  "configuration.warp_pipes.warp_cooldown_message": "Warp Cooldown Message",
+  "configuration.warp_pipes.warp_cooldown_message_with_ticks": "Warp Cooldown Message with Ticks",
+  "configuration.warp_pipes.water_spouts_bucketable": "Bucketable Water Spouts"
 }
