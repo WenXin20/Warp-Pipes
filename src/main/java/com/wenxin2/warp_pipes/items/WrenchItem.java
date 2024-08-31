@@ -83,16 +83,15 @@ public class WrenchItem extends LinkerItem {
     public static ItemAttributeModifiers createAttributes(Tier tier, float attackDamage, float attackSpeed) {
         return ItemAttributeModifiers.builder()
                 .add(Attributes.ATTACK_DAMAGE,
-                        new AttributeModifier(BASE_ATTACK_DAMAGE_UUID,
-                                "Weapon modifier",
+                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID,
                                 attackDamage + tier.getAttackDamageBonus(),
                                 AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND)
 
                 .add(Attributes.ATTACK_SPEED,
-                        new AttributeModifier(BASE_ATTACK_SPEED_UUID,
-                                "Weapon modifier",
-                                attackSpeed, AttributeModifier.Operation.ADD_VALUE),
+                        new AttributeModifier(BASE_ATTACK_SPEED_ID,
+                                attackSpeed,
+                                AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND).build();
     }
 }
