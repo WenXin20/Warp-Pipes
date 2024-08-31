@@ -45,7 +45,7 @@ public class BubblesSlider extends TexturedSlider {
         if (player != null && requiresCreativeBubbles(player))
             guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                     0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
-        if (player != null && waxDisablesBubbles(minecraft))
+        else if (player != null && waxDisablesBubbles(minecraft))
             guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                     0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
         else guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),

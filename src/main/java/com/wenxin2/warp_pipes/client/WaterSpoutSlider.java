@@ -48,7 +48,7 @@ public class WaterSpoutSlider extends TexturedSlider {
         if (player != null && requiresCreativeWaterSpout(player))
             guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                     0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
-        if (player != null && waxDisablesWaterSpouts(minecraft))
+        else if (player != null && waxDisablesWaterSpouts(minecraft))
             guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                     0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
         else guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
