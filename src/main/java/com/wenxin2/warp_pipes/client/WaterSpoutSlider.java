@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class WaterSpoutSlider extends TexturedSlider {
-    public static final ResourceLocation SLIDER_LOCATION = new ResourceLocation(WarpPipes.MODID, "textures/gui/slider.png");
+    public static final ResourceLocation SLIDER_LOCATION = ResourceLocation.fromNamespaceAndPath(WarpPipes.MODID, "textures/gui/slider.png");
 
     /**
      * @param x x position of upper left corner

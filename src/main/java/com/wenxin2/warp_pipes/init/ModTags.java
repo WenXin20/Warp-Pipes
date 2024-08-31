@@ -18,14 +18,14 @@ public class ModTags {
     public static final TagKey<EntityType<?>> QUICK_TRAVEL_BlACKLIST = entityTypeTags(WarpPipes.MODID, "quick_travel_blacklist");
 
     public static TagKey<Block> blockTags(String id, String name) {
-        return TagKey.create(Registries.BLOCK, new ResourceLocation(id, name));
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(id, name));
     }
 
     public static TagKey<Item> itemTags(String id, String name) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(id, name));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(id, name));
     }
 
     public static TagKey<EntityType<?>> entityTypeTags(String id, String name) {
-        return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(id, name));
+        return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(id, name));
     }
 }

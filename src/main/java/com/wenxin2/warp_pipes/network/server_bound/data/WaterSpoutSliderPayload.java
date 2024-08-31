@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record WaterSpoutSliderPayload(BlockPos pos, int waterSpoutHeight) implements CustomPacketPayload {
-    public static final Type<WaterSpoutSliderPayload> SPOUT_HEIGHT_PAYLOAD = new Type<>(new ResourceLocation(WarpPipes.MODID, "spout_height_payload"));
+    public static final Type<WaterSpoutSliderPayload> SPOUT_HEIGHT_PAYLOAD = new Type<>(ResourceLocation.fromNamespaceAndPath(WarpPipes.MODID, "spout_height_payload"));
 
     @Override
     public Type<WaterSpoutSliderPayload> type() {

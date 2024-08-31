@@ -40,15 +40,15 @@ dependencies {
     // Imports
     implementation "curse.maven:architectury-api-${architectury_api_version}"
     implementation "curse.maven:cloth-config-${cloth_config_version}"
-    implementation 'curse.maven:ctm-${ctm_version}'
+    implementation "curse.maven:ctm-${ctm_version}"
     implementation "curse.maven:fusion-connected-textures-${fusion_version}"
     implementation "curse.maven:roughly-enough-items-${rei_version}"
     implementation "curse.maven:spark-${spark_version}"
 
-    // implementation 'curse.maven:jei-${jei_version}'
+    // implementation "curse.maven:jei-${jei_version}"
     // implementation "curse.maven:selene-${moonlight_version}"
     // implementation "curse.maven:structure-gel-api-${structure_gel_version}"
-    // implementation 'curse.maven:supplementaries-${supplementaries_version}'
+    // implementation "curse.maven:supplementaries-${supplementaries_version}"
 }
 
 

@@ -18,6 +18,6 @@ public class CompatRegistry {
     public static final Supplier<ParticleType<?>> SUDS_PARTICLE = make("supplementaries:suds", BuiltInRegistries.PARTICLE_TYPE);
 
     private static <T> Supplier<@Nullable T> make(String name, Registry<T> registry) {
-        return Suppliers.memoize(() -> registry.getOptional(new ResourceLocation(name)).orElse(null));
+        return Suppliers.memoize(() -> registry.getOptional(ResourceLocation.parse(name)).orElse(null));
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record PipeBubblesButtonPayload(BlockPos pos, Boolean hasPipeBubbles) implements CustomPacketPayload {
-    public static final Type<PipeBubblesButtonPayload> BUBBLES_STATE_PAYLOAD = new Type<>(new ResourceLocation(WarpPipes.MODID, "bubbles_state_payload"));
+    public static final Type<PipeBubblesButtonPayload> BUBBLES_STATE_PAYLOAD = new Type<>(ResourceLocation.fromNamespaceAndPath(WarpPipes.MODID, "bubbles_state_payload"));
 
     @NotNull
     @Override
