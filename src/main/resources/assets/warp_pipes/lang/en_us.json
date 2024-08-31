@@ -134,5 +134,9 @@
   "configuration.warp_pipes.warp_cooldown": "Warp Cooldown Duration",
   "configuration.warp_pipes.warp_cooldown_message": "Warp Cooldown Message",
   "configuration.warp_pipes.warp_cooldown_message_with_ticks": "Warp Cooldown Message with Ticks",
-  "configuration.warp_pipes.water_spouts_bucketable": "Bucketable Water Spouts"
+  "configuration.warp_pipes.water_spouts_bucketable": "Bucketable Water Spouts",
+  "configuration.warp_pipes.wax_disables_bubbles": "Wax Disables Pipe Bubbles Button",
+  "configuration.warp_pipes.wax_disables_closing": "Wax Disables Open/Close Button",
+  "configuration.warp_pipes.wax_disables_renaming": "Wax Disables Rename Button",
+  "configuration.warp_pipes.wax_disables_water_spouts": "Wax Disables Water Spout Button"
 }

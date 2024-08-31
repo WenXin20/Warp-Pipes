@@ -35,6 +35,10 @@ public class Config
     public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE;
     public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
     public static ModConfigSpec.BooleanValue WATER_SPOUTS_BUCKETABLE;
+    public static ModConfigSpec.BooleanValue WAX_DISABLES_BUBBLES;
+    public static ModConfigSpec.BooleanValue WAX_DISABLES_CLOSING;
+    public static ModConfigSpec.BooleanValue WAX_DISABLES_RENAMING;
+    public static ModConfigSpec.BooleanValue WAX_DISABLES_WATER_SPOUTS;
 
     private Config() {
         ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -55,6 +59,30 @@ public class Config
         BUILDER.pop();
 
         BUILDER.push(CATEGORY_COMMON);
+        ALLOW_FAST_TRAVEL = BUILDER.translation("configuration.warp_pipes.allow_fast_travel")
+                .comment("Allow fast travel through Clear Warp Pipes.")
+                .comment("§9[Default: true]")
+                .define("allow_fast_travel", true);
+        ALLOW_PIPE_UNWAXING = BUILDER.translation("configuration.warp_pipes.allow_pipe_unwaxing")
+                .comment("Allow pipes to be unwaxed with an axe.")
+                .comment("§9[Default: false]")
+                .define("allow_pipe_unwaxing", false);
+        WAX_DISABLES_BUBBLES = BUILDER.translation("configuration.warp_pipes.wax_disables_bubbles")
+                .comment("Allows waxing pipes to disable the Pipe Bubbles button.")
+                .comment("§9[Default: true]")
+                .define("wax_disables_bubbles", true);
+        WAX_DISABLES_CLOSING = BUILDER.translation("configuration.warp_pipes.wax_disables_closing")
+                .comment("Allows waxing pipes to disable the Open/Close button.")
+                .comment("§9[Default: true]")
+                .define("wax_disables_closing", true);
+        WAX_DISABLES_RENAMING = BUILDER.translation("configuration.warp_pipes.wax_disables_renaming")
+                .comment("Allows waxing pipes to disable the Rename button.")
+                .comment("§9[Default: true]")
+                .define("wax_disables_renaming", true);
+        WAX_DISABLES_WATER_SPOUTS = BUILDER.translation("configuration.warp_pipes.wax_disables_water_spouts")
+                .comment("Allows waxing pipes to disable the Water Spout button.")
+                .comment("§9[Default: true]")
+                .define("wax_disables_water_spouts", true);
         CREATIVE_BUBBLES = BUILDER.translation("configuration.warp_pipes.require_creative_bubbles")
                 .comment("Require creative to turn bubbles on/off.")
                 .comment("§9[Default: false]")
@@ -71,14 +99,6 @@ public class Config
                 .comment("Require creative to link pipes.")
                 .comment("§9[Default: false]")
                 .define("creative_wrench_pipe_linking", false);
-        ALLOW_FAST_TRAVEL = BUILDER.translation("configuration.warp_pipes.allow_fast_travel")
-                .comment("Allow fast travel through Clear Warp Pipes.")
-                .comment("§9[Default: true]")
-                .define("allow_fast_travel", true);
-        ALLOW_PIPE_UNWAXING = BUILDER.translation("configuration.warp_pipes.allow_pipe_unwaxing")
-                .comment("Allow pipes to be unwaxed with an axe.")
-                .comment("§9[Default: false]")
-                .define("allow_pipe_unwaxing", false);
         TELEPORT_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_mobs")
                 .comment("Allow mobs to teleport.")
                 .comment("§9[Default: true]")

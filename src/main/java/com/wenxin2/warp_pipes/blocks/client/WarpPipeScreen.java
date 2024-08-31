@@ -88,59 +88,93 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             BlockState state = world.getBlockState(this.getClickedPos());
 
             if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
-                if (this.renameButton.isHoveredOrFocused() && !pipeBlockEntity.isWaxed())
+                if (this.renameButton.isHoveredOrFocused() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
                     graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 170, 24, 24);
-                else if (pipeBlockEntity.isWaxed())
+                else if (this.renameButton.isHoveredOrFocused() && !Config.WAX_DISABLES_RENAMING.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 170, 24, 24);
+                else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
                     graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 194, 24, 24);
                 else graphics.blit(WARP_PIPE_GUI, x + 7, y + 18, 177, 146, 24, 24);
 
-                if (this.renameBox.visible && !pipeBlockEntity.isWaxed())
+                if (this.renameBox.visible && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
+                    graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
+                else if (this.renameBox.visible && !Config.WAX_DISABLES_RENAMING.get())
                     graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
 
                 if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
-                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !pipeBlockEntity.isWaxed())
-                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
+                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
+                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get()))
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 24, 24, 24);
-                    else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() || pipeBlockEntity.isWaxed())
+                    else if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !Config.WAX_DISABLES_CLOSING.get())
+                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative() && !Config.WAX_DISABLES_CLOSING.get()))
+                        graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 24, 24, 24);
+                    else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 48, 24, 24);
+                    else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 48, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 0, 24, 24);
                 } else {
-                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !pipeBlockEntity.isWaxed())
-                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
+                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
+                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
-                    else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() || pipeBlockEntity.isWaxed())
+                    else if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !Config.WAX_DISABLES_CLOSING.get())
+                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()) && !Config.WAX_DISABLES_CLOSING.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
+                    else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 48, 24, 24);
+                    else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 48, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 0, 24, 24);
                 }
 
                 if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
-                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get() && !pipeBlockEntity.isWaxed())
-                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
+                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
+                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get()))
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 97, 24, 24);
-                    else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() || pipeBlockEntity.isWaxed())
+                    else if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get() && !Config.WAX_DISABLES_WATER_SPOUTS.get())
+                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative() && !Config.WAX_DISABLES_WATER_SPOUTS.get()))
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 97, 24, 24);
+                    else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 121, 24, 24);
+                    else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 121, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 73, 24, 24);
                 } else {
-                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get()) && !pipeBlockEntity.isWaxed()
-                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
+                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
+                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()) && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 97, 24, 24);
-                    else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() || pipeBlockEntity.isWaxed())
+                    else if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get() && !Config.WAX_DISABLES_WATER_SPOUTS.get())
+                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()) && !Config.WAX_DISABLES_WATER_SPOUTS.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 97, 24, 24);
+                    else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 121, 24, 24);
+                    else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 121, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 73, 24, 24);
                 }
 
                 if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
-                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get()) && !pipeBlockEntity.isWaxed()
-                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
+                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
+                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get()))
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 97, 24, 24);
-                    else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get() || pipeBlockEntity.isWaxed())
+                    else if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get() && !Config.WAX_DISABLES_BUBBLES.get())
+                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative() && !Config.WAX_DISABLES_BUBBLES.get()))
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 97, 24, 24);
+                    else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 121, 24, 24);
+                    else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 121, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 73, 24, 24);
                 } else {
-                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get()) && !pipeBlockEntity.isWaxed()
-                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
+                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
+                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative() && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get()))
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
-                    else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get() || pipeBlockEntity.isWaxed())
+                    else if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get() && !Config.WAX_DISABLES_BUBBLES.get())
+                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative() && !Config.WAX_DISABLES_BUBBLES.get()))
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
+                    else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                        graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
+                    else if (pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 0, 24, 24);
                 }
@@ -239,7 +273,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         Component tooltip = Component.literal("");
         BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
-        if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+        if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
             tooltip = Component.translatable("menu.warp_pipes.warp_pipe.rename_button_waxed.tooltip");
         else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.rename_button.tooltip");
         this.renameButton.setTooltip(Tooltip.create(tooltip));
@@ -247,10 +281,10 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.getClickedPos() != null) {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button.tooltip");
-            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                 tooltip = Component.translatable("menu.warp_pipes.warp_pipe.close_button_waxed.tooltip");
             else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.close_button.tooltip");
         }
@@ -259,10 +293,10 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.getClickedPos() != null) {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button.tooltip");
-            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                 tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_on_button_waxed.tooltip");
             else  tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_on_button.tooltip");
         }
@@ -271,10 +305,10 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.getClickedPos() != null) {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_off_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_off_button.tooltip");
-            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
+            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
                 tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_on_button_waxed.tooltip");
             else  tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_on_button.tooltip");
         }
@@ -337,29 +371,33 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final String pipeRename = this.renameBox.getValue();
         BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
-        if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused() && this.getClickedPos() != null
-                && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed()) {
-            PacketHandler.sendToServer(new RenamePipePayload(this.getClickedPos(), this.renameBox.getValue()));
-            this.pipeName = pipeRename;
-        } else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed())
-            player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
+        if (this.getClickedPos() != null) {
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
+                player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
+            else if (!pipeRename.equals(this.pipeName) && this.renameBox.visible && this.renameBox.isFocused()) {
+                PacketHandler.sendToServer(new RenamePipePayload(this.getClickedPos(), this.renameBox.getValue()));
+                this.pipeName = pipeRename;
+            }
+        }
 
-        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed()) this.renameBox.setVisible(!this.renameBox.visible);
+        if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && !pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
+            this.renameBox.setVisible(!this.renameBox.visible);
+        else if (!Config.WAX_DISABLES_RENAMING.get())
+            this.renameBox.setVisible(!this.renameBox.visible);
     }
 
     public void closeButtonOnPress() {
         Player player = this.inventory.player;
         ClientLevel world = Minecraft.getInstance().level;
 
-        if (world != null) {
+        if (world != null && this.getClickedPos() != null) {
             BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
             if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.close_pipes.requires_creative").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && world.isClientSide())
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null)
-                PacketHandler.sendToServer(new ClosePipeButtonPayload(this.getClickedPos(), Boolean.TRUE));
+            else PacketHandler.sendToServer(new ClosePipeButtonPayload(this.getClickedPos(), Boolean.TRUE));
         }
     }
 
@@ -367,15 +405,14 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         Player player = this.inventory.player;
         ClientLevel world = Minecraft.getInstance().level;
 
-        if (world != null) {
+        if (world != null && this.getClickedPos() != null) {
             BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
             if (!player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && world.isClientSide())
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null)
-                PacketHandler.sendToServer(new PipeBubblesButtonPayload(this.getClickedPos(), Boolean.TRUE));
+            else PacketHandler.sendToServer(new PipeBubblesButtonPayload(this.getClickedPos(), Boolean.TRUE));
         }
     }
 
@@ -383,14 +420,14 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         Player player = this.inventory.player;
         ClientLevel world = Minecraft.getInstance().level;
 
-        if (world != null) {
+        if (world != null && this.getClickedPos() != null) {
             BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
             if (!player.isCreative() && Config.CREATIVE_BUBBLES.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.pipe_bubbles.requires_creative").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && world.isClientSide())
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
-            else if (bubblesSlider.isFocused() && this.getClickedPos() != null) {
+            else if (bubblesSlider.isFocused()) {
                 int bubblesDistance = bubblesSlider.getValueInt();
                 BlockPos clickedPos = this.getClickedPos();
                 PacketHandler.sendToServer(new PipeBubblesSliderPayload(clickedPos, bubblesDistance));
@@ -402,17 +439,16 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         Player player = this.inventory.player;
         ClientLevel world = Minecraft.getInstance().level;
 
-        if (world != null) {
+        if (world != null && this.getClickedPos() != null) {
             BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
             if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && world.isClientSide())
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null)
-                PacketHandler.sendToServer(new WaterSpoutButtonPayload(this.getClickedPos(), Boolean.TRUE));
+            else PacketHandler.sendToServer(new WaterSpoutButtonPayload(this.getClickedPos(), Boolean.TRUE));
 
-            if (this.getClickedPos() != null && !Config.CREATIVE_WATER_SPOUT.get() || Config.CREATIVE_WATER_SPOUT.get() && !player.isCreative()) {
+            if (!Config.CREATIVE_WATER_SPOUT.get() || Config.CREATIVE_WATER_SPOUT.get() && !player.isCreative()) {
                 BlockState state = world.getBlockState(this.getClickedPos());
                 if (state.getBlock() instanceof ClearWarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT) && !state.getValue(ClearWarpPipeBlock.WATERLOGGED)) {
                     player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_waterlogging").withStyle(ChatFormatting.RED), true);
@@ -425,14 +461,14 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         Player player = this.inventory.player;
         ClientLevel world = Minecraft.getInstance().level;
 
-        if (world != null) {
+        if (world != null && this.getClickedPos() != null) {
             BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
 
             if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.water_spouts.requires_creative").withStyle(ChatFormatting.RED), true);
-            else if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && world.isClientSide())
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get() && world.isClientSide())
                 player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
-            else if (waterSpoutSlider.isFocused() && this.getClickedPos() != null) {
+            else if (waterSpoutSlider.isFocused()) {
                 int spoutHeight = waterSpoutSlider.getValueInt();
                 BlockPos clickedPos = this.getClickedPos();
                 PacketHandler.sendToServer(new WaterSpoutSliderPayload(clickedPos, spoutHeight));

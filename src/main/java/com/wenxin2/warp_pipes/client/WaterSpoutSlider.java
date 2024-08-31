@@ -1,17 +1,21 @@
 package com.wenxin2.warp_pipes.client;
 
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.client.TexturedSlider;
 import com.wenxin2.warp_pipes.init.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class WaterSpoutSlider extends TexturedSlider {
-    public static final ResourceLocation SLIDER_LOCATION = ResourceLocation.fromNamespaceAndPath(WarpPipes.MODID, "textures/gui/slider.png");
 
     /**
      * @param x x position of upper left corner
@@ -35,8 +39,8 @@ public class WaterSpoutSlider extends TexturedSlider {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
     {
-        final Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = Minecraft.getInstance().player;
+        final Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
 
         guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX(), this.getY(), 0, getTextureY(), this.width, this.height,
                 200, 24, 2, 3, 2, 2);
@@ -44,13 +48,28 @@ public class WaterSpoutSlider extends TexturedSlider {
         if (player != null && requiresCreativeWaterSpout(player))
             guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                     0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
+        if (player != null && waxDisablesWaterSpouts(minecraft))
+            guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
+                    0, 96, 12, this.height, 200, 24 , 2, 3, 3, 3);
         else guiGraphics.blitWithBorder(SLIDER_LOCATION, this.getX() + (int)(this.value * (double)(this.width - 12)), this.getY(),
                 0, getHandleTextureY(), 12, this.height, 200, 24 , 2, 3, 3, 3);
 
-        renderScrollingString(guiGraphics, mc.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
+        renderScrollingString(guiGraphics, minecraft.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     public boolean requiresCreativeWaterSpout(LocalPlayer player) {
         return !player.isCreative() && Config.CREATIVE_WATER_SPOUT.get();
+    }
+
+    public boolean waxDisablesWaterSpouts(Minecraft minecraft) {
+        if (minecraft.player != null && minecraft.hitResult != null && minecraft.level != null && minecraft.hitResult.getType() == HitResult.Type.BLOCK) {
+            BlockPos pos = ((BlockHitResult) minecraft.hitResult).getBlockPos();
+            BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
+
+            if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+                return pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get();
+            }
+        }
+        return false;
     }
 }

@@ -1,6 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    { "id": "warp_pipes:pipe_wrench", "required": false }
-  ]
-}
