@@ -46,8 +46,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Inventory inventory;
 
     public static BlockPos lastClickedPos = null;
-    public static ExtendedSlider waterSpoutSlider;
-    public static ExtendedSlider bubblesSlider;
+    public ExtendedSlider waterSpoutSlider;
+    public ExtendedSlider bubblesSlider;
     private String pipeName = "";
     private Level world;
 
@@ -230,9 +230,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         }
 
         final Component height = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.height");
-        waterSpoutSlider = this.addRenderableWidget(new WaterSpoutSlider(x + 61, y + 18, 108, 24,
+        this.waterSpoutSlider = this.addRenderableWidget(new WaterSpoutSlider(x + 61, y + 18, 108, 24,
                 height, Component.literal(""), 0D, 16D, spoutHeight, 1D, 0, true));
-        waterSpoutSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip")));
 
         final Component bubbles = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_button");
         this.bubblesButton = this.addRenderableWidget(new Button.Builder(bubbles, (b) -> {
@@ -252,10 +251,9 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             }
         }
 
-        final Component distance = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.height");
-        bubblesSlider = this.addRenderableWidget(new BubblesSlider(x + 61, y + 45, 108, 24,
+        final Component distance = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.distance");
+        this.bubblesSlider = this.addRenderableWidget(new BubblesSlider(x + 61, y + 45, 108, 24,
                 distance, Component.literal(""), 0D, 16D, bubblesDistance, 1D, 0, true));
-        bubblesSlider.setTooltip(Tooltip.create(Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.tooltip")));
     }
 
     @Override
@@ -272,6 +270,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
 
         Component tooltip = Component.literal("");
         BlockEntity blockEntity = world.getBlockEntity(this.getClickedPos());
+        Player player = this.inventory.player;
 
         if (this.getClickedPos() != null && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_RENAMING.get())
             tooltip = Component.translatable("menu.warp_pipes.warp_pipe.rename_button_waxed.tooltip");
@@ -281,10 +280,14 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.getClickedPos() != null) {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
+                if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button.tooltip");
-            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
+            } else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.close_button_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_CLOSING.get())
                 tooltip = Component.translatable("menu.warp_pipes.warp_pipe.close_button_waxed.tooltip");
             else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.close_button.tooltip");
         }
@@ -293,26 +296,52 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         if (this.getClickedPos() != null) {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
+                if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button.tooltip");
-            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
+            } else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_on_button_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
                 tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_on_button_waxed.tooltip");
             else  tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_on_button.tooltip");
         }
         this.waterSpoutButton.setTooltip(Tooltip.create(tooltip));
 
         if (this.getClickedPos() != null) {
+            if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_WATER_SPOUTS.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider_waxed.tooltip");
+            else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_slider.tooltip");
+        }
+        this.waterSpoutSlider.setTooltip(Tooltip.create(tooltip));
+
+        if (this.getClickedPos() != null) {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
-                if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
+                if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                    tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_off_button_creative.tooltip");
+                else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_off_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_off_button.tooltip");
-            } else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
+            } else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_on_button_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
                 tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_on_button_waxed.tooltip");
             else  tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_on_button.tooltip");
         }
         this.bubblesButton.setTooltip(Tooltip.create(tooltip));
+
+        if (this.getClickedPos() != null) {
+            if (!player.isCreative() && Config.CREATIVE_BUBBLES.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider_creative.tooltip");
+            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && Config.WAX_DISABLES_BUBBLES.get())
+                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider_waxed.tooltip");
+            else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.tooltip");
+        }
+        this.bubblesSlider.setTooltip(Tooltip.create(tooltip));
     }
 
     @Override
