@@ -2,16 +2,19 @@ package com.wenxin2.warp_pipes.init;
 
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config
 {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static final Config INSTANCE = new Config();
 
     public static final String CATEGORY_DEBUG = "Debug";
     public static final String CATEGORY_CLIENT = "Client";
     public static final String CATEGORY_COMMON = "Common";
 
+    private final ModConfigSpec CONFIG_SPEC;
     public static ModConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
     public static ModConfigSpec.BooleanValue ALLOW_PIPE_UNWAXING;
     public static ModConfigSpec.BooleanValue CREATIVE_BUBBLES;
@@ -31,8 +34,8 @@ public class Config
     public static ModConfigSpec.BooleanValue WARP_COOLDOWN_MESSAGE_TICKS;
     public static ModConfigSpec.BooleanValue WATER_SPOUTS_BUCKETABLE;
 
-    public static void initializeConfig()
-    {
+    private Config() {
+        ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
         BUILDER.push(CATEGORY_CLIENT);
         DISABLE_TEXT = BUILDER.comment("Disable text displaying on pipes. " + "[Default: false]")
                 .define("disable_text", false);
@@ -77,10 +80,16 @@ public class Config
         DEBUG_WATER_SPOUT_SELECTION_BOX = BUILDER.comment("Enable debug selection box for Water Spouts. Creative Only. " + "[Default: false]")
                 .define("debug_water_spout_selection_box", false);
         BUILDER.pop();
+
+        CONFIG_SPEC = BUILDER.build();
     }
 
     public static void register(ModContainer container) {
-        initializeConfig();
-        container.registerConfig(ModConfig.Type.COMMON, BUILDER.build());
+        container.registerConfig(ModConfig.Type.COMMON, INSTANCE.CONFIG_SPEC, "warp_pipes-common.toml");
+        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    public static boolean creativeBubbles() {
+        return CREATIVE_BUBBLES.get();
     }
 }
