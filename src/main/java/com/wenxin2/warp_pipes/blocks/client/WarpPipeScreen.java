@@ -98,15 +98,15 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                     graphics.blit(WARP_PIPE_GUI, x + 7, y + 4, 0, 167, 162, 12);
 
                 if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
-                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
-                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()))
+                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !pipeBlockEntity.isWaxed())
+                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 24, 24, 24);
                     else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() || pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 48, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 202, 0, 24, 24);
                 } else {
-                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get())
-                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()))
+                    if ((this.closeButton.isHoveredOrFocused() && !Config.CREATIVE_CLOSE_PIPES.get() && !pipeBlockEntity.isWaxed())
+                            || (this.closeButton.isHoveredOrFocused() && Config.CREATIVE_CLOSE_PIPES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 24, 24, 24);
                     else if (!player.isCreative() && Config.CREATIVE_CLOSE_PIPES.get() || pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 7, y + 45, 177, 48, 24, 24);
@@ -114,15 +114,15 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                 }
 
                 if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
-                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get())
-                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()))
+                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get() && !pipeBlockEntity.isWaxed())
+                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 97, 24, 24);
                     else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() || pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 121, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 202, 73, 24, 24);
                 } else {
-                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get())
-                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()))
+                    if ((this.waterSpoutButton.isHoveredOrFocused() && !Config.CREATIVE_WATER_SPOUT.get()) && !pipeBlockEntity.isWaxed()
+                            || (this.waterSpoutButton.isHoveredOrFocused() && Config.CREATIVE_WATER_SPOUT.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 97, 24, 24);
                     else if (!player.isCreative() && Config.CREATIVE_WATER_SPOUT.get() || pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 18, 177, 121, 24, 24);
@@ -130,15 +130,15 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
                 }
 
                 if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.BUBBLES)) {
-                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get())
-                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()))
+                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get()) && !pipeBlockEntity.isWaxed()
+                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 97, 24, 24);
                     else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get() || pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 121, 24, 24);
                     else graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 73, 24, 24);
                 } else {
-                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get())
-                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()))
+                    if ((this.bubblesButton.isHoveredOrFocused() && !Config.CREATIVE_BUBBLES.get()) && !pipeBlockEntity.isWaxed()
+                            || (this.bubblesButton.isHoveredOrFocused() && Config.CREATIVE_BUBBLES.get() && player.isCreative()) && !pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 24, 24, 24);
                     else if (!player.isCreative() && Config.CREATIVE_BUBBLES.get() || pipeBlockEntity.isWaxed())
                         graphics.blit(WARP_PIPE_GUI, x + 34, y + 45, 227, 48, 24, 24);
