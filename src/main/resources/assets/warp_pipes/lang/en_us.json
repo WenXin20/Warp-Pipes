@@ -123,7 +123,7 @@
   "configuration.warp_pipes.require_creative_close_pipes": "Closing Pipes Creative Only",
   "configuration.warp_pipes.require_creative_water_spouts": "Water Spouts Creative Only",
   "configuration.warp_pipes.teleport_mobs": "Teleport Mobs",
-  "configuration.warp_pipes.teleport_non_mobs": "Teleport Non Mobs",
+  "configuration.warp_pipes.teleport_non_mobs": "Teleport Non-Living Entities",
   "configuration.warp_pipes.teleport_players": "Teleport Players",
   "configuration.warp_pipes.warp_cooldown": "Warp Cooldown Duration",
   "configuration.warp_pipes.warp_cooldown_message": "Warp Cooldown Message",

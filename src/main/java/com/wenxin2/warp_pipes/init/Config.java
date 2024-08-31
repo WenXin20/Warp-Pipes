@@ -84,7 +84,7 @@ public class Config
                 .comment("§9[Default: true]")
                 .define("teleport_mobs", true);
         TELEPORT_NON_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_non_mobs")
-                .comment("Allow non living entities to teleport.")
+                .comment("Allow non-living entities to teleport.")
                 .comment("§9[Default: true]")
                 .define("teleport_non_mobs", true);
         TELEPORT_PLAYERS = BUILDER.translation("configuration.warp_pipes.teleport_players")
