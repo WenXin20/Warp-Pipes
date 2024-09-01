@@ -18,6 +18,7 @@ public class Config
     public static ModConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
     public static ModConfigSpec.BooleanValue ALLOW_PIPE_UNWAXING;
     public static ModConfigSpec.BooleanValue CREATIVE_BUBBLES;
+    public static ModConfigSpec.BooleanValue BLINDNESS_EFFECT;
     public static ModConfigSpec.BooleanValue CREATIVE_CLOSE_PIPES;
     public static ModConfigSpec.BooleanValue CREATIVE_WATER_SPOUT;
     public static ModConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
@@ -65,6 +66,10 @@ public class Config
                 .comment("Allow pipes to be unwaxed with an axe.")
                 .comment("§9[Default: false]")
                 .define("allow_pipe_unwaxing", false);
+        BLINDNESS_EFFECT = BUILDER.translation("configuration.warp_pipes.blidness_effect")
+                .comment("Warping gives the player a brief blindness effect.")
+                .comment("§9[Default: true]")
+                .define("blidness_effect", true);
         WAX_DISABLES_BUBBLES = BUILDER.translation("configuration.warp_pipes.wax_disables_bubbles")
                 .comment("Allows waxing pipes to disable the Pipe Bubbles button.")
                 .comment("§9[Default: true]")

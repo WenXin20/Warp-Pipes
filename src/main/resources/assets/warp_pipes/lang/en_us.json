@@ -129,6 +129,7 @@
   "warp_pipes.configuration.Debug": "Debug Config",
   "configuration.warp_pipes.allow_fast_travel": "Allow Fast Travel",
   "configuration.warp_pipes.allow_pipe_unwaxing": "Allow Pipe Unwaxing",
+  "configuration.warp_pipes.blindness_effect": "Blindness When Warping",
   "configuration.warp_pipes.creative_wrench_pipe_linking": "Link Pipes Creative Only",
   "configuration.warp_pipes.debug_pipe_bubbles_selection_box": "Pipe Bubbles Debug Selection Box",
   "configuration.warp_pipes.debug_selection_box": "Clear Pipes Debug Selection Box",

@@ -611,11 +611,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (state.getBlock() instanceof ClearWarpPipeBlock && !state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY() - 1.0, warpPos.getZ() + 0.5);
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 1, 0));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 1, 0));
                 } else {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY() - 1.0, warpPos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 1, 0));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 1, 0));
                         entity.unRide();
                     }
                 }
@@ -623,11 +625,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.UP && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY() + 1.0, warpPos.getZ() + 0.5);
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                 } else {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY() + 1.0, warpPos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                         entity.unRide();
                     }
                 }
@@ -635,11 +639,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.DOWN && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY() - entity.getBbHeight(), warpPos.getZ() + 0.5);
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                 } else {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY() - entity.getBbHeight(), warpPos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                         entity.unRide();
                     }
                 }
@@ -647,11 +653,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.NORTH && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() - entity.getBbWidth());
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                 } else {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() - entity.getBbWidth());
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                         entity.unRide();
                     }
                 }
@@ -659,11 +667,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.SOUTH && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + entity.getBbWidth() + 1.0);
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                 } else {
                     entity.teleportTo(warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + entity.getBbWidth() + 1.0);
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                         entity.unRide();
                     }
                 }
@@ -671,11 +681,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.EAST && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() + entity.getBbWidth() + 1.0, warpPos.getY(), warpPos.getZ() + 0.5);
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                 } else {
                     entity.teleportTo(warpPos.getX() + entity.getBbWidth() + 1.0, warpPos.getY(), warpPos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                         entity.unRide();
                     }
                 }
@@ -683,11 +695,13 @@ public class WarpPipeBlock extends DirectionalBlock implements EntityBlock {
             if (world.getBlockState(warpPos).getValue(FACING) == Direction.WEST && state.getValue(ENTRANCE)) {
                 if (entity instanceof Player) {
                     entity.teleportTo(warpPos.getX() - entity.getBbWidth(), warpPos.getY(), warpPos.getZ() + 0.5);
-                    ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                    if (Config.BLINDNESS_EFFECT.get())
+                        ((Player) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                 } else {
                     entity.teleportTo(warpPos.getX() - entity.getBbWidth(), warpPos.getY(), warpPos.getZ() + 0.5);
                     if (passengerEntity instanceof Player) {
-                        ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
+                        if (Config.BLINDNESS_EFFECT.get())
+                            ((Player) passengerEntity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20, 0, true, false));
                         entity.unRide();
                     }
                 }
