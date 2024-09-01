@@ -1,7 +1,5 @@
 package com.wenxin2.warp_pipes.init;
 
-import me.lucko.spark.lib.adventure.text.Component;
-import net.minecraft.client.resources.language.I18n;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -149,6 +147,9 @@ public class Config
 
     public static void register(ModContainer container) {
         container.registerConfig(ModConfig.Type.COMMON, INSTANCE.CONFIG_SPEC, "warp_pipes-common.toml");
+    }
+
+    public static void registerClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

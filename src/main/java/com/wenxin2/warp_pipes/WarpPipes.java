@@ -54,8 +54,10 @@ public class WarpPipes
         SoundRegistry.init();
         Config.register(container);
 
-        if (dist.isClient())
+        if (dist.isClient()) {
             bus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
+            Config.registerClient(container);
+        }
 
 //        WarpEventHandlers.register();
         // PipeBubblesSoundHandler.init();
