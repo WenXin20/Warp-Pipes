@@ -66,10 +66,10 @@ public class Config
                 .comment("Allow pipes to be unwaxed with an axe.")
                 .comment("§9[Default: false]")
                 .define("allow_pipe_unwaxing", false);
-        BLINDNESS_EFFECT = BUILDER.translation("configuration.warp_pipes.blidness_effect")
+        BLINDNESS_EFFECT = BUILDER.translation("configuration.warp_pipes.blindness_effect")
                 .comment("Warping gives the player a brief blindness effect.")
                 .comment("§9[Default: true]")
-                .define("blidness_effect", true);
+                .define("blindness_effect", true);
         WAX_DISABLES_BUBBLES = BUILDER.translation("configuration.warp_pipes.wax_disables_bubbles")
                 .comment("Allows waxing pipes to disable the Pipe Bubbles button.")
                 .comment("§9[Default: true]")
