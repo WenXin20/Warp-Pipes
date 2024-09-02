@@ -114,7 +114,7 @@ public abstract class LivingEntityMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && this.getType() != EntityType.PLAYER && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && !warpPipeBE.preventWarp && this.getType() != EntityType.PLAYER && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
@@ -155,7 +155,7 @@ public abstract class LivingEntityMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && this.getType() != EntityType.PLAYER
-                && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && !warpPipeBE.preventWarp && Config.TELEPORT_MOBS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
