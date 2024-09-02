@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.Block;
 public class ModTags {
     public static final TagKey<Block> DYEABLE_WARP_PIPE_BLOCKS = blockTags(WarpPipes.MODID, "dyeable_warp_pipes");
     public static final TagKey<Block> WARP_PIPE_BLOCKS = blockTags(WarpPipes.MODID, "warp_pipes");
-    public static final TagKey<Block> WRENCH_EFFIECIENT = blockTags(WarpPipes.MODID, "wrench_efficient");
+    public static final TagKey<Block> WRENCH_EFFICIENT = blockTags(WarpPipes.MODID, "wrench_efficient");
     public static final TagKey<Item> DYEABLE_WARP_PIPE_ITEMS = itemTags(WarpPipes.MODID, "dyeable_warp_pipes");
     public static final TagKey<Item> WARP_PIPE_ITEMS = itemTags(WarpPipes.MODID, "warp_pipes");
     public static final TagKey<EntityType<?>> WARP_BLACKLIST = entityTypeTags(WarpPipes.MODID, "warp_blacklist");
