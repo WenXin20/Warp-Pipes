@@ -136,7 +136,7 @@ public abstract class EntityMixin {
         int blockZ = pos.getZ();
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
+                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
@@ -176,7 +176,7 @@ public abstract class EntityMixin {
         int blockZ = pos.getZ();
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && !warpPipeBE.preventWarp && Config.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)) {
+                && !warpPipeBE.preventWarp && Config.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

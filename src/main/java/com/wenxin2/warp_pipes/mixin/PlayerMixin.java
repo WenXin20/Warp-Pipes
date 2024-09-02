@@ -105,7 +105,7 @@ public abstract class PlayerMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
@@ -148,7 +148,7 @@ public abstract class PlayerMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BlACKLIST)
+                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
 //            WarpData warpData = WarpProxy.getInstance().getWarp(warpPipeBE.warpUuid);
             warpPos = warpPipeBE.destinationPos;
@@ -216,7 +216,7 @@ public abstract class PlayerMixin extends Entity {
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
-        } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST))) {
+        } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BLACKLIST))) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.warpPipes$displayNoTeleportMessage();
@@ -261,7 +261,7 @@ public abstract class PlayerMixin extends Entity {
 
     @Unique
     public void warpPipes$displayNoTeleportMessage() {
-        if (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BlACKLIST)) {
+        if (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BLACKLIST)) {
             this.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
                     .withStyle(ChatFormatting.RED), true);
         }
