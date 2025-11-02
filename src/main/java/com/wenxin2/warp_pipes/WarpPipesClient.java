@@ -1,8 +1,8 @@
-package com.wenxin2.warp_pipes.registries;
+package com.wenxin2.warp_pipes;
 
-import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
 import com.wenxin2.warp_pipes.client.renderers.blocks.WarpPipeBlockEntityRenderer;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
 import net.minecraft.client.renderer.BiomeColors;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -11,13 +11,13 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = WarpPipes.MOD_ID, value = Dist.CLIENT)
-public class ClientSetupHandler {
+@EventBusSubscriber(modid = WarpPipes.MOD_ID, value = Dist.CLIENT)
+public class WarpPipesClient {
     @SubscribeEvent
     public static void registerBlockColors(final RegisterColorHandlersEvent.Block event) {
         event.register((state, world, pos, tintIndex) -> {
-            return world != null && pos != null ? BiomeColors.getAverageWaterColor(world, pos) | 0xFF0000cc
-                    : 0xFFFFFFFF;
+            return world != null && pos != null
+                    ? BiomeColors.getAverageWaterColor(world, pos) | 0xFF0000cc : 0xFFFFFFFF;
         }, ModRegistry.WATER_SPOUT.get());
     }
 

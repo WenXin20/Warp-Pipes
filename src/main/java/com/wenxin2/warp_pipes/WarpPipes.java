@@ -2,7 +2,6 @@ package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.event_handlers.WarpEventHandlers;
-import com.wenxin2.warp_pipes.registries.ClientSetupHandler;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataComponentRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
@@ -50,7 +49,7 @@ public class WarpPipes
         ConfigRegistry.register(container);
 
         if (dist.isClient()) {
-            bus.addListener(ClientSetupHandler::registerBlockEntityRenderers);
+            bus.addListener(WarpPipesClient::registerBlockEntityRenderers);
             ConfigRegistry.registerClient(container);
         }
 
