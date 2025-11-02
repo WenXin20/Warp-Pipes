@@ -21,7 +21,7 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue BLINDNESS_EFFECT;
     public static ModConfigSpec.BooleanValue CREATIVE_CLOSE_PIPES;
     public static ModConfigSpec.BooleanValue CREATIVE_WATER_SPOUT;
-    public static ModConfigSpec.BooleanValue CREATIVE_WRENCH_PIPE_LINKING;
+    public static ModConfigSpec.BooleanValue CREATIVE_WRENCH_LINKING;
     public static ModConfigSpec.BooleanValue DEBUG_PIPE_BUBBLES_SELECTION_BOX;
     public static ModConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
@@ -98,7 +98,7 @@ public class ConfigRegistry
                 .comment("Require creative to turn water spouts on/off.")
                 .comment("§9[Default: false]")
                 .define("require_creative_water_spouts", false);
-        CREATIVE_WRENCH_PIPE_LINKING = BUILDER.translation("configuration.warp_pipes.creative_wrench_pipe_linking")
+        CREATIVE_WRENCH_LINKING = BUILDER.translation("configuration.warp_pipes.creative_wrench_pipe_linking")
                 .comment("Require creative to link pipes.")
                 .comment("§9[Default: false]")
                 .define("creative_wrench_pipe_linking", false);

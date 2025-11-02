@@ -2,7 +2,7 @@ package com.wenxin2.warp_pipes.items;
 
 import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
+import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.registries.DataComponentRegistry;
@@ -36,6 +36,16 @@ public class LinkerItem extends TieredItem {
         super(tier, properties);
     }
 
+    private static boolean getLinkableBlock(BlockState state) {
+        if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.ENTRANCE))
+            return true;
+        else if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.ENTRANCE))
+            return false;
+        else if (state.getBlock() instanceof ClearWarpPipeBlock)
+            return true;
+        else return true;
+    }
+
     @Override
     public InteractionResult useOn(UseOnContext useOnContext) {
         Player player = useOnContext.getPlayer();
@@ -46,59 +56,74 @@ public class LinkerItem extends TieredItem {
         ItemStack stack = useOnContext.getItemInHand();
         String dimension = world.dimension().location().toString();
 
-        if (player != null && !player.isCreative() && ConfigRegistry.CREATIVE_WRENCH_PIPE_LINKING.get()) {
-            player.displayClientMessage(Component.translatable("display.warp_pipes.linker.requires_creative")
-                    .withStyle(), true);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+        if (player != null && !player.isCreative() && ConfigRegistry.CREATIVE_WRENCH_LINKING.get()) {
+            player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.requires_creative"), true);
+            return InteractionResult.sidedSuccess(Boolean.TRUE);
         } else if (player != null) {
-            if ((state.getBlock() instanceof ClearWarpPipeBlock || ((state.getBlock() instanceof WarpPipeBlock)
-                    && state.getValue(WarpPipeBlock.ENTRANCE))) && player.isShiftKeyDown() && blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity) {
+            if (player.isShiftKeyDown() && blockEntity instanceof BaseWarpBlockEntity warpBE
+                    && getLinkableBlock(state)) {
+                UUID uuid = warpBE.getUUID();
 
-                UUID uuid = pipeBlockEntity.getUuid();
+                if (warpBE.isWaxed() && ConfigRegistry.WAX_DISABLES_WARP_LINKING.get()) {
+                    player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.waxed",
+                            state.getBlock().getName()).withStyle(ChatFormatting.GOLD), true);
+                    return InteractionResult.sidedSuccess(true);
+                } else if (!getIsBound(stack)) {
 
-                if (!getIsBound(stack)) {
+                    if (!world.isClientSide && uuid == null) {
+                        uuid = UUID.randomUUID();
+                        warpBE.setUUID(uuid);
+                        warpBE.setChanged();
+                    }
                     // First interaction: Bind the first block
                     setWarpPos(stack, pos);
                     setWarpDimension(stack, dimension);
                     setWarpUUID(stack, uuid);
                     setIsBound(stack, true);  // Mark the item as bound
 
-                    player.displayClientMessage(Component.translatable("display.warp_pipes.linker.bound",
-                                    pos.getX(), pos.getY(), pos.getZ(), dimension)
-                            .withStyle(ChatFormatting.DARK_GREEN), true);
+                    player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.bound",
+                            state.getBlock().getName()).withStyle(ChatFormatting.GREEN), true);
 
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
                     this.playSound(world, pos, SoundRegistry.WRENCH_BOUND.get(), SoundSource.PLAYERS, 1.0F, 0.1F);
                 } else {
+
+                    if (!world.isClientSide && uuid == null) {
+                        uuid = UUID.randomUUID();
+                        warpBE.setUUID(uuid);
+                        warpBE.setChanged();
+                    }
+
                     // Second interaction: Link the blocks
                     BlockPos firstPos = getWarpPos(stack);
+                    BlockState firstState = world.getBlockState(firstPos);
                     String firstDim = getWarpDimension(stack);
-//                    if (dimension.equals(getWarpDimension(stack))) {
-                        BlockEntity firstBlockEntity = world.getBlockEntity(firstPos);
-                        if (firstBlockEntity instanceof WarpPipeBlockEntity firstPipeBlockEntity) {
 
-                            // Perform the linking logic
-                            this.link(stack, firstPipeBlockEntity, pipeBlockEntity);
+                    //  if (dimension.equals(getWarpDimension(stack))) {
+                    BlockEntity firstBE = world.getBlockEntity(firstPos);
+                    if (firstBE instanceof BaseWarpBlockEntity firstWarpBE) {
 
-                            player.displayClientMessage(Component.translatable("display.warp_pipes.linker.linked",
-                                            pos.getX(), pos.getY(), pos.getZ(), dimension)
-                                    .withStyle(ChatFormatting.GOLD), true);
+                        // Perform the linking logic
+                        this.link(stack, firstWarpBE, warpBE);
 
-                            this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                            this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
-                        }
-//                    }
+                        player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.linked_warp_block",
+                                state.getBlock().getName(), firstState.getBlock().getName()).withStyle(ChatFormatting.GOLD), true);
+
+                        this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
+                        this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
+                    }
+                    //  }
                     setIsBound(stack, false);  // Reset binding
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return InteractionResult.sidedSuccess(Boolean.TRUE);
             }
         }
         return super.useOn(useOnContext);
     }
 
-    public void link(ItemStack stack, WarpPipeBlockEntity firstPipeBlockEntity, WarpPipeBlockEntity secondPipeBlockEntity) {
-        UUID firstUuid = firstPipeBlockEntity.getUuid();
-        UUID secondUuid = secondPipeBlockEntity.getUuid();
+    public void link(ItemStack stack, BaseWarpBlockEntity firstPipeBlockEntity, BaseWarpBlockEntity secondPipeBlockEntity) {
+        UUID firstUuid = firstPipeBlockEntity.getUUID();
+        UUID secondUuid = secondPipeBlockEntity.getUUID();
 
         BlockPos firstPos = firstPipeBlockEntity.getBlockPos();
         BlockPos secondPos = secondPipeBlockEntity.getBlockPos();
@@ -119,10 +144,9 @@ public class LinkerItem extends TieredItem {
         if (secondUuid != null)
             firstPipeBlockEntity.setWarpUuid(secondUuid);
 
-        firstPipeBlockEntity.setChanged();
-        secondPipeBlockEntity.setChanged();
-
-        clearItemComponents(stack);  // Clear tags after linking
+        firstPipeBlockEntity.markUpdated();
+        secondPipeBlockEntity.markUpdated();
+        clearItemComponents(stack);
     }
 
     public void clearItemComponents(ItemStack stack) {
@@ -178,7 +202,7 @@ public class LinkerItem extends TieredItem {
         world.playSound(null, pos, soundEvent, source, volume, pitch);
     }
 
-    private void spawnParticles(Level world, BlockPos pos, ParticleOptions particleOptions) {
+    public void spawnParticles(Level world, BlockPos pos, ParticleOptions particleOptions) {
         if (world.isClientSide()) {
             RandomSource random = world.getRandom();
 
@@ -192,18 +216,18 @@ public class LinkerItem extends TieredItem {
         }
     }
 
-    @Override
     @ParametersAreNonnullByDefault
+    @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltip) {
-        if (getIsBound(stack)) {
-            list.add(Component.translatable("", true));
-            list.add(Component.translatable("display.warp_pipes.linker.bound_tooltip",
-                    getWarpPos(stack).getX(), getWarpPos(stack).getY(), getWarpPos(stack).getZ(), getWarpDimension(stack), true)
+        if (getIsBound(stack) && getWarpPos(stack) != null) {
+            list.add(Component.literal(""));
+
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound",
+                            getWarpPos(stack).getX(), getWarpPos(stack).getY(), getWarpPos(stack).getZ(), /*getWarpDimension(stack),*/ true)
                     .withStyle(ChatFormatting.GOLD));
-        }
-        else {
-            list.add(Component.translatable("", true));
-            list.add(Component.translatable("display.warp_pipes.linker.not_bound_tooltip", true)
+        } else {
+            list.add(Component.literal(""));
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.not_bound", true)
                     .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
         }
     }
