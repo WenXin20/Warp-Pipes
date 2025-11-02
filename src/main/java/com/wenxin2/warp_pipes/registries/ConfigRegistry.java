@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.init;
+package com.wenxin2.warp_pipes.registries;
 
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
@@ -6,9 +6,9 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public class Config
+public class ConfigRegistry
 {
-    public static final Config INSTANCE = new Config();
+    public static final ConfigRegistry INSTANCE = new ConfigRegistry();
 
     public static final String CATEGORY_DEBUG = "Debug";
     public static final String CATEGORY_CLIENT = "Client";
@@ -39,7 +39,7 @@ public class Config
     public static ModConfigSpec.BooleanValue WAX_DISABLES_RENAMING;
     public static ModConfigSpec.BooleanValue WAX_DISABLES_WATER_SPOUTS;
 
-    private Config() {
+    private ConfigRegistry() {
         ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
         BUILDER.push(CATEGORY_CLIENT);
         DISABLE_TEXT = BUILDER.translation("configuration.warp_pipes.disable_text")

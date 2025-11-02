@@ -1,6 +1,6 @@
 package com.wenxin2.warp_pipes.items;
 
-import com.wenxin2.warp_pipes.init.ModTags;
+import com.wenxin2.warp_pipes.registries.ModTags;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

@@ -1,6 +1,6 @@
 package com.wenxin2.warp_pipes.inventory;
 
-import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

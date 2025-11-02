@@ -1,4 +1,4 @@
-package com.wenxin2.warp_pipes.blocks.client.renderers;
+package com.wenxin2.warp_pipes.client.renderers.blocks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -6,7 +6,7 @@ import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.PipeText;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.init.Config;
+import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -36,7 +36,7 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
 
     @Override
     public void render(WarpPipeBlockEntity blockEntity, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        if (!Config.DISABLE_TEXT.get()) this.renderPipeWithText(blockEntity, stack, buffer, packedLight);
+        if (!ConfigRegistry.DISABLE_TEXT.get()) this.renderPipeWithText(blockEntity, stack, buffer, packedLight);
     }
 
     void renderPipeWithText(WarpPipeBlockEntity pipeBlockEntity, PoseStack stack, MultiBufferSource buffer, int packedLight) {
@@ -57,20 +57,20 @@ public class WarpPipeBlockEntityRenderer implements BlockEntityRenderer<WarpPipe
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.EAST || state.getValue(WarpPipeBlock.FACING) == Direction.WEST)) {
             if (pipeBlockEntity.hasTextEast())
                 this.renderPipeTextEast(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
-                    pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
+                        pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
             if (pipeBlockEntity.hasTextWest())
                 this.renderPipeTextWest(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
-                    pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
+                        pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
 
         if (state.getValue(WarpPipeBlock.ENTRANCE)
                 && !(state.getValue(WarpPipeBlock.FACING) == Direction.UP || state.getValue(WarpPipeBlock.FACING) == Direction.DOWN)) {
             if (pipeBlockEntity.hasTextAbove())
                 this.renderPipeTextAbove(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
-                    pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
+                        pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
             if (pipeBlockEntity.hasTextBelow())
                 this.renderPipeTextBelow(pipeBlockEntity, pipeBlockEntity.getBlockPos(), pipeBlockEntity.getPipeText(), stack, buffer, packedLight,
-                    pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
+                        pipeBlockEntity.getTextLineHeight(), pipeBlockEntity.getMaxTextLineWidth());
         }
         stack.popPose();
     }

@@ -1,9 +1,8 @@
 package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.init.Config;
-import com.wenxin2.warp_pipes.init.ModRegistry;
-import java.nio.channels.Pipe;
+import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -55,7 +54,7 @@ public class PipeBubblesBlock extends BubbleColumnBlock implements BucketPickup 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext && ((EntityCollisionContext)context).getEntity() instanceof Player player
-                && player.hasPermissions(1) && player.isCreative() && Config.DEBUG_PIPE_BUBBLES_SELECTION_BOX.get()) {
+                && player.hasPermissions(1) && player.isCreative() && ConfigRegistry.DEBUG_PIPE_BUBBLES_SELECTION_BOX.get()) {
             return Shapes.block();
         }
         // Shapes.empty() causes a crash, use a tiny bounding box instead

@@ -1,7 +1,7 @@
 package com.wenxin2.warp_pipes.sounds;
 
 import com.wenxin2.warp_pipes.blocks.PipeBubblesBlock;
-import com.wenxin2.warp_pipes.init.ModRegistry;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AmbientSoundHandler;
 import net.minecraft.sounds.SoundEvents;

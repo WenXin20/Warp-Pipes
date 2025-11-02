@@ -1,8 +1,8 @@
-package com.wenxin2.warp_pipes.init;
+package com.wenxin2.warp_pipes.registries;
 
 import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
-import com.wenxin2.warp_pipes.blocks.client.renderers.WarpPipeBlockEntityRenderer;
+import com.wenxin2.warp_pipes.client.renderers.blocks.WarpPipeBlockEntityRenderer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;

@@ -2,8 +2,8 @@ package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
-import com.wenxin2.warp_pipes.init.Config;
-import com.wenxin2.warp_pipes.init.ModTags;
+import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -105,7 +105,7 @@ public abstract class PlayerMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
+                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
@@ -124,7 +124,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, stateAboveEntity);
                     else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
-                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
@@ -148,7 +148,7 @@ public abstract class PlayerMixin extends Entity {
         int blockZ = pos.getZ();
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && Config.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
+                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)
                 && !this.getPersistentData().getBoolean("warp_pipes:prevent_warp")) {
 //            WarpData warpData = WarpProxy.getInstance().getWarp(warpPipeBE.warpUuid);
             warpPos = warpPipeBE.destinationPos;
@@ -168,7 +168,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
@@ -179,7 +179,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
@@ -190,7 +190,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
@@ -201,7 +201,7 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
@@ -212,11 +212,11 @@ public abstract class PlayerMixin extends Entity {
                         WarpPipeBlock.warp(this, warpPos, world, state);
                     else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
                         WarpPipeBlock.warp(this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(Config.WARP_COOLDOWN.get());
+                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 } /* else if (this.getWarpCooldown() <= 10)
                 displayDestinationMissingMessage(); */ else if (warpPipeBE.hasDestinationPos()) this.warpPipes$displayCooldownMessage();
             }
-        } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BLACKLIST))) {
+        } else if (!state.getValue(WarpPipeBlock.CLOSED) && (!ConfigRegistry.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BLACKLIST))) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && this.isShiftKeyDown() && (entityY + this.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.warpPipes$displayNoTeleportMessage();
@@ -249,8 +249,8 @@ public abstract class PlayerMixin extends Entity {
 
     public void warpPipes$displayCooldownMessage() {
         if (this.warpPipes$getWarpCooldown() >= 10) {
-            if (Config.WARP_COOLDOWN_MESSAGE.get()) {
-                if (Config.WARP_COOLDOWN_MESSAGE_TICKS.get())
+            if (ConfigRegistry.WARP_COOLDOWN_MESSAGE.get()) {
+                if (ConfigRegistry.WARP_COOLDOWN_MESSAGE_TICKS.get())
                     this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown.ticks",
                             this.warpPipes$getWarpCooldown()).withStyle(ChatFormatting.RED), true);
                 else this.displayClientMessage(Component.translatable("display.warp_pipes.warp_cooldown")
@@ -261,7 +261,7 @@ public abstract class PlayerMixin extends Entity {
 
     @Unique
     public void warpPipes$displayNoTeleportMessage() {
-        if (!Config.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BLACKLIST)) {
+        if (!ConfigRegistry.TELEPORT_PLAYERS.get() || this.getType().is(ModTags.WARP_BLACKLIST)) {
             this.displayClientMessage(Component.translatable("display.warp_pipes.players_cannot_teleport")
                     .withStyle(ChatFormatting.RED), true);
         }
