@@ -15,20 +15,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber(modid = WarpPipes.MOD_ID)
 public class WarpEventHandlers {
-
-    @SubscribeEvent
-    public static void onJoinWorld(EntityJoinLevelEvent event)
-    {
-        CompoundTag tag = event.getEntity().getPersistentData();
-        if (!(event.getEntity() instanceof LivingEntity) && !(event.getEntity() instanceof Player)) return;
-
-        if (event.getEntity() != null && tag.contains("warp_pipes:can_warp") && tag.getBoolean("warp_pipes:can_warp") == Boolean.FALSE)
-            tag.putBoolean("warp_pipes:prevent_warp", true);
-
-        if (event.getEntity() != null && !tag.contains("warp_pipes:prevent_warp"))
-            tag.putBoolean("warp_pipes:prevent_warp", false);
-    }
-
     @SubscribeEvent
     public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide()) {
