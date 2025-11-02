@@ -1,0 +1,88 @@
+package com.wenxin2.warp_pipes.utils;
+
+import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
+import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
+import com.wenxin2.warp_pipes.registries.TagRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
+public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
+    @Override
+    default void enterWarpDoor(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
+        if (entity instanceof Player player && (!this.mv$getBlockWarpTeleportConfig()
+                || player.getType().is(TagRegistry.CANNOT_WARP) || this.mv$doPreventWarp())) {
+            this.displayNoTeleportMessage(player, world.getBlockState(pos));
+        } else BlockWarpEntityHandler.super.enterWarpDoor(entity, world, pos, warpPos, warpBE);
+    }
+
+    @Override
+    default void enterWarpPipe(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
+        BlockState state = world.getBlockState(pos);
+        double entityX = entity.getX();
+        double entityY = entity.getY();
+        double entityZ = entity.getZ();
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if (entity instanceof Player player && (!this.mv$getBlockWarpTeleportConfig()
+                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.mv$doPreventWarp())) {
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && entity.isShiftKeyDown() && (entityY + entity.getBbHeight() >= blockY - 1)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage(player, state);
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !entity.isShiftKeyDown() && entity.getMotionDirection() == Direction.SOUTH
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
+                this.displayNoTeleportMessage(player, state);
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !entity.isShiftKeyDown() && entity.getMotionDirection() == Direction.NORTH
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
+                this.displayNoTeleportMessage(player, state);
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !entity.isShiftKeyDown() && entity.getMotionDirection() == Direction.WEST
+                    && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage(player, state);
+            }
+            if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !entity.isShiftKeyDown() && entity.getMotionDirection() == Direction.EAST
+                    && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage(player, state);
+            }
+        } else BlockWarpEntityHandler.super.enterWarpPipe(entity, world, pos, warpPos, warpBE);
+    }
+
+    @Override
+    default void enterWarpPipeAbove(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
+        BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(entity.getBbHeight())));
+
+        double entityX = entity.getX();
+        double entityZ = entity.getZ();
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if (entity instanceof Player player && (!this.mv$getBlockWarpTeleportConfig()
+                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.mv$doPreventWarp())) {
+            if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (entity.getBlockY() < blockY)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                this.displayNoTeleportMessage(player, stateAboveEntity);
+            }
+        } else BlockWarpEntityHandler.super.enterWarpPipeAbove(entity, world, pos, warpPos, warpBE);
+    }
+
+    private void displayNoTeleportMessage(Player player, BlockState state) {
+        if (!this.mv$getBlockWarpTeleportConfig() || player.getType().is(TagRegistry.CANNOT_WARP)) {
+            if (state.getBlock() instanceof WarpPipeBlock)
+                player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_cannot_teleport_players"), true);
+        }
+
+        if (this.mv$doPreventWarp())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.warp_disruptor_prevented_warp"), true);
+    }
+}
