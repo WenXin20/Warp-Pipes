@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.event_handlers.WarpEventHandlers;
 import com.wenxin2.warp_pipes.registries.ClientSetupHandler;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.registries.ModCreativeTabs;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.items.data_components.LinkerDataComponents;
@@ -48,7 +47,7 @@ public class WarpPipes
         MENUS.register(bus);
         SOUNDS.register(bus);
         LinkerDataComponents.COMPONENTS.register(bus);
-        ModCreativeTabs.TABS.register(bus);
+        WarpPipesCreativeTabs.TABS.register(bus);
 
         ModRegistry.init();
         SoundRegistry.init();

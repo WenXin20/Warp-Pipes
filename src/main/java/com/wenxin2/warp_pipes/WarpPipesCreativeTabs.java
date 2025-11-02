@@ -1,6 +1,6 @@
-package com.wenxin2.warp_pipes.registries;
+package com.wenxin2.warp_pipes;
 
-import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 @EventBusSubscriber(modid = WarpPipes.MODID, bus = EventBusSubscriber.Bus.MOD)
-public class ModCreativeTabs {
+public class WarpPipesCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WarpPipes.MODID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> WARP_PIPES_TAB = TABS.register("warp_pipes_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.warp_pipes"))
