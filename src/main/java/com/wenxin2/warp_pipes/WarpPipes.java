@@ -4,9 +4,10 @@ import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.event_handlers.WarpEventHandlers;
 import com.wenxin2.warp_pipes.registries.ClientSetupHandler;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.DataComponentRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
-import com.wenxin2.warp_pipes.items.data_components.LinkerDataComponents;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -28,11 +29,9 @@ public class WarpPipes
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, WarpPipes.MOD_ID);
+    public static final DeferredRegister<DataComponentType<?>> COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, WarpPipes.MOD_ID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, WarpPipes.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, WarpPipes.MOD_ID);
-
-    // Bus for Forge Events
-    public static final IEventBus FORGE_BUS = NeoForge.EVENT_BUS;
 
     public WarpPipes(IEventBus bus, Dist dist, ModContainer container)
     {
@@ -42,10 +41,11 @@ public class WarpPipes
         BLOCK_ENTITIES.register(bus);
         MENUS.register(bus);
         SOUNDS.register(bus);
-        LinkerDataComponents.COMPONENTS.register(bus);
+        COMPONENTS.register(bus);
         WarpPipesCreativeTabs.TABS.register(bus);
 
         ModRegistry.init();
+        DataComponentRegistry.init();
         SoundRegistry.init();
         ConfigRegistry.register(container);
 
@@ -54,7 +54,6 @@ public class WarpPipes
             ConfigRegistry.registerClient(container);
         }
 
-        NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onJoinWorld);
         NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
     }
 }
