@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
-public class ModTags {
+public class TagRegistry {
     public static final TagKey<Block> DYEABLE_WARP_PIPE_BLOCKS = blockTags(WarpPipes.MOD_ID, "dyeable_warp_pipes");
     public static final TagKey<Block> WARP_PIPE_BLOCKS = blockTags(WarpPipes.MOD_ID, "warp_pipes");
     public static final TagKey<Block> WRENCH_EFFICIENT = blockTags(WarpPipes.MOD_ID, "wrench_efficient");

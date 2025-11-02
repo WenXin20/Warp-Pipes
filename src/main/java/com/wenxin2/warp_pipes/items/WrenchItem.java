@@ -1,6 +1,6 @@
 package com.wenxin2.warp_pipes.items;
 
-import com.wenxin2.warp_pipes.registries.ModTags;
+import com.wenxin2.warp_pipes.registries.TagRegistry;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -71,7 +71,7 @@ public class WrenchItem extends LinkerItem {
     }
 
     public static Tool createToolProperties() {
-        return new Tool(List.of(Tool.Rule.overrideSpeed(ModTags.WRENCH_EFFICIENT, 1.5F)), 1.0F, 2);
+        return new Tool(List.of(Tool.Rule.overrideSpeed(TagRegistry.WRENCH_EFFICIENT, 1.5F)), 1.0F, 2);
     }
 
     public static ItemAttributeModifiers createAttributes(Tier tier, int attackDamage, float attackSpeed) {

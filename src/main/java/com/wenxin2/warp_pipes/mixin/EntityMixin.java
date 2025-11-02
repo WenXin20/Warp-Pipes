@@ -3,7 +3,7 @@ package com.wenxin2.warp_pipes.mixin;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.registries.ModTags;
+import com.wenxin2.warp_pipes.registries.TagRegistry;
 import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -136,7 +136,7 @@ public abstract class EntityMixin {
         int blockZ = pos.getZ();
 
         if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_PLAYERS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)) {
+                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_PLAYERS.get() && !this.getType().is(TagRegistry.WARP_BLACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 
@@ -176,7 +176,7 @@ public abstract class EntityMixin {
         int blockZ = pos.getZ();
 
         if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_NON_MOBS.get() && !this.getType().is(ModTags.WARP_BLACKLIST)) {
+                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_NON_MOBS.get() && !this.getType().is(TagRegistry.WARP_BLACKLIST)) {
             warpPos = warpPipeBE.destinationPos;
             int entityId = this.getId();
 

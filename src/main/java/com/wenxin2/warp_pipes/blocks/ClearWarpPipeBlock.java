@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
-import com.wenxin2.warp_pipes.registries.ModTags;
+import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.items.LinkerItem;
 import java.util.Collection;
 import java.util.Map;
@@ -416,14 +416,14 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (!entity.isShiftKeyDown() && ConfigRegistry.ALLOW_FAST_TRAVEL.get() && !entity.getType().is(ModTags.QUICK_TRAVEL_BLACKLIST))
+        if (!entity.isShiftKeyDown() && ConfigRegistry.ALLOW_FAST_TRAVEL.get() && !entity.getType().is(TagRegistry.QUICK_TRAVEL_BLACKLIST))
             entity.setSwimming(true);
 
         if ((entityY < blockY + 0.98 && entityY > blockY + 0.02)
                 && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
                 && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02)
                 && !entity.isShiftKeyDown() && ConfigRegistry.ALLOW_FAST_TRAVEL.get()
-                && !entity.getType().is(ModTags.QUICK_TRAVEL_BLACKLIST)) {
+                && !entity.getType().is(TagRegistry.QUICK_TRAVEL_BLACKLIST)) {
             this.moveEntityInPipe(entity);
 
             if (!world.isClientSide) {
