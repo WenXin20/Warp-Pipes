@@ -44,9 +44,7 @@ public class WrenchItem extends LinkerItem {
             list.add(Component.translatable(this.getDescriptionId() + ".tooltip.right_click").withStyle(ChatFormatting.DARK_GREEN));
             list.add(Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click").withStyle(ChatFormatting.BLUE));
 
-        } else {
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
-        }
+        } else list.add(Component.translatable(this.getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
 
         super.appendHoverText(stack, tooltipContext, list, tooltip);
     }
@@ -82,16 +80,10 @@ public class WrenchItem extends LinkerItem {
 
     public static ItemAttributeModifiers createAttributes(Tier tier, float attackDamage, float attackSpeed) {
         return ItemAttributeModifiers.builder()
-                .add(Attributes.ATTACK_DAMAGE,
-                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID,
-                                attackDamage + tier.getAttackDamageBonus(),
-                                AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.MAINHAND)
+                .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, attackDamage + tier.getAttackDamageBonus(),
+                        AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
 
-                .add(Attributes.ATTACK_SPEED,
-                        new AttributeModifier(BASE_ATTACK_SPEED_ID,
-                                attackSpeed,
-                                AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.MAINHAND).build();
+                .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, attackSpeed,
+                        AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build();
     }
 }
