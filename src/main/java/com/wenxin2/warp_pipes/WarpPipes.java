@@ -19,15 +19,11 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(WarpPipes.MOD_ID)
 public class WarpPipes
 {
-    // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "warp_pipes";
-    // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold blocks/items which will all be registered under the "warp_pipes" namespace
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
 
@@ -58,10 +54,6 @@ public class WarpPipes
             ConfigRegistry.registerClient(container);
         }
 
-//        WarpEventHandlers.register();
-        // PipeBubblesSoundHandler.init();
-
-        // Register ourselves for server and other game events we are interested in
         NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onJoinWorld);
         NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
     }
