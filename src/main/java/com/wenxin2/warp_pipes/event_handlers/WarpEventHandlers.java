@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = WarpPipes.MODID)
+@EventBusSubscriber(modid = WarpPipes.MOD_ID)
 public class WarpEventHandlers {
 
     @SubscribeEvent

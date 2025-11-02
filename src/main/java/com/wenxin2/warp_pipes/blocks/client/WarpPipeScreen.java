@@ -37,7 +37,7 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.lwjgl.glfw.GLFW;
 
 public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
-    public static ResourceLocation WARP_PIPE_GUI = ResourceLocation.fromNamespaceAndPath(WarpPipes.MODID, "textures/gui/warp_pipe.png");
+    public static ResourceLocation WARP_PIPE_GUI = ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "textures/gui/warp_pipe.png");
     Button bubblesButton;
     Button closeButton;
     Button renameButton;
@@ -64,7 +64,7 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         else if (!this.pipeName.isEmpty())
             // Warp Pipe "Name"
             graphics.drawString(this.font, this.pipeName, this.titleLabelX, this.titleLabelY, 4210752, false);
-        // "Warp Pipe"
+            // "Warp Pipe"
         else graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
 
         // Inventory
@@ -281,8 +281,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.CLOSED)) {
                 if (!player.isCreative() && ConfigRegistry.CREATIVE_CLOSE_PIPES.get())
-                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button_creative.tooltip");
-            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && ConfigRegistry.WAX_DISABLES_CLOSING.get())
+                    tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button_creative.tooltip");
+                else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && ConfigRegistry.WAX_DISABLES_CLOSING.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.open_button.tooltip");
             } else if (!player.isCreative() && ConfigRegistry.CREATIVE_CLOSE_PIPES.get())
@@ -297,8 +297,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             BlockState state = world.getBlockState(this.getClickedPos());
             if (state.getBlock() instanceof WarpPipeBlock && state.getValue(WarpPipeBlock.WATER_SPOUT)) {
                 if (!player.isCreative() && ConfigRegistry.CREATIVE_WATER_SPOUT.get())
-                tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button_creative.tooltip");
-            else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && ConfigRegistry.WAX_DISABLES_WATER_SPOUTS.get())
+                    tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button_creative.tooltip");
+                else if (blockEntity instanceof WarpPipeBlockEntity pipeBlockEntity && pipeBlockEntity.isWaxed() && ConfigRegistry.WAX_DISABLES_WATER_SPOUTS.get())
                     tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button_waxed.tooltip");
                 else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_spout_off_button.tooltip");
             } else if (!player.isCreative() && ConfigRegistry.CREATIVE_WATER_SPOUT.get())
