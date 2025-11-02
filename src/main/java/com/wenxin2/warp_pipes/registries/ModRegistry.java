@@ -42,8 +42,7 @@ public class ModRegistry {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WarpPipeBlockEntity>> WARP_PIPE_BLOCK_ENTITY;
     public static final DeferredHolder<MenuType<?>, MenuType<WarpPipeMenu>> WARP_PIPE_MENU;
 
-    static
-    {
+    static {
 
         PIPE_WRENCH = registerItem("pipe_wrench",
                 () -> new WrenchItem(new Item.Properties()
@@ -81,33 +80,27 @@ public class ModRegistry {
         WARP_PIPE_MENU = WarpPipes.MENUS.register("warp_pipe", () -> new MenuType<>(WarpPipeMenu::new, FeatureFlags.REGISTRY.allFlags()));
     }
 
-    public static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
-    {
+    public static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
         DeferredBlock<T> blocks = WarpPipes.BLOCKS.register(name, block);
         WarpPipes.ITEMS.register(name, () -> new BlockItem(blocks.get(), new Item.Properties()));
         return blocks;
     }
 
-    public static <T extends Block> DeferredBlock<T> registerNoItemBlock(String name, Supplier<T> block)
-    {
+    public static <T extends Block> DeferredBlock<T> registerNoItemBlock(String name, Supplier<T> block) {
         return WarpPipes.BLOCKS.register(name, block);
     }
 
-    public static <T extends Item> DeferredItem<T> registerItem(String name, Supplier<T> item)
-    {
+    public static <T extends Item> DeferredItem<T> registerItem(String name, Supplier<T> item) {
         return WarpPipes.ITEMS.register(name, item);
     }
 
-    private static boolean always(BlockState state, BlockGetter block, BlockPos pos)
-    {
+    private static boolean always(BlockState state, BlockGetter block, BlockPos pos) {
         return true;
     }
 
-    private static boolean never(BlockState state, BlockGetter block, BlockPos pos)
-    {
+    private static boolean never(BlockState state, BlockGetter block, BlockPos pos) {
         return false;
     }
 
-    public static void init()
-    {}
+    public static void init() {}
 }

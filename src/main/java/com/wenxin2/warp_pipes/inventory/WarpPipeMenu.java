@@ -17,8 +17,7 @@ public class WarpPipeMenu extends AbstractContainerMenu {
         this(id, inventory, ContainerLevelAccess.NULL);
     }
 
-    public WarpPipeMenu(int id, Inventory inventory, final ContainerLevelAccess levelAccess, final BlockPos pos)
-    {
+    public WarpPipeMenu(int id, Inventory inventory, final ContainerLevelAccess levelAccess, final BlockPos pos) {
         super(ModRegistry.WARP_PIPE_MENU.get(), id);
         this.access = levelAccess;
         this.pos = pos;
@@ -34,8 +33,7 @@ public class WarpPipeMenu extends AbstractContainerMenu {
         }
     }
 
-    public WarpPipeMenu(int id, Inventory inventory, final ContainerLevelAccess levelAccess)
-    {
+    public WarpPipeMenu(int id, Inventory inventory, final ContainerLevelAccess levelAccess) {
         super(ModRegistry.WARP_PIPE_MENU.get(), id);
         this.access = levelAccess;
 
