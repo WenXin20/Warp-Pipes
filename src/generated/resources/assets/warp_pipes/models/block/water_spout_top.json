@@ -1,0 +1,8 @@
+{
+  "parent": "warp_pipes:block/template_water_spout_top",
+  "textures": {
+    "side": "warp_pipes:block/water_spout_flow",
+    "splash": "warp_pipes:block/water_spout_splash",
+    "top": "warp_pipes:block/water_spout_still"
+  }
+}

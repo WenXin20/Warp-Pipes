@@ -7,11 +7,14 @@ import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class EntityTypeTagsGen extends EntityTypeTagsProvider {
+    private static ResourceLocation PIRANHA_PLANT = ResourceLocation.fromNamespaceAndPath("marioverse", "piranha_plant");
+
     public EntityTypeTagsGen(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, WarpPipes.MOD_ID, existingFileHelper);
     }
@@ -19,7 +22,7 @@ public class EntityTypeTagsGen extends EntityTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
         tag(TagRegistry.CANNOT_QUICK_TRAVEL)
-                .add(CompatRegistry.PIRANHA_PLANT.get());
+                .addOptional(PIRANHA_PLANT);
 
         tag(TagRegistry.CANNOT_WARP)
                 .addTag(Tags.EntityTypes.BOSSES)

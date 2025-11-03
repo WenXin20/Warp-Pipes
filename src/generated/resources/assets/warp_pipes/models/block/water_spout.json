@@ -1,0 +1,6 @@
+{
+  "parent": "warp_pipes:block/template_water_spout",
+  "textures": {
+    "side": "warp_pipes:block/water_spout_flow"
+  }
+}

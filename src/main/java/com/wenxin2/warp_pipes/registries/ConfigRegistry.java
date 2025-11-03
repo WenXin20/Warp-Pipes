@@ -33,6 +33,7 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
     public static ModConfigSpec.BooleanValue DISABLE_PLAYER_WARP_DISRUPTING;
     public static ModConfigSpec.BooleanValue DISABLE_TEXT;
+    public static ModConfigSpec.BooleanValue DISABLE_WARP_PIPES_TABS;
     public static ModConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_NON_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_PLAYERS;
