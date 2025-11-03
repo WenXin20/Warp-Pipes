@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.blocks;
 
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.DebugStickItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -63,7 +63,7 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             if ((player.hasPermissions(1) && player.isCreative() && ConfigRegistry.DEBUG_WATER_SPOUT_SELECTION_BOX.get())
                     || (((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
                     && ConfigRegistry.WATER_SPOUTS_BUCKETABLE.get())
-                    || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem))) {
+                    || player.getItemInHand(player.getUsedItemHand()).is(TagRegistry.CAN_SELECT_WATER_SPOUTS)))) {
                 if (state.getValue(TOP)) {
                     return SPOUT_TOP;
                 } else return SPOUT;
@@ -148,10 +148,8 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
 
     public void addParticles(Level world, ParticleOptions particleOptions, double xPos, double yPos, double zPos,
                              int amt, double xMotion, double yMotion, double zMotion, double speed) {
-        if (!world.isClientSide) {
-            ServerLevel serverWorld = (ServerLevel)world;
+        if (world instanceof ServerLevel serverWorld)
             serverWorld.sendParticles(particleOptions, xPos, yPos, zPos, amt, xMotion, yMotion, zMotion, speed);
-        }
     }
 
     public void addAlwaysVisibleParticles(Level world, ParticleOptions particleOptions, double xPos, double yPos, double zPos,
@@ -212,13 +210,13 @@ public class WaterSpoutBlock extends Block implements BucketPickup {
             }
         }
 
-       if (entity instanceof LivingEntity livingEntity) {
-           if (!world.isClientSide && livingEntity.canDrownInFluidType(Fluids.WATER.getFluidType())) {
-               int refillAmount = 1;
-               int newAir = Math.min(livingEntity.getAirSupply() + refillAmount, livingEntity.getMaxAirSupply());
-               livingEntity.setAirSupply(newAir);
-           }
-       }
+        if (entity instanceof LivingEntity livingEntity) {
+            if (!world.isClientSide && livingEntity.canDrownInFluidType(Fluids.WATER.getFluidType())) {
+                int refillAmount = 1;
+                int newAir = Math.min(livingEntity.getAirSupply() + refillAmount, livingEntity.getMaxAirSupply());
+                livingEntity.setAirSupply(newAir);
+            }
+        }
     }
 
     public void onAboveUpBubbleCol(Entity entity) {
