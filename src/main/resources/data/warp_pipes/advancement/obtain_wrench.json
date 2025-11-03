@@ -2,13 +2,13 @@
   "parent": "minecraft:adventure/root",
   "display": {
     "icon": {
-      "item": "warp_pipes:pipe_wrench"
+      "item": "warp_pipes:wrench"
     },
     "title": {
-      "translate": "advancements.adventure.warp_pipes.pipe_wrench.title"
+      "translate": "advancements.adventure.warp_pipes.wrench.title"
     },
     "description": {
-      "translate": "advancements.adventure.warp_pipes.pipe_wrench.description"
+      "translate": "advancements.adventure.warp_pipes.wrench.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -22,7 +22,7 @@
         "items": [
           {
             "items": [
-              "warp_pipes:pipe_wrench"
+              "warp_pipes:wrench"
             ]
           }
         ]
@@ -31,7 +31,7 @@
   },
   "requirements": [
     [
-      "pipe_wrench"
+      "wrench"
     ]
   ],
   "sends_telemetry_event": true

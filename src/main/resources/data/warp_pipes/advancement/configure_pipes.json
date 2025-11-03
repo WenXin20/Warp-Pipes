@@ -1,5 +1,5 @@
 {
-  "parent": "warp_pipes:obtain_pipe_wrench",
+  "parent": "warp_pipes:obtain_wrench",
   "display": {
     "icon": {
       "item": "warp_pipes:green_warp_pipe"
@@ -32,7 +32,7 @@
             "condition": "minecraft:match_tool",
             "predicate": {
               "items": [
-                "warp_pipes:pipe_wrench"
+                "warp_pipes:wrench"
               ]
             }
           }

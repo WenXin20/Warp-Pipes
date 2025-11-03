@@ -14,8 +14,10 @@ public class ConfigRegistry
     public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_COMMON = "common";
 
+    public static final String CATEGORY_WARP_DISRUPTOR = "warp_disruptor";
     public static final String CATEGORY_WARP_PIPES = "warp_pipes";
     public static final String CATEGORY_WATER_SPOUTS = "water_spouts";
+    public static final String CATEGORY_WRENCH = "wrench";
 
     private final ModConfigSpec CONFIG_SPEC;
     public static ModConfigSpec.BooleanValue ALLOW_FAST_TRAVEL;
@@ -29,6 +31,7 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ModConfigSpec.BooleanValue DISABLE_PLAYER_WARP_DISRUPTING;
     public static ModConfigSpec.BooleanValue DISABLE_TEXT;
     public static ModConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_NON_MOBS;
@@ -39,9 +42,11 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue WAX_DISABLES_BUBBLES;
     public static ModConfigSpec.BooleanValue WAX_DISABLES_CLOSING;
     public static ModConfigSpec.BooleanValue WAX_DISABLES_RENAMING;
+    public static ModConfigSpec.BooleanValue WAX_DISABLES_WARP_LINKING;
     public static ModConfigSpec.BooleanValue WAX_DISABLES_WATER_SPOUTS;
 
     public static ModConfigSpec.IntValue WARP_COOLDOWN;
+    public static ModConfigSpec.IntValue WARP_DISRUPTING_COOLDOWN;
 
     private ConfigRegistry() {
         ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -63,6 +68,18 @@ public class ConfigRegistry
         BUILDER.pop();
 
         BUILDER.push(CATEGORY_COMMON);
+
+            BUILDER.push(CATEGORY_WARP_DISRUPTOR);
+                DISABLE_PLAYER_WARP_DISRUPTING = BUILDER.translation("configuration.warp_pipes.disable_player_warp_disrupting")
+                        .comment("Prevent the Warp Disruptor from working on players.")
+                        .comment("§9[Default: false]")
+                        .define("disable_player_warp_disrupting", false);
+                WARP_DISRUPTING_COOLDOWN = BUILDER.translation("configuration.warp_pipes.warp_disrupting_cooldown")
+                        .comment("Cooldown before the player is able to warp again.")
+                        .comment("§6[20 ticks = 1 second]")
+                        .comment("§9[Default: 4800]§b")
+                        .defineInRange("warp_disrupting_cooldown", 4800, 1, 72000);
+            BUILDER.pop();
 
             BUILDER.push(CATEGORY_WARP_PIPES);
                 ALLOW_FAST_TRAVEL = BUILDER.translation("configuration.warp_pipes.allow_fast_travel")
@@ -86,6 +103,10 @@ public class ConfigRegistry
                         .comment("Allows waxing pipes to disable the Rename button.")
                         .comment("§9[Default: true]")
                         .define("wax_disables_renaming", true);
+                WAX_DISABLES_WARP_LINKING = BUILDER.translation("configuration.warp_pipes.wax_disables_warp_linking")
+                        .comment("Allow waxing warp blocks to disable warp linking.")
+                        .comment("§9[Default: true]")
+                        .define("wax_disables_warp_linking", true);
                 WAX_DISABLES_WATER_SPOUTS = BUILDER.translation("configuration.warp_pipes.wax_disables_water_spouts")
                         .comment("Allows waxing pipes to disable the Water Spout button.")
                         .comment("§9[Default: true]")
@@ -109,6 +130,13 @@ public class ConfigRegistry
                         .comment("Allow players to bucket water spouts.")
                         .comment("§9[Default: true]")
                         .define("water_spouts_bucketable", true);
+            BUILDER.pop();
+
+            BUILDER.push(CATEGORY_WRENCH);
+                CREATIVE_WRENCH_LINKING = BUILDER.translation("configuration.warp_pipes.creative_wrench_linking")
+                        .comment("Require creative to link pipes, doors, trapdoors, & paintings.")
+                        .comment("§9[Default: false]")
+                        .define("creative_wrench_linking", false);
             BUILDER.pop();
             
         BUILDER.pop();
