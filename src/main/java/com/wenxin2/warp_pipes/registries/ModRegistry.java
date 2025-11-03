@@ -51,7 +51,7 @@ public class ModRegistry {
                         .durability(128), Tiers.IRON));
 
         CLEAR_WARP_PIPE = registerBlock("clear_warp_pipe",
-                () -> new ClearWarpPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
+                () -> new ClearWarpPipeBlock(null, BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
                         .sound(SoundType.GLASS).isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
                         .strength(3.0F, 500.0F).requiresCorrectToolForDrops().noOcclusion()));
 
