@@ -23,7 +23,7 @@ public class TagRegistry {
     public static final TagKey<Item> POWER_UPS_ITEMS = itemTags("marioverse", "power_ups");
     public static final TagKey<Item> WARP_PIPE_CANNOT_SPAWN_ITEMS = itemTags(WarpPipes.MOD_ID, "warp_pipe_cannot_spawn");
     public static final TagKey<Item> WARP_PIPE_ITEMS = itemTags(WarpPipes.MOD_ID, "warp_pipes");
-    public static final TagKey<Item> WRENCHES = itemTags(WarpPipes.MOD_ID, "tools/wrenches");
+    public static final TagKey<Item> WRENCHES = itemTags("marioverse", "tools/wrenches");
 
     public static final TagKey<EntityType<?>> CANNOT_QUICK_TRAVEL = entityTypeTags(WarpPipes.MOD_ID, "cannot_quick_travel");
     public static final TagKey<EntityType<?>> CANNOT_WARP = entityTypeTags(WarpPipes.MOD_ID, "cannot_warp");
