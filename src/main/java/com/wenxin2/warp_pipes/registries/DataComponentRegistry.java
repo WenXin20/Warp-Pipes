@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -15,6 +17,11 @@ public class DataComponentRegistry {
             WarpPipes.COMPONENTS.register("is_bound",
                     () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL)
                             .networkSynchronized(ByteBufCodecs.BOOL).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> PIPE_NAME =
+            WarpPipes.COMPONENTS.register("pipe_name",
+                    () -> DataComponentType.<Component>builder().persistent(ComponentSerialization.FLAT_CODEC)
+                            .networkSynchronized(ComponentSerialization.STREAM_CODEC).cacheEncoding().build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> POS_X =
             WarpPipes.COMPONENTS.register("pos_x",
