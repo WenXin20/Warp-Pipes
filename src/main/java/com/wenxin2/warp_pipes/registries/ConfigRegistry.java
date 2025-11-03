@@ -33,6 +33,7 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
     public static ModConfigSpec.BooleanValue DISABLE_PLAYER_WARP_DISRUPTING;
     public static ModConfigSpec.BooleanValue DISABLE_TEXT;
+    public static ModConfigSpec.BooleanValue DISABLE_VANILLA_TABS;
     public static ModConfigSpec.BooleanValue DISABLE_WARP_PIPES_TABS;
     public static ModConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_NON_MOBS;
@@ -139,6 +140,17 @@ public class ConfigRegistry
                         .comment("§9[Default: false]")
                         .define("creative_wrench_linking", false);
             BUILDER.pop();
+
+            DISABLE_WARP_PIPES_TABS = BUILDER.translation("configuration.warp_pipes.disable_warp_pipes_tabs")
+                    .comment("Disable the Warp Pipes creative tab.")
+                    .comment("§cRequires world reload")
+                    .comment("§9[Default: false]")
+                    .define("disable_warp_pipes_tabs", false);
+            DISABLE_VANILLA_TABS = BUILDER.translation("configuration.warp_pipes.disable_vanilla_tabs")
+                    .comment("Disable items in vanilla creative tabs.")
+                    .comment("§cRequires world reload")
+                    .comment("§9[Default: false]")
+                    .define("disable_vanilla_tabs", false);
             
         BUILDER.pop();
 

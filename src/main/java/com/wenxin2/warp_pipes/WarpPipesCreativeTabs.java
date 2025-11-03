@@ -1,5 +1,6 @@
 package com.wenxin2.warp_pipes;
 
+import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public class WarpPipesCreativeTabs {
 
     @SubscribeEvent
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == WARP_PIPES_TAB.getKey()) {
+        if (event.getTabKey() == WARP_PIPES_TAB.getKey() && !ConfigRegistry.DISABLE_WARP_PIPES_TABS.get()) {
             add(event, ModRegistry.WRENCH.get());
             add(event, ModRegistry.WARP_DISRUPTOR);
 
@@ -43,58 +44,40 @@ public class WarpPipesCreativeTabs {
             addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
         }
 
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            addAfter(event, Items.FISHING_ROD, ModRegistry.WRENCH.get());
-            addBefore(event, ModRegistry.WRENCH, ModRegistry.WARP_DISRUPTOR);
-        }
+        if (!ConfigRegistry.DISABLE_VANILLA_TABS.get()) {
+            if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+                addAfter(event, Items.FISHING_ROD, ModRegistry.WRENCH.get());
+                addBefore(event, ModRegistry.WRENCH, ModRegistry.WARP_DISRUPTOR);
+            }
 
-        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-            addBefore(event, Items.SHIELD, ModRegistry.WRENCH.get());
-        }
+            if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+                addBefore(event, Items.SHIELD, ModRegistry.WRENCH.get());
+            }
 
-        if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
-            addAfter(event, Items.REDSTONE_LAMP, ModRegistry.CLEAR_WARP_PIPE.get());
-            addAfter(event, Items.REDSTONE_LAMP, ModRegistry.WARP_PIPES.get(DyeColor.GREEN).get());
-        }
+            if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
+                addAfter(event, Items.REDSTONE_LAMP, ModRegistry.CLEAR_WARP_PIPE.get());
+                addAfter(event, Items.REDSTONE_LAMP, ModRegistry.WARP_PIPES.get(DyeColor.GREEN).get());
+            }
 
-        if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
-            addAfter(event, Blocks.PINK_SHULKER_BOX, ModRegistry.CLEAR_WARP_PIPE);
-            addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
-        }
+            if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
+                addAfter(event, Blocks.PINK_SHULKER_BOX, ModRegistry.CLEAR_WARP_PIPE);
+                addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
+            }
 
-        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            addAfter(event, Items.RESPAWN_ANCHOR, ModRegistry.CLEAR_WARP_PIPE);
-            addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
-
-//            addAfter(event, ModRegistry.CLEAR_WARP_PIPE.get(), ModRegistry.WARP_PIPES.get(DyeColor.WHITE).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.WHITE).get(), ModRegistry.WARP_PIPES.get(DyeColor.LIGHT_GRAY).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.LIGHT_GRAY).get(), ModRegistry.WARP_PIPES.get(DyeColor.GRAY).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.GRAY).get(), ModRegistry.WARP_PIPES.get(DyeColor.BLACK).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.BLACK).get(), ModRegistry.WARP_PIPES.get(DyeColor.BROWN).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.BROWN).get(), ModRegistry.WARP_PIPES.get(DyeColor.RED).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.RED).get(), ModRegistry.WARP_PIPES.get(DyeColor.ORANGE).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.ORANGE).get(), ModRegistry.WARP_PIPES.get(DyeColor.YELLOW).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.YELLOW).get(), ModRegistry.WARP_PIPES.get(DyeColor.LIME).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.LIME).get(),ModRegistry.WARP_PIPES.get(DyeColor.GREEN).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.GREEN).get(), ModRegistry.WARP_PIPES.get(DyeColor.CYAN).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.CYAN).get(), ModRegistry.WARP_PIPES.get(DyeColor.LIGHT_BLUE).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.LIGHT_BLUE).get(), ModRegistry.WARP_PIPES.get(DyeColor.BLUE).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.BLUE).get(), ModRegistry.WARP_PIPES.get(DyeColor.PURPLE).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.PURPLE).get(), ModRegistry.WARP_PIPES.get(DyeColor.MAGENTA).get());
-//            addAfter(event, ModRegistry.WARP_PIPES.get(DyeColor.MAGENTA).get(), ModRegistry.WARP_PIPES.get(DyeColor.PINK).get());
+            if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+                addAfter(event, Items.RESPAWN_ANCHOR, ModRegistry.CLEAR_WARP_PIPE);
+                addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
+            }
         }
     }
 
-    public static void add(BuildCreativeModeTabContentsEvent event, ItemLike item)
-    {
+    public static void add(BuildCreativeModeTabContentsEvent event, ItemLike item) {
         ItemStack stack = new ItemStack(item);
         add(event, stack);
     }
 
-    public static void add(BuildCreativeModeTabContentsEvent event, ItemStack stack)
-    {
-        if (stack.isEmpty())
-        {
+    public static void add(BuildCreativeModeTabContentsEvent event, ItemStack stack) {
+        if (stack.isEmpty()) {
             System.out.println("Warning, attempting to register an empty stack to tab!");
             return;
         }

@@ -155,6 +155,8 @@
   "configuration.warp_pipes.debug_water_spout_selection_box": "Water Spout Debug Selection Box",
   "configuration.warp_pipes.disable_player_warp_disrupting": "Disable Player Warp Disrupting",
   "configuration.warp_pipes.disable_text": "Disable Text",
+  "configuration.warp_pipes.disable_vanilla_tabs": "Disable Items in Vanilla Tabs",
+  "configuration.warp_pipes.disable_warp_pipes_tabs": "Disable Warp Pipes Creative Tabs",
   "configuration.warp_pipes.require_creative_bubbles": "Pipe Bubbles Creative Only",
   "configuration.warp_pipes.require_creative_close_pipes": "Closing Pipes Creative Only",
   "configuration.warp_pipes.require_creative_water_spouts": "Water Spouts Creative Only",
