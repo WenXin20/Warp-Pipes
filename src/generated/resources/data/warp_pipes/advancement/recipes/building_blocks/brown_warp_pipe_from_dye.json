@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dyeable_warp_pipes": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#warp_pipes:dyeable_warp_pipes"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_dyes/brown": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:dyes/brown"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "warp_pipes:brown_warp_pipe_from_dye"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dyes/brown",
+      "has_dyeable_warp_pipes"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "warp_pipes:brown_warp_pipe_from_dye"
+    ]
+  }
+}

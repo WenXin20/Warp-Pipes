@@ -1,0 +1,4 @@
+// 1.21.1	2025-11-03T00:42:41.1749386	Tags for minecraft:entity_type mod id warp_pipes
+d872c21e9c074e7bdcbc16cf4a4369b550afaa1c data/warp_pipes/tags/entity_type/cannot_quick_travel.json
+1b59d2089d2a804e3dce11a8628b32e62e6a9938 data/warp_pipes/tags/entity_type/cannot_warp.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/warp_pipes/tags/entity_type/warp_pipe_cannot_spawn.json

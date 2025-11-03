@@ -66,16 +66,12 @@ public class RecipeUtils extends RecipeProvider {
 
     public void dyeItemRecipe(int outputAmt, String groupName, ItemLike outputItem, RecipeCategory category,
                               Object input1, Object input2, RecipeOutput output) {
-        ShapelessRecipeBuilder.shapeless(category, outputItem, outputAmt)
-                .group(WarpPipes.MOD_ID + ":" + groupName)
-                .save(output, WarpPipes.MOD_ID + ":" + getItemName(outputItem) + "_from_dye");
-
         ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(category, outputItem, outputAmt)
                 .group(WarpPipes.MOD_ID + ":" + groupName);
 
         builder.unlockedBy(getUnlockName(input1), unlockCriterion(input1));
         builder.unlockedBy(getUnlockName(input2), unlockCriterion(input2));
-        
+
         if (input1 instanceof ItemLike itemLike)
             builder.requires(itemLike);
         if (input2 instanceof ItemLike itemLike)

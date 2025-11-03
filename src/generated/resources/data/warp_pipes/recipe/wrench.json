@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "warp_pipes:wrench",
+  "key": {
+    "I": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "pattern": [
+    "I I",
+    " I ",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "warp_pipes:wrench"
+  }
+}

@@ -7,6 +7,8 @@ import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -19,6 +21,11 @@ public class BlockTagsGen extends BlockTagsProvider {
     @SuppressWarnings("unchecked")
     protected void addTags(HolderLookup.Provider lookupProvider) {
         ModRegistry.WARP_PIPES.values().forEach(block -> tag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS).add(block.get()));
+
+        for (DyeColor color : DyeColor.values()) {
+            tag(TagRegistry.blockTags("c", "dyed/" + color))
+                    .add(ModRegistry.WARP_PIPES.get(color).get());
+        }
 
         tag(TagRegistry.WARP_PIPE_BLOCKS)
                 .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS)

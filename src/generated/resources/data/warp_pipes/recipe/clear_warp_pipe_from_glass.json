@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "warp_pipes:warp_pipes",
+  "ingredients": [
+    {
+      "tag": "warp_pipes:dyeable_warp_pipes"
+    },
+    {
+      "tag": "c:glass_blocks/colorless"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "warp_pipes:clear_warp_pipe"
+  }
+}

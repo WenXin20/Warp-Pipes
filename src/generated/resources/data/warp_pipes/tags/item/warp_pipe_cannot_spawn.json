@@ -1,0 +1,12 @@
+{
+  "values": [
+    "#c:dyes",
+    "#c:tools/wrench",
+    "#warp_pipes:warp_pipes",
+    "warp_pipes:wrench",
+    "warp_pipes:warp_disruptor",
+    "minecraft:debug_stick",
+    "minecraft:glow_ink_sac",
+    "minecraft:ink_sac"
+  ]
+}
