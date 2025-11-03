@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.sounds;
 
 import com.wenxin2.warp_pipes.integration.CompatRegistry;
+import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -35,7 +36,7 @@ public class WarpPipesSoundTypes {
             world.playSound(null, pos, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
         else if (stack.getItem() instanceof ArmorStandItem)
             world.playSound(null, pos, SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
-        else if (stack.is(TagRegistry.POWER_UPS_ITEMS) || stack.getItem() == CompatRegistry.DASH_MUSHROOM.get())
+        else if (CompatRegistry.POWER_UP_SPAWNS.get() != null && stack.is(TagRegistry.POWER_UPS_ITEMS) || stack.getItem() == CompatRegistry.DASH_MUSHROOM.get())
             world.playSound(null, pos, CompatRegistry.POWER_UP_SPAWNS.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
         else if (stack.getItem() instanceof BoatItem)
             world.playSound(null, pos, SoundEvents.BOAT_PADDLE_WATER, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -51,7 +52,7 @@ public class WarpPipesSoundTypes {
             world.playSound(null, pos, SoundEvents.MINECART_RIDING, SoundSource.BLOCKS, 1.0F, 1.0F);
         else if (stack.getItem() instanceof PotionItem)
             world.playSound(null, pos, SoundEvents.SPLASH_POTION_THROW, SoundSource.BLOCKS, 1.0F, 1.0F);
-        else if (stack.getItem() instanceof SpawnEggItem)
+        else if (CompatRegistry.POWER_UP_SPAWNS.get() != null && stack.getItem() instanceof SpawnEggItem)
             world.playSound(null, pos, CompatRegistry.MOB_SPAWNS.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
         else if (stack.getItem() instanceof WindChargeItem)
             world.playSound(null, pos, SoundEvents.WIND_CHARGE_THROW, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -67,6 +68,6 @@ public class WarpPipesSoundTypes {
             world.playSound(null, pos, SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
         else if (stack.getItem() == CompatRegistry.ICE_BOMB_ITEM.get())
             world.playSound(null, pos, CompatRegistry.ICE_BOMB_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-        else world.playSound(null, pos, CompatRegistry.ITEM_SPAWNS.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+        else world.playSound(null, pos, SoundRegistry.ITEM_SPAWNS.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 }
