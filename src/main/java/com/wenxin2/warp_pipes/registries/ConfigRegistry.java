@@ -88,6 +88,26 @@ public class ConfigRegistry
                         .comment("Allow fast travel through Clear Warp Pipes.")
                         .comment("§9[Default: true]")
                         .define("allow_fast_travel", true);
+                ALLOW_PIPE_UNWAXING = BUILDER.translation("configuration.warp_pipes.allow_pipe_unwaxing")
+                        .comment("Allow warp pipes to be unwaxed with an axe.")
+                        .comment("§9[Default: false]")
+                        .define("allow_pipe_unwaxing", false);
+                BLINDNESS_EFFECT = BUILDER.translation("configuration.warp_pipes.blindness_effect")
+                        .comment("Warping gives the player a brief blindness effect.")
+                        .comment("§9[Default: true]")
+                        .define("blindness_effect", true);
+                TELEPORT_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_mobs")
+                        .comment("Allow mobs to teleport.")
+                        .comment("§9[Default: true]")
+                        .define("teleport_mobs", true);
+                TELEPORT_NON_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_non_mobs")
+                        .comment("Allow non-living entities to teleport.")
+                        .comment("§9[Default: true]")
+                        .define("teleport_non_mobs", true);
+                TELEPORT_PLAYERS = BUILDER.translation("configuration.warp_pipes.teleport_players")
+                        .comment("Allow players to teleport.")
+                        .comment("§9[Default: true]")
+                        .define("teleport_players", true);
                 WARP_COOLDOWN = BUILDER.translation("configuration.warp_pipes.warp_cooldown")
                         .comment("Cooldown between teleports in ticks.")
                         .comment("§6[20 ticks = 1 second]")
