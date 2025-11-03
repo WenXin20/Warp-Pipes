@@ -528,14 +528,13 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         BlockPos posLegacy = entity.getOnPosLegacy();
         BlockState state = world.getBlockState(posLegacy);
         float scale = (float) entity.getAttributeValue(Attributes.SCALE);
-        float widthScale = (float) entity.getAttributeValue(AttributesRegistry.WIDTH_SCALE);
 
         if (!state.addRunningEffects(world, posLegacy, entity)) {
             if (state.getRenderShape() != RenderShape.INVISIBLE) {
                 Vec3 vec3 = entity.getDeltaMovement();
                 BlockPos pos = entity.blockPosition();
-                double x = entity.getX() + (entity.getRandom().nextDouble() - 0.5) * scale * widthScale;
-                double z = entity.getZ() + (entity.getRandom().nextDouble() - 0.5) * scale * widthScale;
+                double x = entity.getX() + (entity.getRandom().nextDouble() - 0.5) * scale;
+                double z = entity.getZ() + (entity.getRandom().nextDouble() - 0.5) * scale;
 
                 if (pos.getX() != posLegacy.getX())
                     x = Mth.clamp(x, posLegacy.getX(), posLegacy.getX() + 1.0);
