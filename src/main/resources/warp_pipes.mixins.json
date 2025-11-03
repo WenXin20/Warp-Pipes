@@ -5,6 +5,7 @@
   "refmap": "warp_pipes.refmap.json",
   "minVersion": "0.8",
   "mixins": [
+    "AxeItemMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "PlayerMixin",
