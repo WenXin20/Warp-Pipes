@@ -66,6 +66,7 @@ public class ItemTagsGen extends ItemTagsProvider {
                 .addTag(TagRegistry.WARP_PIPE_ITEMS)
                 .add(ModRegistry.WRENCH.get())
                 .add(ModRegistry.WARP_DISRUPTOR.get())
+                .add(Items.BRUSH)
                 .add(Items.DEBUG_STICK)
                 .add(Items.GLOW_INK_SAC)
                 .add(Items.INK_SAC);
