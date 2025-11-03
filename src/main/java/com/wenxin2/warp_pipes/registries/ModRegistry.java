@@ -8,6 +8,7 @@ import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WrenchItem;
+import com.wenxin2.warp_pipes.sounds.WarpPipesSoundTypes;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.function.Supplier;
@@ -57,7 +58,7 @@ public class ModRegistry {
         // Keep below CLEAR_WARP_PIPE to prevent crash
         Arrays.stream(DyeColor.values()).forEach(color ->
                 WARP_PIPES.put(color, registerBlock(color.getName() + "_warp_pipe",
-                        () -> new WarpPipeBlock(BlockBehaviour.Properties.of().mapColor(color)
+                        () -> new WarpPipeBlock(color, BlockBehaviour.Properties.of().mapColor(color)
                                 .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
                                 .isViewBlocking(ModRegistry::always).requiresCorrectToolForDrops()))));
 
@@ -66,7 +67,7 @@ public class ModRegistry {
                         .replaceable().noCollission().noLootTable().liquid()));
 
         WATER_SPOUT = registerNoItemBlock("water_spout",
-                () -> new WaterSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).sound(SoundRegistry.WATER_SPOUT)
+                () -> new WaterSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).sound(WarpPipesSoundTypes.WATER_SPOUT_TYPE)
                         .pushReaction(PushReaction.DESTROY).isRedstoneConductor(ModRegistry::never)
                         .isSuffocating(ModRegistry::never).isViewBlocking(ModRegistry::never)
                         .replaceable().noCollission().noLootTable()));
