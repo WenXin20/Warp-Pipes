@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class BaseEntityDirectionalBlock extends DirectionalBlock implements EntityBlock {
-    protected BaseEntityDirectionalBlock(Properties p_49224_) {
-        super(p_49224_);
+    protected BaseEntityDirectionalBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

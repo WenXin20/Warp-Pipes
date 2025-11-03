@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes;
 
 import com.mojang.logging.LogUtils;
+import com.wenxin2.warp_pipes.event_handlers.RegistryEventHandlers;
 import com.wenxin2.warp_pipes.event_handlers.WarpEventHandlers;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
@@ -59,5 +60,6 @@ public class WarpPipes
         }
 
         NeoForge.EVENT_BUS.addListener(WarpEventHandlers::onPlayerRightClick);
+        bus.addListener(RegistryEventHandlers::gatherData);
     }
 }
