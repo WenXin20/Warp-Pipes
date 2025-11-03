@@ -1,4 +1,23 @@
 {
+  "block.clear_pipe_enter": { "category": "block", "sounds": [{ "name": "warp_pipes:block/clear_pipe_enter" }],
+    "subtitle": "subtitles.warp_pipes.block.clear_pipe_enter" },
+  "block.clear_pipe_exit": { "category": "block", "sounds": [{ "name": "warp_pipes:block/clear_pipe_exit" }],
+    "subtitle": "subtitles.warp_pipes.block.clear_pipe_exit" },
+  "block.clear_pipe_inside": { "category": "block", "sounds": [{ "name": "warp_pipes:block/clear_pipe_inside1" },
+    { "name": "warp_pipes:block/clear_pipe_inside2" },
+    { "name": "warp_pipes:block/clear_pipe_inside3" },
+    { "name": "warp_pipes:block/clear_pipe_inside4" }],
+    "subtitle": "subtitles.warp_pipes.block.clear_pipe_inside" },
+
+  "block.glass_hit": { "category": "block", "sounds": [{ "name": "warp_pipes:block/step/glass_step1" },
+    { "name": "warp_pipes:block/step/glass_step2" }],
+    "subtitle": "subtitles.warp_pipes.block.glass_hit" },
+  "block.glass_fall": { "category": "block", "sounds": [{ "name": "warp_pipes:block/step/glass_fall" }],
+    "subtitle": "subtitles.warp_pipes.block.glass_fall" },
+  "block.glass_step": { "category": "block", "sounds": [{ "name": "warp_pipes:block/step/glass_step1" },
+    { "name": "warp_pipes:block/step/glass_step2" }],
+    "subtitle": "subtitles.warp_pipes.block.glass_step" },
+  
   "block.pipes_linked": {"category": "block", "sounds": [{ "name": "block/amethyst_cluster/break1", "stream": false },
     { "name": "block/amethyst_cluster/break2", "stream": false },
     { "name": "block/amethyst_cluster/break3", "stream": false },
@@ -14,8 +33,8 @@
     { "name": "block/iron_trapdoor/close3", "stream": false },
     { "name": "block/iron_trapdoor/close4", "stream": false }], "subtitle": "subtitles.warp_pipes.block.pipe_closes" },
 
-  "block.pipe_warps": {"category": "block", "sounds": [{ "name": "mob/endermen/portal", "stream": false },
-    { "name": "mob/endermen/portal2", "stream": false }], "subtitle": "subtitles.warp_pipes.block.pipe_warps" },
+  "block.pipe_warps": { "category": "block", "sounds": [{ "name": "warp_pipes:block/pipe_warps", "volume": 0.8 }],
+    "subtitle": "subtitles.warp_pipes.block.pipe_warps" },
 
   "block.water_spout.break": {"category": "block", "sounds": [{ "name": "item/bucket/fill1", "stream": false },
     { "name": "item/bucket/fill2", "stream": false },
