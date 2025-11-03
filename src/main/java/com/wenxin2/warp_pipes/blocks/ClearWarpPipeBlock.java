@@ -6,30 +6,35 @@ import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
-import com.wenxin2.warp_pipes.items.LinkerItem;
-import java.util.Collection;
 import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.DebugStickItem;
 import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -38,13 +43,14 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -64,7 +70,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         enumMap.put(Direction.SOUTH, SOUTH);
         enumMap.put(Direction.WEST, WEST);
     }));
-    
+
     public static final VoxelShape PIPE_UP = Shapes.or(
             Block.box(0, 13, 0, 16, 16, 16)).optimize();
     public static final VoxelShape PIPE_NORTH = Shapes.or(
@@ -92,18 +98,18 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     public static final VoxelShape PIPE_ALL = Shapes.or(
             Block.box(4, 4, 4, 12, 12, 12)).optimize();
 
-    public ClearWarpPipeBlock(Properties properties) {
-        super(properties);
+    public ClearWarpPipeBlock(@Nullable DyeColor color, Properties properties) {
+        super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP)
-                .setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE)
+                .setValue(ENTRANCE, Boolean.TRUE).setValue(CLOSED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE)
+                .setValue(WATERLOGGED, Boolean.FALSE).setValue(WATER_SPOUT, Boolean.FALSE)
                 .setValue(UP, Boolean.FALSE).setValue(NORTH, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE)
-                .setValue(EAST, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(DOWN, Boolean.FALSE)
-                .setValue(WATER_SPOUT, Boolean.FALSE));
+                .setValue(EAST, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(DOWN, Boolean.FALSE));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING, WATER_SPOUT, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
+        stateBuilder.add(BUBBLES, CLOSED, ENTRANCE, FACING, POWERED, WATER_SPOUT, WATERLOGGED, UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
 
     public VoxelShape voxelShape(BlockState state) {
@@ -200,13 +206,16 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
                     if ((player.isCreative() && ConfigRegistry.DEBUG_SELECTION_BOX_CREATIVE.get() || ConfigRegistry.DEBUG_SELECTION_BOX.get())
                             || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
-                            || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
-                            || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem
                             || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DiggerItem
+                            || player.getItemInHand(player.getUsedItemHand()).is(TagRegistry.CAN_SELECT_CLEAR_WARP_PIPES)
                             || player.getItemInHand(player.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()))) {
                         shape = Shapes.or(shape, PIPE_ALL);
                     }
                 }
+
+                if (player.getItemInHand(player.getUsedItemHand()).is(TagRegistry.CAN_SELECT_CLEAR_WARP_PIPES)
+                        || player.getItemInHand(player.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem())
+                    shape = Shapes.block();
             }
 
             if (!state.getValue(ENTRANCE) && state.getValue(UP) && state.getValue(DOWN) && state.getValue(NORTH)
@@ -214,9 +223,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
                 if ((player.isCreative() && ConfigRegistry.DEBUG_SELECTION_BOX_CREATIVE.get() || ConfigRegistry.DEBUG_SELECTION_BOX.get())
                         || ((player.getItemInHand(player.getUsedItemHand()).getItem() instanceof BucketItem
-                        || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof LinkerItem
-                        || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DebugStickItem
                         || player.getItemInHand(player.getUsedItemHand()).getItem() instanceof DiggerItem
+                        || player.getItemInHand(player.getUsedItemHand()).is(TagRegistry.CAN_SELECT_CLEAR_WARP_PIPES)
                         || player.getItemInHand(player.getUsedItemHand()).getItem() == ModRegistry.CLEAR_WARP_PIPE.get().asItem()))) {
                     shape = Shapes.or(shape, PIPE_ALL);
                 }
@@ -232,12 +240,19 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         return shape.optimize();
     }
 
-
+    @NotNull
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return this.voxelShape(state);
     }
 
+    @NotNull
+    @Override
+    protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_, BlockPos p_308956_, CollisionContext p_309006_) {
+        return Shapes.empty();
+    }
+
+    @NotNull
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return this.voxelShape(state);
@@ -246,6 +261,101 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     @Override
     public boolean isPathfindable(BlockState state, PathComputationType pathType) {
         return false;
+    }
+
+    @Override
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        double entityX = player.getX();
+        double entityY = player.getY();
+        double entityZ = player.getZ();
+        double height =  + player.getBbHeight();
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if (state.getValue(ENTRANCE) && (!player.isCreative() || player.getItemInHand(hand).is(TagRegistry.WARP_PIPE_CANNOT_SPAWN_ITEMS))
+                && !player.getItemInHand(hand).is(TagRegistry.WRENCHES)) {
+            Direction facing = state.getValue(FACING);
+            boolean yPosCheck = entityY + height >= blockY && entityY - height < blockY + 0.75;
+
+            if (facing == Direction.UP && (entityY + height >= blockY - 1)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                return ItemInteractionResult.SUCCESS;
+            } else if (facing == Direction.DOWN && (entityY + height <= blockY)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                return ItemInteractionResult.SUCCESS;
+            } else if (facing == Direction.NORTH
+                    && (entityX < blockX + 1 && entityX > blockX) && yPosCheck && (entityZ < blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                return ItemInteractionResult.SUCCESS;
+            } else if (facing == Direction.SOUTH
+                    && (entityX < blockX + 1 && entityX > blockX) && yPosCheck && (entityZ > blockZ + 0.25)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                player.setSwimming(true);
+                return ItemInteractionResult.SUCCESS;
+            } else if (facing == Direction.EAST
+                    && (entityX > blockX) && yPosCheck && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                player.setSwimming(true);
+                return ItemInteractionResult.SUCCESS;
+            } else if (facing == Direction.WEST
+                    && (entityX < blockX) && yPosCheck && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                player.setSwimming(true);
+                return ItemInteractionResult.SUCCESS;
+            } else return super.useItemOn(stack, state, world, pos, player, hand, hit);
+        }
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
+    }
+
+    @NotNull
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hitResult) {
+        ItemStack heldItem = player.getItemInHand(player.getUsedItemHand());
+
+        double entityX = player.getX();
+        double entityY = player.getY();
+        double entityZ = player.getZ();
+        double height =  + player.getBbHeight();
+        int blockX = pos.getX();
+        int blockY = pos.getY();
+        int blockZ = pos.getZ();
+
+        if (state.getValue(ENTRANCE) && heldItem.isEmpty()) {
+            Direction facing = state.getValue(FACING);
+            boolean yPosCheck = entityY + height >= blockY && entityY - height < blockY + 0.75;
+
+            if (facing == Direction.UP && (entityY + height >= blockY - 1)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                return InteractionResult.SUCCESS;
+            } else if (facing == Direction.DOWN && (entityY + height <= blockY)
+                    && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                return InteractionResult.SUCCESS;
+            } else if (facing == Direction.NORTH
+                    && (entityX < blockX + 1 && entityX > blockX) && yPosCheck && (entityZ < blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                return InteractionResult.SUCCESS;
+            } else if (facing == Direction.SOUTH
+                    && (entityX < blockX + 1 && entityX > blockX) && yPosCheck && (entityZ > blockZ + 0.25)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                player.setSwimming(true);
+                return InteractionResult.SUCCESS;
+            } else if (facing == Direction.EAST
+                    && (entityX > blockX) && yPosCheck && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                player.setSwimming(true);
+                return InteractionResult.SUCCESS;
+            } else if (facing == Direction.WEST
+                    && (entityX < blockX) && yPosCheck && (entityZ < blockZ + 1 && entityZ > blockZ)) {
+                player.moveTo(pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5);
+                player.setSwimming(true);
+                return InteractionResult.SUCCESS;
+            } else return super.useWithoutItem(state, world, pos, player, hitResult);
+        } else return super.useWithoutItem(state, world, pos, player, hitResult);
     }
 
     @Override
@@ -276,15 +386,53 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
                 .setValue(SOUTH, this.connectsTo(stateSouth))
                 .setValue(EAST, this.connectsTo(stateEast))
                 .setValue(WEST, this.connectsTo(stateWest))
-                .setValue(CLOSED, placeContext.getLevel().hasNeighborSignal(placeContext.getClickedPos()))
                 .setValue(WATERLOGGED, fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8);
     }
 
     @NotNull
     @Override
-    public FluidState getFluidState(final BlockState state)
-    {
+    public FluidState getFluidState(final BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        switch (rotation) {
+            case CLOCKWISE_180:
+                return state.setValue(NORTH, state.getValue(SOUTH))
+                        .setValue(EAST, state.getValue(WEST))
+                        .setValue(SOUTH, state.getValue(NORTH))
+                        .setValue(WEST, state.getValue(EAST))
+                        .setValue(FACING, rotation.rotate(state.getValue(FACING)));
+            case COUNTERCLOCKWISE_90:
+                return state.setValue(NORTH, state.getValue(EAST))
+                        .setValue(EAST, state.getValue(SOUTH))
+                        .setValue(SOUTH, state.getValue(WEST))
+                        .setValue(WEST, state.getValue(NORTH))
+                        .setValue(FACING, rotation.rotate(state.getValue(FACING)));
+            case CLOCKWISE_90:
+                return state.setValue(NORTH, state.getValue(WEST))
+                        .setValue(EAST, state.getValue(NORTH))
+                        .setValue(SOUTH, state.getValue(EAST))
+                        .setValue(WEST, state.getValue(SOUTH))
+                        .setValue(FACING, rotation.rotate(state.getValue(FACING)));
+            default:
+                return super.rotate(state, rotation);
+        }
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        switch (mirror) {
+            case LEFT_RIGHT:
+                return state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH))
+                        .setValue(FACING, mirror.mirror(state.getValue(FACING))).setValue(ENTRANCE, false);
+            case FRONT_BACK:
+                return state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST))
+                        .setValue(FACING, mirror.mirror(state.getValue(FACING))).setValue(ENTRANCE, false);
+            default:
+                return super.mirror(state, mirror);
+        }
     }
 
     public boolean connectsTo(BlockState state) {
@@ -312,66 +460,15 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos pos2) {
-        Block blockAbove = worldAccessor.getBlockState(pos.above()).getBlock();
-        Block blockBelow = worldAccessor.getBlockState(pos.below()).getBlock();
-        Block blockNorth = worldAccessor.getBlockState(pos.north()).getBlock();
-        Block blockSouth = worldAccessor.getBlockState(pos.south()).getBlock();
-        Block blockEast = worldAccessor.getBlockState(pos.east()).getBlock();
-        Block blockWest = worldAccessor.getBlockState(pos.west()).getBlock();
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos posNeighbor) {
+        Direction facing = state.getValue(FACING);
+        BlockPos posRelative = pos.relative(facing);
 
-        boolean facingUp = state.getValue(FACING) == Direction.UP;
-        boolean facingDown = state.getValue(FACING) == Direction.DOWN;
-        boolean facingNorth = state.getValue(FACING) == Direction.NORTH;
-        boolean facingSouth = state.getValue(FACING) == Direction.SOUTH;
-        boolean facingEast = state.getValue(FACING) == Direction.EAST;
-        boolean facingWest = state.getValue(FACING) == Direction.WEST;
-
-        if (state.getValue(WATERLOGGED) && !state.getValue(CLOSED)) {
+        if (state.getValue(WATERLOGGED) && !state.getValue(CLOSED))
             worldAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldAccessor));
-        }
 
-        if (facingUp) {
-            if (blockAbove instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-        }
-
-        if (facingDown) {
-            if (blockBelow instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-        }
-
-        if (facingNorth) {
-            if (blockNorth instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-        }
-
-        if (facingSouth) {
-            if (blockSouth instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-        }
-
-        if (facingEast) {
-            if (blockEast instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-            }
-            return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-        }
-
-        if (facingWest) {
-            if (blockWest instanceof WarpPipeBlock) {
-                return state.setValue(ENTRANCE, Boolean.FALSE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
-            }
-        }
-        return state.setValue(ENTRANCE, Boolean.TRUE).setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
+        return state.setValue(ENTRANCE, worldAccessor.getBlockState(posRelative).getBlock() != this)
+                .setValue(PROPERTY_BY_DIRECTION.get(direction), this.connectsTo(neighborState));
     }
 
     @Override
@@ -406,38 +503,52 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-        RandomSource random = world.getRandom();
-        Vec3 moveVec = entity.getDeltaMovement();
+        Direction facing = state.getValue(FACING);
 
-        double entityX = entity.getX();
-        double entityY = entity.getY();
-        double entityZ = entity.getZ();
-        int blockX = pos.getX();
-        int blockY = pos.getY();
-        int blockZ = pos.getZ();
-
-        if (!entity.isShiftKeyDown() && ConfigRegistry.ALLOW_FAST_TRAVEL.get() && !entity.getType().is(TagRegistry.CANNOT_QUICK_TRAVEL))
-            entity.setSwimming(true);
-
-        if ((entityY < blockY + 0.98 && entityY > blockY + 0.02)
-                && (entityX < blockX + 0.98 && entityX > blockX + 0.02)
-                && (entityZ < blockZ + 0.98 && entityZ > blockZ + 0.02)
-                && !entity.isShiftKeyDown() && ConfigRegistry.ALLOW_FAST_TRAVEL.get()
-                && !entity.getType().is(TagRegistry.CANNOT_QUICK_TRAVEL)) {
-            this.moveEntityInPipe(entity);
-
-            if (!world.isClientSide) {
-                if (moveVec.x > 0 || moveVec.x < 0 || moveVec.y > 0 || moveVec.y < 0 || moveVec.z > 0 || moveVec.z < 0) {
-                    if (random.nextInt(10) == 0) {
-                        this.spawnParticles(entity);
-                    }
+        if (!entity.isShiftKeyDown() && ConfigRegistry.ALLOW_FAST_TRAVEL.get() && !entity.getType().is(TagRegistry.CANNOT_QUICK_TRAVEL)) {
+            if ((facing == Direction.UP || facing == Direction.DOWN)) {
+                if (state.getValue(NORTH) || state.getValue(SOUTH)
+                        || state.getValue(EAST) || state.getValue(WEST)) {
+                    entity.setSwimming(true);
                 }
-            }
+            } else entity.setSwimming(true);
+
+            if (entity instanceof LivingEntity livingEntity)
+                this.spawnTrailParticles(world, livingEntity);
+
+            if (entity instanceof Player player) {
+                Direction moveDirection = this.getDirectionFromLook(player);
+                movePlayerInPipe(player, moveDirection);
+            } else moveEntityInPipe(entity);
+            super.entityInside(state, world, pos, entity);
         }
-        super.entityInside(state, world, pos, entity);
     }
 
-    public void moveEntityInPipe(Entity entity) {
+    protected void spawnTrailParticles(Level world, LivingEntity entity) {
+        BlockPos posLegacy = entity.getOnPosLegacy();
+        BlockState state = world.getBlockState(posLegacy);
+        float scale = (float) entity.getAttributeValue(Attributes.SCALE);
+        float widthScale = (float) entity.getAttributeValue(AttributesRegistry.WIDTH_SCALE);
+
+        if (!state.addRunningEffects(world, posLegacy, entity)) {
+            if (state.getRenderShape() != RenderShape.INVISIBLE) {
+                Vec3 vec3 = entity.getDeltaMovement();
+                BlockPos pos = entity.blockPosition();
+                double x = entity.getX() + (entity.getRandom().nextDouble() - 0.5) * scale * widthScale;
+                double z = entity.getZ() + (entity.getRandom().nextDouble() - 0.5) * scale * widthScale;
+
+                if (pos.getX() != posLegacy.getX())
+                    x = Mth.clamp(x, posLegacy.getX(), posLegacy.getX() + 1.0);
+
+                if (pos.getZ() != posLegacy.getZ())
+                    z = Mth.clamp(z, posLegacy.getZ(), posLegacy.getZ() + 1.0);
+
+                world.addParticle(ParticleTypes.EFFECT, x, entity.getY(), z, vec3.x * -4.0, 1.5, vec3.z * -4.0);
+            }
+        }
+    }
+
+    private void moveEntityInPipe(Entity entity) {
         Vec3 lookVec = entity.getLookAngle();
         Vec3 moveVec = entity.getDeltaMovement();
         double d0 = Math.min(1.5D, moveVec.y + 0.1D);
@@ -448,36 +559,45 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
             Vec3 movement = new Vec3(lookVec.x * speed, moveVec.y * verticalSpeed, lookVec.z * speed);
             entity.setDeltaMovement(movement.x, movement.y, movement.z);
 
-            if (moveVec.y > 0 || moveVec.y < 0) {
+            if (moveVec.y > 0 || moveVec.y < 0)
                 entity.setDeltaMovement(moveVec.x, d0, moveVec.z);
-            }
         } else if (!entity.isShiftKeyDown()) {
-
             Vec3 movement = new Vec3(moveVec.x * speed, moveVec.y * verticalSpeed, moveVec.z * speed);
             entity.setDeltaMovement(movement.x, movement.y, movement.z);
-
-            if (moveVec.y > 0 || moveVec.y < 0) {
+            if (moveVec.y > 0 || moveVec.y < 0)
                 entity.setDeltaMovement(moveVec.x, d0, moveVec.z);
-            }
         }
         entity.resetFallDistance();
     }
 
-    public void spawnParticles(Entity entity) {
-        double entityX = entity.getX();
-        double entityY = entity.getY();
-        double entityZ = entity.getZ();
+    public void movePlayerInPipe(Entity entity, Direction direction) {
+        Vec3 motion = switch (direction) {
+            case NORTH -> new Vec3(0, 0, -0.75);
+            case SOUTH -> new Vec3(0, 0, 0.75);
+            case WEST -> new Vec3(-0.75, 0, 0);
+            case EAST -> new Vec3(0.75, 0, 0);
+            case UP -> new Vec3(0, 0.6, 0);
+            case DOWN -> new Vec3(0, -0.25, 0);
+        };
 
-        Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-        for (ServerPlayer player : players) {
-            for (int i = 0; i < 2; i++) {
-                player.connection.send(new ClientboundLevelParticlesPacket(
-                        ParticleTypes.EFFECT, false,
-                        entityX, entityY, entityZ,
-                        0.25F, 0.15F, 0.25F,
-                        0, 2
-                ));
+        entity.setDeltaMovement(motion);
+        entity.resetFallDistance();
+    }
+
+    private Direction getDirectionFromLook(Entity entity) {
+        Vec3 lookVec = entity.getLookAngle().normalize();
+        Direction bestDirection = null;
+        double bestDot = -1; // -1 picks the most aligned direction
+
+        for (Direction dir : Direction.values()) {
+            Vec3 pipeVec = Vec3.atLowerCornerOf(dir.getNormal()).normalize();
+            double dotProduct = lookVec.dot(pipeVec);
+
+            if (dotProduct > bestDot) {
+                bestDot = dotProduct;
+                bestDirection = dir;
             }
         }
+        return bestDirection;
     }
 }
