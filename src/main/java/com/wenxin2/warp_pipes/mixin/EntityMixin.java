@@ -1,233 +1,161 @@
 package com.wenxin2.warp_pipes.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
-import java.util.Collection;
+import com.wenxin2.warp_pipes.utils.BlockWarpEntityHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements BlockWarpEntityHandler {
     @Shadow public abstract Level level();
-
     @Shadow public abstract double getX();
-
     @Shadow public abstract double getY();
     @Shadow public abstract double getZ();
-
-    @Shadow public abstract float getBbHeight();
-
-    @Shadow public abstract float getBbWidth();
-
     @Shadow public abstract int getId();
-
     @Shadow public abstract BlockPos blockPosition();
-
-    @Shadow public abstract double getRandomX(double p_20209_);
-
-    @Shadow public abstract double getRandomY();
-
-    @Shadow public abstract double getRandomZ(double p_20263_);
-
     @Shadow public abstract EntityType<?> getType();
+    @Shadow public abstract void setPos(Vec3 vec3);
+    @Unique private boolean wp$preventWarp;
+    @Unique private int wp$preventWarpCooldown;
+    @Unique private int wp$warpCooldown;
 
-    @Shadow public abstract void setPos(Vec3 p_146885_);
+    @Override
+    public boolean wp$getBlockWarpTeleportConfig() {
+        return ConfigRegistry.TELEPORT_NON_MOBS.get();
+    }
 
-    @Unique
-    private static final int MAX_PARTICLE_AMOUNT = 100;
-    @Unique
-    private int warpPipes$warpCooldown;
+    @Inject(method = "save", at = @At("TAIL"))
+    public void save(CompoundTag tag, CallbackInfoReturnable<Boolean> cir) {
+        Entity entity = (Entity) (Object) this;
 
-    @Inject(at = @At("TAIL"), method = "baseTick")
-    public void baseTick(CallbackInfo ci) {
-        Level world = this.level();
-        BlockPos pos = this.blockPosition();
+        if (!entity.getType().is(TagRegistry.CANNOT_WARP)
+                && ConfigRegistry.TELEPORT_NON_MOBS.get()) {
+            tag.putBoolean("marioverse:prevent_warp", this.wp$doPreventWarp());
+            tag.putInt("marioverse:warp_cooldown", this.wp$getWarpCooldown());
+        }
+    }
+
+    @Inject(method = "load", at = @At("TAIL"))
+    public void load(CompoundTag tag, CallbackInfo ci) {
+        Entity entity = (Entity) (Object) this;
+
+        if (!entity.getType().is(TagRegistry.CANNOT_WARP)
+                && ConfigRegistry.TELEPORT_NON_MOBS.get()) {
+            this.wp$setPreventWarp(tag.getBoolean("marioverse:prevent_warp"));
+            this.wp$setWarpCooldown(tag.getInt("marioverse:warp_cooldown"));
+        }
+    }
+
+    @Inject(at = @At("TAIL"), method = "tick")
+    public void tick(CallbackInfo ci) {
+        Entity entity = (Entity) (Object) this;
+        Level world = entity.level();
+        BlockPos pos = entity.blockPosition();
+        BlockPos posAboveEntity = pos.above(Math.round(entity.getBbHeight()));
         BlockState state = world.getBlockState(pos);
-        BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
+        BlockState stateAboveEntity = world.getBlockState(posAboveEntity);
+
+        if (this.wp$getWarpCooldown() > 0)
+            this.wp$setWarpCooldown(this.wp$getWarpCooldown() - 1);
 
         for (Direction facing : Direction.values()) {
             BlockPos offsetPos = pos.relative(facing);
             BlockState offsetState = world.getBlockState(offsetPos);
 
-            if (offsetState.getBlock() instanceof WarpPipeBlock) {
-                this.warpPipes$enterPipe(offsetPos);
-            }
-            if (state.getBlock() instanceof WarpPipeBlock) {
-                this.warpPipes$enterPipe(pos);
-            }
-        }
-
-        if (stateAboveEntity.getBlock() instanceof WarpPipeBlock) {
-            this.warpPipes$enterPipeBelow(pos);
-        }
-
-        if (this.warpPipes$warpCooldown > 0) {
-            --this.warpPipes$warpCooldown;
-        }
-    }
-
-    @Unique
-    public void warpPipes$spawnParticles(Level world) {
-        RandomSource random = world.getRandom();
-
-        // Calculate a scaling factor based on entity dimensions
-        float scaleFactor = this.getBbHeight() * this.getBbWidth();
-        // Calculate the particle count based on the scaling factor
-        int particleCount = (int) (scaleFactor * 40);
-        // Ensure particle count does not exceed the maximum limit
-        particleCount = Math.min(particleCount, MAX_PARTICLE_AMOUNT);
-
-        Collection<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-        for (ServerPlayer player : players) {
-            for (int i = 0; i < particleCount; ++i) {
-                player.connection.send(new ClientboundLevelParticlesPacket(
-                        ParticleTypes.ENCHANT,      // Particle type
-                        false,                       // Long distance
-                        this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), // Position
-                        (random.nextFloat() - 0.5F) * 2.0F, -random.nextFloat(),
-                        (random.nextFloat() - 0.5F) * 2.0F, // Motion
-                        0,                          // Particle data
-                        2                           // Particle count
-                ));
+            if (!this.wp$doPreventWarp() || entity instanceof Player) {
+                if (offsetState.getBlock() instanceof WarpPipeBlock && !offsetState.getValue(WarpPipeBlock.CLOSED))
+                    this.enterWarp(entity, world, offsetPos);
+                if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED))
+                    this.enterWarp(entity, world, pos);
             }
         }
+
+        if (stateAboveEntity.getBlock() instanceof WarpPipeBlock && !stateAboveEntity.getValue(WarpPipeBlock.CLOSED)
+                && !this.wp$doPreventWarp())
+            this.enterWarp(entity, world, pos);
     }
 
-    @Unique
-    public int warpPipes$getWarpCooldown() {
-        return warpPipes$warpCooldown;
-    }
-
-    @Unique
-    public void warpPipes$setWarpCooldown(int cooldown) {
-        this.warpPipes$warpCooldown = cooldown;
-    }
-
-    @Unique
-    public void warpPipes$enterPipeBelow(BlockPos pos) {
-        Level world = this.level();
-        BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(this.getBbHeight())));
-        BlockEntity blockEntity = world.getBlockEntity(pos.above(Math.round(this.getBbHeight())));
-        BlockPos warpPos;
-
-        double entityX = this.getX();
-        double entityZ = this.getZ();
-
-        int blockX = pos.getX();
-        int blockZ = pos.getZ();
-
-        if (!stateAboveEntity.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE && warpPipeBE.getLevel() != null
-                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_PLAYERS.get() && !this.getType().is(TagRegistry.CANNOT_WARP)) {
-            warpPos = warpPipeBE.destinationPos;
-            int entityId = this.getId();
-
-            if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.warpPipes$spawnParticles(world);
-
-                // Reset the teleport status for the entity
-                WarpPipeBlock.teleportedEntities.put(entityId, false);
-            }
-
-            if (this.warpPipes$getWarpCooldown() == 0) {
-                if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, stateAboveEntity);
-                    else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp((Entity) (Object) this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, stateAboveEntity);
-                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
-                }
-            }
+    @ModifyReturnValue(method = "isInWaterOrBubble", at = @At("RETURN"))
+    private boolean isInWaterOrBubble(boolean original) {
+        BlockState state = this.level().getBlockState(this.blockPosition());
+        if (!original) {
+            if (state.is(ModRegistry.PIPE_BUBBLES.get()))
+                return true;
         }
+        return original;
     }
-    
-    @Unique
-    public void warpPipes$enterPipe(BlockPos pos) {
-        Level world = this.level();
-        BlockState state = world.getBlockState(pos);
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        BlockPos warpPos;
 
-        double entityX = this.getX();
-        double entityY = this.getY();
-        double entityZ = this.getZ();
+    @ModifyReturnValue(method = "isInWaterRainOrBubble", at = @At("RETURN"))
+    private boolean isInWaterRainOrBubble(boolean original) {
+        BlockState state = this.level().getBlockState(this.blockPosition());
+        if (!original) {
+            if (state.is(ModRegistry.PIPE_BUBBLES.get()))
+                return true;
+        }
+        return original;
+    }
 
-        int blockX = pos.getX();
-        int blockY = pos.getY();
-        int blockZ = pos.getZ();
+    @Override
+    public boolean wp$doPreventWarp() {
+        return this.wp$preventWarp;
+    }
 
-        if (!state.getValue(WarpPipeBlock.CLOSED) && blockEntity instanceof WarpPipeBlockEntity warpPipeBE
-                && !warpPipeBE.preventWarp && ConfigRegistry.TELEPORT_NON_MOBS.get() && !this.getType().is(TagRegistry.CANNOT_WARP)) {
-            warpPos = warpPipeBE.destinationPos;
-            int entityId = this.getId();
+    @Override
+    public void wp$setPreventWarp(boolean preventWarp) {
+        this.wp$preventWarp = preventWarp;
+    }
 
-            if (!world.isClientSide() && WarpPipeBlock.teleportedEntities.getOrDefault(entityId, false)) {
-                this.warpPipes$spawnParticles(world);
+    @Override
+    public int wp$getPreventWarpCooldown() {
+        return this.wp$preventWarpCooldown;
+    }
 
-                // Reset the teleport status for the entity
-                WarpPipeBlock.teleportedEntities.put(entityId, false);
-            }
+    @Override
+    public void wp$setPreventWarpCooldown(int preventWarpCooldown) {
+        this.wp$preventWarpCooldown = preventWarpCooldown;
+    }
 
-            if (this.warpPipes$getWarpCooldown() == 0) {
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && (entityY > blockY - 1)
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp((Entity) (Object) this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp((Entity) (Object) this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH
-                        && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp((Entity) (Object) this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST
-                        && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp((Entity) (Object) this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
-                }
-                if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST
-                        && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (warpPos != null && world.getBlockState(warpPos).getBlock() instanceof WarpPipeBlock)
-                        WarpPipeBlock.warp((Entity) (Object) this, warpPos, world, state);
-                    else if (warpPipeBE.getUuid() != null && warpPipeBE.getWarpUuid() != null && WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos) != null)
-                        WarpPipeBlock.warp((Entity) (Object) this, WarpPipeBlock.findMatchingUUID(warpPipeBE.getUuid(), world, pos), world, state);
-                    this.warpPipes$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
-                }
+    @Override
+    public int wp$getWarpCooldown() {
+        return this.wp$warpCooldown;
+    }
+
+    @Override
+    public void wp$setWarpCooldown(int warpCooldown) {
+        this.wp$warpCooldown = warpCooldown;
+    }
+
+    @Inject(method = "handleEntityEvent", at = @At("HEAD"))
+    private void handleEntityEvent(byte id, CallbackInfo ci) {
+        Entity entity = (Entity) (Object) this;
+        RandomSource random = entity.getRandom();
+
+        if (id == 120) {
+            for(int i = 0; i < 100; ++i) {
+                this.level().addParticle(ParticleTypes.ENCHANT,
+                        entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D),
+                        (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
+                        (random.nextDouble() - 0.5D) * 2.0D);
             }
         }
     }

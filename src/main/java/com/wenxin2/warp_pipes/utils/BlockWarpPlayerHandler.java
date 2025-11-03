@@ -9,15 +9,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
     @Override
     default void enterWarpDoor(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
-        if (entity instanceof Player player && (!this.mv$getBlockWarpTeleportConfig()
-                || player.getType().is(TagRegistry.CANNOT_WARP) || this.mv$doPreventWarp())) {
+        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
+                || player.getType().is(TagRegistry.CANNOT_WARP) || this.wp$doPreventWarp())) {
             this.displayNoTeleportMessage(player, world.getBlockState(pos));
         } else BlockWarpEntityHandler.super.enterWarpDoor(entity, world, pos, warpPos, warpBE);
     }
@@ -32,8 +30,8 @@ public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (entity instanceof Player player && (!this.mv$getBlockWarpTeleportConfig()
-                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.mv$doPreventWarp())) {
+        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
+                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.wp$doPreventWarp())) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && entity.isShiftKeyDown() && (entityY + entity.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, state);
@@ -67,8 +65,8 @@ public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (entity instanceof Player player && (!this.mv$getBlockWarpTeleportConfig()
-                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.mv$doPreventWarp())) {
+        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
+                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.wp$doPreventWarp())) {
             if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (entity.getBlockY() < blockY)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, stateAboveEntity);
@@ -77,12 +75,12 @@ public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
     }
 
     private void displayNoTeleportMessage(Player player, BlockState state) {
-        if (!this.mv$getBlockWarpTeleportConfig() || player.getType().is(TagRegistry.CANNOT_WARP)) {
+        if (!this.wp$getBlockWarpTeleportConfig() || player.getType().is(TagRegistry.CANNOT_WARP)) {
             if (state.getBlock() instanceof WarpPipeBlock)
                 player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_cannot_teleport_players"), true);
         }
 
-        if (this.mv$doPreventWarp())
+        if (this.wp$doPreventWarp())
             player.displayClientMessage(Component.translatable("display.warp_pipes.warp_disruptor_prevented_warp"), true);
     }
 }
