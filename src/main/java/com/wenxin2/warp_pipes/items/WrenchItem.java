@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,14 +38,18 @@ public class WrenchItem extends LinkerItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltip) {
-
-        list.add(Component.literal(""));
+        MutableComponent warpableText = Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click.binds");
 
         if (Screen.hasShiftDown()) {
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.right_click").withStyle(ChatFormatting.DARK_GREEN));
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click").withStyle(ChatFormatting.BLUE));
+            list.add(Component.literal(""));
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.right_click"));
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.right_click.gui"));
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click"));
 
-        } else list.add(Component.translatable(this.getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+            warpableText = warpableText.append(Component.translatable(this.getDescriptionId() + ".tooltip.shift_right_click.pipe"));
+            list.add(warpableText);
+
+        } else list.add(Component.translatable(this.getDescriptionId() + ".tooltip"));
 
         super.appendHoverText(stack, tooltipContext, list, tooltip);
     }
