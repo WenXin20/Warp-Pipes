@@ -1,0 +1,39 @@
+package com.wenxin2.warp_pipes.datagen;
+
+import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.registries.ModRegistry;
+import com.wenxin2.warp_pipes.registries.TagRegistry;
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
+import net.minecraft.tags.BlockTags;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+public class BlockTagsGen extends BlockTagsProvider {
+    public BlockTagsGen(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
+        super(output, lookupProvider, WarpPipes.MOD_ID, existingFileHelper);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void addTags(HolderLookup.Provider lookupProvider) {
+        ModRegistry.WARP_PIPES.values().forEach(block -> tag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS).add(block.get()));
+
+        tag(TagRegistry.WARP_PIPE_BLOCKS)
+                .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS)
+                .add(ModRegistry.CLEAR_WARP_PIPE.get());
+
+        tag(TagRegistry.WRENCH_EFFICIENT)
+                .addTag(TagRegistry.WARP_PIPE_BLOCKS);
+
+        tag(BlockTags.IMPERMEABLE)
+                .add(ModRegistry.CLEAR_WARP_PIPE.get());
+
+        tag(BlockTags.NEEDS_STONE_TOOL)
+                .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS);
+
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .addTag(TagRegistry.WARP_PIPE_BLOCKS);
+    }
+}

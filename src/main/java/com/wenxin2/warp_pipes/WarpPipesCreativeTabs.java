@@ -26,7 +26,7 @@ public class WarpPipesCreativeTabs {
     @SubscribeEvent
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == WARP_PIPES_TAB.getKey()) {
-            add(event, ModRegistry.PIPE_WRENCH.get());
+            add(event, ModRegistry.WRENCH.get());
 
             add(event, ModRegistry.CLEAR_WARP_PIPE.get());
 
@@ -35,11 +35,11 @@ public class WarpPipesCreativeTabs {
             }
         }
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            addAfter(event, Items.FISHING_ROD, ModRegistry.PIPE_WRENCH.get());
+            addAfter(event, Items.FISHING_ROD, ModRegistry.WRENCH.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-            addBefore(event, Items.SHIELD, ModRegistry.PIPE_WRENCH.get());
+            addBefore(event, Items.SHIELD, ModRegistry.WRENCH.get());
         }
 
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {

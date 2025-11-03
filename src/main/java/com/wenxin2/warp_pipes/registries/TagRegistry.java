@@ -6,9 +6,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 
 public class TagRegistry {
+    public static final TagKey<Biome> HAS_PIPE_TOWERS = biomeTags(WarpPipes.MOD_ID, "has_pipe_towers");
+    public static final TagKey<Biome> HAS_SUBMERGED_PIPES = biomeTags(WarpPipes.MOD_ID, "has_submerged_pipes");
+
     public static final TagKey<Block> DYEABLE_WARP_PIPE_BLOCKS = blockTags(WarpPipes.MOD_ID, "dyeable_warp_pipes");
     public static final TagKey<Block> WARP_PIPE_BLOCKS = blockTags(WarpPipes.MOD_ID, "warp_pipes");
     public static final TagKey<Block> WRENCH_EFFICIENT = blockTags(WarpPipes.MOD_ID, "wrench_efficient");
@@ -23,7 +27,12 @@ public class TagRegistry {
 
     public static final TagKey<EntityType<?>> CANNOT_QUICK_TRAVEL = entityTypeTags(WarpPipes.MOD_ID, "cannot_quick_travel");
     public static final TagKey<EntityType<?>> CANNOT_WARP = entityTypeTags(WarpPipes.MOD_ID, "cannot_warp");
+    public static final TagKey<EntityType<?>> TWILIGHT_FOREST_BOSSES = entityTypeTags("twilightforest", "bosses");
     public static final TagKey<EntityType<?>> WARP_PIPE_CANNOT_SPAWN = entityTypeTags(WarpPipes.MOD_ID, "warp_pipe_cannot_spawn");
+
+    private static TagKey<Biome> biomeTags(String id, String name) {
+        return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(id, name));
+    }
 
     public static TagKey<Block> blockTags(String id, String name) {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(id, name));

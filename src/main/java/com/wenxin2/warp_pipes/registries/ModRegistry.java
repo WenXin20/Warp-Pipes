@@ -7,6 +7,7 @@ import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WaterSpoutBlock;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
+import com.wenxin2.warp_pipes.items.WarpDisruptorItem;
 import com.wenxin2.warp_pipes.items.WrenchItem;
 import com.wenxin2.warp_pipes.sounds.WarpPipesSoundTypes;
 import java.util.Arrays;
@@ -35,7 +36,8 @@ import net.neoforged.neoforge.registries.DeferredItem;
 public class ModRegistry {
     public static final EnumMap<DyeColor, DeferredBlock<Block>> WARP_PIPES =
             new EnumMap<>(DyeColor.class);
-    public static final DeferredItem<Item> PIPE_WRENCH;
+    public static final DeferredItem<Item> WARP_DISRUPTOR;
+    public static final DeferredItem<Item> WRENCH;
     public static final DeferredBlock<Block> CLEAR_WARP_PIPE;
     public static final DeferredBlock<Block> PIPE_BUBBLES;
     public static final DeferredBlock<Block> WATER_SPOUT;
@@ -45,7 +47,9 @@ public class ModRegistry {
 
     static {
 
-        PIPE_WRENCH = registerItem("pipe_wrench",
+        WARP_DISRUPTOR = registerItem("warp_disruptor",
+                () -> new WarpDisruptorItem(new Item.Properties().durability(128)));
+        WRENCH = registerItem("wrench",
                 () -> new WrenchItem(new Item.Properties()
                         .attributes(WrenchItem.createAttributes(Tiers.IRON, 3, -3.2F))
                         .durability(128), Tiers.IRON));
