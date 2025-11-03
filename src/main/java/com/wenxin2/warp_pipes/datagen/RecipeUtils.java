@@ -74,8 +74,17 @@ public class RecipeUtils extends RecipeProvider {
 
         if (input1 instanceof ItemLike itemLike)
             builder.requires(itemLike);
+        else if (input1 instanceof TagKey<?> itemLike && itemLike.registry() == Registries.ITEM) {
+            TagKey<Item> tag = (TagKey<Item>) itemLike;
+            builder.requires(tag);
+        }
+
         if (input2 instanceof ItemLike itemLike)
             builder.requires(itemLike);
+        else if (input2 instanceof TagKey<?> itemLike && itemLike.registry() == Registries.ITEM) {
+            TagKey<Item> tag = (TagKey<Item>) itemLike;
+            builder.requires(tag);
+        }
 
         builder.save(output, WarpPipes.MOD_ID + ":" + getItemName(outputItem) + "_from_dye");
     }

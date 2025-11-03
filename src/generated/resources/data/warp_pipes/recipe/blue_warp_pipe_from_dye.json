@@ -2,7 +2,14 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "group": "warp_pipes:warp_pipes_from_dye",
-  "ingredients": [],
+  "ingredients": [
+    {
+      "tag": "c:dyes/blue"
+    },
+    {
+      "tag": "warp_pipes:dyeable_warp_pipes"
+    }
+  ],
   "result": {
     "count": 1,
     "id": "warp_pipes:blue_warp_pipe"
