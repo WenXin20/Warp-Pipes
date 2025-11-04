@@ -6,6 +6,7 @@ import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -41,8 +42,7 @@ public interface BlockWarpEntityHandler {
         BlockEntity blockEntityAbove = world.getBlockEntity(pos.above(Math.round(entity.getBbHeight())));
         BlockPos warpPos;
 
-        if (blockEntity instanceof BaseWarpBlockEntity warpBE && warpBE.getLevel() != null
-                && !warpBE.preventWarp) {
+        if (blockEntity instanceof BaseWarpBlockEntity warpBE && warpBE.getLevel() != null) {
             warpPos = warpBE.destinationPos;
             int entityId = entity.getId();
 
@@ -54,8 +54,7 @@ public interface BlockWarpEntityHandler {
                 this.enterWarpPipe(entity, world, pos, warpPos, warpBE);
         }
 
-        if (blockEntityAbove instanceof BaseWarpBlockEntity warpBE && warpBE.getLevel() != null
-                && !warpBE.preventWarp) {
+        if (blockEntityAbove instanceof BaseWarpBlockEntity warpBE && warpBE.getLevel() != null) {
             warpPos = warpBE.destinationPos;
             int entityId = entity.getId();
 
@@ -64,17 +63,6 @@ public interface BlockWarpEntityHandler {
 
             if (stateAboveEntity.getBlock() instanceof WarpPipeBlock)
                 this.enterWarpPipeAbove(entity, world, pos, warpPos, warpBE);
-        }
-    }
-
-    default void enterWarpDoor(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
-        BlockState state = world.getBlockState(pos);
-
-        if (!this.wp$doPreventWarp()) {
-            if (this.wp$getBlockWarpTeleportConfig() && !entity.getType().is(TagRegistry.CANNOT_WARP)) {
-                if (this.wp$getWarpCooldown() == 0 && !entity.isShiftKeyDown())
-                    this.warp(entity, world, pos, state, warpPos, warpBE);
-            }
         }
     }
 
@@ -92,50 +80,70 @@ public interface BlockWarpEntityHandler {
             if (this.wp$getBlockWarpTeleportConfig() && !entity.getType().is(TagRegistry.CANNOT_WARP)) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && getShiftKeyForEntity(entity) && (entityY + entity.getBbHeight() >= blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
-                    else if (entity instanceof Player player && warpBE.hasDestinationPos())
-                        this.displayCooldownMessage(player, state);
-                }
+                    else if (entity instanceof Player player) {
+                        if (warpBE.preventWarp)
+                            this.displayWarpDisruptedMessage(player, state);
+                        else if (warpBE.hasDestinationPos())
+                            this.displayCooldownMessage(player);
+                    }
+                } else
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.NORTH && !entity.isShiftKeyDown()
                         && (entity.onGround() || entity.isInWaterOrBubble()
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    if (this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
-                    else if (entity instanceof Player player && warpBE.hasDestinationPos())
-                        this.displayCooldownMessage(player, state);
+                    else if (entity instanceof Player player) {
+                        if (warpBE.preventWarp)
+                            this.displayWarpDisruptedMessage(player, state);
+                        else if (warpBE.hasDestinationPos())
+                            this.displayCooldownMessage(player);
+                    }
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.SOUTH && !entity.isShiftKeyDown()
                         && (entity.onGround() || entity.isInWaterOrBubble()
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
-                    if (this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
-                    else if (entity instanceof Player player && warpBE.hasDestinationPos())
-                        this.displayCooldownMessage(player, state);
+                    else if (entity instanceof Player player) {
+                        if (warpBE.preventWarp)
+                            this.displayWarpDisruptedMessage(player, state);
+                        else if (warpBE.hasDestinationPos())
+                            this.displayCooldownMessage(player);
+                    }
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.EAST && !entity.isShiftKeyDown()
                         && (entity.onGround() || entity.isInWaterOrBubble()
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
-                    else if (entity instanceof Player player && warpBE.hasDestinationPos())
-                        this.displayCooldownMessage(player, state);
+                    else if (entity instanceof Player player) {
+                        if (warpBE.preventWarp)
+                            this.displayWarpDisruptedMessage(player, state);
+                        else if (warpBE.hasDestinationPos())
+                            this.displayCooldownMessage(player);
+                    }
                 }
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.WEST && !entity.isShiftKeyDown()
                         && (entity.onGround() || entity.isInWaterOrBubble()
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
-                    else if (entity instanceof Player player && warpBE.hasDestinationPos())
-                        this.displayCooldownMessage(player, state);
+                    else if (entity instanceof Player player) {
+                        if (warpBE.preventWarp)
+                            this.displayWarpDisruptedMessage(player, state);
+                        else if (warpBE.hasDestinationPos())
+                            this.displayCooldownMessage(player);
+                    }
                 }
             }
         }
@@ -153,10 +161,14 @@ public interface BlockWarpEntityHandler {
             if (this.wp$getBlockWarpTeleportConfig() && !entity.getType().is(TagRegistry.CANNOT_WARP)) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
                         this.warp(entity, world, pos, stateAboveEntity, warpPos, warpBE);
-                    else if (entity instanceof Player player && warpBE.hasDestinationPos())
-                        this.displayCooldownMessage(player, stateAboveEntity);
+                    else if (entity instanceof Player player) {
+                        if (warpBE.preventWarp)
+                            this.displayWarpDisruptedMessage(player, stateAboveEntity);
+                        else if (warpBE.hasDestinationPos())
+                            this.displayCooldownMessage(player);
+                    }
                 }
             }
         }
@@ -190,17 +202,20 @@ public interface BlockWarpEntityHandler {
         }
     }
 
-    default void displayCooldownMessage(Player player, BlockState state) {
+    default void displayCooldownMessage(Player player) {
         if (this.wp$getWarpCooldown() >= 10) {
-            if (state.getBlock() instanceof WarpPipeBlock) {
-                if (ConfigRegistry.WARP_COOLDOWN_MESSAGE.get()) {
-                    if (ConfigRegistry.WARP_COOLDOWN_MESSAGE_TICKS.get())
-                        player.displayClientMessage(Component.translatable("display.warp_pipes.warp_pipe_cooldown.ticks",
-                                this.wp$getWarpCooldown()), true);
-                    else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_pipe_cooldown"), true);
-                }
+            if (ConfigRegistry.WARP_COOLDOWN_MESSAGE.get()) {
+                if (ConfigRegistry.WARP_COOLDOWN_MESSAGE_TICKS.get())
+                    player.displayClientMessage(Component.translatable("display.warp_pipes.warp_pipe_cooldown.ticks",
+                            this.wp$getWarpCooldown()), true);
+                else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_pipe_cooldown"), true);
             }
         }
+    }
+
+    default void displayWarpDisruptedMessage(Player player, BlockState state) {
+        player.displayClientMessage(Component.translatable("display.warp_pipes.warp_disrupted",
+                state.getBlock().getName()).withStyle(ChatFormatting.RED), true);
     }
 
     default void displayDestinationMissingMessage(Player player) {
