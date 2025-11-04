@@ -13,14 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
     @Override
-    default void enterWarpDoor(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
-        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
-                || player.getType().is(TagRegistry.CANNOT_WARP) || this.wp$doPreventWarp())) {
-            this.displayNoTeleportMessage(player, world.getBlockState(pos));
-        } else BlockWarpEntityHandler.super.enterWarpDoor(entity, world, pos, warpPos, warpBE);
-    }
-
-    @Override
     default void enterWarpPipe(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
         BlockState state = world.getBlockState(pos);
         double entityX = entity.getX();
