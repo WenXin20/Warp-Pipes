@@ -29,9 +29,9 @@
 
   "item.warp_pipes.wrench.tooltip": "§e§o[Press Shift]",
   "item.warp_pipes.wrench.tooltip.bound": "§6Bound Location:",
-  "item.warp_pipes.wrench.tooltip.bound.x": "§7• %1$s",
-  "item.warp_pipes.wrench.tooltip.bound.y": "§7• %1$s",
-  "item.warp_pipes.wrench.tooltip.bound.z": "§7• %1$s",
+  "item.warp_pipes.wrench.tooltip.bound.x": " §7• X: %1$s",
+  "item.warp_pipes.wrench.tooltip.bound.y": " §7• Y: %1$s",
+  "item.warp_pipes.wrench.tooltip.bound.z": " §7• Z: %1$s",
   "item.warp_pipes.wrench.tooltip.right_click": "§2Right-click:",
   "item.warp_pipes.wrench.tooltip.right_click.gui": " §7• Opens pipe GUI",
   "item.warp_pipes.wrench.tooltip.shift_right_click": "§6Shift-right-click:",
