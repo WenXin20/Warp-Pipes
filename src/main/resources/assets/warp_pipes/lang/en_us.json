@@ -124,7 +124,7 @@
   "display.warp_pipes.warp_pipe_cooldown": "§cPipe warping on cooldown!",
   "display.warp_pipes.warp_pipe_cooldown.ticks": "§cPipe warping on cooldown for §r%1$s §cticks!",
 
-  "display.warp_pipes.warp_destination_missing": "Warp destination not found!",
+  "display.warp_pipes.warp_destination_missing": "§cWarp destination not found!",
 
   "advancements.adventure.warp_pipes.brush_a_pipe.description": "Brush a pipe to remove text",
   "advancements.adventure.warp_pipes.brush_a_pipe.title": "Text Erasure",
