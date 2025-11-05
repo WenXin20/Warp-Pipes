@@ -121,8 +121,8 @@
   "display.warp_pipes.warp_disrupted": "§c%1$s was prevented from warping you!",
   "display.warp_pipes.warp_disrupted_player": "§cYou were prevented from warping!",
 
-  "display.warp_pipes.warp_pipe_cooldown": "Pipe warping on cooldown!",
-  "display.warp_pipes.warp_pipe_cooldown.ticks": "Pipe warping on cooldown for %1$s ticks!",
+  "display.warp_pipes.warp_pipe_cooldown": "§cPipe warping on cooldown!",
+  "display.warp_pipes.warp_pipe_cooldown.ticks": "§cPipe warping on cooldown for §r%1$s §cticks!",
 
   "display.warp_pipes.warp_destination_missing": "Warp destination not found!",
 
