@@ -39,7 +39,7 @@
   "item.warp_pipes.wrench.tooltip.shift_right_click.pipe": "§7 pipes",
 
   "item.warp_pipes.warp_disruptor.tooltip": "§e§o[Press Shift]",
-  "item.warp_pipes.warp_disruptor.tooltip.right_click": "§6Right-click:",
+  "item.warp_pipes.warp_disruptor.tooltip.right_click": "§2Right-click:",
   "item.warp_pipes.warp_disruptor.tooltip.right_click.selected": " §7• Prevents selected ",
   "item.warp_pipes.warp_disruptor.tooltip.right_click.mob": "§7mob",
   "item.warp_pipes.warp_disruptor.tooltip.right_click.player": "§7, player",
