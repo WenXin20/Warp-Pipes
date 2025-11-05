@@ -73,6 +73,6 @@ public interface BlockWarpPlayerHandler extends BlockWarpEntityHandler {
         }
 
         if (this.wp$doPreventWarp())
-            player.displayClientMessage(Component.translatable("display.warp_pipes.warp_disruptor_prevented_warp"), true);
+            player.displayClientMessage(Component.translatable("display.warp_pipes.warp_disrupted_player"), true);
     }
 }
