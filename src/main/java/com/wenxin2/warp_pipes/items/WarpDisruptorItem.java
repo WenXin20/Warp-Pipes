@@ -3,7 +3,7 @@ package com.wenxin2.warp_pipes.items;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.utils.BlockWarpEntityHandler;
+import com.wenxin2.warp_pipes.utils.BlockWarpEntitiesHandler;
 import com.wenxin2.warp_pipes.utils.ServerParticleUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -105,7 +105,7 @@ public class WarpDisruptorItem extends Item {
     @NotNull
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity livingEntity, InteractionHand hand) {
-        if (livingEntity instanceof BlockWarpEntityHandler handler && !handler.wp$doPreventWarp()) {
+        if (livingEntity instanceof BlockWarpEntitiesHandler handler && !handler.wp$doPreventWarp()) {
             if (livingEntity instanceof Player && !ConfigRegistry.DISABLE_PLAYER_WARP_DISRUPTING.get()) {
                 handler.wp$setPreventWarp(true);
                 handler.wp$setPreventWarpCooldown(ConfigRegistry.WARP_DISRUPTING_COOLDOWN.get());
@@ -141,7 +141,7 @@ public class WarpDisruptorItem extends Item {
 
         if (hitResult.getType() == HitResult.Type.MISS) {
             if (!ConfigRegistry.DISABLE_PLAYER_WARP_DISRUPTING.get()) {
-                if (player instanceof BlockWarpEntityHandler handler && !handler.wp$doPreventWarp()) {
+                if (player instanceof BlockWarpEntitiesHandler handler && !handler.wp$doPreventWarp()) {
                     handler.wp$setPreventWarp(true);
                     handler.wp$setPreventWarpCooldown(ConfigRegistry.WARP_DISRUPTING_COOLDOWN.get());
                     player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.prevent_player_warp",

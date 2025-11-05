@@ -1,26 +1,14 @@
 package com.wenxin2.warp_pipes.mixin;
 
-import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
-import com.wenxin2.warp_pipes.utils.BlockWarpEntityHandler;
-import java.util.Collection;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
+import com.wenxin2.warp_pipes.utils.BlockWarpEntitiesHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements BlockWarpEntityHandler {
+public abstract class LivingEntityMixin extends Entity implements BlockWarpEntitiesHandler {
     @Unique private boolean wp$preventWarp;
     @Unique private int wp$preventWarpCooldown;
     @Unique private int wp$warpCooldown;

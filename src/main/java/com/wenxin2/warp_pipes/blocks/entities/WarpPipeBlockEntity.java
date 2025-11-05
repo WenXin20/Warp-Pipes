@@ -14,7 +14,7 @@ import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.integration.CompatRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.sounds.WarpPipesSoundTypes;
-import com.wenxin2.warp_pipes.utils.BlockWarpEntityHandler;
+import com.wenxin2.warp_pipes.utils.BlockWarpEntitiesHandler;
 import com.wenxin2.warp_pipes.world.PipeSpawner;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import java.util.HashMap;
@@ -656,7 +656,7 @@ public class WarpPipeBlockEntity extends BaseWarpBlockEntity implements MenuProv
     public static void warp(Entity entity, BlockPos warpPos, Level world, BlockState state) {
         Entity passengerEntity = entity.getControllingPassenger();
 
-        if (entity instanceof BlockWarpEntityHandler handler && !handler.wp$doPreventWarp()) {
+        if (entity instanceof BlockWarpEntitiesHandler handler && !handler.wp$doPreventWarp()) {
             if (state.getBlock() instanceof ClearWarpPipeBlock && !state.getValue(WarpPipeBlock.ENTRANCE)) {
                 handler.wp$setWarpCooldown(ConfigRegistry.WARP_COOLDOWN.get());
                 if (entity instanceof Player player) {
