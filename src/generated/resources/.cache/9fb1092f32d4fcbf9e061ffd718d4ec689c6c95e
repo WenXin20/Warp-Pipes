@@ -1,4 +1,6 @@
-// 1.21.1	2025-11-03T02:00:29.3979597	Recipes
+// 1.21.1	2025-11-05T19:11:07.9900384	Recipes
+69832923682005568d2658d58814b9b2e8a0da69 data/minecraft/advancement/recipes/misc/wrench_from_wrench.json
+51ea3ae3331794fdd5988676b9ea382f9e854829 data/minecraft/recipe/wrench_from_wrench.json
 a0efbd5422e06a7e4b931941c9155c79e1cce68b data/warp_pipes/advancement/recipes/building_blocks/black_warp_pipe.json
 479494bdb2ff19d0259c8f9ccf0ff74ff8c798ce data/warp_pipes/advancement/recipes/building_blocks/black_warp_pipe_from_dye.json
 2d92e036484a1ad1c2213153482be646c909a420 data/warp_pipes/advancement/recipes/building_blocks/blue_warp_pipe.json

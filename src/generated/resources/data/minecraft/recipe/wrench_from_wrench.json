@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "warp_pipes:wrench",
+  "ingredients": [
+    {
+      "item": "warp_pipes:wrench"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "warp_pipes:wrench"
+  }
+}
