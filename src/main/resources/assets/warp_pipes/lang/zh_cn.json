@@ -119,7 +119,7 @@
   "display.warp_pipes.players_cannot_teleport": "玩家无法通过传送管道传送！",
 
   "display.warp_pipes.warp_disrupted": "§c%1$s 被阻止传送到你附近！",
-  "display.warp_pipes.warp_disrupted_player": "§cY你被阻止传送！",
+  "display.warp_pipes.warp_disrupted_player": "§c你被阻止传送！",
 
   "display.warp_pipes.warp_pipe_cooldown": "§c管道传送冷却中！",
   "display.warp_pipes.warp_pipe_cooldown.ticks": "§c管道传送冷却 §r%1$s §游戏刻！",
