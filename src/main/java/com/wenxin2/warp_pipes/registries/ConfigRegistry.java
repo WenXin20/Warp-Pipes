@@ -114,7 +114,7 @@ public class ConfigRegistry
                         .comment("§6[20 ticks = 1 second]")
                         .comment("§9[Default: 50]§b")
                         .defineInRange("warp_cooldown", 50, 0, 72000);
-                WARP_PIPE_SPAWNS_MOBS = BUILDER.translation("configuration.marioverse.warp_pipe_spawns_mobs")
+                WARP_PIPE_SPAWNS_MOBS = BUILDER.translation("configuration.warp_pipes.warp_pipe_spawns_mobs")
                         .comment("Allow warp pipes to spawn mobs.")
                         .comment("§9[Default: true]")
                         .define("warp_pipe_spawns_mobs", true);
