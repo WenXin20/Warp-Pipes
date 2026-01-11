@@ -1,6 +1,7 @@
 package com.wenxin2.warp_pipes.event_handlers;
 
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +30,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 @EventBusSubscriber(modid = WarpPipes.MOD_ID)
 public class WarpPipesEventHandlers {
     @SubscribeEvent
-    public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Level world = event.getLevel();
         BlockPos pos = event.getPos();
         BlockState state = world.getBlockState(pos);
@@ -41,6 +43,14 @@ public class WarpPipesEventHandlers {
             if (blockEntity instanceof WarpPipeBlockEntity) {
                 // Update the last clicked position
                 WarpPipeScreen.lastClickedPos = clickedPos;
+            }
+        }
+
+        if (heldItem.getItem() instanceof SpawnEggItem && state.getBlock() instanceof WarpPipeBlock
+                && world.getBlockEntity(pos) instanceof BaseWarpBlockEntity warpBE) {
+            if (warpBE.isWaxed() || !ConfigRegistry.WARP_PIPE_SPAWNS_MOBS.get() || !player.isCreative()) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
             }
         }
 

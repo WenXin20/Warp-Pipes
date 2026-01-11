@@ -59,7 +59,7 @@ public class WarpPipes
             ConfigRegistry.registerClient(container);
         }
 
-        NeoForge.EVENT_BUS.addListener(WarpPipesEventHandlers::onPlayerRightClick);
+        NeoForge.EVENT_BUS.addListener(WarpPipesEventHandlers::onRightClickBlock);
         bus.addListener(RegistryEventHandlers::gatherData);
     }
 }
