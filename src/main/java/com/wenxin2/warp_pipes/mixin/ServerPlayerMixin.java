@@ -1,13 +1,13 @@
 package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.utils.BlockWarpPlayersHandler;
+import com.wenxin2.warp_pipes.utils.WP$BlockWarpPlayersHandler;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerPlayer.class)
-public class ServerPlayerMixin implements BlockWarpPlayersHandler {
+public class ServerPlayerMixin implements WP$BlockWarpPlayersHandler {
     @Unique private boolean wp$preventWarp;
     @Unique private int wp$preventWarpCooldown;
     @Unique private int wp$warpCooldown;

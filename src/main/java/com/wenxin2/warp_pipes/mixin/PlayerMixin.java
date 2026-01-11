@@ -1,7 +1,7 @@
 package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.utils.BlockWarpPlayersHandler;
+import com.wenxin2.warp_pipes.utils.WP$BlockWarpPlayersHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends Entity implements BlockWarpPlayersHandler {
+public abstract class PlayerMixin extends Entity implements WP$BlockWarpPlayersHandler {
     public PlayerMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }

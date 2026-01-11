@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface BlockWarpPlayersHandler extends BlockWarpEntitiesHandler {
+public interface WP$BlockWarpPlayersHandler extends WP$BlockWarpEntitiesHandler {
     @Override
     default void enterWarpPipe(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
         BlockState state = world.getBlockState(pos);
@@ -44,7 +44,7 @@ public interface BlockWarpPlayersHandler extends BlockWarpEntitiesHandler {
                     && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, state);
             }
-        } else BlockWarpEntitiesHandler.super.enterWarpPipe(entity, world, pos, warpPos, warpBE);
+        } else WP$BlockWarpEntitiesHandler.super.enterWarpPipe(entity, world, pos, warpPos, warpBE);
     }
 
     @Override
@@ -63,7 +63,7 @@ public interface BlockWarpPlayersHandler extends BlockWarpEntitiesHandler {
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, stateAboveEntity);
             }
-        } else BlockWarpEntitiesHandler.super.enterWarpPipeAbove(entity, world, pos, warpPos, warpBE);
+        } else WP$BlockWarpEntitiesHandler.super.enterWarpPipeAbove(entity, world, pos, warpPos, warpBE);
     }
 
     private void displayNoTeleportMessage(Player player, BlockState state) {
