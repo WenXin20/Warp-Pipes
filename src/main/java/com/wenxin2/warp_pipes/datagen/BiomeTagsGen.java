@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.biome.Biomes;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -18,7 +19,7 @@ public class BiomeTagsGen extends BiomeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
         tag(TagRegistry.HAS_PIPE_TOWERS)
-                .addTag(Tags.Biomes.IS_MUSHROOM);
+                .add(Biomes.MUSHROOM_FIELDS);
 
         tag(TagRegistry.HAS_SUBMERGED_PIPES)
                 .addTag(BiomeTags.IS_OVERWORLD);
