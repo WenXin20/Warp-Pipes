@@ -2,6 +2,7 @@ package com.wenxin2.warp_pipes.utils;
 
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
+import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface WP$BlockWarpPlayersHandler extends WP$BlockWarpEntitiesHandler {
+public interface WP$BlockWarpPlayerHandler extends WP$BlockWarpEntitiesHandler {
     @Override
     default void enterWarpPipe(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
         BlockState state = world.getBlockState(pos);
@@ -23,7 +24,7 @@ public interface WP$BlockWarpPlayersHandler extends WP$BlockWarpEntitiesHandler 
         int blockZ = pos.getZ();
 
         if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
-                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.wp$doPreventWarp())) {
+                || entity.getType().is(TagRegistry.CANNOT_WARP) || entity.getData(DataAttachmentRegistry.PREVENT_WARP))) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && entity.isShiftKeyDown() && (entityY + entity.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, state);
@@ -58,7 +59,7 @@ public interface WP$BlockWarpPlayersHandler extends WP$BlockWarpEntitiesHandler 
         int blockZ = pos.getZ();
 
         if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
-                || entity.getType().is(TagRegistry.CANNOT_WARP) || this.wp$doPreventWarp())) {
+                || entity.getType().is(TagRegistry.CANNOT_WARP) || entity.getData(DataAttachmentRegistry.PREVENT_WARP))) {
             if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (entity.getBlockY() < blockY)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, stateAboveEntity);
@@ -72,7 +73,7 @@ public interface WP$BlockWarpPlayersHandler extends WP$BlockWarpEntitiesHandler 
                 player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_cannot_teleport_players"), true);
         }
 
-        if (this.wp$doPreventWarp())
+        if (player.getData(DataAttachmentRegistry.PREVENT_WARP))
             player.displayClientMessage(Component.translatable("display.warp_pipes.warp_disrupted_player"), true);
     }
 }

@@ -1,4 +1,6 @@
 ## Update 3.0.4
 - Added shader support for Water Spouts
 - Pipe textures now connect to polished stones and copper blocks
+- Players will now face away from a sideways pipe after teleporting
+- Vehicles now teleport with the rider
 - Fixed pipe towers generating outside of mushroom islands if another mod adds a biome tagged as `is_mushroom`

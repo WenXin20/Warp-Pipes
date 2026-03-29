@@ -117,13 +117,11 @@
   "display.warp_pipes.linker.dimension_fail": "Pipes cannot cross dimensions!",
 
   "display.warp_pipes.players_cannot_teleport": "Players cannot teleport through Warp Pipes!",
-
   "display.warp_pipes.warp_disrupted": "§c%1$s was prevented from warping you!",
   "display.warp_pipes.warp_disrupted_player": "§cYou were prevented from warping!",
-
+  "display.warp_pipes.pipes_cannot_teleport_players": "§cWarp Pipes cannot teleport Players!",
   "display.warp_pipes.warp_pipe_cooldown": "§cPipe warping on cooldown!",
   "display.warp_pipes.warp_pipe_cooldown.ticks": "§cPipe warping on cooldown for §r%1$s §cticks!",
-
   "display.warp_pipes.warp_destination_missing": "§cWarp destination not found!",
 
   "advancements.adventure.warp_pipes.brush_a_pipe.description": "Brush a pipe to remove text",

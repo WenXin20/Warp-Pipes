@@ -4,6 +4,7 @@ import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
 import net.minecraft.ChatFormatting;
@@ -25,15 +26,6 @@ public interface WP$BlockWarpEntitiesHandler {
         return (!entity.isShiftKeyDown() && !(entity instanceof Player))
                 || (entity.isShiftKeyDown() && entity instanceof Player);
     }
-
-    boolean wp$doPreventWarp();
-    void wp$setPreventWarp(boolean preventWarp);
-
-    int wp$getPreventWarpCooldown();
-    void wp$setPreventWarpCooldown(int preventWarpCooldown);
-
-    int wp$getWarpCooldown();
-    void wp$setWarpCooldown(int warpCooldown);
 
     default void enterWarp(Entity entity, Level world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
@@ -76,11 +68,11 @@ public interface WP$BlockWarpEntitiesHandler {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (!this.wp$doPreventWarp()) {
+        if (!entity.getData(DataAttachmentRegistry.PREVENT_WARP)) {
             if (this.wp$getBlockWarpTeleportConfig() && !entity.getType().is(TagRegistry.CANNOT_WARP)) {
                 if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && getShiftKeyForEntity(entity) && (entityY + entity.getBbHeight() >= blockY - 1)
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
                     else if (entity instanceof Player player) {
                         if (warpBE.preventWarp)
@@ -94,7 +86,7 @@ public interface WP$BlockWarpEntitiesHandler {
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ)) {
-                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
                     else if (entity instanceof Player player) {
                         if (warpBE.preventWarp)
@@ -108,7 +100,7 @@ public interface WP$BlockWarpEntitiesHandler {
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX < blockX + 1 && entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ > blockZ + 0.25)) {
-                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
                     else if (entity instanceof Player player) {
                         if (warpBE.preventWarp)
@@ -122,7 +114,7 @@ public interface WP$BlockWarpEntitiesHandler {
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX > blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
                     else if (entity instanceof Player player) {
                         if (warpBE.preventWarp)
@@ -136,7 +128,7 @@ public interface WP$BlockWarpEntitiesHandler {
                         || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying())
                         || (entity instanceof Player player && player.getAbilities().flying))
                         && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
                         this.warp(entity, world, pos, state, warpPos, warpBE);
                     else if (entity instanceof Player player) {
                         if (warpBE.preventWarp)
@@ -157,11 +149,11 @@ public interface WP$BlockWarpEntitiesHandler {
         int blockX = pos.getX();
         int blockZ = pos.getZ();
 
-        if (!this.wp$doPreventWarp()) {
+        if (!entity.getData(DataAttachmentRegistry.PREVENT_WARP)) {
             if (this.wp$getBlockWarpTeleportConfig() && !entity.getType().is(TagRegistry.CANNOT_WARP)) {
                 if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN
                         && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
-                    if (!warpBE.preventWarp && this.wp$getWarpCooldown() == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
                         this.warp(entity, world, pos, stateAboveEntity, warpPos, warpBE);
                     else if (entity instanceof Player player) {
                         if (warpBE.preventWarp)
@@ -203,11 +195,11 @@ public interface WP$BlockWarpEntitiesHandler {
     }
 
     default void displayCooldownMessage(Player player) {
-        if (this.wp$getWarpCooldown() >= 10) {
+        if (player.getData(DataAttachmentRegistry.WARP_COOLDOWN) >= 10) {
             if (ConfigRegistry.WARP_COOLDOWN_MESSAGE.get()) {
                 if (ConfigRegistry.WARP_COOLDOWN_MESSAGE_TICKS.get())
                     player.displayClientMessage(Component.translatable("display.warp_pipes.warp_pipe_cooldown.ticks",
-                            this.wp$getWarpCooldown()), true);
+                            player.getData(DataAttachmentRegistry.WARP_COOLDOWN)), true);
                 else player.displayClientMessage(Component.translatable("display.warp_pipes.warp_pipe_cooldown"), true);
             }
         }

@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
@@ -35,35 +36,10 @@ public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
     @Shadow public abstract BlockPos blockPosition();
     @Shadow public abstract EntityType<?> getType();
     @Shadow public abstract void setPos(Vec3 vec3);
-    @Unique private boolean wp$preventWarp;
-    @Unique private int wp$preventWarpCooldown;
-    @Unique private int wp$warpCooldown;
 
     @Override
     public boolean wp$getBlockWarpTeleportConfig() {
         return ConfigRegistry.TELEPORT_NON_MOBS.get();
-    }
-
-    @Inject(method = "save", at = @At("TAIL"))
-    public void save(CompoundTag tag, CallbackInfoReturnable<Boolean> cir) {
-        Entity entity = (Entity) (Object) this;
-
-        if (!entity.getType().is(TagRegistry.CANNOT_WARP)
-                && ConfigRegistry.TELEPORT_NON_MOBS.get()) {
-            tag.putBoolean("marioverse:prevent_warp", this.wp$doPreventWarp());
-            tag.putInt("marioverse:warp_cooldown", this.wp$getWarpCooldown());
-        }
-    }
-
-    @Inject(method = "load", at = @At("TAIL"))
-    public void load(CompoundTag tag, CallbackInfo ci) {
-        Entity entity = (Entity) (Object) this;
-
-        if (!entity.getType().is(TagRegistry.CANNOT_WARP)
-                && ConfigRegistry.TELEPORT_NON_MOBS.get()) {
-            this.wp$setPreventWarp(tag.getBoolean("marioverse:prevent_warp"));
-            this.wp$setWarpCooldown(tag.getInt("marioverse:warp_cooldown"));
-        }
     }
 
     @Inject(at = @At("TAIL"), method = "tick")
@@ -75,14 +51,11 @@ public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
         BlockState state = world.getBlockState(pos);
         BlockState stateAboveEntity = world.getBlockState(posAboveEntity);
 
-        if (this.wp$getWarpCooldown() > 0)
-            this.wp$setWarpCooldown(this.wp$getWarpCooldown() - 1);
-
         for (Direction facing : Direction.values()) {
             BlockPos offsetPos = pos.relative(facing);
             BlockState offsetState = world.getBlockState(offsetPos);
 
-            if (!this.wp$doPreventWarp() || entity instanceof Player) {
+            if (!entity.getData(DataAttachmentRegistry.PREVENT_WARP) || entity instanceof Player) {
                 if (offsetState.getBlock() instanceof WarpPipeBlock && !offsetState.getValue(WarpPipeBlock.CLOSED))
                     this.enterWarp(entity, world, offsetPos);
                 if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED))
@@ -91,7 +64,7 @@ public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
         }
 
         if (stateAboveEntity.getBlock() instanceof WarpPipeBlock && !stateAboveEntity.getValue(WarpPipeBlock.CLOSED)
-                && !this.wp$doPreventWarp())
+                && !entity.getData(DataAttachmentRegistry.PREVENT_WARP))
             this.enterWarp(entity, world, pos);
     }
 
@@ -113,36 +86,6 @@ public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
                 return true;
         }
         return original;
-    }
-
-    @Override
-    public boolean wp$doPreventWarp() {
-        return this.wp$preventWarp;
-    }
-
-    @Override
-    public void wp$setPreventWarp(boolean preventWarp) {
-        this.wp$preventWarp = preventWarp;
-    }
-
-    @Override
-    public int wp$getPreventWarpCooldown() {
-        return this.wp$preventWarpCooldown;
-    }
-
-    @Override
-    public void wp$setPreventWarpCooldown(int preventWarpCooldown) {
-        this.wp$preventWarpCooldown = preventWarpCooldown;
-    }
-
-    @Override
-    public int wp$getWarpCooldown() {
-        return this.wp$warpCooldown;
-    }
-
-    @Override
-    public void wp$setWarpCooldown(int warpCooldown) {
-        this.wp$warpCooldown = warpCooldown;
     }
 
     @Inject(method = "handleEntityEvent", at = @At("HEAD"))
