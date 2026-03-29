@@ -395,6 +395,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
+    @NotNull
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         switch (rotation) {
@@ -421,6 +422,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         }
     }
 
+    @NotNull
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         switch (mirror) {
@@ -459,6 +461,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         return false;
     }
 
+    @NotNull
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor worldAccessor, BlockPos pos, BlockPos posNeighbor) {
         Direction facing = state.getValue(FACING);

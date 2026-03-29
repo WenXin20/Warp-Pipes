@@ -133,6 +133,7 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
         return createTickerHelper(type, ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), world.isClientSide ? WarpPipeBlockEntity::clientTick : WarpPipeBlockEntity::serverTick);
     }
 
+    @NotNull
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
@@ -366,11 +367,13 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
         return this.defaultBlockState().setValue(FACING, direction);
     }
 
+    @NotNull
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
+    @NotNull
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
@@ -386,6 +389,7 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
         super.neighborChanged(state, world, pos, block, posNeighbor, b);
     }
 
+    @NotNull
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
                                   LevelAccessor worldAccessor, BlockPos pos, BlockPos posNeighbor) {
@@ -396,8 +400,40 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        BlockState newState = calculateEntrance(state, level, pos);
+        Direction direction = state.getValue(FACING);
+        BlockState stateRelative = level.getBlockState(pos.relative(direction));
 
+        if (oldState.getBlock() == state.getBlock())
+            return;
+        if (level instanceof ServerLevel serverLevel)
+            this.checkAndFlip(state, serverLevel, pos);
+
+        if (newState != state)
+            level.setBlock(pos, newState, 3);
+
+        if (stateRelative.is(Blocks.WATER))
+            level.scheduleTick(pos, this, 3);
+    }
+
+    public BlockState calculateEntrance(BlockState state, LevelAccessor level, BlockPos pos) {
+        Direction facing = state.getValue(FACING);
+        BlockState stateRelative = level.getBlockState(pos.relative(facing));
+
+        boolean connects = /*stateRelative.is(TagRegistry.PIPE_JUNCTION_BLOCKS)
+                ||*/ stateRelative.getBlock() instanceof ClearWarpPipeBlock
+                || (stateRelative.getBlock() instanceof WarpPipeBlock
+                && !(stateRelative.getBlock() instanceof ClearWarpPipeBlock));
+        boolean shouldBeEntrance = !connects;
+
+        if (state.getValue(ENTRANCE) != shouldBeEntrance)
+            return state.setValue(ENTRANCE, shouldBeEntrance);
+        return state;
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel serverWorld, BlockPos pos, RandomSource random) {
         if (serverWorld.getBlockEntity(pos) instanceof WarpPipeBlockEntity pipeBE) {
             if (!serverWorld.isClientSide && pipeBE.getUUID() == null) {
                 UUID uuid = UUID.randomUUID();
@@ -430,73 +466,6 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
                 PipeBubblesBlock.repeatColumnWest(serverWorld, pos.west(), state, pipeBE.bubblesDistance);
                 serverWorld.scheduleTick(pos, this, 3);
             }
-        }
-    }
-
-    @Override
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState neighborState, boolean b) {
-        Block blockAbove = world.getBlockState(pos.above()).getBlock();
-        Block blockBelow = world.getBlockState(pos.below()).getBlock();
-        Block blockNorth = world.getBlockState(pos.north()).getBlock();
-        Block blockSouth = world.getBlockState(pos.south()).getBlock();
-        Block blockEast = world.getBlockState(pos.east()).getBlock();
-        Block blockWest = world.getBlockState(pos.west()).getBlock();
-
-        if (neighborState.getBlock() != state.getBlock() && world instanceof ServerLevel serverWorld)
-            this.checkAndFlip(state, serverWorld, pos);
-
-        if (state.getValue(FACING) == Direction.UP) {
-            if (blockAbove == this)
-                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE),3);
-            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE),3);
-
-            if (blockAbove == Blocks.WATER)
-                world.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(FACING) == Direction.DOWN) {
-            if (blockBelow == this)
-                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE),3);
-            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE),3);
-
-            if (blockBelow == Blocks.WATER)
-                world.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(FACING) == Direction.NORTH) {
-            if (blockNorth == this)
-                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE),3);
-            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE),3);
-
-            if (blockNorth == Blocks.WATER)
-                world.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(FACING) == Direction.SOUTH) {
-            if (blockSouth == this)
-                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE),3);
-            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE),3);
-
-            if (blockSouth == Blocks.WATER)
-                world.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(FACING) == Direction.EAST) {
-            if (blockEast == this)
-                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE),3);
-            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE),3);
-
-            if (blockEast == Blocks.WATER)
-                world.scheduleTick(pos, this, 3);
-        }
-
-        if (state.getValue(FACING) == Direction.WEST) {
-            if (blockWest == this)
-                world.setBlock(pos, state.setValue(ENTRANCE, Boolean.FALSE),3);
-            else world.setBlock(pos, state.setValue(ENTRANCE, Boolean.TRUE),3);
-
-            if (blockWest == Blocks.WATER)
-                world.scheduleTick(pos, this, 3);
         }
     }
 
