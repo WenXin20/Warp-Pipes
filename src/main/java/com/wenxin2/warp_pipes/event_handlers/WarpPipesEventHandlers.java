@@ -7,9 +7,12 @@ import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ParticleUtils;
@@ -27,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -56,6 +60,10 @@ public class WarpPipesEventHandlers {
     public static void preEntityTick(EntityTickEvent.Pre event) {
         Entity entity = event.getEntity();
 
+        if (entity.hasData(DataAttachmentRegistry.RIDE_VEHICLE_COUNTDOWN) &&
+                entity.getData(DataAttachmentRegistry.RIDE_VEHICLE_COUNTDOWN) > 0)
+            entity.setData(DataAttachmentRegistry.RIDE_VEHICLE_COUNTDOWN, entity.getData(DataAttachmentRegistry.RIDE_VEHICLE_COUNTDOWN) - 1);
+
         if (entity.hasData(DataAttachmentRegistry.WARP_COOLDOWN) &&
                 entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) > 0)
             entity.setData(DataAttachmentRegistry.WARP_COOLDOWN, entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) - 1);
@@ -69,6 +77,27 @@ public class WarpPipesEventHandlers {
             if (preventWarpCooldown == 0
                     && entity.getData(DataAttachmentRegistry.PREVENT_WARP))
                 entity.setData(DataAttachmentRegistry.PREVENT_WARP, false);
+        }
+    }
+
+    @SubscribeEvent
+    public static void postEntityTick(EntityTickEvent.Post event) {
+        Entity entity = event.getEntity();
+        Level level = entity.level();
+
+        if (entity instanceof ServerPlayer player && level instanceof ServerLevel
+                && player.hasData(DataAttachmentRegistry.VEHICLE_UUID)
+                && entity.getData(DataAttachmentRegistry.RIDE_VEHICLE_COUNTDOWN) == 0) {
+            UUID uuid = player.getData(DataAttachmentRegistry.VEHICLE_UUID);
+            ServerLevel serverLevel = level.getServer().getLevel(level.dimension());
+
+            if (serverLevel != null) {
+                Entity vehicle = serverLevel.getEntity(uuid);
+                if (vehicle != null && !player.isPassenger())
+                    player.startRiding(vehicle, true);
+                player.removeData(DataAttachmentRegistry.RIDE_VEHICLE_COUNTDOWN);
+                player.removeData(DataAttachmentRegistry.VEHICLE_UUID);
+            }
         }
     }
 
