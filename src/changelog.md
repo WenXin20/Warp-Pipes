@@ -1,4 +1,6 @@
 ## Update 3.0.4
+- Added Pipe Junction Blocks
+  - Pipe textures connect to these
 - Added shader support for Water Spouts
 - Pipe textures now connect to polished stones and copper blocks
 - Players will now face away from a sideways pipe after teleporting

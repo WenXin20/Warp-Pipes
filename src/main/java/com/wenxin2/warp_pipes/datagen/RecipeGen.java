@@ -14,6 +14,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -34,7 +35,8 @@ public class RecipeGen extends RecipeUtils {
             DyeColor dyeColor = entry.getKey();
             TagKey<Item> dyeItemTag = TagRegistry.itemTags("c", "dyes/" + dyeColor.getName());
 
-            dyeItemRecipe(1, "pipe_corners_from_dye", entry.getValue(), RecipeCategory.BUILDING_BLOCKS, dyeItemTag, TagRegistry.PIPE_JUNCTION_BLOCK_ITEMS, output);
+            dyeItemRecipe(1, "pipe_junctions_from_dye", entry.getValue(), RecipeCategory.BUILDING_BLOCKS, dyeItemTag, TagRegistry.PIPE_JUNCTION_BLOCK_ITEMS, false, output);
+            dyeItemRecipe(1, "pipe_junctions_from_dye", entry.getValue(), RecipeCategory.BUILDING_BLOCKS, dyeItemTag, Blocks.COPPER_BLOCK, true, output);
         }
 
         for (Map.Entry<DyeColor, DeferredBlock<Block>> entry : ModRegistry.WARP_PIPES.entrySet()) {
@@ -42,7 +44,7 @@ public class RecipeGen extends RecipeUtils {
             TagKey<Item> dyeItemTag = TagRegistry.itemTags("c", "dyes/" + dyeColor.getName());
 
             warpPipeRecipe(4, entry.getValue(), Tags.Items.INGOTS_COPPER, dyeItemTag, Tags.Items.GEMS_DIAMOND, Tags.Items.ENDER_PEARLS, output);
-            dyeItemRecipe(1, "warp_pipes_from_dye", entry.getValue(), RecipeCategory.BUILDING_BLOCKS, dyeItemTag, TagRegistry.DYEABLE_WARP_PIPE_ITEMS, output);
+            dyeItemRecipe(1, "warp_pipes_from_dye", entry.getValue(), RecipeCategory.BUILDING_BLOCKS, dyeItemTag, TagRegistry.DYEABLE_WARP_PIPE_ITEMS, false, output);
         }
     }
 }

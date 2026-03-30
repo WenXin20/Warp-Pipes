@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "warp_pipes:pipe_junctions_from_dye",
+  "ingredients": [
+    {
+      "tag": "c:dyes/pink"
+    },
+    {
+      "item": "minecraft:copper_block"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "warp_pipes:pink_pipe_junction"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "building",
-  "group": "warp_pipes:pipe_corners_from_dye",
+  "group": "warp_pipes:pipe_junctions_from_dye",
   "ingredients": [
     {
       "tag": "c:dyes/pink"

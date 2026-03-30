@@ -65,7 +65,7 @@ public class RecipeUtils extends RecipeProvider {
     }
 
     public void dyeItemRecipe(int outputAmt, String groupName, ItemLike outputItem, RecipeCategory category,
-                              Object input1, Object input2, RecipeOutput output) {
+                              Object input1, Object input2, boolean uniqueFileName, RecipeOutput output) {
         ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(category, outputItem, outputAmt)
                 .group(WarpPipes.MOD_ID + ":" + groupName);
 
@@ -86,7 +86,9 @@ public class RecipeUtils extends RecipeProvider {
             builder.requires(tag);
         }
 
-        builder.save(output, WarpPipes.MOD_ID + ":" + getItemName(outputItem) + "_from_dye");
+        if (uniqueFileName && input2 instanceof ItemLike itemLike)
+            builder.save(output, WarpPipes.MOD_ID + ":" + getConversionRecipeName(outputItem, itemLike));
+        else builder.save(output, WarpPipes.MOD_ID + ":" + getItemName(outputItem) + "_from_dye");
     }
 
     public void twoItemTagRecipe(int outputAmt, String groupName, String recipeName, ItemLike outputItem, RecipeCategory category,
