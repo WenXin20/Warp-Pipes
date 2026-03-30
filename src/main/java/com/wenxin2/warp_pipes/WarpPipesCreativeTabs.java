@@ -42,6 +42,7 @@ public class WarpPipesCreativeTabs {
 
             add(event, ModRegistry.CLEAR_WARP_PIPE.get());
             addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
+            addDyedBlocks(event, ModRegistry.WARP_PIPES.get(DyeColor.PINK), ModRegistry.PIPE_JUNCTION, true, true);
         }
 
         if (!ConfigRegistry.DISABLE_VANILLA_TABS.get()) {
@@ -62,6 +63,7 @@ public class WarpPipesCreativeTabs {
             if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
                 addAfter(event, Blocks.PINK_SHULKER_BOX, ModRegistry.CLEAR_WARP_PIPE);
                 addDyedBlocks(event, ModRegistry.CLEAR_WARP_PIPE, ModRegistry.WARP_PIPES, true, true);
+                addDyedBlocks(event, ModRegistry.WARP_PIPES.get(DyeColor.PINK), ModRegistry.PIPE_JUNCTION, true, true);
             }
 
             if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {

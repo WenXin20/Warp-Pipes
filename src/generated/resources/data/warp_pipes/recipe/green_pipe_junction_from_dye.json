@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "warp_pipes:pipe_corners_from_dye",
+  "ingredients": [
+    {
+      "tag": "c:dyes/green"
+    },
+    {
+      "tag": "warp_pipes:pipe_junction_blocks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "warp_pipes:green_pipe_junction"
+  }
+}

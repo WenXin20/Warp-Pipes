@@ -1,5 +1,6 @@
 {
   "values": [
-    "#warp_pipes:dyeable_warp_pipes"
+    "#warp_pipes:dyeable_warp_pipes",
+    "#warp_pipes:pipe_junction_blocks"
   ]
 }

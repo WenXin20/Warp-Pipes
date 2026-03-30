@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "warp_pipes:block/red_pipe_junction"
+    }
+  }
+}

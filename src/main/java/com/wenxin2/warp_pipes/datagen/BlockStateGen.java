@@ -32,6 +32,13 @@ public class BlockStateGen extends BlockStateProvider {
         this.waterSpoutModel(ModRegistry.WATER_SPOUT.get(), modLoc("block/" + waterSpoutName + "_flow"),
                 modLoc("block/" + waterSpoutName + "_still"), modLoc("block/" + waterSpoutName + "_splash"));
 
+        for (Map.Entry<DyeColor, DeferredBlock<Block>> entry : ModRegistry.PIPE_JUNCTION.entrySet()) {
+            String blockName = BuiltInRegistries.BLOCK.getKey(entry.getValue().get()).getPath();
+            ResourceLocation texture = modLoc("block/" + blockName);
+
+            this.cubeAllModel(entry.getValue().get(), texture);
+        }
+
         for (Map.Entry<DyeColor, DeferredBlock<Block>> entry : ModRegistry.WARP_PIPES.entrySet()) {
             String blockName = BuiltInRegistries.BLOCK.getKey(entry.getValue().get()).getPath();
             ResourceLocation entranceTexture = modLoc("block/" + blockName + "_entrance_side");
@@ -42,6 +49,16 @@ public class BlockStateGen extends BlockStateProvider {
 
             this.warpPipeModel(entry.getValue().get(), entranceTexture, bottomTexture, sideTexture, topTexture, topClosedTexture);
         }
+    }
+
+    private void cubeAllModel(Block block, ResourceLocation mainTexture) {
+        String modelName = BuiltInRegistries.BLOCK.getKey(block).getPath();
+
+        ModelFile model = models()
+                .withExistingParent(modelName, mcLoc("minecraft:block/cube_all"))
+                .texture("all", mainTexture);
+
+        this.simpleBlockWithItem(block, model);
     }
 
     private void pipeBubblesModel(Block block) {

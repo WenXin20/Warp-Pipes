@@ -23,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -34,8 +35,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 public class ModRegistry {
-    public static final EnumMap<DyeColor, DeferredBlock<Block>> WARP_PIPES =
-            new EnumMap<>(DyeColor.class);
+    public static final EnumMap<DyeColor, DeferredBlock<Block>> WARP_PIPES = new EnumMap<>(DyeColor.class);
+    public static final EnumMap<DyeColor, DeferredBlock<Block>> PIPE_JUNCTION = new EnumMap<>(DyeColor.class);
     public static final DeferredItem<Item> WARP_DISRUPTOR;
     public static final DeferredItem<Item> WRENCH;
     public static final DeferredBlock<Block> CLEAR_WARP_PIPE;
@@ -46,7 +47,6 @@ public class ModRegistry {
     public static final DeferredHolder<MenuType<?>, MenuType<WarpPipeMenu>> WARP_PIPE_MENU;
 
     static {
-
         WARP_DISRUPTOR = registerItem("warp_disruptor",
                 () -> new WarpDisruptorItem(new Item.Properties().durability(128)));
         WRENCH = registerItem("wrench",
@@ -65,6 +65,10 @@ public class ModRegistry {
                         () -> new WarpPipeBlock(color, BlockBehaviour.Properties.of().mapColor(color)
                                 .sound(SoundType.NETHERITE_BLOCK).strength(3.5F, 1000.0F)
                                 .isViewBlocking(ModRegistry::always).requiresCorrectToolForDrops()))));
+
+        Arrays.stream(DyeColor.values()).forEach(color ->
+                PIPE_JUNCTION.put(color, registerBlock(color.getName() + "_pipe_junction",
+                        () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK).mapColor(color)))));
 
         PIPE_BUBBLES = registerNoItemBlock("pipe_bubbles",
                 () -> new PipeBubblesBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY)

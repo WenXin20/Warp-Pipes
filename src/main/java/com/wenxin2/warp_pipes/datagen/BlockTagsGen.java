@@ -20,10 +20,12 @@ public class BlockTagsGen extends BlockTagsProvider {
     @Override
     @SuppressWarnings("unchecked")
     protected void addTags(HolderLookup.Provider lookupProvider) {
+        ModRegistry.PIPE_JUNCTION.values().forEach(block -> tag(TagRegistry.PIPE_JUNCTION_BLOCKS).add(block.get()));
         ModRegistry.WARP_PIPES.values().forEach(block -> tag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS).add(block.get()));
 
         for (DyeColor color : DyeColor.values()) {
             tag(TagRegistry.blockTags("c", "dyed/" + color))
+                    .add(ModRegistry.PIPE_JUNCTION.get(color).get())
                     .add(ModRegistry.WARP_PIPES.get(color).get());
         }
 
@@ -38,9 +40,11 @@ public class BlockTagsGen extends BlockTagsProvider {
                 .add(ModRegistry.CLEAR_WARP_PIPE.get());
 
         tag(BlockTags.NEEDS_STONE_TOOL)
-                .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS);
+                .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS)
+                .addTag(TagRegistry.PIPE_JUNCTION_BLOCKS);
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .addTag(TagRegistry.PIPE_JUNCTION_BLOCKS)
                 .addTag(TagRegistry.WARP_PIPE_BLOCKS);
     }
 }

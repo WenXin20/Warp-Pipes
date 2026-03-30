@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "warp_pipes:block/light_blue_pipe_junction"
+  }
+}

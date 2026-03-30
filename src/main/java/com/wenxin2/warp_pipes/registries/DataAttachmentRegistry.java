@@ -32,7 +32,7 @@ public class DataAttachmentRegistry {
     public static final Supplier<AttachmentType<Integer>> RIDE_VEHICLE_COUNTDOWN = WarpPipes.ATTACHMENT_TYPES
             .register("ride_vehicle_countdown", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT)
                     .sync(StreamCodec.of(FriendlyByteBuf::writeInt, FriendlyByteBuf::readInt)).build());
-    
+
     public static final Supplier<AttachmentType<UUID>> VEHICLE_UUID = WarpPipes.ATTACHMENT_TYPES
             .register("vehicle_uuid", () -> AttachmentType.<UUID>builder(() -> null).serialize(UUIDUtil.CODEC)
                     .sync(UUIDUtil.STREAM_CODEC).build());

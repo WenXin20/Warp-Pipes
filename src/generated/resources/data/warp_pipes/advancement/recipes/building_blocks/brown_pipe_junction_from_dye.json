@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dyes/brown": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:dyes/brown"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_pipe_junction_blocks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#warp_pipes:pipe_junction_blocks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "warp_pipes:brown_pipe_junction_from_dye"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dyes/brown",
+      "has_pipe_junction_blocks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "warp_pipes:brown_pipe_junction_from_dye"
+    ]
+  }
+}

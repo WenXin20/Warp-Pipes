@@ -3,6 +3,23 @@
 
   "menu.warp_pipes.warp_pipe": "Warp Pipe",
 
+  "block.warp_pipes.black_pipe_junction": "Black Pipe Junction",
+  "block.warp_pipes.blue_pipe_junction": "Blue Pipe Junction",
+  "block.warp_pipes.brown_pipe_junction": "Brown Pipe Junction",
+  "block.warp_pipes.cyan_pipe_junction": "Cyan Pipe Junction",
+  "block.warp_pipes.gray_pipe_junction": "Gray Pipe Junction",
+  "block.warp_pipes.green_pipe_junction": "Green Pipe Junction",
+  "block.warp_pipes.light_blue_pipe_junction": "Light Blue Pipe Junction",
+  "block.warp_pipes.light_gray_pipe_junction": "Light Gray Pipe Junction",
+  "block.warp_pipes.lime_pipe_junction": "Lime Pipe Junction",
+  "block.warp_pipes.magenta_pipe_junction": "Magenta Pipe Junction",
+  "block.warp_pipes.orange_pipe_junction": "Orange Pipe Junction",
+  "block.warp_pipes.pink_pipe_junction": "Pink Pipe Junction",
+  "block.warp_pipes.purple_pipe_junction": "Purple Pipe Junction",
+  "block.warp_pipes.red_pipe_junction": "Red Pipe Junction",
+  "block.warp_pipes.white_pipe_junction": "White Pipe Junction",
+  "block.warp_pipes.yellow_pipe_junction": "Yellow Pipe Junction",
+
   "block.warp_pipes.black_warp_pipe": "Black Warp Pipe",
   "block.warp_pipes.blue_warp_pipe": "Blue Warp Pipe",
   "block.warp_pipes.brown_warp_pipe": "Brown Warp Pipe",

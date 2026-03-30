@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "warp_pipes:pipe_corners_from_dye",
+  "ingredients": [
+    {
+      "tag": "c:dyes/orange"
+    },
+    {
+      "tag": "warp_pipes:pipe_junction_blocks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "warp_pipes:orange_pipe_junction"
+  }
+}

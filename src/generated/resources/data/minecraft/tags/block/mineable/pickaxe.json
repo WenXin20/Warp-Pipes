@@ -1,5 +1,6 @@
 {
   "values": [
+    "#warp_pipes:pipe_junction_blocks",
     "#warp_pipes:warp_pipes"
   ]
 }

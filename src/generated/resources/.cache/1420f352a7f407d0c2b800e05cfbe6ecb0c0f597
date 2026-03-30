@@ -1,20 +1,20 @@
-// 1.21.1	2025-11-03T01:40:31.1266627	Tags for minecraft:item mod id warp_pipes
-44ceaf9cda49e28222a2752765e059b24a90a1a8 data/c/tags/item/dyed/black.json
-2e183f24d6fa20023f46ad8a27390a63d26fbc2c data/c/tags/item/dyed/blue.json
-f18c16b958130279146af90ec56e73caeae972bb data/c/tags/item/dyed/brown.json
-9f3b7db3b19d3361d9d213e87307d2e81dee4496 data/c/tags/item/dyed/cyan.json
-80c1913438a9f9e23943722f7ae5c54e3f5ebed2 data/c/tags/item/dyed/gray.json
-6bff422b8343db6c74c6fd88611d5468939609e8 data/c/tags/item/dyed/green.json
-e497b920f6b339f271198f858c5844147e70f288 data/c/tags/item/dyed/light_blue.json
-f454b3eade9cf90ba68d6f6b435e4e31216225e9 data/c/tags/item/dyed/light_gray.json
-17ab1a70fac45903d8c8523a4a50760d0f06968c data/c/tags/item/dyed/lime.json
-e6079fe6e3947cf972674f69c95a9e89e404dadd data/c/tags/item/dyed/magenta.json
-f04270f5f94609f8986e729fb71c91a3a6ca5d43 data/c/tags/item/dyed/orange.json
-a458726c15ab220fec6313cec35cad394a27b3eb data/c/tags/item/dyed/pink.json
-5626c550fdd456e6e16df89f725c787fd67a3802 data/c/tags/item/dyed/purple.json
-38c4b589477f3f1585bdfb050dd17161633c25b6 data/c/tags/item/dyed/red.json
-3561a08b14525823c8262a32e26a2d59883ab0d3 data/c/tags/item/dyed/white.json
-7fcaa60089b3b1d58d5993c1ac2e0a4de663f24a data/c/tags/item/dyed/yellow.json
+// 1.21.1	2026-03-29T22:02:15.7706469	Tags for minecraft:item mod id warp_pipes
+a8abb2e7b75aba7bc15dab9a152e4956cdff42b8 data/c/tags/item/dyed/black.json
+2fae187ccf41076021ac05494d462f31ea9ccad3 data/c/tags/item/dyed/blue.json
+f09f2e88bce0cb0767a8180caacd0ca190563053 data/c/tags/item/dyed/brown.json
+07e4c82f2a728fa9d89480f0059f653eeeb0edfe data/c/tags/item/dyed/cyan.json
+b64510289abddbbff168534df5f5429454bddaae data/c/tags/item/dyed/gray.json
+042d4b281985eb2720c197e3865671fd7daaa43c data/c/tags/item/dyed/green.json
+a8512c49899db228b8dee6d8206606c5d448ae85 data/c/tags/item/dyed/light_blue.json
+d3a1cf31f19fe52e446bdd0c902b3e231fd376d8 data/c/tags/item/dyed/light_gray.json
+f1368a8dff221a7caad46f74bfb654b9c7e3d583 data/c/tags/item/dyed/lime.json
+b9505da8388c70e9bb146b21622f3d73d0d2834c data/c/tags/item/dyed/magenta.json
+5f95ad7e1307f38dbda3e60421fea96ba91b2269 data/c/tags/item/dyed/orange.json
+4409ad9de2a3dab3147af247ae22f4af7bfbfd6a data/c/tags/item/dyed/pink.json
+8c8d733ace09d161ef01c55d4538911d3b5be432 data/c/tags/item/dyed/purple.json
+df2eba28d485aec83185c11dc8edf64aa3cde72c data/c/tags/item/dyed/red.json
+bd405b5fa202bdda5f8ad450ba544ac40d3d68d6 data/c/tags/item/dyed/white.json
+56198f6c21bbfd371e62e30649609d6461f24cf1 data/c/tags/item/dyed/yellow.json
 fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/c/tags/item/tools/melee_weapon.json
 fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/c/tags/item/tools/wrench.json
 fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/marioverse/tags/item/tools/wrenches.json
@@ -24,5 +24,6 @@ fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/minecraft/tags/item/enchantable/we
 97ff919c8b6a6d7797f5dd53b4050282c440e2f9 data/warp_pipes/tags/item/can_select_clear_warp_pipes.json
 097ebe883ec7c85a67e8f927f2e5887c42dc4f31 data/warp_pipes/tags/item/can_select_water_spouts.json
 62fa04764c75de5376320ed0b3589fccc1a6951a data/warp_pipes/tags/item/dyeable_warp_pipes.json
+e4b13a10cb835f7e2bc347ae9069bcf297603b0c data/warp_pipes/tags/item/pipe_junction_blocks.json
 f8edddc8f42af19152ce4c1ece3b6c8b10df09b1 data/warp_pipes/tags/item/warp_pipes.json
 9a0f677dc5e22723585f016cc521ec106bb987e8 data/warp_pipes/tags/item/warp_pipe_cannot_spawn.json

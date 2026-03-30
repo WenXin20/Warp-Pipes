@@ -1,0 +1,20 @@
+{
+  "values": [
+    "warp_pipes:white_pipe_junction",
+    "warp_pipes:orange_pipe_junction",
+    "warp_pipes:magenta_pipe_junction",
+    "warp_pipes:light_blue_pipe_junction",
+    "warp_pipes:yellow_pipe_junction",
+    "warp_pipes:lime_pipe_junction",
+    "warp_pipes:pink_pipe_junction",
+    "warp_pipes:gray_pipe_junction",
+    "warp_pipes:light_gray_pipe_junction",
+    "warp_pipes:cyan_pipe_junction",
+    "warp_pipes:purple_pipe_junction",
+    "warp_pipes:blue_pipe_junction",
+    "warp_pipes:brown_pipe_junction",
+    "warp_pipes:green_pipe_junction",
+    "warp_pipes:red_pipe_junction",
+    "warp_pipes:black_pipe_junction"
+  ]
+}
