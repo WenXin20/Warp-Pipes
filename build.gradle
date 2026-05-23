@@ -20,6 +20,13 @@ repositories {
         url "https://cursemaven.com"
         content { includeGroup "curse.maven" }
     }
+    exclusiveContent {
+        forRepository {
+            maven { url = "https://maven.ryanhcode.dev/releases" }
+        }
+        filter { includeGroup("dev.ryanhcode.sable-companion") }
+    }
+    maven { url = "https://api.modrinth.com/maven" }
     maven { url "https://maven.neoforged.net/releases" }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     mavenCentral()
@@ -38,14 +45,24 @@ dependencies {
     compileOnly "org.spongepowered:mixin:0.8.5"
 
     // Imports
+    // Marioverse Dependencies
+    implementation "curse.maven:fusion-connected-textures-${fusion_version}"
+
     implementation "curse.maven:architectury-api-${architectury_api_version}"
     implementation "curse.maven:cloth-config-${cloth_config_version}"
     implementation "curse.maven:ctm-${ctm_version}"
-    implementation "curse.maven:embeddium-${embeddium_version}"
-    implementation "curse.maven:fusion-connected-textures-${fusion_version}"
+    // implementation "curse.maven:embeddium-${embeddium_version}"
     implementation "curse.maven:neoculus-1200907:6787071"
     implementation "curse.maven:roughly-enough-items-${rei_version}"
     implementation "curse.maven:spark-${spark_version}"
+
+    implementation "curse.maven:copycats-968398:7251823" // Requires Create
+    implementation "curse.maven:create-328085:7963363"
+    implementation "maven.modrinth:create-aeronautics:1.2.1+mc1.21.1-neoforge"  // Requires Create, Sable, Incompatible w/ Embeddium
+
+    // Libraries
+    implementation "curse.maven:sable-1312371:8007005" // Requires Create
+    implementation "curse.maven:sodium-394468:6382651" // Incompatible w/ Embeddium
 
     // implementation "curse.maven:jei-${jei_version}"
     // implementation "curse.maven:selene-${moonlight_version}"
