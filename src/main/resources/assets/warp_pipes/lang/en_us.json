@@ -3,6 +3,9 @@
 
   "menu.warp_pipes.warp_pipe": "Warp Pipe",
 
+  "resource_pack.warp_pipes.classic_pipes": "Classic Pipes",
+  "resource_pack.warp_pipes.classic_pipes_fusion": "Classic Pipes [Fusion]",
+
   "block.warp_pipes.black_pipe_junction": "Black Pipe Junction",
   "block.warp_pipes.blue_pipe_junction": "Blue Pipe Junction",
   "block.warp_pipes.brown_pipe_junction": "Brown Pipe Junction",

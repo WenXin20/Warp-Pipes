@@ -30,12 +30,12 @@ public abstract class LivingEntityMixin extends Entity implements WP$BlockWarpEn
     public void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
-        if (tag.contains("marioverse:prevent_warp"))
-            entity.getPersistentData().putBoolean("marioverse:prevent_warp",
-                    tag.getBoolean("marioverse:prevent_warp"));
+        if (tag.contains("warp_pipes:prevent_warp"))
+            entity.getPersistentData().putBoolean("warp_pipes:prevent_warp",
+                    tag.getBoolean("warp_pipes:prevent_warp"));
 
-        if (tag.contains("marioverse:warp_cooldown"))
-            entity.getPersistentData().putInt("marioverse:warp_cooldown",
-                    tag.getInt("marioverse:warp_cooldown"));
+        if (tag.contains("warp_pipes:warp_cooldown"))
+            entity.getPersistentData().putInt("warp_pipes:warp_cooldown",
+                    tag.getInt("warp_pipes:warp_cooldown"));
     }
 }
