@@ -2,6 +2,7 @@
   - Added new pipe textures
   - Added built-in resource packs for the old models/textures
   - Improved item and mob movement through clear pipes
+  - Improved Wrench tooltips, sounds, & subtitles
   - Added Create Aeronautics support for:
     - Warp Pipe teleporting
     - Right-click to enter clear pipes & proper movement inside

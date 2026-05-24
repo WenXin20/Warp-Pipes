@@ -3,8 +3,6 @@ package com.wenxin2.warp_pipes.registries;
 import com.wenxin2.warp_pipes.WarpPipes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.SoundType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class SoundRegistry {
@@ -24,7 +22,12 @@ public class SoundRegistry {
     public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_HIT;
     public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_PLACE;
     public static final DeferredHolder<SoundEvent, SoundEvent> WATER_SPOUT_STEP;
-    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_BOUND;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_LINKED_BLOCK;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_LINK_CREATED;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_LINK_FAILED;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_UNLINKED_BLOCK;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_WARP_CREATED;
+    public static final DeferredHolder<SoundEvent, SoundEvent> WRENCH_WARP_LINKED;
 
     static {
         CLEAR_PIPE_ENTER = WarpPipes.SOUNDS.register("block.clear_pipe_enter",
@@ -63,9 +66,19 @@ public class SoundRegistry {
                 () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "block.water_spout.place")));
         WATER_SPOUT_STEP = WarpPipes.SOUNDS.register("block.water_spout.step",
                 () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "block.water_spout.step")));
-        
-        WRENCH_BOUND = WarpPipes.SOUNDS.register("item.wrench_bound",
-                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_bound")));
+
+        WRENCH_LINKED_BLOCK = WarpPipes.SOUNDS.register("item.wrench_linked_block",
+                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_linked_block")));
+        WRENCH_LINK_CREATED = WarpPipes.SOUNDS.register("item.wrench_link_created",
+                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_link_created")));
+        WRENCH_LINK_FAILED = WarpPipes.SOUNDS.register("item.wrench_link_failed",
+                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_link_failed")));
+        WRENCH_WARP_CREATED = WarpPipes.SOUNDS.register("item.wrench_warp_created",
+                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_warp_created")));
+        WRENCH_WARP_LINKED = WarpPipes.SOUNDS.register("item.wrench_warp_linked",
+                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_warp_linked")));
+        WRENCH_UNLINKED_BLOCK = WarpPipes.SOUNDS.register("item.wrench_unlinked_block",
+                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "item.wrench_unlinked_block")));
     }
 
     public static void init()

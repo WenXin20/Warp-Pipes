@@ -47,6 +47,29 @@ public class LinkerItem extends TieredItem {
     }
 
     @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltip) {
+        if (getIsBound(stack) && stack.has(DataComponentRegistry.WARP_POS)) {
+            list.add(Component.literal(""));
+
+            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound", true)
+                    .withStyle(ChatFormatting.GOLD));
+
+            if (stack.has(DataComponentRegistry.WARP_BLOCK.get()))
+                list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.block",
+                        getWarpBlock(stack).name(), true).withStyle(ChatFormatting.GRAY));
+
+            if (stack.has(DataComponentRegistry.WARP_POS)) {
+                list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.x",
+                        getWarpPos(stack).getX(), true).withStyle(ChatFormatting.GRAY));
+                list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.y",
+                        getWarpPos(stack).getY(), true).withStyle(ChatFormatting.GRAY));
+                list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.z",
+                        getWarpPos(stack).getZ(), true).withStyle(ChatFormatting.GRAY));
+            }
+        }
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext useOnContext) {
         Player player = useOnContext.getPlayer();
         Level world = useOnContext.getLevel();
@@ -55,10 +78,11 @@ public class LinkerItem extends TieredItem {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         ItemStack stack = useOnContext.getItemInHand();
         String dimension = world.dimension().location().toString();
+        float pitch = 0.9F + world.random.nextFloat() * 0.2F;
 
         if (player != null && !player.isCreative() && ConfigRegistry.CREATIVE_WRENCH_LINKING.get()) {
             player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.requires_creative"), true);
-            return InteractionResult.sidedSuccess(Boolean.TRUE);
+            return InteractionResult.SUCCESS;
         } else if (player != null) {
             if (player.isShiftKeyDown() && blockEntity instanceof BaseWarpBlockEntity warpBE
                     && getLinkableBlock(state)) {
@@ -67,8 +91,8 @@ public class LinkerItem extends TieredItem {
                 if (warpBE.isWaxed() && ConfigRegistry.WAX_DISABLES_WARP_LINKING.get()) {
                     player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.waxed",
                             state.getBlock().getName()).withStyle(ChatFormatting.GOLD), true);
-                    return InteractionResult.sidedSuccess(true);
-                } else if (!getIsBound(stack)) {
+                    return InteractionResult.SUCCESS;
+                } else if (!getIsBound(stack) || !stack.has(DataComponentRegistry.WARP_POS)) {
 
                     if (!world.isClientSide && uuid == null) {
                         uuid = UUID.randomUUID();
@@ -85,7 +109,7 @@ public class LinkerItem extends TieredItem {
                             state.getBlock().getName()).withStyle(ChatFormatting.GREEN), true);
 
                     this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                    this.playSound(world, pos, SoundRegistry.WRENCH_BOUND.get(), SoundSource.PLAYERS, 1.0F, 0.1F);
+                    this.playSound(world, pos, SoundRegistry.WRENCH_WARP_LINKED.get(), SoundSource.BLOCKS, 1.0F, pitch);
                 } else {
 
                     if (!world.isClientSide && uuid == null) {
@@ -110,12 +134,12 @@ public class LinkerItem extends TieredItem {
                                 state.getBlock().getName(), firstState.getBlock().getName()).withStyle(ChatFormatting.GOLD), true);
 
                         this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
-                        this.playSound(world, pos, SoundRegistry.PIPES_LINKED.get(), SoundSource.BLOCKS, 1.0F, 0.1F);
+                        this.playSound(world, pos, SoundRegistry.WRENCH_WARP_CREATED.get(), SoundSource.BLOCKS, 1.0F, pitch);
                     }
                     //  }
                     setIsBound(stack, false);  // Reset binding
                 }
-                return InteractionResult.sidedSuccess(Boolean.TRUE);
+                return InteractionResult.sidedSuccess(true);
             }
         }
         return super.useOn(useOnContext);
@@ -171,6 +195,15 @@ public class LinkerItem extends TieredItem {
         stack.set(DataComponentRegistry.WARP_POS, warpPos);
     }
 
+    public static DataComponentRegistry.WarpTarget getWarpBlock(ItemStack stack) {
+        return stack.getOrDefault(DataComponentRegistry.WARP_BLOCK, new DataComponentRegistry.WarpTarget(null, null));
+    }
+
+    public static void setWarpBlock(ItemStack stack, BlockPos warpPos, BlockState blockState) {
+        String blockName = blockState.getBlock().getName().getString();
+        stack.set(DataComponentRegistry.WARP_BLOCK.get(), new DataComponentRegistry.WarpTarget(warpPos, blockName));
+    }
+
     public static String getWarpDimension(ItemStack stack) {
         return stack.getOrDefault(DataComponentRegistry.WARP_DIMENSION.get(), "");
     }
@@ -213,23 +246,6 @@ public class LinkerItem extends TieredItem {
                         (random.nextDouble() - 0.5D) * 2.0D, -random.nextDouble(),
                         (random.nextDouble() - 0.5D) * 2.0D);
             }
-        }
-    }
-
-    @ParametersAreNonnullByDefault
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltip) {
-        if (getIsBound(stack) && getWarpPos(stack) != null) {
-            list.add(Component.literal(""));
-
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound", true)
-                    .withStyle(ChatFormatting.GOLD));
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.x",
-                    getWarpPos(stack).getX(), true).withStyle(ChatFormatting.GRAY));
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.y",
-                    getWarpPos(stack).getY(), true).withStyle(ChatFormatting.GRAY));
-            list.add(Component.translatable(this.getDescriptionId() + ".tooltip.bound.z",
-                    getWarpPos(stack).getZ(), true).withStyle(ChatFormatting.GRAY));
         }
     }
 }
