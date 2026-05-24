@@ -1,13 +1,19 @@
 {
   "values": [
+    "#c:tools/wrenches",
     "#minecraft:axes",
     "#minecraft:hoes",
     "#minecraft:pickaxes",
     "#minecraft:shovels",
-    "warp_pipes:wrench",
     "minecraft:debug_stick",
+    "warp_pipes:clear_warp_pipe",
+    "warp_pipes:wrench",
     {
       "id": "create:super_glue",
+      "required": false
+    },
+    {
+      "id": "simulated:honey_glue",
       "required": false
     }
   ]

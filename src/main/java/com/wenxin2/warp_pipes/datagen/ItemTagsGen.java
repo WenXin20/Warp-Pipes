@@ -17,6 +17,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ItemTagsGen extends ItemTagsProvider {
     private static final ResourceLocation CREATE_SUPER_GLUE = ResourceLocation.fromNamespaceAndPath("create", "super_glue");
+    private static final ResourceLocation SIMULATED_HONEY_GLUE = ResourceLocation.fromNamespaceAndPath("simulated", "honey_glue");
 
     public  ItemTagsGen(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                         CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
@@ -49,17 +50,21 @@ public class ItemTagsGen extends ItemTagsProvider {
                 .add(ModRegistry.WRENCH.get());
 
         tag(TagRegistry.CAN_SELECT_CLEAR_WARP_PIPES)
+                .addTag(Tags.Items.TOOLS_WRENCH)
                 .addTag(ItemTags.AXES)
                 .addTag(ItemTags.HOES)
                 .addTag(ItemTags.PICKAXES)
                 .addTag(ItemTags.SHOVELS)
-                .add(ModRegistry.WRENCH.get())
                 .add(Items.DEBUG_STICK)
-                .addOptional(CREATE_SUPER_GLUE);
+                .add(ModRegistry.CLEAR_WARP_PIPE.asItem())
+                .add(ModRegistry.WRENCH.get())
+                .addOptional(CREATE_SUPER_GLUE)
+                .addOptional(SIMULATED_HONEY_GLUE);
 
         tag(TagRegistry.CAN_SELECT_WATER_SPOUTS)
                 .add(Items.DEBUG_STICK)
-                .addOptional(CREATE_SUPER_GLUE);
+                .addOptional(CREATE_SUPER_GLUE)
+                .addOptional(SIMULATED_HONEY_GLUE);
 
         tag(TagRegistry.WARP_PIPE_CANNOT_SPAWN_ITEMS)
                 .addTag(Tags.Items.DYES)
