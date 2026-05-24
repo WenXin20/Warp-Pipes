@@ -59,7 +59,7 @@ dependencies {
     implementation "curse.maven:architectury-api-${architectury_api_version}"
     implementation "curse.maven:cloth-config-${cloth_config_version}"
     implementation "curse.maven:ctm-${ctm_version}"
-    implementation "curse.maven:roughly-enough-items-${rei_version}"
+    // implementation "curse.maven:roughly-enough-items-${rei_version}"
     implementation "curse.maven:spark-${spark_version}"
 
     implementation "curse.maven:copycats-968398:7251823" // Requires Create
@@ -67,6 +67,7 @@ dependencies {
     implementation "maven.modrinth:create-aeronautics:1.2.1+mc1.21.1-neoforge"  // Requires Create, Sable, Incompatible w/ Embeddium
     compileOnly "curse.maven:irisshaders-455508:6661598" // Requires Sodium
     implementation "curse.maven:itemzoom-261725:5536959"
+    implementation "curse.maven:wiki-zoomer-unofficial-1534301:8122492"
     compileOnly "dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:[1.6.0,)"
 
     jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:1.6.0"))
