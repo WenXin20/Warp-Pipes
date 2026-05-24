@@ -3,6 +3,7 @@ package com.wenxin2.warp_pipes;
 import com.mojang.logging.LogUtils;
 import com.wenxin2.warp_pipes.event_handlers.RegistryEventHandlers;
 import com.wenxin2.warp_pipes.event_handlers.WarpPipesEventHandlers;
+import com.wenxin2.warp_pipes.integration.SableCompat;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.DataComponentRegistry;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
@@ -53,6 +55,8 @@ public class WarpPipes
         SoundRegistry.init();
         ConfigRegistry.register(container);
 
+        WarpPipes.sableModule();
+
         if (dist.isClient()) {
             ConfigRegistry.registerClient(container);
             bus.addListener(WarpPipesClient::addPackFinder);
@@ -61,5 +65,15 @@ public class WarpPipes
 
         NeoForge.EVENT_BUS.addListener(WarpPipesEventHandlers::onRightClickBlock);
         bus.addListener(RegistryEventHandlers::gatherData);
+    }
+
+    private static void sableModule() {
+        try {
+            if (ModList.get().isLoaded("sable"))
+                SableCompat.init();
+            else LOGGER.info("Sable compat not loaded");
+        } catch (Throwable e) {
+            LOGGER.error("Failed to load Sable compat", e);
+        }
     }
 }
