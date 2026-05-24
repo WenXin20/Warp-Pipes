@@ -37,8 +37,7 @@ public class WarpPipes
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, WarpPipes.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, WarpPipes.MOD_ID);
 
-    public WarpPipes(IEventBus bus, Dist dist, ModContainer container)
-    {
+    public WarpPipes(IEventBus bus, Dist dist, ModContainer container) {
         ATTACHMENT_TYPES.register(bus);
         BLOCKS.register(bus);
         ITEMS.register(bus);
@@ -55,8 +54,9 @@ public class WarpPipes
         ConfigRegistry.register(container);
 
         if (dist.isClient()) {
-            bus.addListener(WarpPipesClient::registerBlockEntityRenderers);
             ConfigRegistry.registerClient(container);
+            bus.addListener(WarpPipesClient::addPackFinder);
+            bus.addListener(WarpPipesClient::registerBlockEntityRenderers);
         }
 
         NeoForge.EVENT_BUS.addListener(WarpPipesEventHandlers::onRightClickBlock);
