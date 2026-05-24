@@ -1,16 +1,13 @@
 package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -22,7 +19,7 @@ public abstract class LivingEntityMixin extends Entity implements WP$BlockWarpEn
     }
 
     @Override
-    public boolean wp$getBlockWarpTeleportConfig() {
+    public boolean wp$getBlockWarpTeleportConfig(Entity entity) {
         return ConfigRegistry.TELEPORT_MOBS.get();
     }
 

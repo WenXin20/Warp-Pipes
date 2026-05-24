@@ -160,7 +160,7 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
         ItemStack heldItem = player.getItemInHand(player.getUsedItemHand());
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (state.getValue(ENTRANCE) && player.isCreative()
+        if (state.hasProperty(ENTRANCE) && state.getValue(ENTRANCE) && player.isCreative()
                 && blockEntity instanceof WarpPipeBlockEntity pipeBE
                 && !pipeBE.getTheItem().isEmpty() && heldItem.isEmpty()) {
             world.sendBlockUpdated(pos, state, state, 3);
@@ -174,6 +174,7 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
         return InteractionResult.PASS;
     }
 
+    @NotNull
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
                                            Player player, InteractionHand hand, BlockHitResult hit) {

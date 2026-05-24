@@ -11,10 +11,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public interface WP$BlockWarpPlayerHandler extends WP$BlockWarpEntitiesHandler {
     @Override
-    default void enterWarpPipe(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
+    default void enterWarpPipe(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE,
+                               @Nullable Object context) {
         BlockState state = world.getBlockState(pos);
         double entityX = entity.getX();
         double entityY = entity.getY();
@@ -23,7 +25,7 @@ public interface WP$BlockWarpPlayerHandler extends WP$BlockWarpEntitiesHandler {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
+        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig(entity)
                 || entity.getType().is(TagRegistry.CANNOT_WARP) || entity.getData(DataAttachmentRegistry.PREVENT_WARP))) {
             if (state.getValue(WarpPipeBlock.FACING) == Direction.UP && entity.isShiftKeyDown() && (entityY + entity.getBbHeight() >= blockY - 1)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
@@ -45,12 +47,13 @@ public interface WP$BlockWarpPlayerHandler extends WP$BlockWarpEntitiesHandler {
                     && (entityX < blockX) && (entityY >= blockY && entityY < blockY + 0.75) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, state);
             }
-        } else WP$BlockWarpEntitiesHandler.super.enterWarpPipe(entity, world, pos, warpPos, warpBE);
+        } else WP$BlockWarpEntitiesHandler.super.enterWarpPipe(entity, world, pos, warpPos, warpBE, context);
     }
 
     @Override
-    default void enterWarpPipeAbove(Entity entity, Level world, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
-        BlockState stateAboveEntity = world.getBlockState(pos.above(Math.round(entity.getBbHeight())));
+    default void enterWarpPipeAbove(Entity entity, Level level, BlockPos pos, BlockPos warpPos, BaseWarpBlockEntity warpBE,
+                                    @Nullable Object context) {
+        BlockState stateAboveEntity = level.getBlockState(pos.above(Math.round(entity.getBbHeight())));
 
         double entityX = entity.getX();
         double entityZ = entity.getZ();
@@ -58,17 +61,17 @@ public interface WP$BlockWarpPlayerHandler extends WP$BlockWarpEntitiesHandler {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig()
+        if (entity instanceof Player player && (!this.wp$getBlockWarpTeleportConfig(entity)
                 || entity.getType().is(TagRegistry.CANNOT_WARP) || entity.getData(DataAttachmentRegistry.PREVENT_WARP))) {
             if (stateAboveEntity.getValue(WarpPipeBlock.FACING) == Direction.DOWN && (entity.getBlockY() < blockY)
                     && (entityX < blockX + 1 && entityX > blockX) && (entityZ < blockZ + 1 && entityZ > blockZ)) {
                 this.displayNoTeleportMessage(player, stateAboveEntity);
             }
-        } else WP$BlockWarpEntitiesHandler.super.enterWarpPipeAbove(entity, world, pos, warpPos, warpBE);
+        } else WP$BlockWarpEntitiesHandler.super.enterWarpPipeAbove(entity, level, pos, warpPos, warpBE, context);
     }
 
     private void displayNoTeleportMessage(Player player, BlockState state) {
-        if (!this.wp$getBlockWarpTeleportConfig() || player.getType().is(TagRegistry.CANNOT_WARP)) {
+        if (!this.wp$getBlockWarpTeleportConfig(player) || player.getType().is(TagRegistry.CANNOT_WARP)) {
             if (state.getBlock() instanceof WarpPipeBlock)
                 player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_cannot_teleport_players"), true);
         }

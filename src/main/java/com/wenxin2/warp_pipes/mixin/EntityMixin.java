@@ -5,12 +5,10 @@ import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
-import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,11 +18,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
@@ -38,7 +34,7 @@ public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
     @Shadow public abstract void setPos(Vec3 vec3);
 
     @Override
-    public boolean wp$getBlockWarpTeleportConfig() {
+    public boolean wp$getBlockWarpTeleportConfig(Entity entity) {
         return ConfigRegistry.TELEPORT_NON_MOBS.get();
     }
 
