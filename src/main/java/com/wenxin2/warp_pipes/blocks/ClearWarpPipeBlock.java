@@ -273,6 +273,7 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
         return false;
     }
 
+    @NotNull
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         double entityX = player.getX();
@@ -567,8 +568,8 @@ public class ClearWarpPipeBlock extends WarpPipeBlock implements EntityBlock, Si
 
             if (entity instanceof Player player) {
                 Direction moveDirection = this.getDirectionFromLook(player);
-                movePlayerInPipe(player, moveDirection);
-            } else moveEntityInPipe(entity, state, pos);
+                this.movePlayerInPipe(player, moveDirection);
+            } else this.moveEntityInPipe(entity, state, pos);
             super.entityInside(state, world, pos, entity);
         }
     }

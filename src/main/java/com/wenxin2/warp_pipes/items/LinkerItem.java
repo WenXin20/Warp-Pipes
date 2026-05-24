@@ -100,6 +100,7 @@ public class LinkerItem extends TieredItem {
                         warpBE.setChanged();
                     }
                     // First interaction: Bind the first block
+                    setWarpBlock(stack, pos, state);
                     setWarpPos(stack, pos);
                     setWarpDimension(stack, dimension);
                     setWarpUUID(stack, uuid);
