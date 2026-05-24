@@ -46,5 +46,8 @@ public class BlockTagsGen extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .addTag(TagRegistry.PIPE_JUNCTION_BLOCKS)
                 .addTag(TagRegistry.WARP_PIPE_BLOCKS);
+
+        tag(TagRegistry.blockTags("framedblocks", "blockentity_whitelisted"))
+                .addTag(TagRegistry.WARP_PIPE_BLOCKS);
     }
 }
