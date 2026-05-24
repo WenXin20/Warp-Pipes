@@ -4,7 +4,7 @@
         "type":"ctm",
         "layer":"SOLID",
         "textures":[
-            "marioverse:block/lime_warp_pipe_bottom_ctm"
+            "warp_pipes:block/lime_warp_pipe_bottom_ctm"
         ],
         "extra":{
         	"ignore_states":false,

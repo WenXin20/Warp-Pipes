@@ -4,7 +4,7 @@
         "type":"ctm",
         "layer":"SOLID",
         "textures":[
-            "marioverse:block/cyan_warp_pipe_bottom_ctm"
+            "warp_pipes:block/cyan_warp_pipe_bottom_ctm"
         ],
         "extra":{
         	"ignore_states":false,
