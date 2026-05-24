@@ -48,7 +48,7 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue WAX_DISABLES_WARP_LINKING;
     public static ModConfigSpec.BooleanValue WAX_DISABLES_WATER_SPOUTS;
 
-    public static ModConfigSpec.IntValue WARP_COOLDOWN;
+    public static ModConfigSpec.IntValue WARP_PIPE_COOLDOWN;
     public static ModConfigSpec.IntValue WARP_DISRUPTING_COOLDOWN;
 
     private ConfigRegistry() {
@@ -109,7 +109,7 @@ public class ConfigRegistry
                         .comment("Allow players to teleport.")
                         .comment("§9[Default: true]")
                         .define("teleport_players", true);
-                WARP_COOLDOWN = BUILDER.translation("configuration.warp_pipes.warp_cooldown")
+                WARP_PIPE_COOLDOWN = BUILDER.translation("configuration.warp_pipes.warp_cooldown")
                         .comment("Cooldown between teleports in ticks.")
                         .comment("§6[20 ticks = 1 second]")
                         .comment("§9[Default: 50]§b")
