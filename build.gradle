@@ -59,7 +59,6 @@ dependencies {
     implementation "curse.maven:architectury-api-${architectury_api_version}"
     implementation "curse.maven:cloth-config-${cloth_config_version}"
     implementation "curse.maven:ctm-${ctm_version}"
-    // implementation "curse.maven:roughly-enough-items-${rei_version}"
     implementation "curse.maven:spark-${spark_version}"
 
     implementation "curse.maven:copycats-968398:7251823" // Requires Create
@@ -81,6 +80,7 @@ dependencies {
     // implementation "curse.maven:embeddium-${embeddium_version}"
     // implementation "curse.maven:jei-${jei_version}"
     // implementation "curse.maven:neoculus-1200907:6787071"
+    // implementation "curse.maven:roughly-enough-items-${rei_version}"
     // implementation "curse.maven:selene-${moonlight_version}"
     // implementation "curse.maven:structure-gel-api-${structure_gel_version}"
     // implementation "curse.maven:supplementaries-${supplementaries_version}"
