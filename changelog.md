@@ -2,6 +2,7 @@
   - Added new pipe textures
   - Added built-in resource packs for the old models/textures
   - Added pipe junctions to dye tag
+  - Improved movement inside Clear Pipes for non-players
   - Fixed incorrect textures for black & gray pipe junctions
   - Removed forgotten debug log
 
