@@ -1,12 +1,14 @@
+## Update 3.2.1
+- Added Pipe junctions to pipe world gen
 ## Update 3.2.0
-  - Added new pipe textures
-  - Added built-in resource packs for the old models/textures
-  - Improved item and mob movement through clear pipes
-  - Improved Wrench tooltips, sounds, & subtitles
-  - Added Create Aeronautics support for:
-    - Warp Pipe teleporting
-    - Right-click to enter clear pipes & proper movement inside
-  - Added Warp Pipes to Framed Blocks whitelist tag
+- Added new pipe textures
+- Added built-in resource packs for the old models/textures
+- Improved item and mob movement through clear pipes
+- Improved Wrench tooltips, sounds, & subtitles
+- Added Create Aeronautics support for:
+  - Warp Pipe teleporting
+  - Right-click to enter clear pipes & proper movement inside
+- Added Warp Pipes to Framed Blocks whitelist tag
 
 ## Update 3.1.0
 - Added Pipe Junction Blocks
