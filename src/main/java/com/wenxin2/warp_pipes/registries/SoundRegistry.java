@@ -13,7 +13,6 @@ public class SoundRegistry {
     public static final DeferredHolder<SoundEvent, SoundEvent> GLASS_FALL;
     public static final DeferredHolder<SoundEvent, SoundEvent> GLASS_STEP;
     public static final DeferredHolder<SoundEvent, SoundEvent> ITEM_SPAWNS;
-    public static final DeferredHolder<SoundEvent, SoundEvent> PIPES_LINKED;
     public static final DeferredHolder<SoundEvent, SoundEvent> PIPE_CLOSES;
     public static final DeferredHolder<SoundEvent, SoundEvent> PIPE_OPENS;
     public static final DeferredHolder<SoundEvent, SoundEvent> PIPE_WARPS;
@@ -46,9 +45,7 @@ public class SoundRegistry {
 
         ITEM_SPAWNS = WarpPipes.SOUNDS.register("block.item_spawns",
                 () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "block.item_spawns")));
-        
-        PIPES_LINKED = WarpPipes.SOUNDS.register("block.pipes_linked",
-                () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "block.pipes_linked")));
+
         PIPE_CLOSES = WarpPipes.SOUNDS.register("block.pipe_closes",
                 () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "block.pipe_closes")));
         PIPE_OPENS = WarpPipes.SOUNDS.register("block.pipe_opens",

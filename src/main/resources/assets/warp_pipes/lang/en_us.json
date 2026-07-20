@@ -66,7 +66,7 @@
   "item.warp_pipes.warp_disruptor.tooltip.right_click.player": "§7, player",
   "item.warp_pipes.warp_disruptor.tooltip.right_click.warping": "§7 from warping",
 
-  "item.warp_pipes.warp_disruptor.tooltip.shift_right_click": "§6Right-click:",
+  "item.warp_pipes.warp_disruptor.tooltip.shift_right_click": "§6Right-click Pipe:",
   "item.warp_pipes.warp_disruptor.tooltip.shift_right_click.prevents": " §7• Prevents",
   "item.warp_pipes.warp_disruptor.tooltip.shift_right_click.pipe": "§7 pipe",
   "item.warp_pipes.warp_disruptor.tooltip.shift_right_click.warping": "§7 warping",
@@ -213,10 +213,10 @@
   "subtitles.warp_pipes.block.water_spout.hit": "Water Spout splashes",
   "subtitles.warp_pipes.block.water_spout.place": "Water Spout grows",
   "subtitles.warp_pipes.block.water_spout.step": "Footsteps",
-  "subtitles.marioverse.item.wrench_link_created": "Linked to wrench",
-  "subtitles.marioverse.item.wrench_link_failed": "Link failed",
-  "subtitles.marioverse.item.wrench_linked_block": "Linked blocks together",
-  "subtitles.marioverse.item.wrench_unlinked_block": "Unlinked blocks",
-  "subtitles.marioverse.item.wrench_warp_created": "Warp created",
-  "subtitles.marioverse.item.wrench_warp_linked": "Warp linked to wrench"
+  "subtitles.warp_pipes.item.wrench_link_created": "Linked to wrench",
+  "subtitles.warp_pipes.item.wrench_link_failed": "Link failed",
+  "subtitles.warp_pipes.item.wrench_linked_block": "Linked blocks together",
+  "subtitles.warp_pipes.item.wrench_unlinked_block": "Unlinked blocks",
+  "subtitles.warp_pipes.item.wrench_warp_created": "Warp created",
+  "subtitles.warp_pipes.item.wrench_warp_linked": "Warp linked to wrench"
 }
