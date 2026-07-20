@@ -1,5 +1,8 @@
 ## Update 3.2.1
 - Added Pipe junctions to pipe world gen
+- Fixed a crash when the Warp Disruptor used on a player, and then the player stepped on a pipe
+- Fixed wrench sounds
+
 ## Update 3.2.0
 - Added new pipe textures
 - Added built-in resource packs for the old models/textures

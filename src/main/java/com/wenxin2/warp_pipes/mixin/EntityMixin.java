@@ -6,12 +6,11 @@ import com.wenxin2.warp_pipes.integration.sable_compat.SableProvider;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
-import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
+import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntityHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -28,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements WP$BlockWarpEntitiesHandler {
+public abstract class EntityMixin implements WP$BlockWarpEntityHandler {
     @Shadow public abstract Level level();
     @Shadow public abstract double getX();
     @Shadow public abstract double getY();

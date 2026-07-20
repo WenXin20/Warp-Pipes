@@ -1,7 +1,7 @@
 package com.wenxin2.warp_pipes.mixin;
 
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
-import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
+import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntityHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements WP$BlockWarpEntitiesHandler {
+public abstract class LivingEntityMixin extends Entity implements WP$BlockWarpEntityHandler {
     public LivingEntityMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }

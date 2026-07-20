@@ -16,7 +16,6 @@ import com.wenxin2.warp_pipes.registries.TagRegistry;
 import com.wenxin2.warp_pipes.integration.CompatRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.sounds.WarpPipesSoundTypes;
-import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
 import com.wenxin2.warp_pipes.world.PipeSpawner;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import java.util.EnumSet;

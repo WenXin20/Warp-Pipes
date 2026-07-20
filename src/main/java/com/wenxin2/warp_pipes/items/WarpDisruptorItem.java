@@ -4,7 +4,6 @@ import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
-import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntitiesHandler;
 import com.wenxin2.warp_pipes.utils.ServerParticleUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;

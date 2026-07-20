@@ -27,10 +27,10 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
 
-public interface WP$BlockWarpEntitiesHandler {
+public interface WP$BlockWarpEntityHandler {
     boolean wp$getBlockWarpTeleportConfig(Entity entity);
 
-    private static boolean getShiftKeyForEntity(Entity entity) {
+    static boolean getShiftKeyForEntity(Entity entity) {
         return (!entity.isShiftKeyDown() && !(entity instanceof Player))
                 || (entity.isShiftKeyDown() && entity instanceof Player);
     }
@@ -178,7 +178,7 @@ public interface WP$BlockWarpEntitiesHandler {
     default void warp(Entity entity, Level level, BlockPos pos, BlockState state, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
         if (warpPos != null && !(level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity)
                 && entity instanceof Player player)
-            WP$BlockWarpEntitiesHandler.displayDestinationMissingMessage(player);
+            WP$BlockWarpEntityHandler.displayDestinationMissingMessage(player);
 
         if (warpPos != null && level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity) {
             BlockState warpState = level.getBlockState(warpPos);
