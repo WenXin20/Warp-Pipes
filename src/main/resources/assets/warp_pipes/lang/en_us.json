@@ -44,6 +44,15 @@
   "block.warp_pipes.pipe_bubbles": "Pipe Bubbles",
   "block.warp_pipes.water_spout": "Water Spout",
 
+  "block.warp_pipes.clear_warp_pipe.tooltip": "§e§o[Shift for §9ℹ§e§o]",
+  "block.warp_pipes.clear_warp_pipe.tooltip.instructions": "§9Instructions:",
+  "block.warp_pipes.clear_warp_pipe.tooltip.instructions.wrench": " §7• Link or configure with a wrench",
+  "block.warp_pipes.clear_warp_pipe.tooltip.instructions.place": " §7• Place multiple together to travel inside",
+
+  "block.warp_pipes.warp_pipe.tooltip": "§e§o[Shift for §9ℹ§e§o]",
+  "block.warp_pipes.warp_pipe.tooltip.instructions": "§9Instructions:",
+  "block.warp_pipes.warp_pipe.tooltip.instructions.wrench": " §7• Link or configure with a wrench",
+
   "item.warp_pipes.wrench": "Wrench",
   "item.warp_pipes.warp_disruptor": "Warp Disruptor",
 

@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -110,6 +112,46 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
         return new WarpPipeBlockEntity(pos, state);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), world.isClientSide ? WarpPipeBlockEntity::clientTick : WarpPipeBlockEntity::serverTick);
+    }
+
+    @NotNull
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag options) {
+        Player player = Minecraft.getInstance().player;
+
+        if (Screen.hasShiftDown()) {
+            if (player != null && player.isCreative())
+                Spawner.appendHoverText(stack, list, "SpawnData");
+
+            list.add(Component.literal(""));
+
+            list.add(Component.translatable("block.warp_pipes.warp_pipe.tooltip.instructions"));
+            list.add(Component.translatable("block.warp_pipes.warp_pipe.tooltip.instructions.wrench"));
+
+            list.add(Component.literal(""));
+        } else list.add(Component.translatable("block.warp_pipes.warp_pipe.tooltip"));
+
+        super.appendHoverText(stack, context, list, options);
+    }
+
+    @Nullable
+    public DyeColor getColor() {
+        return this.color;
+    }
+
+    public static ItemStack getColoredItemStack(@Nullable DyeColor color) {
+        return new ItemStack(ModRegistry.WARP_PIPES.get(color));
+    }
+
     @Override
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
@@ -125,33 +167,6 @@ public class WarpPipeBlock extends BaseEntityDirectionalBlock {
                 return Math.min(warpPipeBE.getBubblesDistance(), 15);
         }
         return 0;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModRegistry.WARP_PIPE_BLOCK_ENTITY.get(), world.isClientSide ? WarpPipeBlockEntity::clientTick : WarpPipeBlockEntity::serverTick);
-    }
-
-    @NotNull
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag options) {
-        super.appendHoverText(stack, context, list, options);
-        Spawner.appendHoverText(stack, list, "SpawnData");
-    }
-
-    @Nullable
-    public DyeColor getColor() {
-        return this.color;
-    }
-
-    public static ItemStack getColoredItemStack(@Nullable DyeColor color) {
-        return new ItemStack(ModRegistry.WARP_PIPES.get(color));
     }
 
     @NotNull
