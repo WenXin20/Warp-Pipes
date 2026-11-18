@@ -1,6 +1,10 @@
 package com.wenxin2.warp_pipes.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.wenxin2.warp_pipes.utils.SubLevelCollision;
+import net.minecraft.world.entity.MoverType;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.integration.sable_compat.SableProvider;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
@@ -42,6 +46,21 @@ public abstract class EntityMixin implements WP$BlockWarpEntityHandler {
         return ConfigRegistry.TELEPORT_NON_MOBS.get();
     }
 
+    @WrapMethod(method = "move")
+    private void wp$trackCollidingEntity(MoverType type, Vec3 movement, Operation<Void> original) {
+        if (!SableProvider.isLoaded()) {
+            original.call(type, movement);
+            return;
+        }
+
+        Entity previous = SubLevelCollision.pushCollidingEntity((Entity) (Object) this);
+        try {
+            original.call(type, movement);
+        } finally {
+            SubLevelCollision.popCollidingEntity(previous);
+        }
+    }
+
     @Inject(at = @At("TAIL"), method = "tick")
     public void tick(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
@@ -66,6 +85,14 @@ public abstract class EntityMixin implements WP$BlockWarpEntityHandler {
                     this.enterWarp(entity, level, posOffset, posOffset, stateOffset, null);
                 if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED))
                     this.enterWarp(entity, level, pos, pos, state, null);
+
+                if (facing.getAxis().isHorizontal() && WP$BlockWarpEntityHandler.isOnLoweredFloor(entity.getY())) {
+                    BlockPos liftedOffset = pos.above().relative(facing);
+                    BlockState liftedState = level.getBlockState(liftedOffset);
+
+                    if (liftedState.getBlock() instanceof WarpPipeBlock && !liftedState.getValue(WarpPipeBlock.CLOSED))
+                        this.enterWarp(entity, level, liftedOffset, liftedOffset, liftedState, null);
+                }
             }
         }
 
@@ -73,8 +100,10 @@ public abstract class EntityMixin implements WP$BlockWarpEntityHandler {
                 && !entity.getData(DataAttachmentRegistry.PREVENT_WARP))
             this.enterWarp(entity, level, pos, pos, state, null);
 
-        if (ModList.get().isLoaded("sable")) {
-            SableProvider.SableContext context = SableProvider.getContext(level, entity);
+        SableProvider.SableContext sableContext = SableProvider.isLoaded() ? SableProvider.getContext(level, entity) : null;
+
+        if (SableProvider.isLoaded()) {
+            SableProvider.SableContext context = sableContext;
             BlockPos posEmbedded;
             BlockPos posWorld;
 
@@ -110,13 +139,25 @@ public abstract class EntityMixin implements WP$BlockWarpEntityHandler {
                         this.enterWarp(entity, level, worldOffset, embeddedOffset, stateOffset, context);
                     if (state.getBlock() instanceof WarpPipeBlock && !state.getValue(WarpPipeBlock.CLOSED))
                         this.enterWarp(entity, level, posWorld, posWorld, state, context);
+
+                    if (context != null && facing.getAxis().isHorizontal() && WP$BlockWarpEntityHandler.isOnLoweredFloor(context.posLocal.y)) {
+                        BlockPos liftedEmbedded = context.posEmbedded.above().relative(facing);
+                        BlockPos liftedWorld = context.toWorld(liftedEmbedded);
+                        BlockState liftedState = context.accessor.getBlockState(liftedEmbedded);
+
+                        if (level instanceof ServerLevel) {
+                            liftedEmbedded = context.posWorld.above().relative(facing);
+                            liftedState = context.accessor.getServerBlockState(liftedEmbedded);
+                        }
+
+                        if (liftedState.getBlock() instanceof WarpPipeBlock && !liftedState.getValue(WarpPipeBlock.CLOSED))
+                            this.enterWarp(entity, level, liftedWorld, liftedEmbedded, liftedState, context);
+                    }
                 }
             }
         }
 
-        Object object = null;
-        if (ModList.get().isLoaded("sable"))
-            object = SableProvider.getContext(level, entity);
+        Object object = sableContext;
 
         for (BlockPos posAbove : BlockPos.betweenClosed(min, max)) {
             BlockState stateAbove = level.getBlockState(posAbove);

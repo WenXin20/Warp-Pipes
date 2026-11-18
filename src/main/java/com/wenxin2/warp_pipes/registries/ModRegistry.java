@@ -9,6 +9,12 @@ import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.items.WarpDisruptorItem;
 import com.wenxin2.warp_pipes.items.WrenchItem;
+import com.wenxin2.warp_pipes.particles.WarpLinkParticleOption;
+import com.wenxin2.warp_pipes.particles.WarpStarParticleOption;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import com.wenxin2.warp_pipes.sounds.WarpPipesSoundTypes;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -45,6 +51,8 @@ public class ModRegistry {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WarpPipeBlockEntity>> WARP_PIPE_BLOCK_ENTITY;
     public static final DeferredHolder<MenuType<?>, MenuType<WarpPipeMenu>> WARP_PIPE_MENU;
+    public static final DeferredHolder<ParticleType<?>, ParticleType<WarpLinkParticleOption>> WARP_LINK;
+    public static final DeferredHolder<ParticleType<?>, ParticleType<WarpStarParticleOption>> RAINBOW_STAR;
 
     static {
         WARP_DISRUPTOR = registerItem("warp_disruptor",
@@ -87,6 +95,30 @@ public class ModRegistry {
                         .build(null));
 
         WARP_PIPE_MENU = WarpPipes.MENUS.register("warp_pipe", () -> new MenuType<>(WarpPipeMenu::new, FeatureFlags.REGISTRY.allFlags()));
+
+        RAINBOW_STAR = WarpPipes.PARTICLES.register("rainbow_star", () -> new ParticleType<WarpStarParticleOption>(false) {
+            @Override
+            public MapCodec<WarpStarParticleOption> codec() {
+                return WarpStarParticleOption.CODEC;
+            }
+
+            @Override
+            public StreamCodec<? super RegistryFriendlyByteBuf, WarpStarParticleOption> streamCodec() {
+                return WarpStarParticleOption.STREAM_CODEC;
+            }
+        });
+
+        WARP_LINK = WarpPipes.PARTICLES.register("warp_link", () -> new ParticleType<WarpLinkParticleOption>(true) {
+            @Override
+            public MapCodec<WarpLinkParticleOption> codec() {
+                return WarpLinkParticleOption.CODEC;
+            }
+
+            @Override
+            public StreamCodec<? super RegistryFriendlyByteBuf, WarpLinkParticleOption> streamCodec() {
+                return WarpLinkParticleOption.STREAM_CODEC;
+            }
+        });
     }
 
     public static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {

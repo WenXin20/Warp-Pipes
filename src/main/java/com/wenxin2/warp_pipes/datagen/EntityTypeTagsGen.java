@@ -31,6 +31,9 @@ public class EntityTypeTagsGen extends EntityTypeTagsProvider {
                 .add(EntityType.WITHER)
                 .addOptionalTag(TagRegistry.TWILIGHT_FOREST_BOSSES);
 
+        tag(TagRegistry.TRAVELS_HEAD_FIRST_IN_PIPES)
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("marioverse", "travels_head_first_in_pipes"));
+
         tag(TagRegistry.WARP_PIPE_CANNOT_SPAWN);
     }
 }

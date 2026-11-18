@@ -7,11 +7,20 @@
   "mixins": [
     "EntityMixin",
     "LivingEntityMixin",
+    "MobAccessor",
+    "PathFinderMixin",
+    "PathNavigationAccessor",
+    "PiglinAiMixin",
     "PlayerMixin",
     "ServerPlayerMixin",
+    "StructureStartMixin",
+    "StructureTemplateMixin",
+    "VillagerGoalPackagesMixin",
+    "WalkNodeEvaluatorMixin",
     "iris.IdMapMixin"
   ],
   "client": [
+    "LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

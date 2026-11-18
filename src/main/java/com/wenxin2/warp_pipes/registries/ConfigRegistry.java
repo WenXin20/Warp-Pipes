@@ -33,8 +33,10 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
     public static ModConfigSpec.BooleanValue DISABLE_PLAYER_WARP_DISRUPTING;
     public static ModConfigSpec.BooleanValue DISABLE_TEXT;
+    public static ModConfigSpec.BooleanValue DISABLE_WARP_COOLDOWN_PARTICLES;
     public static ModConfigSpec.BooleanValue DISABLE_VANILLA_TABS;
     public static ModConfigSpec.BooleanValue DISABLE_WARP_PIPES_TABS;
+    public static ModConfigSpec.BooleanValue TELEPORT_CONTRAPTIONS;
     public static ModConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_NON_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_PLAYERS;
@@ -50,6 +52,9 @@ public class ConfigRegistry
 
     public static ModConfigSpec.IntValue WARP_PIPE_COOLDOWN;
     public static ModConfigSpec.IntValue WARP_DISRUPTING_COOLDOWN;
+
+    public static ModConfigSpec.DoubleValue WARP_PIPE_FUEL_COST_MULTIPLIER;
+    public static ModConfigSpec.DoubleValue WARP_PIPE_XP_COST_MULTIPLIER;
 
     private ConfigRegistry() {
         ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -68,6 +73,10 @@ public class ConfigRegistry
                     .comment("§cRequires \"Warp Cooldown Message\"")
                     .comment("§9[Default: false]")
                     .define("warp_cooldown_message_with_ticks", false);
+            DISABLE_WARP_COOLDOWN_PARTICLES = BUILDER.translation("configuration.warp_pipes.disable_warp_cooldown_particles")
+                    .comment("Disable the smoke particles at warp pipe entrances while on warp cooldown.")
+                    .comment("§9[Default: false]")
+                    .define("disable_warp_cooldown_particles", false);
         BUILDER.pop();
 
         BUILDER.push(CATEGORY_COMMON);
@@ -97,6 +106,10 @@ public class ConfigRegistry
                         .comment("Warping gives the player a brief blindness effect.")
                         .comment("§9[Default: true]")
                         .define("blindness_effect", true);
+                TELEPORT_CONTRAPTIONS = BUILDER.translation("configuration.warp_pipes.teleport_contraptions")
+                        .comment("Allow Sable contraptions to teleport.")
+                        .comment("§9[Default: true]")
+                        .define("teleport_contraptions", true);
                 TELEPORT_MOBS = BUILDER.translation("configuration.warp_pipes.teleport_mobs")
                         .comment("Allow mobs to teleport.")
                         .comment("§9[Default: true]")
@@ -118,6 +131,14 @@ public class ConfigRegistry
                         .comment("Allow warp pipes to spawn mobs.")
                         .comment("§9[Default: true]")
                         .define("warp_pipe_spawns_mobs", true);
+                WARP_PIPE_XP_COST_MULTIPLIER = BUILDER.translation("configuration.warp_pipes.warp_pipe_xp_cost_multiplier")
+                        .comment("Experience points a player spends per block of distance when warping.")
+                        .comment("§6[Set to 0 to disable]§b")
+                        .defineInRange("warp_pipe_xp_cost_multiplier", 0.0, 0.0, 5.0);
+                WARP_PIPE_FUEL_COST_MULTIPLIER = BUILDER.translation("configuration.warp_pipes.warp_pipe_fuel_cost_multiplier")
+                        .comment("Amount of items in the `warp_pipes:warp_fuel` item tag (ender pearls by default) a player spends per block of distance when warping.")
+                        .comment("§6[Set to 0 to disable]§b")
+                        .defineInRange("warp_pipe_fuel_cost_multiplier", 0.0, 0.0, 1.0);
                 WAX_DISABLES_BUBBLES = BUILDER.translation("configuration.warp_pipes.wax_disables_bubbles")
                         .comment("Allows waxing pipes to disable the Pipe Bubbles button.")
                         .comment("§9[Default: true]")

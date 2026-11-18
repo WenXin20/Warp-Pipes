@@ -25,11 +25,13 @@ public class TagRegistry {
     public static final TagKey<Item> POWER_UPS_ITEMS = itemTags("marioverse", "power_ups");
     public static final TagKey<Item> WARP_PIPE_CANNOT_SPAWN_ITEMS = itemTags(WarpPipes.MOD_ID, "warp_pipe_cannot_spawn");
     public static final TagKey<Item> WARP_PIPE_ITEMS = itemTags(WarpPipes.MOD_ID, "warp_pipes");
+    public static final TagKey<Item> WARP_FUEL = itemTags(WarpPipes.MOD_ID, "warp_fuel");
     public static final TagKey<Item> WRENCHES = itemTags("marioverse", "tools/wrenches");
 
     public static final TagKey<EntityType<?>> CANNOT_QUICK_TRAVEL = entityTypeTags(WarpPipes.MOD_ID, "cannot_quick_travel");
     public static final TagKey<EntityType<?>> CANNOT_WARP = entityTypeTags(WarpPipes.MOD_ID, "cannot_warp");
     public static final TagKey<EntityType<?>> TWILIGHT_FOREST_BOSSES = entityTypeTags("twilightforest", "bosses");
+    public static final TagKey<EntityType<?>> TRAVELS_HEAD_FIRST_IN_PIPES = entityTypeTags(WarpPipes.MOD_ID, "travels_head_first_in_pipes");
     public static final TagKey<EntityType<?>> WARP_PIPE_CANNOT_SPAWN = entityTypeTags(WarpPipes.MOD_ID, "warp_pipe_cannot_spawn");
 
     private static TagKey<Biome> biomeTags(String id, String name) {

@@ -8,6 +8,9 @@ import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.registries.TagRegistry;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,12 +25,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
 
 public interface WP$BlockWarpEntityHandler {
+    Map<Entity, Long> AWAITING_RELEASE = Collections.synchronizedMap(new WeakHashMap<>());
+    int RELEASE_GRACE_TICKS = 10;
+    double LOWERED_FLOOR_TOLERANCE = 0.25;
+
     boolean wp$getBlockWarpTeleportConfig(Entity entity);
 
     static boolean getShiftKeyForEntity(Entity entity) {
@@ -37,10 +43,13 @@ public interface WP$BlockWarpEntityHandler {
 
     default void enterWarp(Entity entity, Level world, BlockPos pos, BlockPos posEmbedded, BlockState state,
                            @Nullable Object object) {
+        if (entity.isSpectator())
+            return;
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
         BlockPos warpPos;
 
-        if (ModList.get().isLoaded("sable") && object instanceof SableProvider.SableContext context) {
+        if (SableProvider.isLoaded() && object instanceof SableProvider.SableContext context) {
             state = context.accessor.getBlockState(posEmbedded);
             blockEntity = context.accessor.getBlockEntity(posEmbedded);
             if (world instanceof ServerLevel) {
@@ -80,7 +89,7 @@ public interface WP$BlockWarpEntityHandler {
         int blockY = pos.getY();
         int blockZ = pos.getZ();
 
-        if (ModList.get().isLoaded("sable") && object instanceof SableProvider.SableContext context) {
+        if (SableProvider.isLoaded() && object instanceof SableProvider.SableContext context) {
             Quaterniondc rotation = context.subLevel.logicalPose().orientation();
             Vector3d localLook = rotation.transformInverse(new Vector3d(look.x, look.y, look.z));
             look = new Vec3(localLook.x, localLook.y, localLook.z).normalize();
@@ -104,9 +113,9 @@ public interface WP$BlockWarpEntityHandler {
                 double lookDot = flatX * facing.getStepX() + flatZ * facing.getStepZ();
                 boolean facingIntoPipe = lookDot < -0.65;
 
-                boolean withinX = entityX > blockX && entityX < blockX + 1;
-                boolean withinY = entityY >= blockY && entityY < blockY + 1;
-                boolean withinZ = entityZ > blockZ && entityZ < blockZ + 1;
+                boolean withinX = entityX >= blockX && entityX < blockX + 1;
+                boolean withinY = entityY + LOWERED_FLOOR_TOLERANCE >= blockY && entityY < blockY + 1;
+                boolean withinZ = entityZ >= blockZ && entityZ < blockZ + 1;
                 boolean insideFaceBounds;
 
                 switch (facing.getAxis()) {
@@ -122,9 +131,13 @@ public interface WP$BlockWarpEntityHandler {
                 else canEnterPipe = getShiftKeyForEntity(entity);
 
                 if (insideFaceBounds && canEnterPipe) {
-                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
+                    if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0) {
                         this.warp(entity, world, pos, state, warpPos, warpBE);
-                    else if (entity instanceof Player player) {
+                        AWAITING_RELEASE.put(entity, entity.level().getGameTime());
+                    } else if (entity instanceof Player player) {
+                        if (WP$BlockWarpEntityHandler.isStillEnteringAfterWarp(entity))
+                            return;
+
                         if (warpBE.preventWarp)
                             this.displayWarpDisruptedMessage(player, state);
                         else if (warpBE.hasDestinationPos())
@@ -147,7 +160,7 @@ public interface WP$BlockWarpEntityHandler {
         for (BlockPos posAbove : BlockPos.betweenClosed(min, max)) {
             BlockState stateAbove = level.getBlockState(posAbove);
 
-            if (ModList.get().isLoaded("sable") && object instanceof SableProvider.SableContext context) {
+            if (SableProvider.isLoaded() && object instanceof SableProvider.SableContext context) {
                 BlockPos posEmbedded = context.posEmbedded.above(Math.round(entity.getBbHeight()))
                         .offset(posAbove.getX() - min.getX(), posAbove.getY() - max.getY(), posAbove.getZ() - min.getZ());
                 stateAbove = context.accessor.getBlockState(posEmbedded);
@@ -159,11 +172,15 @@ public interface WP$BlockWarpEntityHandler {
             }
 
             if (!entity.getData(DataAttachmentRegistry.PREVENT_WARP)) {
-                if (this.wp$getBlockWarpTeleportConfig(entity) && !entity.getType().is(TagRegistry.CANNOT_WARP) && stateAbove.hasProperty(WarpPipeBlock.FACING)) {
-                    if (stateAbove.getValue(WarpPipeBlock.FACING) == Direction.DOWN) {
-                        if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0)
+                if (this.wp$getBlockWarpTeleportConfig(entity) && !entity.getType().is(TagRegistry.CANNOT_WARP)) {
+                    if (stateAbove.hasProperty(WarpPipeBlock.FACING) && stateAbove.getValue(WarpPipeBlock.FACING) == Direction.DOWN) {
+                        if (!warpBE.preventWarp && entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0) {
                             this.warp(entity, level, pos, stateAbove, warpPos, warpBE);
-                        else if (entity instanceof Player player) {
+                            AWAITING_RELEASE.put(entity, entity.level().getGameTime());
+                        } else if (entity instanceof Player player) {
+                            if (WP$BlockWarpEntityHandler.isStillEnteringAfterWarp(entity))
+                                continue;
+
                             if (warpBE.preventWarp)
                                 this.displayWarpDisruptedMessage(player, stateAbove);
                             else if (warpBE.hasDestinationPos())
@@ -176,26 +193,46 @@ public interface WP$BlockWarpEntityHandler {
     }
 
     default void warp(Entity entity, Level level, BlockPos pos, BlockState state, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
-        if (warpPos != null && !(level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity)
+        if (SableProvider.isLoaded()) {
+            if (warpBE.destinationSubLevel != null && warpBE.destinationSubLevelPos != null) {
+                if (!(level instanceof ServerLevel serverLevel))
+                    return;
+
+                BlockPos resolvedPos = SableProvider.resolveSubLevelPos(serverLevel, warpBE.destinationSubLevel, warpBE.destinationSubLevelPos);
+
+                if (resolvedPos == null) {
+                    if (SableProvider.queueSubLevelWarp(serverLevel, warpBE.destinationSubLevel, warpBE.destinationSubLevelPos, entity,
+                            loadedPos -> serverLevel.getBlockEntity(loadedPos) instanceof BaseWarpBlockEntity,
+                            () -> this.warp(entity, level, pos, state, warpBE.destinationPos, warpBE))) {
+                        if (entity instanceof Player player)
+                            player.displayClientMessage(Component.translatable("display.warp_pipes.warp_destination_loading"), true);
+                    } else if (entity instanceof Player player)
+                        WP$BlockWarpEntityHandler.displayDestinationMissingMessage(player);
+                    return;
+                }
+
+                if (!resolvedPos.equals(warpPos)) {
+                    warpBE.destinationPos = resolvedPos;
+                    warpBE.setChanged();
+                    warpPos = resolvedPos;
+                }
+            } else if (warpPos != null && level instanceof ServerLevel) {
+                warpBE.updateDestinationSubLevel(warpPos);
+                if (warpBE.destinationSubLevel != null)
+                    warpBE.setChanged();
+            }
+        }
+
+        if (!level.isClientSide && warpPos != null && !(level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity)
                 && entity instanceof Player player)
             WP$BlockWarpEntityHandler.displayDestinationMissingMessage(player);
 
         if (warpPos != null && level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity) {
-            BlockState warpState = level.getBlockState(warpPos);
-
-            if (warpState.getBlock() instanceof WarpPipeBlock)
-                WarpPipeBlockEntity.warp(entity, warpPos, level, warpState);
-            if (state.getBlock() instanceof WarpPipeBlock)
-                level.playSound(null, pos, SoundRegistry.PIPE_WARPS.get(), SoundSource.BLOCKS);
+            this.warpToBlock(entity, level, pos, state, warpPos);
         } else if (warpBE.getUUID() != null && warpBE.getWarpUuid() != null
-                && BaseWarpBlockEntity.findMatchingUUID(warpBE.getUUID()) != null) {
-            warpPos = BaseWarpBlockEntity.findMatchingUUID(warpBE.getUUID());
-            BlockState warpState = level.getBlockState(warpPos);
-
-            if (warpState.getBlock() instanceof WarpPipeBlock)
-                WarpPipeBlockEntity.warp(entity, warpPos, level, warpState);
-            if (state.getBlock() instanceof WarpPipeBlock)
-                level.playSound(null, pos, SoundRegistry.PIPE_WARPS.get(), SoundSource.BLOCKS);
+                && BaseWarpBlockEntity.findMatchingUUID(warpBE.getUUID(), level, pos) != null) {
+            warpPos = BaseWarpBlockEntity.findMatchingUUID(warpBE.getUUID(), level, pos);
+            this.warpToBlock(entity, level, pos, state, warpPos);
 
             warpBE.setDestinationPos(warpPos);
             if (level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity destBE)
@@ -203,8 +240,27 @@ public interface WP$BlockWarpEntityHandler {
         }
     }
 
+    private void warpToBlock(Entity entity, Level level, BlockPos pos, BlockState state, BlockPos warpPos) {
+        BlockState warpState = level.getBlockState(warpPos);
+        WarpCost.Cost warpCost = WarpCost.getBlockCost(level, pos, warpPos, state);
+        Vec3 startPos = entity.position();
+
+        if (!WarpCost.canAfford(entity, warpCost))
+            return;
+
+        if (warpState.getBlock() instanceof WarpPipeBlock)
+            WarpPipeBlockEntity.warp(entity, warpPos, level, warpState);
+        if (state.getBlock() instanceof WarpPipeBlock)
+            level.playSound(null, pos, SoundRegistry.PIPE_WARPS.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+        WarpCost.chargeIfWarped(entity, startPos, warpCost);
+        WarpReturn.onWarped(entity, warpPos, startPos);
+
+        if (level instanceof ServerLevel serverLevel && !entity.position().equals(startPos))
+            WarpLinkParticles.spawnWarpTransition(serverLevel, pos, state, warpPos, warpState);
+    }
+
     default void displayCooldownMessage(Player player, BlockState state) {
-        if (player.getData(DataAttachmentRegistry.WARP_COOLDOWN) >= 10) {
+        if (!player.level().isClientSide && player.getData(DataAttachmentRegistry.WARP_COOLDOWN) >= 10) {
             if (state.getBlock() instanceof WarpPipeBlock) {
                 if (ConfigRegistry.WARP_COOLDOWN_MESSAGE.get()) {
                     if (ConfigRegistry.WARP_COOLDOWN_MESSAGE_TICKS.get())
@@ -221,7 +277,46 @@ public interface WP$BlockWarpEntityHandler {
                 state.getBlock().getName()).withStyle(ChatFormatting.RED), true);
     }
 
+    default boolean spectatorWarp(Entity entity, Level level, BlockPos pos, BlockState state, BaseWarpBlockEntity warpBE) {
+        if (!(state.getBlock() instanceof WarpPipeBlock) || warpBE.preventWarp || !warpBE.hasDestinationPos()
+                || entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) > 0)
+            return false;
+        if (!state.getValue(WarpPipeBlock.ENTRANCE) || state.getValue(WarpPipeBlock.CLOSED))
+            return false;
+
+        this.warp(entity, level, pos, state, warpBE.destinationPos, warpBE);
+        return true;
+    }
+
     static void displayDestinationMissingMessage(Player player) {
         player.displayClientMessage(Component.translatable("display.warp_pipes.warp_destination_missing"), true);
+    }
+
+    static boolean isOnLoweredFloor(double feetY) {
+        double fraction = feetY - Math.floor(feetY);
+        return fraction > 0.0 && fraction >= 1.0 - LOWERED_FLOOR_TOLERANCE;
+    }
+
+    static boolean isStillEnteringAfterWarp(Entity entity) {
+        Long lastTick = AWAITING_RELEASE.get(entity);
+        long gameTime = entity.level().getGameTime();
+
+        if (lastTick != null && gameTime - lastTick <= RELEASE_GRACE_TICKS) {
+            AWAITING_RELEASE.put(entity, gameTime);
+            return true;
+        }
+
+        AWAITING_RELEASE.remove(entity);
+        return false;
+    }
+
+    static void warpIntoBlock(Level level, BlockPos warpPos, Entity entity) {
+        if (!(level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity))
+            return;
+
+        BlockState warpState = level.getBlockState(warpPos);
+
+        if (warpState.getBlock() instanceof WarpPipeBlock)
+            WarpPipeBlockEntity.warp(entity, warpPos, level, warpState);
     }
 }

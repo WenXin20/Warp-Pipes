@@ -13,9 +13,12 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -83,28 +86,22 @@ public class BlockStateGen extends BlockStateProvider {
 
             for (boolean entrance : new boolean[]{false, true}) {
                 for (boolean closed : new boolean[]{false, true}) {
-                    for (boolean bubbles : new boolean[]{false, true}) {
-                        for (boolean waterSpout : new boolean[]{false, true}) {
-                            String modelName = baseName + "_"
-                                    + direction.getName()
-                                    + (entrance ? "_entrance" : "")
-                                    + (entrance ? (closed ? "_closed" : "") : "");
+                    String modelName = baseName + "_"
+                            + direction.getName()
+                            + (entrance ? "_entrance" : "")
+                            + (entrance ? (closed ? "_closed" : "") : "");
 
-                            ModelFile model = modelCache.computeIfAbsent(modelName, name -> {
-                                ResourceLocation side = entrance ? entranceTexture : sideTexture;
-                                ResourceLocation top = entrance ? (closed ? topClosedTexture : topTexture) : bottomTexture;
-                                return this.createWarpPipeModel(name, bottomTexture, side, top, direction);
-                            });
+                    ModelFile model = modelCache.computeIfAbsent(modelName, name -> {
+                        ResourceLocation side = entrance ? entranceTexture : sideTexture;
+                        ResourceLocation top = entrance ? (closed ? topClosedTexture : topTexture) : bottomTexture;
+                        return this.createWarpPipeModel(name, bottomTexture, side, top, direction);
+                    });
 
-                            variantBuilder.partialState()
-                                    .with(WarpPipeBlock.FACING, direction)
-                                    .with(WarpPipeBlock.ENTRANCE, entrance)
-                                    .with(WarpPipeBlock.CLOSED, closed)
-                                    .with(WarpPipeBlock.BUBBLES, bubbles)
-                                    .with(WarpPipeBlock.WATER_SPOUT, waterSpout)
-                                    .addModels(new ConfiguredModel(model, xRot, yRot, false));
-                        }
-                    }
+                    variantBuilder.partialState()
+                            .with(WarpPipeBlock.FACING, direction)
+                            .with(WarpPipeBlock.ENTRANCE, entrance)
+                            .with(WarpPipeBlock.CLOSED, closed)
+                            .addModels(new ConfiguredModel(model, xRot, yRot, false));
                 }
             }
         }
@@ -167,16 +164,86 @@ public class BlockStateGen extends BlockStateProvider {
     private void waterSpoutModel(Block block, ResourceLocation sideTexture, ResourceLocation topTexture, ResourceLocation splashTexture) {
         String modelName = BuiltInRegistries.BLOCK.getKey(block).getPath();
 
-        ModelFile model = models()
-                .withExistingParent(modelName, modLoc("block/template_water_spout"))
-                .texture("side", sideTexture);
-        ModelFile modelTop = models()
-                .withExistingParent(modelName + "_top", modLoc("block/template_water_spout_top"))
-                .texture("splash", splashTexture).texture("side", sideTexture).texture("top", topTexture);
+        ModelFile[] side = this.waterSpoutParts(modelName, "_side", sideTexture, topTexture, splashTexture);
+        ModelFile[] sideLeft = this.waterSpoutParts(modelName, "_side_left", sideTexture, topTexture, splashTexture);
+        ModelFile[] sideRight = this.waterSpoutParts(modelName, "_side_right", sideTexture, topTexture, splashTexture);
+        ModelFile topCenter = this.waterSpoutPart(modelName, "_top_center", sideTexture, topTexture, splashTexture);
+        ModelFile[] topEdge = this.waterSpoutParts(modelName, "_top_edge", sideTexture, topTexture, splashTexture);
+        ModelFile[] topCorner = this.waterSpoutParts(modelName, "_top_corner", sideTexture, topTexture, splashTexture);
+        ModelFile[] splash = this.waterSpoutParts(modelName, "_splash", sideTexture, topTexture, splashTexture);
+        ModelFile[] splashLeft = this.waterSpoutParts(modelName, "_splash_left", sideTexture, topTexture, splashTexture);
+        ModelFile[] splashRight = this.waterSpoutParts(modelName, "_splash_right", sideTexture, topTexture, splashTexture);
+        ModelFile[] splashExtendLeft = this.waterSpoutParts(modelName, "_splash_extend_left", sideTexture, topTexture, splashTexture);
+        ModelFile[] splashExtendRight = this.waterSpoutParts(modelName, "_splash_extend_right", sideTexture, topTexture, splashTexture);
 
-        VariantBlockStateBuilder variantBuilder = this.getVariantBuilder(block);
-        variantBuilder.partialState().with(WaterSpoutBlock.TOP, false).addModels(new ConfiguredModel(model));
-        variantBuilder.partialState().with(WaterSpoutBlock.TOP, true).addModels(new ConfiguredModel(modelTop));
+        MultiPartBlockStateBuilder builder = this.getMultipartBuilder(block);
+
+        for (Direction facing : Direction.values()) {
+            builder.part().modelFile(topCenter).rotationX(WaterSpoutBlock.getModelXRotation(facing))
+                    .rotationY(WaterSpoutBlock.getModelYRotation(facing)).addModel()
+                    .condition(WaterSpoutBlock.FACING, facing).condition(WaterSpoutBlock.TOP, true).end();
+
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                BooleanProperty property = PipeBlock.PROPERTY_BY_DIRECTION.get(direction);
+                BooleanProperty left = PipeBlock.PROPERTY_BY_DIRECTION.get(direction.getCounterClockWise());
+                BooleanProperty right = PipeBlock.PROPERTY_BY_DIRECTION.get(direction.getClockWise());
+                int[] rotation = this.waterSpoutRotation(facing, direction);
+
+                this.waterSpoutPart(builder, side, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(property, false).end();
+                this.waterSpoutPart(builder, sideLeft, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(property, true).condition(left, false).end();
+                this.waterSpoutPart(builder, sideRight, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(property, true).condition(right, false).end();
+                this.waterSpoutPart(builder, topEdge, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, true).end();
+                this.waterSpoutPart(builder, topCorner, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, true).condition(right, true).end();
+                this.waterSpoutPart(builder, splash, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, false).end();
+                this.waterSpoutPart(builder, splashLeft, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, false).condition(left, false).end();
+                this.waterSpoutPart(builder, splashRight, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, false).condition(right, false).end();
+                this.waterSpoutPart(builder, splashExtendLeft, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, false).condition(left, true).end();
+                this.waterSpoutPart(builder, splashExtendRight, rotation).condition(WaterSpoutBlock.FACING, facing)
+                        .condition(WaterSpoutBlock.TOP, true).condition(property, false).condition(right, true).end();
+            }
+        }
+    }
+
+    private MultiPartBlockStateBuilder.PartBuilder waterSpoutPart(MultiPartBlockStateBuilder builder, ModelFile[] models, int[] rotation) {
+        return builder.part().modelFile(models[rotation[0]]).rotationX(rotation[1]).rotationY(rotation[2]).addModel();
+    }
+
+    private int[] waterSpoutRotation(Direction facing, Direction local) {
+        Direction target = WaterSpoutBlock.getWorldSide(facing, local);
+
+        for (int base = 0; base < 2; base++) {
+            Direction baseDirection = base == 0 ? Direction.NORTH : Direction.EAST;
+            for (int x = 0; x < 360; x += 90) {
+                for (int y = 0; y < 360; y += 90) {
+                    if (WaterSpoutBlock.rotateDirection(Direction.UP, x, y) == facing
+                            && WaterSpoutBlock.rotateDirection(baseDirection, x, y) == target)
+                        return new int[]{base, x, y};
+                }
+            }
+        }
+        throw new IllegalStateException("No water spout rotation for " + facing + " " + local);
+    }
+
+    private ModelFile[] waterSpoutParts(String modelName, String suffix, ResourceLocation sideTexture,
+                                        ResourceLocation topTexture, ResourceLocation splashTexture) {
+        return new ModelFile[]{this.waterSpoutPart(modelName, suffix, sideTexture, topTexture, splashTexture),
+                this.waterSpoutPart(modelName, suffix + "_east", sideTexture, topTexture, splashTexture)};
+    }
+
+    private ModelFile waterSpoutPart(String modelName, String suffix, ResourceLocation sideTexture,
+                                     ResourceLocation topTexture, ResourceLocation splashTexture) {
+        return models().withExistingParent(modelName + suffix, modLoc("block/template_water_spout" + suffix))
+                .texture("side", sideTexture).texture("top", topTexture).texture("splash", splashTexture)
+                .texture("particle", sideTexture);
     }
 
     // Unfinished

@@ -6,6 +6,11 @@ import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
 import com.wenxin2.warp_pipes.registries.DataComponentRegistry;
+import com.wenxin2.warp_pipes.utils.WarpLinkParticles;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,6 +25,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,8 +40,11 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class LinkerItem extends TieredItem {
+    private record PipePair(BlockPos first, BlockPos second, double distance) {}
+
     public LinkerItem(final Properties properties, Tier tier) {
         super(tier, properties);
     }
@@ -109,7 +122,8 @@ public class LinkerItem extends TieredItem {
                     player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.bound",
                             state.getBlock().getName()).withStyle(ChatFormatting.GREEN), true);
 
-                    this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
+                    if (world instanceof ServerLevel serverLevel)
+                        WarpLinkParticles.outlineWarp(serverLevel, pos, null);
                     this.playSound(world, pos, SoundRegistry.WRENCH_WARP_LINKED.get(), SoundSource.BLOCKS, 1.0F, pitch);
                 } else {
 
@@ -129,13 +143,20 @@ public class LinkerItem extends TieredItem {
                     if (firstBE instanceof BaseWarpBlockEntity firstWarpBE) {
 
                         // Perform the linking logic
-                        this.link(stack, firstWarpBE, warpBE);
+                        if (!LinkerItem.linkPipeGroups(this, stack, world, firstPos, firstState, pos, state))
+                            this.link(stack, firstWarpBE, warpBE);
 
                         player.displayClientMessage(Component.translatable(this.getDescriptionId() + ".message.linked_warp_block",
                                 state.getBlock().getName(), firstState.getBlock().getName()).withStyle(ChatFormatting.GOLD), true);
 
-                        this.spawnParticles(world, pos, ParticleTypes.ENCHANT);
+                        if (world instanceof ServerLevel serverLevel) {
+                            WarpLinkParticles.outlineWarp(serverLevel, firstPos, null);
+                            WarpLinkParticles.outlineWarp(serverLevel, pos, null);
+                        }
                         this.playSound(world, pos, SoundRegistry.WRENCH_WARP_CREATED.get(), SoundSource.BLOCKS, 1.0F, pitch);
+
+                        if (!world.isClientSide)
+                            stack.hurtAndBreak(2, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
                     }
                     //  }
                     setIsBound(stack, false);  // Reset binding
@@ -171,6 +192,9 @@ public class LinkerItem extends TieredItem {
 
         firstPipeBlockEntity.markUpdated();
         secondPipeBlockEntity.markUpdated();
+
+        if (firstPipeBlockEntity.getLevel() instanceof ServerLevel serverLevel)
+            WarpLinkParticles.sendLinkVibration(serverLevel, Vec3.atCenterOf(firstPos), Vec3.atCenterOf(secondPos));
         clearItemComponents(stack);
     }
 
@@ -178,6 +202,146 @@ public class LinkerItem extends TieredItem {
         setWarpPos(stack, null);
         setWarpDimension(stack, "");
         setWarpUUID(stack, null);
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return LinkerItem.getIsBound(stack) || super.isFoil(stack);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, level, entity, slot, selected);
+
+        if (level instanceof ServerLevel serverLevel && entity instanceof ServerPlayer player && level.getGameTime() % 10 == 0
+                && (selected || player.getOffhandItem() == stack) && LinkerItem.getIsBound(stack)) {
+            BlockPos warpPos = LinkerItem.getWarpPos(stack);
+
+            if (warpPos != null)
+                WarpLinkParticles.outlineWarp(serverLevel, warpPos, player);
+        }
+    }
+
+    public static boolean linkPipeGroups(LinkerItem linker, ItemStack stack, Level level, BlockPos firstPos, BlockState firstState,
+                                         BlockPos secondPos, BlockState secondState) {
+        List<BlockPos> firstGroup = WarpPipeBlock.getEntranceGroup(level, firstPos, firstState);
+        List<BlockPos> secondGroup = WarpPipeBlock.getEntranceGroup(level, secondPos, secondState);
+
+        if (firstGroup.isEmpty() != secondGroup.isEmpty() && Math.max(firstGroup.size(), secondGroup.size()) > 1)
+            return LinkerItem.linkPipeGroupToWarp(linker, stack, level, firstGroup.isEmpty() ? secondPos : firstPos,
+                    firstGroup.isEmpty() ? secondGroup : firstGroup, firstGroup.isEmpty() ? firstPos : secondPos);
+
+        if (firstGroup.isEmpty() || secondGroup.isEmpty() || (firstGroup.size() == 1 && secondGroup.size() == 1))
+            return false;
+
+        Direction firstFacing = firstState.getValue(WarpPipeBlock.FACING);
+        Direction secondFacing = secondState.getValue(WarpPipeBlock.FACING);
+        List<PipePair> pairs = new ArrayList<>();
+
+        for (BlockPos first : firstGroup) {
+            double[] firstOffset = LinkerItem.getLocalPipeOffset(first.subtract(firstPos), firstFacing, true);
+
+            for (BlockPos second : secondGroup) {
+                double[] secondOffset = LinkerItem.getLocalPipeOffset(second.subtract(secondPos), secondFacing, false);
+                pairs.add(new PipePair(first, second, Math.hypot(firstOffset[0] - secondOffset[0], firstOffset[1] - secondOffset[1])));
+            }
+        }
+
+        pairs.sort(Comparator.comparingDouble(PipePair::distance));
+        Set<BlockPos> linkedFirst = new HashSet<>();
+        Set<BlockPos> linkedSecond = new HashSet<>();
+
+        for (PipePair pair : pairs) {
+            if (linkedFirst.contains(pair.first()) || linkedSecond.contains(pair.second())
+                    || !(level.getBlockEntity(pair.first()) instanceof BaseWarpBlockEntity firstBE)
+                    || !(level.getBlockEntity(pair.second()) instanceof BaseWarpBlockEntity secondBE))
+                continue;
+
+            if (!level.isClientSide) {
+                if (firstBE.getUUID() == null)
+                    firstBE.setUUID(UUID.randomUUID());
+                if (secondBE.getUUID() == null)
+                    secondBE.setUUID(UUID.randomUUID());
+            }
+
+            linker.link(stack, firstBE, secondBE);
+            linkedFirst.add(pair.first());
+            linkedSecond.add(pair.second());
+        }
+
+        for (PipePair pair : pairs) {
+            if (linkedFirst.contains(pair.first()) || !linkedSecond.contains(pair.second())
+                    || !(level.getBlockEntity(pair.first()) instanceof BaseWarpBlockEntity firstBE)
+                    || !(level.getBlockEntity(pair.second()) instanceof BaseWarpBlockEntity secondBE))
+                continue;
+
+            if (!level.isClientSide && firstBE.getUUID() == null)
+                firstBE.setUUID(UUID.randomUUID());
+
+            firstBE.setDestinationPos(pair.second());
+            if (secondBE.getDestinationDim() != null)
+                firstBE.setDestinationDim(secondBE.getDestinationDim());
+            if (secondBE.getUUID() != null)
+                firstBE.setWarpUuid(secondBE.getUUID());
+            firstBE.markUpdated();
+
+            if (level instanceof ServerLevel serverLevel)
+                WarpLinkParticles.sendLinkVibration(serverLevel, Vec3.atCenterOf(pair.first()), Vec3.atCenterOf(pair.second()));
+            linkedFirst.add(pair.first());
+        }
+        return true;
+    }
+
+    private static boolean linkPipeGroupToWarp(LinkerItem linker, ItemStack stack, Level level, BlockPos pipePos,
+                                               List<BlockPos> group, BlockPos warpPos) {
+        if (!(level.getBlockEntity(pipePos) instanceof BaseWarpBlockEntity pipeBE)
+                || !(level.getBlockEntity(warpPos) instanceof BaseWarpBlockEntity warpBE))
+            return false;
+
+        if (!level.isClientSide) {
+            if (pipeBE.getUUID() == null)
+                pipeBE.setUUID(UUID.randomUUID());
+            if (warpBE.getUUID() == null)
+                warpBE.setUUID(UUID.randomUUID());
+        }
+
+        linker.link(stack, pipeBE, warpBE);
+
+        for (BlockPos pos : group) {
+            if (pos.equals(pipePos) || !(level.getBlockEntity(pos) instanceof BaseWarpBlockEntity groupBE))
+                continue;
+
+            if (!level.isClientSide && groupBE.getUUID() == null)
+                groupBE.setUUID(UUID.randomUUID());
+
+            groupBE.setDestinationPos(warpPos);
+            if (pipeBE.getDestinationDim() != null)
+                groupBE.setDestinationDim(pipeBE.getDestinationDim());
+            if (warpBE.getUUID() != null)
+                groupBE.setWarpUuid(warpBE.getUUID());
+            groupBE.markUpdated();
+
+            if (level instanceof ServerLevel serverLevel)
+                WarpLinkParticles.sendLinkVibration(serverLevel, Vec3.atCenterOf(pos), Vec3.atCenterOf(warpPos));
+        }
+        return true;
+    }
+
+    private static double[] getLocalPipeOffset(BlockPos offset, Direction facing, boolean entering) {
+        Direction right;
+        Direction up;
+
+        if (facing.getAxis().isHorizontal()) {
+            right = entering ? facing.getClockWise() : facing.getCounterClockWise();
+            up = Direction.UP;
+        } else {
+            right = entering ? Direction.EAST : Direction.WEST;
+            up = Direction.SOUTH;
+        }
+
+        return new double[] {
+                offset.getX() * right.getStepX() + offset.getY() * right.getStepY() + offset.getZ() * right.getStepZ(),
+                offset.getX() * up.getStepX() + offset.getY() * up.getStepY() + offset.getZ() * up.getStepZ()};
     }
 
     public static boolean getIsBound(ItemStack stack) {

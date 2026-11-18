@@ -1,6 +1,8 @@
 package com.wenxin2.warp_pipes;
 
 import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
+import com.wenxin2.warp_pipes.client.particles.WarpLinkParticle;
+import com.wenxin2.warp_pipes.client.particles.WarpStarParticle;
 import com.wenxin2.warp_pipes.client.renderers.blocks.WarpPipeBlockEntityRenderer;
 import com.wenxin2.warp_pipes.registries.ModRegistry;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 @EventBusSubscriber(modid = WarpPipes.MOD_ID, value = Dist.CLIENT)
@@ -31,6 +34,12 @@ public class WarpPipesClient {
             return world != null && pos != null
                     ? BiomeColors.getAverageWaterColor(world, pos) | 0xFF0000cc : 0xFFFFFFFF;
         }, ModRegistry.WATER_SPOUT.get());
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModRegistry.WARP_LINK.get(), WarpLinkParticle.Provider::new);
+        event.registerSpriteSet(ModRegistry.RAINBOW_STAR.get(), WarpStarParticle.Provider::new);
     }
 
     @SubscribeEvent

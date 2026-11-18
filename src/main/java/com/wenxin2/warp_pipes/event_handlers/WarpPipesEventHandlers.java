@@ -1,8 +1,17 @@
 package com.wenxin2.warp_pipes.event_handlers;
 
 import com.wenxin2.warp_pipes.WarpPipes;
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
-import com.wenxin2.warp_pipes.blocks.client.WarpPipeScreen;
+import com.wenxin2.warp_pipes.entities.ai.goals.ReturnThroughWarpGoal;
+import com.wenxin2.warp_pipes.entities.ai.goals.UseClearPipeGoal;
+import com.wenxin2.warp_pipes.entities.ai.goals.UseWarpLinkGoal;
+import com.wenxin2.warp_pipes.utils.WP$BlockWarpEntityHandler;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
@@ -40,8 +49,22 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 @EventBusSubscriber(modid = WarpPipes.MOD_ID)
 public class WarpPipesEventHandlers {
     @SubscribeEvent
+    public static void onEntitySize(EntityEvent.Size event) {
+        if (ClearWarpPipeBlock.isShrunkPose(event.getEntity(), event.getPose()))
+            event.setNewSize(ClearWarpPipeBlock.getShrunkDimensions(event.getNewSize(), event.getPose()));
+    }
+
+    @SubscribeEvent
     public static void onJoinWorld(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
+
+        if (!event.getLevel().isClientSide() && entity instanceof PathfinderMob pathfinderMob
+                && !pathfinderMob.getBrain().checkMemory(MemoryModuleType.PATH, MemoryStatus.REGISTERED)) {
+            UseClearPipeGoal.addTo(pathfinderMob);
+            UseWarpLinkGoal.addTo(pathfinderMob);
+            ReturnThroughWarpGoal.addTo(pathfinderMob);
+        }
+
         if (!(entity instanceof LivingEntity)) return;
         CompoundTag tag = entity.getPersistentData();
 
@@ -78,6 +101,9 @@ public class WarpPipesEventHandlers {
                     && entity.getData(DataAttachmentRegistry.PREVENT_WARP))
                 entity.setData(DataAttachmentRegistry.PREVENT_WARP, false);
         }
+
+        if (entity instanceof Mob mob && !entity.level().isClientSide)
+            ClearWarpPipeBlock.restoreShrunkMob(mob);
     }
 
     @SubscribeEvent
@@ -109,15 +135,12 @@ public class WarpPipesEventHandlers {
         ItemStack heldItem = event.getItemStack();
         Player player = event.getEntity();
 
-        if (world.isClientSide()) {
-            BlockPos clickedPos = event.getPos();
-            BlockEntity blockEntity = event.getLevel().getBlockEntity(clickedPos);
-            if (blockEntity instanceof WarpPipeBlockEntity) {
-                // Update the last clicked position
-                WarpPipeScreen.lastClickedPos = clickedPos;
-            }
+        if (player.isSpectator() && !world.isClientSide && world.getBlockEntity(pos) instanceof BaseWarpBlockEntity warpBE
+                && ((WP$BlockWarpEntityHandler) player).spectatorWarp(player, world, pos, state, warpBE)) {
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
         }
-
         if (heldItem.getItem() instanceof SpawnEggItem && state.getBlock() instanceof WarpPipeBlock
                 && world.getBlockEntity(pos) instanceof BaseWarpBlockEntity warpBE) {
             if (warpBE.isWaxed() || !ConfigRegistry.WARP_PIPE_SPAWNS_MOBS.get() || !player.isCreative()) {

@@ -66,6 +66,9 @@ public class ItemTagsGen extends ItemTagsProvider {
                 .addOptional(CREATE_SUPER_GLUE)
                 .addOptional(SIMULATED_HONEY_GLUE);
 
+        tag(TagRegistry.WARP_FUEL)
+                .addTag(Tags.Items.ENDER_PEARLS);
+
         tag(TagRegistry.WARP_PIPE_CANNOT_SPAWN_ITEMS)
                 .addTag(Tags.Items.DYES)
                 .addTag(Tags.Items.TOOLS_WRENCH)
