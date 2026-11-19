@@ -1,4 +1,4 @@
-// 1.21.1	2026-03-29T22:02:15.7706469	Tags for minecraft:item mod id warp_pipes
+// 1.21.1	2026-11-18T16:11:03.6557333	Tags for minecraft:item mod id warp_pipes
 a8abb2e7b75aba7bc15dab9a152e4956cdff42b8 data/c/tags/item/dyed/black.json
 2fae187ccf41076021ac05494d462f31ea9ccad3 data/c/tags/item/dyed/blue.json
 f09f2e88bce0cb0767a8180caacd0ca190563053 data/c/tags/item/dyed/brown.json
@@ -21,9 +21,10 @@ fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/marioverse/tags/item/tools/wrenche
 c7f34cd73daf08ac050731c521edc7624f25b264 data/minecraft/tags/item/enchantable/durability.json
 fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/minecraft/tags/item/enchantable/fire_aspect.json
 fdcac6f82c2877cc2de2f6986ab15d9e29e112ee data/minecraft/tags/item/enchantable/weapon.json
-97ff919c8b6a6d7797f5dd53b4050282c440e2f9 data/warp_pipes/tags/item/can_select_clear_warp_pipes.json
-097ebe883ec7c85a67e8f927f2e5887c42dc4f31 data/warp_pipes/tags/item/can_select_water_spouts.json
+fdee3a6f9ed06b5c99d0343a81609e4537a71049 data/warp_pipes/tags/item/can_select_clear_warp_pipes.json
+b2090841679d347ba3c0505963be72c130a2f24b data/warp_pipes/tags/item/can_select_water_spouts.json
 62fa04764c75de5376320ed0b3589fccc1a6951a data/warp_pipes/tags/item/dyeable_warp_pipes.json
 e4b13a10cb835f7e2bc347ae9069bcf297603b0c data/warp_pipes/tags/item/pipe_junction_blocks.json
+79c86b7629e2a26714ed5d5558bac597397dfcb6 data/warp_pipes/tags/item/warp_fuel.json
 f8edddc8f42af19152ce4c1ece3b6c8b10df09b1 data/warp_pipes/tags/item/warp_pipes.json
 9a0f677dc5e22723585f016cc521ec106bb987e8 data/warp_pipes/tags/item/warp_pipe_cannot_spawn.json

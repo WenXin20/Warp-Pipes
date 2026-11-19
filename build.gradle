@@ -67,7 +67,7 @@ dependencies {
     compileOnly "curse.maven:irisshaders-455508:6661598" // Requires Sodium
     implementation "curse.maven:itemzoom-261725:5536959"
     implementation "curse.maven:roughly-enough-items-${rei_version}"
-    implementation "curse.maven:wiki-zoomer-unofficial-1534301:8122492"
+    compileOnly "curse.maven:wiki-zoomer-unofficial-1534301:8122492"
     compileOnly "dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:[1.6.0,)"
 
     jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:1.6.0"))
