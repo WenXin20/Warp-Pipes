@@ -1,5 +1,6 @@
 ## Update 3.2.2
 - Added tooltips to warp pipes
+- Added the ability for water spouts to face any direction
 
 ## Update 3.2.1
 - Added Pipe Junctions to pipe world gen
