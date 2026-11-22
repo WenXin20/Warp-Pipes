@@ -3,26 +3,83 @@ package com.wenxin2.warp_pipes.utils;
 import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
+import com.wenxin2.warp_pipes.entities.ai.goals.UseWarpLinkGoal;
+import com.wenxin2.warp_pipes.mixin.MobAccessor;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
+import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class WarpLinkPathing {
     public static final float WARP_LINK_COST = 2.0F;
+    private static final double INTENT_DESTINATION_RANGE = 2.5;
+    private static final double RETURN_ENTRANCE_RANGE = 2.0;
+    private static final double TRIGGER_REACHED_DISTANCE = 0.15;
+    private static final Map<Entity, WarpLink> INTENTS = new WeakHashMap<>();
 
     public record WarpLink(BlockPos trigger, BlockPos destinationStand, boolean jump, @Nullable BlockPos door) {}
 
     public static boolean canPathThroughWarps(Mob mob) {
         return ConfigRegistry.TELEPORT_MOBS.get() && mob.getNavigation().getNodeEvaluator().canOpenDoors();
+    }
+
+    public static boolean canUseWarpsNow(Mob mob) {
+        return WarpLinkPathing.canPathThroughWarps(mob) && mob.getData(DataAttachmentRegistry.WARP_COOLDOWN) == 0;
+    }
+
+    public static void setIntent(Mob mob, WarpLink link) {
+        INTENTS.put(mob, link);
+    }
+
+    public static void clearIntent(Mob mob) {
+        INTENTS.remove(mob);
+    }
+
+    public static boolean hasIntent(Mob mob) {
+        return INTENTS.containsKey(mob);
+    }
+
+    public static boolean hasReachedTrigger(Mob mob, Vec3 trigger) {
+        return mob.position().subtract(trigger).horizontalDistanceSqr() < TRIGGER_REACHED_DISTANCE * TRIGGER_REACHED_DISTANCE;
+    }
+
+    public static void moveToTrigger(Mob mob, Vec3 trigger, double speed) {
+        if (WarpLinkPathing.hasReachedTrigger(mob, trigger))
+            mob.getMoveControl().setWantedPosition(mob.getX(), mob.getY(), mob.getZ(), speed);
+        else mob.getMoveControl().setWantedPosition(trigger.x, trigger.y, trigger.z, speed);
+    }
+
+    public static boolean isAccidentalWarp(Entity entity, BlockPos entered, @Nullable BlockPos destination) {
+        if (!(entity instanceof Mob mob) || mob.getControllingPassenger() instanceof Player
+                || !WarpLinkPathing.canPathThroughWarps(mob) || !WarpLinkPathing.hasWarpLinkAI(mob))
+            return false;
+
+        WarpLink intent = INTENTS.get(mob);
+        if (intent != null && destination != null && intent.destinationStand().closerThan(destination, INTENT_DESTINATION_RANGE))
+            return false;
+
+        BlockPos returnBlock = WarpReturn.isReturning(mob) ? WarpReturn.getReturnBlock(mob) : null;
+        return returnBlock == null || !returnBlock.closerThan(entered, RETURN_ENTRANCE_RANGE);
+    }
+
+    private static boolean hasWarpLinkAI(Mob mob) {
+        return mob instanceof Villager || mob instanceof Piglin || ((MobAccessor) mob).wp$getGoalSelector().getAvailableGoals()
+                .stream().anyMatch(goal -> goal.getGoal() instanceof UseWarpLinkGoal);
     }
 
     public static List<WarpLink> getWarpLinks(Level level, BlockPos trigger, Entity entity) {

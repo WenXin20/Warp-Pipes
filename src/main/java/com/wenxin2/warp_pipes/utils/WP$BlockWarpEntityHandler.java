@@ -245,6 +245,9 @@ public interface WP$BlockWarpEntityHandler {
     }
 
     private void warpToBlock(Entity entity, Level level, BlockPos pos, BlockState state, BlockPos warpPos) {
+        if (WarpLinkPathing.isAccidentalWarp(entity, pos, warpPos))
+            return;
+
         BlockState warpState = level.getBlockState(warpPos);
         WarpCost.Cost warpCost = WarpCost.getBlockCost(level, pos, warpPos, state);
         Vec3 startPos = entity.position();
