@@ -212,6 +212,8 @@
   "configuration.warp_pipes.warp_pipe_fuel_cost_multiplier": "Fuel Cost Multiplier",
   "configuration.warp_pipes.warp_pipe_xp_cost_multiplier": "XP Cost Multiplier",
   "configuration.warp_pipes.water_spouts_bucketable": "Bucketable",
+  "configuration.warp_pipes.water_spouts_require_water": "Require Water Source",
+  "configuration.warp_pipes.water_spout_regrow_delay": "Regrow Delay",
   "configuration.warp_pipes.wax_disables_bubbles": "Wax Disables Pipe Bubbles Button",
   "configuration.warp_pipes.wax_disables_closing": "Wax Disables Open/Close Button",
   "configuration.warp_pipes.wax_disables_renaming": "Wax Disables Rename Button",
