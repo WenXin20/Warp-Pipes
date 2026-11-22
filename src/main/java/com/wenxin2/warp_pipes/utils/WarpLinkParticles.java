@@ -1,6 +1,5 @@
 package com.wenxin2.warp_pipes.utils;
 
-import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.integration.sable_compat.SableProvider;
 import com.wenxin2.warp_pipes.particles.WarpLinkParticleOption;
@@ -51,7 +50,7 @@ public class WarpLinkParticles {
         }
 
         Direction facing = state.getValue(WarpPipeBlock.FACING);
-        List<BlockPos> blocks = state.getBlock() instanceof ClearWarpPipeBlock ? List.of(pos) : WarpPipeBlock.getEntranceGroup(level, pos, state);
+        List<BlockPos> blocks = WarpPipeBlock.getWarpFaceGroup(level, pos, state);
         if (blocks.isEmpty())
             blocks = List.of(pos);
 
@@ -146,7 +145,7 @@ public class WarpLinkParticles {
 
         if (state.getBlock() instanceof WarpPipeBlock) {
             facing = state.getValue(WarpPipeBlock.FACING);
-            List<BlockPos> group = state.getBlock() instanceof ClearWarpPipeBlock ? List.of(pos) : WarpPipeBlock.getEntranceGroup(level, pos, state);
+            List<BlockPos> group = WarpPipeBlock.getWarpFaceGroup(level, pos, state);
 
             if (!group.isEmpty())
                 blocks = group;
