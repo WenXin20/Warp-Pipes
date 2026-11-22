@@ -4,6 +4,7 @@ import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.blocks.entities.WarpPipeBlockEntity;
 import com.wenxin2.warp_pipes.integration.sable_compat.SableProvider;
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.registries.DataAttachmentRegistry;
 import com.wenxin2.warp_pipes.registries.SoundRegistry;
@@ -193,6 +194,9 @@ public interface WP$BlockWarpEntityHandler {
     }
 
     default void warp(Entity entity, Level level, BlockPos pos, BlockState state, BlockPos warpPos, BaseWarpBlockEntity warpBE) {
+        if (ClearWarpPipeBlock.isTeleportDisabled(state))
+            return;
+
         if (SableProvider.isLoaded()) {
             if (warpBE.destinationSubLevel != null && warpBE.destinationSubLevelPos != null) {
                 if (!(level instanceof ServerLevel serverLevel))
@@ -279,7 +283,7 @@ public interface WP$BlockWarpEntityHandler {
 
     default boolean spectatorWarp(Entity entity, Level level, BlockPos pos, BlockState state, BaseWarpBlockEntity warpBE) {
         if (!(state.getBlock() instanceof WarpPipeBlock) || warpBE.preventWarp || !warpBE.hasDestinationPos()
-                || entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) > 0)
+                || entity.getData(DataAttachmentRegistry.WARP_COOLDOWN) > 0 || ClearWarpPipeBlock.isTeleportDisabled(state))
             return false;
         if (!state.getValue(WarpPipeBlock.ENTRANCE) || state.getValue(WarpPipeBlock.CLOSED))
             return false;

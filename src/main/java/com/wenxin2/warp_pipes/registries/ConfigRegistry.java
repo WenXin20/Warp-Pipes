@@ -14,6 +14,7 @@ public class ConfigRegistry
     public static final String CATEGORY_CLIENT = "client";
     public static final String CATEGORY_COMMON = "common";
 
+    public static final String CATEGORY_CLEAR_WARP_PIPES = "clear_warp_pipes";
     public static final String CATEGORY_WARP_DISRUPTOR = "warp_disruptor";
     public static final String CATEGORY_WARP_PIPES = "warp_pipes";
     public static final String CATEGORY_WATER_SPOUTS = "water_spouts";
@@ -31,6 +32,7 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue DEBUG_WATER_SPOUT_SELECTION_BOX;
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX;
     public static ModConfigSpec.BooleanValue DEBUG_SELECTION_BOX_CREATIVE;
+    public static ModConfigSpec.BooleanValue DISABLE_CLEAR_PIPE_TELEPORTING;
     public static ModConfigSpec.BooleanValue DISABLE_PLAYER_WARP_DISRUPTING;
     public static ModConfigSpec.BooleanValue DISABLE_TEXT;
     public static ModConfigSpec.BooleanValue DISABLE_WARP_COOLDOWN_PARTICLES;
@@ -81,6 +83,18 @@ public class ConfigRegistry
 
         BUILDER.push(CATEGORY_COMMON);
 
+            BUILDER.push(CATEGORY_CLEAR_WARP_PIPES);
+                ALLOW_FAST_TRAVEL = BUILDER.translation("configuration.warp_pipes.allow_fast_travel")
+                        .comment("Allow fast travel through Clear Warp Pipes.")
+                        .comment("§9[Default: true]")
+                        .define("allow_fast_travel", true);
+                DISABLE_CLEAR_PIPE_TELEPORTING = BUILDER.translation("configuration.warp_pipes.disable_clear_pipe_teleporting")
+                        .comment("Prevent linked Clear Warp Pipes from teleporting entities and contraptions.")
+                        .comment("Travel through connected Clear Warp Pipes still works.")
+                        .comment("§9[Default: false]")
+                        .define("disable_clear_pipe_teleporting", false);
+            BUILDER.pop();
+
             BUILDER.push(CATEGORY_WARP_DISRUPTOR);
                 DISABLE_PLAYER_WARP_DISRUPTING = BUILDER.translation("configuration.warp_pipes.disable_player_warp_disrupting")
                         .comment("Prevent the Warp Disruptor from working on players.")
@@ -94,10 +108,6 @@ public class ConfigRegistry
             BUILDER.pop();
 
             BUILDER.push(CATEGORY_WARP_PIPES);
-                ALLOW_FAST_TRAVEL = BUILDER.translation("configuration.warp_pipes.allow_fast_travel")
-                        .comment("Allow fast travel through Clear Warp Pipes.")
-                        .comment("§9[Default: true]")
-                        .define("allow_fast_travel", true);
                 ALLOW_PIPE_UNWAXING = BUILDER.translation("configuration.warp_pipes.allow_pipe_unwaxing")
                         .comment("Allow warp pipes to be unwaxed with an axe.")
                         .comment("§9[Default: false]")

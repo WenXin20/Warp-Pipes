@@ -1,5 +1,6 @@
 package com.wenxin2.warp_pipes.integration.sable_compat;
 
+import com.wenxin2.warp_pipes.blocks.ClearWarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.WarpPipeBlock;
 import com.wenxin2.warp_pipes.blocks.entities.BaseWarpBlockEntity;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
@@ -177,7 +178,8 @@ public class SubLevelWarpHandler {
         Vec3 center = Vec3.atCenterOf(pos);
 
         if (state.getBlock() instanceof WarpPipeBlock) {
-            if (requireEntrance && (!state.getValue(WarpPipeBlock.ENTRANCE) || state.getValue(WarpPipeBlock.CLOSED)))
+            if (requireEntrance && (!state.getValue(WarpPipeBlock.ENTRANCE) || state.getValue(WarpPipeBlock.CLOSED)
+                    || ClearWarpPipeBlock.isTeleportDisabled(state)))
                 return null;
             facing = state.getValue(WarpPipeBlock.FACING);
             if (!requireEntrance) {
