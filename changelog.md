@@ -1,6 +1,17 @@
 ## Update 3.2.2
 - Added tooltips to warp pipes
-- Added the ability for water spouts to face any direction
+- Changed water spouts to face any direction
+- Changed water spouts to connect the model to make wider spouts
+- Removed the bubbles & water_spout blockstates from warp pipes
+  - Saves to the block entity now
+  - Reduces states from 192 to 48
+- Added a config option to charge xp for teleporting with warp pipes,. 0 by default
+- Added the ability for mobs that can open doors to use warp pipes.
+- Added the ability for warp pipes to teleport Aeronautics contraptions
+- Added new linking and warping particles
+- Added an enchant glow to wrenches when bound to a pipe
+- Added smoke particles to pipes on cooldown. Configurable
+- Added a config to disable teleporting using clear pipes
 
 ## Update 3.2.1
 - Added Pipe Junctions to pipe world gen
