@@ -1,4 +1,5 @@
-## Update 3.2.2
+## Update 3.3.0
+- Ported changes from Marioverse:
 - Added tooltips to warp pipes
 - Changed water spouts to face any direction
 - Changed water spouts to connect the model to make wider spouts
