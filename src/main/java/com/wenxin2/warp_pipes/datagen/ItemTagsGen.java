@@ -27,6 +27,7 @@ public class ItemTagsGen extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
         copy(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS, TagRegistry.DYEABLE_WARP_PIPE_ITEMS);
+        copy(TagRegistry.DYED_PIPE_JUNCTION_BLOCKS, TagRegistry.DYED_PIPE_JUNCTION_ITEMS);
         copy(TagRegistry.PIPE_JUNCTION_BLOCKS, TagRegistry.PIPE_JUNCTION_BLOCK_ITEMS);
         copy(TagRegistry.WARP_PIPE_BLOCKS, TagRegistry.WARP_PIPE_ITEMS);
 

@@ -20,7 +20,8 @@ public class BlockTagsGen extends BlockTagsProvider {
     @Override
     @SuppressWarnings("unchecked")
     protected void addTags(HolderLookup.Provider lookupProvider) {
-        ModRegistry.PIPE_JUNCTION.values().forEach(block -> tag(TagRegistry.PIPE_JUNCTION_BLOCKS).add(block.get()));
+        ModRegistry.PIPE_JUNCTION.values().forEach(block -> tag(TagRegistry.DYED_PIPE_JUNCTION_BLOCKS).add(block.get()));
+
         ModRegistry.WARP_PIPES.values().forEach(block -> tag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS).add(block.get()));
 
         for (DyeColor color : DyeColor.values()) {
@@ -28,6 +29,30 @@ public class BlockTagsGen extends BlockTagsProvider {
                     .add(ModRegistry.PIPE_JUNCTION.get(color).get())
                     .add(ModRegistry.WARP_PIPES.get(color).get());
         }
+
+        tag(TagRegistry.PIPE_JUNCTION_BLOCKS)
+                .addTag(TagRegistry.DYED_PIPE_JUNCTION_BLOCKS)
+                .add(Blocks.COPPER_BLOCK)
+                .add(Blocks.EXPOSED_COPPER)
+                .add(Blocks.WEATHERED_COPPER)
+                .add(Blocks.OXIDIZED_COPPER)
+                .add(Blocks.WAXED_COPPER_BLOCK)
+                .add(Blocks.WAXED_EXPOSED_COPPER)
+                .add(Blocks.WAXED_WEATHERED_COPPER)
+                .add(Blocks.WAXED_OXIDIZED_COPPER)
+                .add(Blocks.DIAMOND_BLOCK)
+                .add(Blocks.EMERALD_BLOCK)
+                .add(Blocks.GOLD_BLOCK)
+                .add(Blocks.IRON_BLOCK)
+                .add(Blocks.LAPIS_BLOCK)
+                .add(Blocks.NETHERITE_BLOCK)
+                .add(Blocks.POLISHED_ANDESITE)
+                .add(Blocks.POLISHED_BLACKSTONE)
+                .add(Blocks.POLISHED_DEEPSLATE)
+                .add(Blocks.POLISHED_DIORITE)
+                .add(Blocks.POLISHED_GRANITE)
+                .add(Blocks.POLISHED_TUFF)
+                .add(Blocks.SMOOTH_STONE);
 
         tag(TagRegistry.WARP_PIPE_BLOCKS)
                 .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS)
@@ -41,10 +66,10 @@ public class BlockTagsGen extends BlockTagsProvider {
 
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .addTag(TagRegistry.DYEABLE_WARP_PIPE_BLOCKS)
-                .addTag(TagRegistry.PIPE_JUNCTION_BLOCKS);
+                .addTag(TagRegistry.DYED_PIPE_JUNCTION_BLOCKS);
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .addTag(TagRegistry.PIPE_JUNCTION_BLOCKS)
+                .addTag(TagRegistry.DYED_PIPE_JUNCTION_BLOCKS)
                 .addTag(TagRegistry.WARP_PIPE_BLOCKS);
 
         tag(TagRegistry.blockTags("framedblocks", "blockentity_whitelisted"))

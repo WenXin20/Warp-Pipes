@@ -136,7 +136,7 @@ public class WarpLinkPathing {
             return;
 
         BaseWarpBlockEntity warpBE = WarpLinkPathing.getUsableWarpBlockEntity(level, pipe);
-        if (warpBE == null)
+        if (warpBE == null || !WarpPipeBlock.arePipesConnected(level, pipe, warpBE.destinationPos))
             return;
 
         BlockState destinationState = level.getBlockState(warpBE.destinationPos);

@@ -146,6 +146,7 @@
   "display.warp_pipes.linker.linked": "Pipe bound to %1$s, %2$s, %3$s, in %4$s",
   "display.warp_pipes.linker.dimension_fail": "Pipes cannot cross dimensions!",
 
+  "display.warp_pipes.pipes_not_connected": "Pipe is not connected to the destination pipe!",
   "display.warp_pipes.players_cannot_teleport": "Players cannot teleport through Warp Pipes!",
   "display.warp_pipes.warp_disrupted": "§c%1$s was prevented from warping you!",
   "display.warp_pipes.warp_disrupted_player": "§cYou were prevented from warping!",
@@ -199,6 +200,8 @@
   "configuration.warp_pipes.require_creative_bubbles": "Pipe Bubbles Creative Only",
   "configuration.warp_pipes.require_creative_close_pipes": "Closing Pipes Creative Only",
   "configuration.warp_pipes.require_creative_water_spouts": "Water Spouts Creative Only",
+  "configuration.warp_pipes.require_connected_clear_pipes": "Require Connected Pipes",
+  "configuration.warp_pipes.require_connected_pipes": "Require Connected Pipes",
   "configuration.warp_pipes.teleport_contraptions": "Teleport Contraptions",
   "configuration.warp_pipes.teleport_mobs": "Teleport Mobs",
   "configuration.warp_pipes.teleport_non_mobs": "Teleport Non-Living Entities",

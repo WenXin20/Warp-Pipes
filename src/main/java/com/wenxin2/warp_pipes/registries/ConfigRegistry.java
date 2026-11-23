@@ -38,6 +38,8 @@ public class ConfigRegistry
     public static ModConfigSpec.BooleanValue DISABLE_WARP_COOLDOWN_PARTICLES;
     public static ModConfigSpec.BooleanValue DISABLE_VANILLA_TABS;
     public static ModConfigSpec.BooleanValue DISABLE_WARP_PIPES_TABS;
+    public static ModConfigSpec.BooleanValue REQUIRE_CONNECTED_PIPES;
+    public static ModConfigSpec.BooleanValue REQUIRE_CONNECTED_CLEAR_PIPES;
     public static ModConfigSpec.BooleanValue TELEPORT_CONTRAPTIONS;
     public static ModConfigSpec.BooleanValue TELEPORT_MOBS;
     public static ModConfigSpec.BooleanValue TELEPORT_NON_MOBS;
@@ -95,6 +97,11 @@ public class ConfigRegistry
                         .comment("Travel through connected Clear Warp Pipes still works.")
                         .comment("§9[Default: false]")
                         .define("disable_clear_pipe_teleporting", false);
+                REQUIRE_CONNECTED_CLEAR_PIPES = BUILDER.translation("configuration.warp_pipes.require_connected_clear_pipes")
+                        .comment("Only teleport to a linked clear pipe connected to the destination pipe.")
+                        .comment("Links between Clear Warp Pipes and other warps stop working.")
+                        .comment("§9[Default: false]")
+                        .define("require_connected_clear_pipes", false);
             BUILDER.pop();
 
             BUILDER.push(CATEGORY_WARP_DISRUPTOR);
@@ -118,6 +125,10 @@ public class ConfigRegistry
                         .comment("Warping gives the player a brief blindness effect.")
                         .comment("§9[Default: true]")
                         .define("blindness_effect", true);
+                REQUIRE_CONNECTED_PIPES = BUILDER.translation("configuration.warp_pipes.require_connected_pipes")
+                        .comment("Only teleport to a linked warp pipe connected to the destination pipe by pipes of the same color. Pipe Junctions can connect pipes of different colors.")
+                        .comment("§9[Default: false]")
+                        .define("require_connected_pipes", false);
                 TELEPORT_CONTRAPTIONS = BUILDER.translation("configuration.warp_pipes.teleport_contraptions")
                         .comment("Allow Sable contraptions to teleport.")
                         .comment("§9[Default: true]")

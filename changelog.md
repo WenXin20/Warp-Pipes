@@ -5,7 +5,11 @@
 - Removed the bubbles & water_spout blockstates from warp pipes
   - Saves to the block entity now
   - Reduces states from 192 to 48
-- Added a config option to charge xp for teleporting with warp pipes,. 0 by default
+- Added a config option to charge xp for teleporting with warp pipes. 0 by default
+- Added a config option to require pipes be connected to the destination pipe to teleport.
+  - Disabled by default
+  - Pipes connected to the destination pipe must be the same color
+  - Pipe Junction blocks can be used to change the color of the pipes connected
 - Added the ability for mobs that can open doors to use warp pipes.
 - Added the ability for warp pipes to teleport Aeronautics contraptions
 - Added new linking and warping particles

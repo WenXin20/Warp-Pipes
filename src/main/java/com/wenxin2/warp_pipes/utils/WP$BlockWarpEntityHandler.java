@@ -247,6 +247,11 @@ public interface WP$BlockWarpEntityHandler {
     private void warpToBlock(Entity entity, Level level, BlockPos pos, BlockState state, BlockPos warpPos) {
         if (WarpLinkPathing.isAccidentalWarp(entity, pos, warpPos))
             return;
+        if (!WarpPipeBlock.arePipesConnected(level, pos, warpPos)) {
+            if (!level.isClientSide && entity instanceof Player player)
+                player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_not_connected"), true);
+            return;
+        }
 
         BlockState warpState = level.getBlockState(warpPos);
         WarpCost.Cost warpCost = WarpCost.getBlockCost(level, pos, warpPos, state);
