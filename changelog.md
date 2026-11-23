@@ -10,12 +10,12 @@
   - Disabled by default
   - Pipes connected to the destination pipe must be the same color
   - Pipe Junction blocks can be used to change the color of the pipes connected
+- Added a config to disable teleporting using clear pipes
 - Added the ability for mobs that can open doors to use warp pipes.
 - Added the ability for warp pipes to teleport Aeronautics contraptions
 - Added new linking and warping particles
 - Added an enchant glow to wrenches when bound to a pipe
 - Added smoke particles to pipes on cooldown. Configurable
-- Added a config to disable teleporting using clear pipes
 
 ## Update 3.2.1
 - Added Pipe Junctions to pipe world gen
