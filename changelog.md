@@ -2,7 +2,9 @@
 - Added tooltips to warp pipes
 - Changed water spouts to face any direction
 - Changed water spouts to connect the model to make wider spouts
-- Removed the bubbles & water_spout blockstates from warp pipes
+- Improved bucketing water spouts
+- Added a config to require water near a connected pipe for water spouts to place. Default false.
+- Removed the `bubbles` & `water_spout` blockstates from warp pipes
   - Saves to the block entity now
   - Reduces states from 192 to 48
 - Added a config option to charge xp for teleporting with warp pipes. 0 by default

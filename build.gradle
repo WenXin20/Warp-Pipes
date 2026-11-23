@@ -65,7 +65,8 @@ dependencies {
     compileOnly "curse.maven:create-328085:7963363"
     compileOnly "maven.modrinth:create-aeronautics:1.2.1+mc1.21.1-neoforge"  // Requires Create, Sable, Incompatible w/ Embeddium
     compileOnly "curse.maven:irisshaders-455508:6661598" // Requires Sodium
-    implementation "curse.maven:itemzoom-261725:5536959"
+    compileOnly "curse.maven:itemzoom-261725:5536959"
+    compileOnly "curse.maven:jei-${jei_version}"
     implementation "curse.maven:roughly-enough-items-${rei_version}"
     compileOnly "curse.maven:wiki-zoomer-unofficial-1534301:8122492"
     compileOnly "dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:[1.6.0,)"
@@ -75,7 +76,6 @@ dependencies {
     // Libraries
     compileOnly "curse.maven:sable-1312371:8007005" // Requires Create
     compileOnly "curse.maven:sodium-394468:6382651" // Incompatible w/ Embeddium
-    implementation "curse.maven:jei-${jei_version}"
     implementation "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_spef_version}"
 
     // implementation "curse.maven:embeddium-${embeddium_version}"
