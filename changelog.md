@@ -9,6 +9,8 @@
   - Saves to the block entity now
   - Reduces states from 192 to 48
 - Added a config option to charge xp for teleporting with warp pipes. 0 by default
+- Added a config option to charge an item for teleporting with warp pipes. 
+  - The item tag `warp_fuel` includes ender pearls by default
 - Added a config option to require pipes be connected to the destination pipe to teleport.
   - Disabled by default
   - Pipes connected to the destination pipe must be the same color
@@ -19,6 +21,8 @@
 - Added new linking and warping particles
 - Added an enchant glow to wrenches when bound to a pipe
 - Added smoke particles to pipes on cooldown. Configurable
+
+Please report any bugs found to [GitHub](https://github.com/WenXin20/Warp-Pipes/issues)
 
 ## Update 3.2.1
 - Added Pipe Junctions to pipe world gen
@@ -43,5 +47,3 @@
 - Players will now face away from a sideways pipe after teleporting
 - Vehicles now teleport with the rider
 - Fixed pipe towers generating outside of mushroom islands if another mod adds a biome tagged as `is_mushroom`3
-
-Please report any bugs found to [GitHub](https://github.com/WenXin20/Warp-Pipes/issues)
