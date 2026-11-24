@@ -2,6 +2,12 @@
 - Improved disconnected pipe message
 - Fixed pipe gui background being too dark
 - Fixed pipe gui sliders not working with scrolling and click-dragging
+- Added checkmark boxes to the pipe gui to require connecting pipes for warping. 
+  - Waxing prevents changing it
+  - The config still overrides this
+- Added checkmark boxes to the pipe gui to require water source for water spouts. 
+  - Waxing prevents changing it
+  - The config still overrides this
 
 Please report any bugs found to [GitHub](https://github.com/WenXin20/Warp-Pipes/issues)
 

@@ -5,6 +5,8 @@ import com.wenxin2.warp_pipes.WarpPipes;
 import com.wenxin2.warp_pipes.client.BubblesSlider;
 import com.wenxin2.warp_pipes.client.StateImageButton;
 import com.wenxin2.warp_pipes.client.WaterSpoutSlider;
+import com.wenxin2.warp_pipes.network.server_bound.data.ConnectedPipesCheckboxPayload;
+import com.wenxin2.warp_pipes.network.server_bound.data.WaterSourceCheckboxPayload;
 import com.wenxin2.warp_pipes.registries.ConfigRegistry;
 import com.wenxin2.warp_pipes.inventory.WarpPipeMenu;
 import com.wenxin2.warp_pipes.network.PacketHandler;
@@ -36,6 +38,8 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     Button renameButton;
     Button waterSpoutButton;
     EditBox renameBox;
+    Button waterSourceCheckbox;
+    Button connectionCheckbox;
     Inventory inventory;
 
     public ExtendedSlider waterSpoutSlider;
@@ -51,6 +55,16 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
     private static final WidgetSprites WATER_SPOUT_ON_SPRITES = sprites("water_spout_on");
     private static final WidgetSprites BUBBLES_OFF_SPRITES = sprites("bubbles_off");
     private static final WidgetSprites BUBBLES_ON_SPRITES = sprites("bubbles_on");
+    private static final WidgetSprites CHECKBOX_SPRITES = new WidgetSprites(
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox"),
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox_selected"),
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox_highlighted"),
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox_selected_highlighted"));
+    private static final WidgetSprites CHECKBOX_WAXED_SPRITES = new WidgetSprites(
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox"),
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox_selected_waxed"),
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox"),
+            ResourceLocation.fromNamespaceAndPath(WarpPipes.MOD_ID, "checkbox_selected_waxed"));
 
     public WarpPipeScreen(WarpPipeMenu container, Inventory inventory, Component name) {
         super(container, inventory, name);
@@ -129,6 +143,17 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
         final Component distance = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.distance");
         this.bubblesSlider = this.addRenderableWidget(new BubblesSlider(x + 61, y + 45, 108, 24,
                 distance, Component.literal(""), 0D, 16D, this.lastBubblesDistance, 1D, 0, true, this.menu::isWaxed));
+
+        this.waterSourceCheckbox = this.addRenderableWidget(new StateImageButton(x + 155, y + 26, 10, 8,
+                () -> this.menu.isWaxed() ? CHECKBOX_WAXED_SPRITES : CHECKBOX_SPRITES, () -> !this.menu.requiresWaterSource() && !this.isWaterSourceForced(),
+                button -> this.waterSourceCheckboxOnPress(), Component.translatable("menu.warp_pipes.warp_pipe.water_source_checkbox.tooltip")));
+        this.waterSourceCheckbox.visible = !this.menu.isClearPipe();
+        this.waterSourceCheckbox.active = !this.isWaterSourceForced();
+
+        this.connectionCheckbox = this.addRenderableWidget(new StateImageButton(x + 155, y + 53, 10, 8,
+                () -> this.menu.isWaxed() ? CHECKBOX_WAXED_SPRITES : CHECKBOX_SPRITES, () -> !this.menu.requiresConnection() && !this.isConnectionForced(),
+                button -> this.connectionCheckboxOnPress(), Component.translatable("menu.warp_pipes.warp_pipe.connection_checkbox.tooltip")));
+        this.connectionCheckbox.active = !this.isConnectionForced();
     }
 
     @Override
@@ -217,6 +242,20 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider_waxed.tooltip");
         else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.bubbles_slider.tooltip");
         this.bubblesSlider.setTooltip(Tooltip.create(tooltip));
+
+        if (this.isWaterSourceForced())
+            tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_source_checkbox_config.tooltip");
+        else if (this.menu.isWaxed())
+            tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_source_checkbox_waxed.tooltip");
+        else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.water_source_checkbox.tooltip");
+        this.waterSourceCheckbox.setTooltip(Tooltip.create(tooltip));
+
+        if (this.isConnectionForced())
+            tooltip = Component.translatable("menu.warp_pipes.warp_pipe.connection_checkbox_config.tooltip");
+        else if (this.menu.isWaxed())
+            tooltip = Component.translatable("menu.warp_pipes.warp_pipe.connection_checkbox_waxed.tooltip");
+        else tooltip = Component.translatable("menu.warp_pipes.warp_pipe.connection_checkbox.tooltip");
+        this.connectionCheckbox.setTooltip(Tooltip.create(tooltip));
     }
 
     @Override
@@ -361,6 +400,30 @@ public class WarpPipeScreen extends AbstractContainerScreen<WarpPipeMenu> {
             int spoutHeight = waterSpoutSlider.getValueInt();
             PacketHandler.sendToServer(new WaterSpoutSliderPayload(this.menu.containerId, spoutHeight));
         }
+    }
+
+    public void waterSourceCheckboxOnPress() {
+        Player player = this.inventory.player;
+
+        if (this.menu.isWaxed())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
+        else PacketHandler.sendToServer(new WaterSourceCheckboxPayload(this.menu.containerId, !this.menu.requiresWaterSource()));
+    }
+
+    public void connectionCheckboxOnPress() {
+        Player player = this.inventory.player;
+
+        if (this.menu.isWaxed())
+            player.displayClientMessage(Component.translatable("display.warp_pipes.rename_pipes.pipe_waxed").withStyle(ChatFormatting.RED), true);
+        else PacketHandler.sendToServer(new ConnectedPipesCheckboxPayload(this.menu.containerId, !this.menu.requiresConnection()));
+    }
+
+    private boolean isWaterSourceForced() {
+        return ConfigRegistry.WATER_SPOUTS_REQUIRE_WATER.get();
+    }
+
+    private boolean isConnectionForced() {
+        return this.menu.isClearPipe() ? ConfigRegistry.REQUIRE_CONNECTED_CLEAR_PIPES.get() : ConfigRegistry.REQUIRE_CONNECTED_PIPES.get();
     }
 
     private boolean isWaxLocked(boolean waxDisables) {

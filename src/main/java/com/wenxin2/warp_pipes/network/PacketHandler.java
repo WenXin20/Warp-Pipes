@@ -1,15 +1,19 @@
 package com.wenxin2.warp_pipes.network;
 
 import com.wenxin2.warp_pipes.network.server_bound.data.ClosePipeButtonPayload;
+import com.wenxin2.warp_pipes.network.server_bound.data.ConnectedPipesCheckboxPayload;
 import com.wenxin2.warp_pipes.network.server_bound.data.PipeBubblesButtonPayload;
 import com.wenxin2.warp_pipes.network.server_bound.data.PipeBubblesSliderPayload;
 import com.wenxin2.warp_pipes.network.server_bound.data.RenamePipePayload;
+import com.wenxin2.warp_pipes.network.server_bound.data.WaterSourceCheckboxPayload;
 import com.wenxin2.warp_pipes.network.server_bound.data.WaterSpoutButtonPayload;
 import com.wenxin2.warp_pipes.network.server_bound.data.WaterSpoutSliderPayload;
 import com.wenxin2.warp_pipes.network.server_bound.handler.ClosePipeButtonPacket;
+import com.wenxin2.warp_pipes.network.server_bound.handler.ConnectedPipesCheckboxPacket;
 import com.wenxin2.warp_pipes.network.server_bound.handler.PipeBubblesButtonPacket;
 import com.wenxin2.warp_pipes.network.server_bound.handler.PipeBubblesSliderPacket;
 import com.wenxin2.warp_pipes.network.server_bound.handler.RenamePipePacket;
+import com.wenxin2.warp_pipes.network.server_bound.handler.WaterSourceCheckboxPacket;
 import com.wenxin2.warp_pipes.network.server_bound.handler.WaterSpoutButtonPacket;
 import com.wenxin2.warp_pipes.network.server_bound.handler.WaterSpoutSliderPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -34,6 +38,8 @@ public class PacketHandler {
         registrar.playToServer(RenamePipePayload.RENAME_PIPE_PAYLOAD, RenamePipePayload.STREAM_CODEC, RenamePipePacket.get()::handle);
         registrar.playToServer(WaterSpoutSliderPayload.SPOUT_HEIGHT_PAYLOAD, WaterSpoutSliderPayload.STREAM_CODEC, WaterSpoutSliderPacket.get()::handle);
         registrar.playToServer(WaterSpoutButtonPayload.SPOUT_STATE_PAYLOAD, WaterSpoutButtonPayload.STREAM_CODEC, WaterSpoutButtonPacket.get()::handle);
+        registrar.playToServer(WaterSourceCheckboxPayload.PAYLOAD, WaterSourceCheckboxPayload.STREAM_CODEC, WaterSourceCheckboxPacket.get()::handle);
+        registrar.playToServer(ConnectedPipesCheckboxPayload.PAYLOAD, ConnectedPipesCheckboxPayload.STREAM_CODEC, ConnectedPipesCheckboxPacket.get()::handle);
     }
 
     public static <MSG extends CustomPacketPayload> void sendToServer(MSG message) {

@@ -307,7 +307,7 @@ public interface WP$BlockWarpEntityHandler {
     static void displayPipesNotConnectedMessage(Player player, Level level, BlockPos from, BlockPos to) {
         Component fromName = level.getBlockState(from).getBlock().getName();
         Component toName = level.getBlockState(to).getBlock().getName();
-        player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_not_connected", fromName, toName), true);
+        player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_not_connected", fromName, toName).withStyle(ChatFormatting.RED), true);
     }
 
     static boolean isOnLoweredFloor(double feetY) {
