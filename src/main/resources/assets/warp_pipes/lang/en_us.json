@@ -136,6 +136,7 @@
   "menu.warp_pipes.warp_pipe.water_source_checkbox.tooltip": "Require Water Source\n§7• Water spout only flows if the opposite entrance has water",
   "menu.warp_pipes.warp_pipe.water_source_checkbox_waxed.tooltip": "§mRequire Water Source§r\n§7• Water spout only flows if the opposite entrance has water\n§cPipe is Waxed!",
   "menu.warp_pipes.warp_pipe.water_source_checkbox_config.tooltip": "Require Water Source\n§7• Water spout only flows if the opposite entrance has water\n§eEnabled for all pipes in the config",
+  "menu.warp_pipes.warp_pipe.water_source_checkbox_clear.tooltip": "Require Water Source\n§e• Clear pipes must be waterlogged",
   "menu.warp_pipes.warp_pipe.connection_checkbox.tooltip": "Require Connected Pipes\n§7• Pipes must be connected to the destination pipe to warp",
   "menu.warp_pipes.warp_pipe.connection_checkbox_waxed.tooltip": "§mRequire Connected Pipes§r\n§7• Pipes must be connected to the destination pipe to warp\n§cPipe is Waxed!",
   "menu.warp_pipes.warp_pipe.connection_checkbox_config.tooltip": "Require Connected Pipes\n§7• Pipes must be connected to the destination pipe to warp\n§eEnabled for all pipes in the config",
