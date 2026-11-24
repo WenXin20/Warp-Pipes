@@ -1,3 +1,9 @@
+## Update 3.3.1
+- Improved disconnected pipe message
+- 
+
+Please report any bugs found to [GitHub](https://github.com/WenXin20/Warp-Pipes/issues)
+
 ## Update 3.3.0
 - Ported changes from Marioverse:
 - Added tooltips to warp pipes
@@ -21,8 +27,6 @@
 - Added new linking and warping particles
 - Added an enchant glow to wrenches when bound to a pipe
 - Added smoke particles to pipes on cooldown. Configurable
-
-Please report any bugs found to [GitHub](https://github.com/WenXin20/Warp-Pipes/issues)
 
 ## Update 3.2.1
 - Added Pipe Junctions to pipe world gen

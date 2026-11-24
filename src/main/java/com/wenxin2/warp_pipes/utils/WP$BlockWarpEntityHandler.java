@@ -249,7 +249,7 @@ public interface WP$BlockWarpEntityHandler {
             return;
         if (!WarpPipeBlock.arePipesConnected(level, pos, warpPos)) {
             if (!level.isClientSide && entity instanceof Player player)
-                player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_not_connected"), true);
+                WP$BlockWarpEntityHandler.displayPipesNotConnectedMessage(player, level, pos, warpPos);
             return;
         }
 
@@ -302,6 +302,12 @@ public interface WP$BlockWarpEntityHandler {
 
     static void displayDestinationMissingMessage(Player player) {
         player.displayClientMessage(Component.translatable("display.warp_pipes.warp_destination_missing"), true);
+    }
+
+    static void displayPipesNotConnectedMessage(Player player, Level level, BlockPos from, BlockPos to) {
+        Component fromName = level.getBlockState(from).getBlock().getName();
+        Component toName = level.getBlockState(to).getBlock().getName();
+        player.displayClientMessage(Component.translatable("display.warp_pipes.pipes_not_connected", fromName, toName), true);
     }
 
     static boolean isOnLoweredFloor(double feetY) {
