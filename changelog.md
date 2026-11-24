@@ -1,6 +1,6 @@
 ## Update 3.3.1
 - Improved disconnected pipe message
-- 
+- Fixed warp pipe gui background being too dark
 
 Please report any bugs found to [GitHub](https://github.com/WenXin20/Warp-Pipes/issues)
 
